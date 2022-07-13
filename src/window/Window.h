@@ -16,6 +16,8 @@ namespace engine {
         int height;
         void init();
 
+        static void keyboardEventCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
     public:
         Window(std::string title);
         Window(int width, int height, std::string title);

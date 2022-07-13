@@ -42,7 +42,24 @@ namespace engine {
             throw std::runtime_error("GLFW Window context creation failed");
         }
 
+        glfwSetKeyCallback(windowContext, keyboardEventCallback);
+
         bind();
+
+    }
+
+    void Window::keyboardEventCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {
+
+        if (action == GLFW_PRESS) {
+            KeyPressEvent event(key);
+            EventBus::getInstance().dispatchRawEvent(event);
+        } else if (action == GLFW_REPEAT) {
+            KeyRepeatEvent event(key);
+            EventBus::getInstance().dispatchRawEvent(event);
+        } else if (action == GLFW_RELEASE) {
+            KeyReleaseEvent event(key);
+            EventBus::getInstance().dispatchRawEvent(event);
+        }
 
     }
 

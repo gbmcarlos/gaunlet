@@ -1,7 +1,8 @@
-#include "application/Application.h"
-#include "window/Window.h"
+#include <iostream>
 
-class EmptyScreenApplication : engine::Application {
+#include "Core.h"
+
+class EmptyScreenApplication : public engine::Application {
     void onReady() override {}
 
     void onUpdate() override {}
@@ -9,13 +10,20 @@ class EmptyScreenApplication : engine::Application {
     void onRender() override {}
 
     void onGuiRender() override {}
+
+    virtual void onEvent(engine::Event& event) override {
+        std::cout << "Event" << std::endl;
+    }
 };
 
 int main() {
 
     engine::Window window("Empty Screen");
+    engine::RunLoop runLoop(window);
 
     EmptyScreenApplication app;
+
+    runLoop.run(&app);
 
     return 0;
 
