@@ -8,4 +8,6 @@ conan_basic_setup()
 include_directories(${PROJECT_SOURCE_DIR}/vendor)
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/src)
+
 add_subdirectory(${PROJECT_SOURCE_DIR}/examples/empty-screen)
+add_subdirectory(${PROJECT_SOURCE_DIR}/examples/render-triangle)

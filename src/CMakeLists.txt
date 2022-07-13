@@ -4,6 +4,8 @@ add_library(graphics-engine
         ${PROJECT_SOURCE_DIR}/src/run-loop/run_loop_utils.h ${PROJECT_SOURCE_DIR}/src/run-loop/RunLoop.h ${PROJECT_SOURCE_DIR}/src/run-loop/RunLoop.cpp
         ${PROJECT_SOURCE_DIR}/src/input/Input.h ${PROJECT_SOURCE_DIR}/src/input/Event.h ${PROJECT_SOURCE_DIR}/src/input/EventBus.h ${PROJECT_SOURCE_DIR}/src/input/EventBus.cpp
         ${PROJECT_SOURCE_DIR}/src/input/events/KeyPressEvent.h ${PROJECT_SOURCE_DIR}/src/input/events/KeyRepeatEvent.h ${PROJECT_SOURCE_DIR}/src/input/events/KeyRepeatEvent.h
+        ${PROJECT_SOURCE_DIR}/src/buffer/VertexBuffer.h ${PROJECT_SOURCE_DIR}/src/buffer/VertexBuffer.cpp ${PROJECT_SOURCE_DIR}/src/buffer/VertexBufferLayout.h ${PROJECT_SOURCE_DIR}/src/buffer/VertexBufferLayout.cpp ${PROJECT_SOURCE_DIR}/src/buffer/IndexBuffer.h ${PROJECT_SOURCE_DIR}/src/buffer/IndexBuffer.cpp ${PROJECT_SOURCE_DIR}/src/buffer/VertexArray.h ${PROJECT_SOURCE_DIR}/src/buffer/VertexArray.cpp
+        ${PROJECT_SOURCE_DIR}/src/shader/Shader.h ${PROJECT_SOURCE_DIR}/src/shader/Shader.cpp
 
         ${PROJECT_SOURCE_DIR}/vendor/imgui/imgui_impl_glfw.h ${PROJECT_SOURCE_DIR}/vendor/imgui/imgui_impl_glfw.cpp ${PROJECT_SOURCE_DIR}/vendor/imgui/imgui_impl_opengl3.h ${PROJECT_SOURCE_DIR}/vendor/imgui/imgui_impl_opengl3.cpp
     )
