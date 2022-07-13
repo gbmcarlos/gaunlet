@@ -6,8 +6,6 @@
 
 [generators]
  cmake
- CMakeDeps
- CMakeToolchain
 
  [imports]
  ./res/bindings, imgui_impl_glfw.h -> ../vendor/imgui

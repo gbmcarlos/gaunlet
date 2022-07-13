@@ -1,4 +1,5 @@
 #include "application/Application.h"
+#include "window/Window.h"
 
 class EmptyScreenApplication : engine::Application {
     void onReady() override {}
@@ -11,6 +12,8 @@ class EmptyScreenApplication : engine::Application {
 };
 
 int main() {
+
+    engine::Window window("Empty Screen");
 
     EmptyScreenApplication app;
 
