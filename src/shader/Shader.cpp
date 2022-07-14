@@ -54,6 +54,7 @@ namespace engine {
 
     void Shader::setUniform4f(const std::string name, glm::vec4 value) {
 
+        bind();
         GLint location = getUniformLocation(name);
         glUniform4f(location, value.x, value.y, value.z, value.w);
 

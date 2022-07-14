@@ -1,4 +1,5 @@
 #include "Core.h"
+#include <imgui.h>
 
 class RenderTriangleApplication : public engine::Application {
 
@@ -6,6 +7,10 @@ class RenderTriangleApplication : public engine::Application {
     std::unique_ptr<engine::VertexBuffer> vertexBuffer;
     std::unique_ptr<engine::IndexBuffer> indexBuffer;
     std::unique_ptr<engine::Shader> shader;
+
+    float color[4] = {
+            1.0f, 1.0f, 1.0f, 1.0f
+    };
 
     void onReady() override {
 
@@ -42,7 +47,6 @@ class RenderTriangleApplication : public engine::Application {
         shader->attach(GL_FRAGMENT_SHADER, "res/shaders/fragment-color.glsl");
         shader->compile();
         shader->bind();
-        shader->setUniform3f("u_color", glm::vec3(1.0f, 0.0f, 0.0f));
 
     }
 
@@ -50,13 +54,21 @@ class RenderTriangleApplication : public engine::Application {
 
     void onRender() override {
 
+        shader->setUniform4f("u_color", glm::vec4(color[0], color[1], color[2], color[3]));
+
         glClear(GL_COLOR_BUFFER_BIT);
 
         glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
 
     }
 
-    void onGuiRender() override {}
+    void onGuiRender() override {
+
+        ImGui::Begin("Controls");
+        ImGui::ColorPicker4("Color", color);
+        ImGui::End();
+
+    }
 
     virtual void onEvent(engine::Event& event) override {}
 };

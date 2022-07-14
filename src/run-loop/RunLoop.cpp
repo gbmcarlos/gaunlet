@@ -31,6 +31,7 @@ namespace engine {
         // Set up the GUI, with ImGUI
         ImGui::CreateContext();
         ImGuiIO &io = ImGui::GetIO();
+        io.IniFilename = "";
         ImGui_ImplGlfw_InitForOpenGL(window.windowContext, true);
         ImGui_ImplOpenGL3_Init();
         ImGui::StyleColorsDark();
