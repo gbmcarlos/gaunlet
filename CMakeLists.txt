@@ -9,6 +9,6 @@ include_directories(${PROJECT_SOURCE_DIR}/vendor)
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/src)
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/examples/empty-screen)
-add_subdirectory(${PROJECT_SOURCE_DIR}/examples/render-triangle)
-add_subdirectory(${PROJECT_SOURCE_DIR}/examples/playable-quad)
+add_subdirectory(${PROJECT_SOURCE_DIR}/examples/1-empty-screen)
+add_subdirectory(${PROJECT_SOURCE_DIR}/examples/2-render-triangle)
+add_subdirectory(${PROJECT_SOURCE_DIR}/examples/3-playable-quad)
