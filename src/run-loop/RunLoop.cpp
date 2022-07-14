@@ -1,12 +1,10 @@
+#include "RunLoop.h"
+
 #include <iostream>
 #include <sstream>
 
-#include <imgui.h>
-#include <imgui/imgui_impl_glfw.h>
-#include <imgui/imgui_impl_opengl3.h>
-
 #include "../render/Renderer.h"
-#include "RunLoop.h"
+#include "../render/imgui/ImGuiRenderApi.h"
 
 namespace engine {
 
@@ -15,13 +13,7 @@ namespace engine {
 
         Renderer::init();
 
-        // Set up the GUI, with ImGUI
-        ImGui::CreateContext();
-        ImGuiIO &io = ImGui::GetIO();
-        io.IniFilename = "";
-        ImGui_ImplGlfw_InitForOpenGL(window.windowContext, true);
-        ImGui_ImplOpenGL3_Init();
-        ImGui::StyleColorsDark();
+        ImGuiRenderApi::init(window);
 
     }
 
@@ -44,9 +36,7 @@ namespace engine {
         while (!glfwWindowShouldClose(window.windowContext)) {
 
             // Start ImGUI rendering
-            ImGui_ImplOpenGL3_NewFrame();
-            ImGui_ImplGlfw_NewFrame();
-            ImGui::NewFrame();
+            ImGuiRenderApi::newFrame();
 
             nowTime = glfwGetTime();
             deltaTime += (nowTime - lastTime) / limitFPS;
@@ -74,19 +64,14 @@ namespace engine {
                 updates = 0, frames = 0;
             }
 
-            // Render ImGUI
-            ImGui::Render();
-            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+            ImGuiRenderApi::render();
 
             window.swap();
             window.pollEvents();
 
         }
 
-        // Close ImGUI
-        ImGui_ImplOpenGL3_Shutdown();
-        ImGui_ImplGlfw_Shutdown();
-        ImGui::DestroyContext();
+        ImGuiRenderApi::shutdown();
 
     }
 
