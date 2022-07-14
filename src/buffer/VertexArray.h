@@ -11,9 +11,9 @@ namespace engine {
     public:
         VertexArray();
         ~VertexArray();
-        void bind() const;
-        void unbind() const;
-        void addBuffer(VertexBuffer& vertexBuffer) const;
+        void bind();
+        void unbind();
+        void addBuffer(VertexBuffer& vertexBuffer);
     };
 
 }

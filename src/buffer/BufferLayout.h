@@ -26,9 +26,9 @@ namespace engine {
         static GLenum layoutElementTypeToGLType(LayoutElementType type) {
 
             switch (type) {
-                case LayoutElementType::Bool:   return GL_BOOL;
-                case LayoutElementType::Int:   return GL_INT;
-                case LayoutElementType::Float:   return GL_FLOAT;
+                case LayoutElementType::Bool:       return GL_BOOL;
+                case LayoutElementType::Int:        return GL_INT;
+                case LayoutElementType::Float:      return GL_FLOAT;
             }
 
             throw std::runtime_error("Unknown layout element type");

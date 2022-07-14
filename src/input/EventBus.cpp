@@ -2,9 +2,6 @@
 
 #include "Event.h"
 
-#include <utility>
-#include <iostream>
-
 namespace engine {
 
     void EventBus::dispatchRawEvent(Event& event) {

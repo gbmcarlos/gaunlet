@@ -1,27 +1,21 @@
 #include "VertexBuffer.h"
 
-#include <GL/glew.h>
-
-#include <utility>
+#include "../render/Renderer.h"
 
 namespace engine {
 
     VertexBuffer::VertexBuffer(BufferLayout& layout, const void *data, unsigned int size)
         : dynamic(false), layout{std::move(layout)} {
-        glGenBuffers(1, &rendererId);
-        glBindBuffer(GL_ARRAY_BUFFER, rendererId);
-        glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+        Renderer::createVertexBuffer(rendererId, data, size);
     }
 
     VertexBuffer::VertexBuffer(BufferLayout& layout, unsigned int size)
-        : dynamic(true), layout{std::move(layout)} {
-        glGenBuffers(1, &rendererId);
-        glBindBuffer(GL_ARRAY_BUFFER, rendererId);
-        glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
+            : dynamic(true), layout{std::move(layout)} {
+        Renderer::createVertexBuffer(rendererId, size);
     }
 
     VertexBuffer::~VertexBuffer() {
-        glDeleteBuffers(1, &rendererId);
+        Renderer::deleteBuffer(rendererId);
     }
 
     void VertexBuffer::setData(const void *data, unsigned int size) {
@@ -31,14 +25,14 @@ namespace engine {
         }
 
         bind();
-        glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
+        Renderer::submitVertexBufferData(data, size);
     }
 
-    void VertexBuffer::bind() const {
-        glBindBuffer(GL_ARRAY_BUFFER, rendererId);
+    void VertexBuffer::bind() {
+        Renderer::bindVertexBuffer(rendererId);
     }
-    void VertexBuffer::unbind() const {
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    void VertexBuffer::unbind() {
+        Renderer::unbindVertexBuffer();
     }
 
 }

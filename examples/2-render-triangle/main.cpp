@@ -1,6 +1,8 @@
 #include <Core.h>
 #include <imgui.h>
 
+#include <memory>
+
 class RenderTriangleApplication : public engine::Application {
 
     std::unique_ptr<engine::VertexArray> vertexArray;
@@ -22,6 +24,7 @@ class RenderTriangleApplication : public engine::Application {
 
         // Create a vertex array, which will bind together the vertex buffer and the layout
         vertexArray = std::make_unique<engine::VertexArray>();
+        vertexArray->bind();
 
         engine::BufferLayout layout = {
             {"a_position", 2, engine::LayoutElementType::Float}
@@ -39,8 +42,6 @@ class RenderTriangleApplication : public engine::Application {
 
         // Create an index buffer, which specifies how to use the vertices to draw triangles
         indexBuffer = std::make_unique<engine::IndexBuffer>(indices, 3);
-
-        vertexArray->bind();
 
         shader = std::make_unique<engine::Shader>();
         shader->attach(GL_VERTEX_SHADER, "res/shaders/vertex-position.glsl");

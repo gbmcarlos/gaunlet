@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include "BufferLayout.h"
 
 namespace engine {
@@ -17,8 +15,8 @@ namespace engine {
         VertexBuffer(BufferLayout& layout, unsigned int size);
         ~VertexBuffer();
         void setData(const void* data, unsigned int size);
-        void bind() const;
-        void unbind() const;
+        void bind();
+        void unbind();
         inline BufferLayout getBufferLayout() {return layout;}
     };
 

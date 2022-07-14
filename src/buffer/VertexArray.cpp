@@ -1,25 +1,25 @@
 #include "VertexArray.h"
 
-#include <GL/glew.h>
+#include "../render/Renderer.h"
 
 namespace engine {
 
     VertexArray::VertexArray() {
-        glGenVertexArrays(1, &rendererId);
-    };
+        Renderer::createVertexArray(rendererId);
+    }
     VertexArray::~VertexArray() {
-        glDeleteVertexArrays(1, &rendererId);
-    };
-
-    void VertexArray::bind() const {
-        glBindVertexArray(rendererId);
+        Renderer::deleteVertexArray(rendererId);
     }
 
-    void VertexArray::unbind() const {
-        glBindVertexArray(0);
+    void VertexArray::bind() {
+        Renderer::bindVertexArray(rendererId);
     }
 
-    void VertexArray::addBuffer(VertexBuffer &vertexBuffer) const {
+    void VertexArray::unbind() {
+        Renderer::unbindVertexArray();
+    }
+
+    void VertexArray::addBuffer(VertexBuffer &vertexBuffer) {
 
         bind();
         vertexBuffer.bind();
@@ -27,14 +27,13 @@ namespace engine {
         const auto& elements = vertexBuffer.getBufferLayout().getElements();
         for (unsigned int i = 0; i < elements.size(); i++) {
             const auto& element = elements[i];
-            glEnableVertexAttribArray(i);
-            glVertexAttribPointer(
+            Renderer::addVertexArrayAttribute(
                     i,
                     element.count,
                     BufferLayoutElement::layoutElementTypeToGLType(element.type),
-                    element.normalized ? GL_TRUE : GL_FALSE,
+                    element.normalized,
                     vertexBuffer.getBufferLayout().getStride(),
-                    (const void*) element.offset
+                    element.offset
                 );
         }
 
