@@ -19,25 +19,23 @@ namespace engine {
         glBindVertexArray(0);
     }
 
-    void VertexArray::addBuffer(VertexBuffer &vertexBuffer, VertexBufferLayout &vertexBufferLayout) {
+    void VertexArray::addBuffer(VertexBuffer &vertexBuffer) const {
 
         bind();
         vertexBuffer.bind();
 
-        const auto& elements = vertexBufferLayout.elements;
-        unsigned int offset = 0;
+        const auto& elements = vertexBuffer.getBufferLayout().getElements();
         for (unsigned int i = 0; i < elements.size(); i++) {
             const auto& element = elements[i];
             glEnableVertexAttribArray(i);
             glVertexAttribPointer(
                     i,
                     element.count,
-                    element.type,
+                    BufferLayoutElement::layoutElementTypeToGLType(element.type),
                     element.normalized ? GL_TRUE : GL_FALSE,
-                    vertexBufferLayout.stride,
-                    (const void*) offset
+                    vertexBuffer.getBufferLayout().getStride(),
+                    (const void*) element.offset
                 );
-            offset += element.count * VertexBufferLayoutElement::getSizeOfType(element.type);
         }
 
     }

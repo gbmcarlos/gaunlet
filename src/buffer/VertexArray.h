@@ -1,7 +1,7 @@
 #pragma once
 
 #include "VertexBuffer.h"
-#include "VertexBufferLayout.h"
+#include "BufferLayout.h"
 
 namespace engine {
 
@@ -13,7 +13,7 @@ namespace engine {
         ~VertexArray();
         void bind() const;
         void unbind() const;
-        void addBuffer(VertexBuffer& vertexBuffer, VertexBufferLayout& vertexBufferLayout);
+        void addBuffer(VertexBuffer& vertexBuffer) const;
     };
 
 }

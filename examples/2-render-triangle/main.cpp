@@ -23,15 +23,15 @@ class RenderTriangleApplication : public engine::Application {
         // Create a vertex array, which will bind together the vertex buffer and the layout
         vertexArray = std::make_unique<engine::VertexArray>();
 
-        // Create the vertex buffer, which contains the actual data
-        vertexBuffer = std::make_unique<engine::VertexBuffer>(vertices, sizeof(float) * 2 * 4);
+        engine::BufferLayout layout = {
+            {"a_position", 2, engine::LayoutElementType::Float}
+        };
 
-        // Create a layout, and specify the structure of the vertex buffer
-        engine::VertexBufferLayout vertexBufferLayout;
-        vertexBufferLayout.pushFloat(2);
+        // Create the vertex buffer, which contains the actual data
+        vertexBuffer = std::make_unique<engine::VertexBuffer>(layout, vertices, sizeof(vertices));
 
         // Bind the vertex buffer and the layout into the vertex array
-        vertexArray->addBuffer(*vertexBuffer, vertexBufferLayout);
+        vertexArray->addBuffer(*vertexBuffer);
 
         unsigned int indices[] = {
                 0, 1, 2

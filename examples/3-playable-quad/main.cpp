@@ -67,15 +67,15 @@ public:
         // Create a vertex array, which will bind together the vertex buffer and the layout
         vertexArray = std::make_unique<engine::VertexArray>();
 
-        // Create the vertex buffer, which will contain the actual data (2 quads)
-        vertexBuffer = std::make_unique<engine::VertexBuffer>(sizeof(Vertex) * 4 * 2);
+        engine::BufferLayout layout = {
+            {"a_position", 2, engine::LayoutElementType::Float}
+        };
 
-        // Create a layout, and specify the structure of the vertex buffer
-        engine::VertexBufferLayout vertexBufferLayout;
-        vertexBufferLayout.pushFloat(2);
+        // Create the vertex buffer, which will contain the actual data (2 quads)
+        vertexBuffer = std::make_unique<engine::VertexBuffer>(layout, sizeof(Vertex) * 4 * 2);
 
         // Bind the vertex buffer and the layout into the vertex array
-        vertexArray->addBuffer(*vertexBuffer, vertexBufferLayout);
+        vertexArray->addBuffer(*vertexBuffer);
 
         unsigned int indices[] = {
                 0, 1, 2,

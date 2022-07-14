@@ -6,7 +6,7 @@
 #include "input/Input.h"
 
 #include "buffer/VertexBuffer.h"
-#include "buffer/VertexBufferLayout.h"
+#include "buffer/BufferLayout.h"
 #include "buffer/IndexBuffer.h"
 #include "buffer/VertexArray.h"
 

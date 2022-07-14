@@ -2,15 +2,19 @@
 
 #include <GL/glew.h>
 
+#include <utility>
+
 namespace engine {
 
-    VertexBuffer::VertexBuffer(const void *data, unsigned int size) {
+    VertexBuffer::VertexBuffer(BufferLayout& layout, const void *data, unsigned int size)
+        : dynamic(false), layout{std::move(layout)} {
         glGenBuffers(1, &rendererId);
         glBindBuffer(GL_ARRAY_BUFFER, rendererId);
         glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
     }
 
-    VertexBuffer::VertexBuffer(unsigned int size) {
+    VertexBuffer::VertexBuffer(BufferLayout& layout, unsigned int size)
+        : dynamic(true), layout{std::move(layout)} {
         glGenBuffers(1, &rendererId);
         glBindBuffer(GL_ARRAY_BUFFER, rendererId);
         glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
@@ -21,6 +25,11 @@ namespace engine {
     }
 
     void VertexBuffer::setData(const void *data, unsigned int size) {
+
+        if (!dynamic) {
+            throw std::runtime_error("Can't set data for non-dynamic vertex buffer");
+        }
+
         bind();
         glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
     }
