@@ -1,4 +1,4 @@
-add_executable(example-playable-quad
+add_executable(example-3-playable-quad
         ${PROJECT_SOURCE_DIR}/examples/3-playable-quad/main.cpp
     )
-target_link_libraries(example-playable-quad graphics-engine)
+target_link_libraries(example-3-playable-quad graphics-engine)
