@@ -1,4 +1,4 @@
-#include "Core.h"
+#include <Core.h>
 #include <imgui.h>
 
 class RenderTriangleApplication : public engine::Application {
@@ -38,7 +38,7 @@ class RenderTriangleApplication : public engine::Application {
         };
 
         // Create an index buffer, which specifies how to use the vertices to draw triangles
-        indexBuffer = std::make_unique<engine::IndexBuffer>(indices, 6);
+        indexBuffer = std::make_unique<engine::IndexBuffer>(indices, 3);
 
         vertexArray->bind();
 
@@ -58,7 +58,7 @@ class RenderTriangleApplication : public engine::Application {
 
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, indexBuffer->getCount(), GL_UNSIGNED_INT, nullptr);
 
     }
 

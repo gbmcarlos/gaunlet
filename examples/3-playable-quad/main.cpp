@@ -1,4 +1,4 @@
-#include "Core.h"
+#include <Core.h>
 
 #include <array>
 
@@ -122,7 +122,7 @@ public:
 
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, indexBuffer->getCount(), GL_UNSIGNED_INT, nullptr);
 
     }
 

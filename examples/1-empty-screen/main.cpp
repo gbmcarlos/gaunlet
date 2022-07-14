@@ -1,5 +1,4 @@
-
-#include "Core.h"
+#include <Core.h>
 
 class RenderTriangleApplication : public engine::Application {
     void onReady() override {}
