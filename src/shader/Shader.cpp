@@ -62,6 +62,7 @@ namespace engine {
 
     void Shader::setUniformMat4f(const std::string name, glm::mat4 value) {
 
+        bind();
         GLint location = getUniformLocation(name);
         glUniformMatrix4fv(location, 1, GL_FALSE, &value[0][0]);
 

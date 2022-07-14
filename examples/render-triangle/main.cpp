@@ -37,7 +37,7 @@ class RenderTriangleApplication : public engine::Application {
                 0, 1, 2
         };
 
-        // Create a index buffer, which specifies how to use the vertices to draw triangles
+        // Create an index buffer, which specifies how to use the vertices to draw triangles
         indexBuffer = std::make_unique<engine::IndexBuffer>(indices, 6);
 
         vertexArray->bind();
@@ -75,7 +75,7 @@ class RenderTriangleApplication : public engine::Application {
 
 int main() {
 
-    engine::Window window("Empty Screen");
+    engine::Window window("Render Triangle");
     engine::RunLoop runLoop(window);
 
     RenderTriangleApplication app;
