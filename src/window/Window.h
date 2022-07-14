@@ -22,13 +22,19 @@ namespace engine {
         Window(std::string title);
         Window(int width, int height, std::string title);
         ~Window();
+
+        GLFWwindow* windowContext;
+
         void setTitle(std::string title);
+        void swap();
+        void pollEvents();
         void bind() const;
         void unbind() const;
-        GLFWwindow* windowContext;
+
         inline std::string getTitle() { return title;}
         inline int getWidth() { return width;}
         inline int getHeight() { return height;}
+
     };
 
 }

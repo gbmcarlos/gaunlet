@@ -3,8 +3,8 @@
 #include <string>
 #include <memory>
 
-#include "../application/Application.h"
 #include "../window/Window.h"
+#include "../application/Application.h"
 
 namespace engine {
 

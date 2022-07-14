@@ -120,7 +120,7 @@ public:
 
     void onRender() override {
 
-        glClear(GL_COLOR_BUFFER_BIT);
+        engine::Renderer::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
 
         glDrawElements(GL_TRIANGLES, indexBuffer->getCount(), GL_UNSIGNED_INT, nullptr);
 

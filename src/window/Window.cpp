@@ -16,6 +16,10 @@ namespace engine {
         init();
     }
 
+    Window::~Window() {
+        glfwTerminate();
+    }
+
     void Window::init() {
 
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
@@ -48,27 +52,16 @@ namespace engine {
 
     }
 
-    void Window::keyboardEventCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {
-
-        if (action == GLFW_PRESS) {
-            KeyPressEvent event(key);
-            EventBus::getInstance().dispatchRawEvent(event);
-        } else if (action == GLFW_REPEAT) {
-            KeyRepeatEvent event(key);
-            EventBus::getInstance().dispatchRawEvent(event);
-        } else if (action == GLFW_RELEASE) {
-            KeyReleaseEvent event(key);
-            EventBus::getInstance().dispatchRawEvent(event);
-        }
-
-    }
-
-    Window::~Window() {
-        glfwTerminate();
-    }
-
     void Window::setTitle(std::string title) {
         glfwSetWindowTitle(windowContext, title.c_str());
+    }
+
+    void Window::swap() {
+        glfwSwapBuffers(windowContext);
+    }
+
+    void Window::pollEvents() {
+        glfwPollEvents();
     }
 
     void Window::bind() const {
@@ -83,6 +76,21 @@ namespace engine {
 
     void Window::unbind() const {
         glfwMakeContextCurrent(nullptr);
+    }
+
+    void Window::keyboardEventCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {
+
+        if (action == GLFW_PRESS) {
+            KeyPressEvent event(key);
+            EventBus::getInstance().dispatchRawEvent(event);
+        } else if (action == GLFW_REPEAT) {
+            KeyRepeatEvent event(key);
+            EventBus::getInstance().dispatchRawEvent(event);
+        } else if (action == GLFW_RELEASE) {
+            KeyReleaseEvent event(key);
+            EventBus::getInstance().dispatchRawEvent(event);
+        }
+
     }
 
 }

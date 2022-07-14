@@ -1,32 +1,19 @@
 #include <iostream>
 #include <sstream>
 
-#include <GL/glew.h>
 #include <imgui.h>
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
 
+#include "../render/Renderer.h"
 #include "RunLoop.h"
-#include "run_loop_utils.h"
 
 namespace engine {
 
     RunLoop::RunLoop(const Window& window)
         : window(window), application(nullptr) {
 
-        // Set up OpenGL, with GLEW
-        if (glewInit() != GLEW_OK) {
-            std::cout << "GLEW initialization failed" << std::endl;
-        }
-
-        int flags;
-        glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
-        if (flags & GL_CONTEXT_FLAG_DEBUG_BIT) {
-            glEnable(GL_DEBUG_OUTPUT);
-            glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-            glDebugMessageCallback(glDebugOutput, nullptr);
-            glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
-        }
+        Renderer::init();
 
         // Set up the GUI, with ImGUI
         ImGui::CreateContext();
@@ -91,9 +78,9 @@ namespace engine {
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-            glfwSwapBuffers(window.windowContext);
+            window.swap();
+            window.pollEvents();
 
-            glfwPollEvents();
         }
 
         // Close ImGUI

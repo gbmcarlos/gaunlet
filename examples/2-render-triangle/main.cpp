@@ -56,7 +56,7 @@ class RenderTriangleApplication : public engine::Application {
 
         shader->setUniform4f("u_color", glm::vec4(color[0], color[1], color[2], color[3]));
 
-        glClear(GL_COLOR_BUFFER_BIT);
+        engine::Renderer::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
 
         glDrawElements(GL_TRIANGLES, indexBuffer->getCount(), GL_UNSIGNED_INT, nullptr);
 
