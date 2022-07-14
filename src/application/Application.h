@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../run-loop/TimeStep.h"
 #include "../input/Event.h"
 
 namespace engine {
@@ -7,8 +8,7 @@ namespace engine {
     class Application {
     public:
         virtual void onReady() = 0;
-        virtual void onUpdate() = 0;
-        virtual void onRender() = 0;
+        virtual void onUpdate(TimeStep timeStep) = 0;
         virtual void onGuiRender() = 0;
         virtual void onEvent(engine::Event& event) = 0;
     };

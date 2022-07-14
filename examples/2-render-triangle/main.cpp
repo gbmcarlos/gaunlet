@@ -51,9 +51,7 @@ class RenderTriangleApplication : public engine::Application {
 
     }
 
-    void onUpdate() override {}
-
-    void onRender() override {
+    void onUpdate(engine::TimeStep timeStep) override {
 
         shader->setUniform4f("u_color", glm::vec4(color[0], color[1], color[2], color[3]));
 

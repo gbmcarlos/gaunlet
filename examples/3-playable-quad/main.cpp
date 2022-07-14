@@ -96,13 +96,14 @@ public:
         shader->compile();
         shader->bind();
         shader->setUniform4f("u_color", glm::vec4(quadColor.x, quadColor.y, quadColor.z, quadColor.w));
+        shader->setUniformMat4f("u_mvp", projection * view);
 
     }
 
-    void onUpdate() override {
+    void onUpdate(engine::TimeStep timeStep) override {
 
-        quad1Position.x += quad1Speed.x;
-        quad1Position.y += quad1Speed.y;
+        quad1Position.x += quad1Speed.x * timeStep;
+        quad1Position.y += quad1Speed.y * timeStep;
 
         // Prepare the quad1, positioned statically
         auto quad1 = getQuad(quad1Position.x, quad1Position.y, quadSize);
@@ -114,12 +115,6 @@ public:
         // Submit the quad1's data
         vertexBuffer->setData(vertices, sizeof(quad1) * 2);
 
-        shader->setUniformMat4f("u_mvp", projection * view);
-
-    }
-
-    void onRender() override {
-
         engine::Renderer::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
 
         glDrawElements(GL_TRIANGLES, indexBuffer->getCount(), GL_UNSIGNED_INT, nullptr);
@@ -130,20 +125,22 @@ public:
 
     void onEvent(engine::Event& event) override {
 
+        float targetSpeed = 300;
+
         if (event.getType() == engine::EventType::KeyPress) {
             engine::KeyPressEvent derivedEvent = dynamic_cast<engine::KeyPressEvent&>(event);
-            if (derivedEvent.getKey() == GLFW_KEY_RIGHT && quad1Speed.x == 0) {
-                quad1Speed.x = 10;
+            if (derivedEvent.getKey() == GLFW_KEY_RIGHT) {
+                quad1Speed.x = targetSpeed;
                 return;
-            } else if (derivedEvent.getKey() == GLFW_KEY_LEFT && quad1Speed.x == 0) {
-                quad1Speed.x = -10;
+            } else if (derivedEvent.getKey() == GLFW_KEY_LEFT) {
+                quad1Speed.x = -targetSpeed;
                 return;
             }
         }
 
         if (event.getType() == engine::EventType::KeyRelease) {
             engine::KeyReleaseEvent derivedEvent = dynamic_cast<engine::KeyReleaseEvent&>(event);
-            if (derivedEvent.getKey() == GLFW_KEY_RIGHT || derivedEvent.getKey() == GLFW_KEY_LEFT) {
+            if ( (derivedEvent.getKey() == GLFW_KEY_RIGHT && quad1Speed.x > 0) || (derivedEvent.getKey() == GLFW_KEY_LEFT && quad1Speed.x < 0) ) {
                 quad1Speed.x = 0;
                 return;
             }
@@ -151,18 +148,18 @@ public:
 
         if (event.getType() == engine::EventType::KeyPress) {
             engine::KeyPressEvent derivedEvent = dynamic_cast<engine::KeyPressEvent&>(event);
-            if (derivedEvent.getKey() == GLFW_KEY_UP && quad1Speed.y == 0) {
-                quad1Speed.y = 10;
+            if (derivedEvent.getKey() == GLFW_KEY_UP) {
+                quad1Speed.y = targetSpeed;
                 return;
-            } else if (derivedEvent.getKey() == GLFW_KEY_DOWN && quad1Speed.y == 0) {
-                quad1Speed.y = -10;
+            } else if (derivedEvent.getKey() == GLFW_KEY_DOWN) {
+                quad1Speed.y = -targetSpeed;
                 return;
             }
         }
 
         if (event.getType() == engine::EventType::KeyRelease) {
             engine::KeyReleaseEvent derivedEvent = dynamic_cast<engine::KeyReleaseEvent&>(event);
-            if (derivedEvent.getKey() == GLFW_KEY_UP || derivedEvent.getKey() == GLFW_KEY_DOWN) {
+            if ( (derivedEvent.getKey() == GLFW_KEY_UP && quad1Speed.y > 0) || (derivedEvent.getKey() == GLFW_KEY_DOWN && quad1Speed.y < 0) ) {
                 quad1Speed.y = 0;
                 return;
             }

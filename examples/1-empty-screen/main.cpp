@@ -3,9 +3,7 @@
 class RenderTriangleApplication : public engine::Application {
     void onReady() override {}
 
-    void onUpdate() override {}
-
-    void onRender() override {}
+    void onUpdate(engine::TimeStep timeStep) override {}
 
     void onGuiRender() override {}
 

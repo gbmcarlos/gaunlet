@@ -4,6 +4,7 @@
 #include <sstream>
 
 #include "../render/Renderer.h"
+#include "TimeStep.h"
 #include "../render/imgui/ImGuiRenderApi.h"
 
 namespace engine {
@@ -26,43 +27,23 @@ namespace engine {
 
         application->onReady();
 
-        // Prepare the variables to keep track of time and frames
-        static double limitFPS = 1.0 / 60.0;
-        double lastTime = glfwGetTime(), timer = lastTime;
-        double deltaTime = 0, nowTime = 0;
-        int frames = 0 , updates = 0;
+        float lastFrameTime = 0;
 
         // Start the main loop
         while (!glfwWindowShouldClose(window.windowContext)) {
 
+            float time = (float) glfwGetTime();
+            TimeStep ts(time - lastFrameTime);
+            lastFrameTime = time;
+
             // Start ImGUI rendering
             ImGuiRenderApi::newFrame();
 
-            nowTime = glfwGetTime();
-            deltaTime += (nowTime - lastTime) / limitFPS;
-            lastTime = nowTime;
-
-            while (deltaTime >= 1.0){
-                // Delegate the update to the application
-                application->onUpdate();
-                updates++;
-                deltaTime--;
-            }
-
-            // Delegate the rendering to the application
-            application->onRender();
-            frames++;
+            // Delegate the update to the application
+            application->onUpdate(ts);
 
             // Delegate the GUI to the application
             application->onGuiRender();
-
-            // Consolidate the updates and frames per second
-            if (glfwGetTime() - timer > 1.0) {
-                timer ++;
-                std::stringstream title; title << window.getTitle().c_str() << " - FPS: " << frames << " Updates:" << updates;
-                window.setTitle(title.str());
-                updates = 0, frames = 0;
-            }
 
             ImGuiRenderApi::render();
 
