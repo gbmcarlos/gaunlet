@@ -39,12 +39,12 @@ namespace engine {
 
     void OpenGLRenderApi::createVertexBuffer(unsigned int& id, const void *data, unsigned int size) {
         glGenBuffers(1, &id);
-        glBindBuffer(GL_ARRAY_BUFFER, 10);
+        glBindBuffer(GL_ARRAY_BUFFER, id);
         glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
     }
 
     void OpenGLRenderApi::bindVertexBuffer(unsigned int& id) {
-        glDeleteBuffers(1, &id);
+        glBindBuffer(GL_ARRAY_BUFFER, id);
     }
 
 
