@@ -11,13 +11,13 @@ namespace engine {
 
     void OrthographicCamera::calculateViewProjectionMatrix() {
 
-        // Calculate the m_position matrix based on our vec3 m_position
+        // Calculate the position matrix based on our vec3 m_position
         glm::mat4 position = glm::translate(glm::mat4(1.0f), m_position);
 
         // Calculate the rotation matrix based on our float rotation (rotate only along the z axis)
         glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), glm::radians(m_rotation), glm::vec3(0, 0, 1));
 
-        // The transform of the m_camera is the m_position * rotation
+        // The transform of the camera is the m_position * rotation
         glm::mat4 transform = position * rotation;
 
         // Moving the m_camera actually means moving the whole world, so we invert its transform
