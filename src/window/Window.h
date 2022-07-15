@@ -23,18 +23,18 @@ namespace engine {
         static void keyboardEventCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
     public:
-        Window(std::string title);
-        Window(int width, int height, std::string title);
+        Window(const std::string& title);
+        Window(int width, int height, const std::string& title);
         ~Window();
 
         bool shouldRun();
-        void setTitle(std::string title);
+        void setTitle(const std::string& title);
         void swap();
         void pollEvents();
         void bind() const;
         void unbind() const;
 
-        inline std::string getTitle() { return m_title;}
+        inline const std::string& getTitle() { return m_title;}
         inline int getWidth() { return m_width;}
         inline int getHeight() { return m_height;}
         inline GLFWwindow*& getContext() {return m_windowContext;}

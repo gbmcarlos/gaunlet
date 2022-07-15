@@ -28,7 +28,7 @@ namespace engine {
         }
 
         void dispatchRawEvent(Event& event);
-        void setKeyboardEventCallback(std::function<void(Event&)> callback);
+        void setKeyboardEventCallback(const std::function<void(Event&)>& callback);
 
     };
 

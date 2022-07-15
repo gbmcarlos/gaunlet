@@ -8,7 +8,7 @@
 
 namespace engine {
 
-    unsigned int compileShaderProgram(unsigned int type, std::string& source) {
+    unsigned int compileShaderProgram(unsigned int type, const std::string& source) {
 
         unsigned int id = glCreateShader(type);
         const char* src = source.c_str();
@@ -32,7 +32,7 @@ namespace engine {
 
     }
 
-    std::string readFromFile(std::string& filePath) {
+    std::string readFromFile(const std::string& filePath) {
 
         std::string fileContent;
         std::ifstream file;

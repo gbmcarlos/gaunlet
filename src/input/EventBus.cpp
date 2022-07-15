@@ -10,7 +10,7 @@ namespace engine {
         }
     }
 
-    void EventBus::setKeyboardEventCallback(std::function<void(Event&)> callback) {
+    void EventBus::setKeyboardEventCallback(const std::function<void(Event&)>& callback) {
         eventCallback = callback;
     }
 

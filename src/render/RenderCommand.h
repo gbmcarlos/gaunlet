@@ -20,7 +20,7 @@ namespace engine {
 
     public:
         static void init();
-        static void clear(glm::vec4 color);
+        static void clear(const glm::vec4& color);
 
         static void createVertexBuffer(unsigned int& id, unsigned int size);
         static void createVertexBuffer(unsigned int& id, const void *data, unsigned int size);

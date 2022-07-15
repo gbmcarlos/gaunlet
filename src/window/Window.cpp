@@ -6,13 +6,13 @@
 
 namespace engine {
 
-    Window::Window(int width, int height, std::string title)
-        : m_width(width), m_height(height), m_title(std::move(title)) {
+    Window::Window(int width, int height, const std::string& title)
+        : m_width(width), m_height(height), m_title(title) {
         init();
     }
 
-    Window::Window(std::string title)
-        : m_width(0), m_height(0), m_title(std::move(title)) {
+    Window::Window(const std::string& title)
+        : m_width(0), m_height(0), m_title(title) {
         init();
     }
 
@@ -56,7 +56,7 @@ namespace engine {
         return !glfwWindowShouldClose(m_windowContext);
     }
 
-    void Window::setTitle(std::string title) {
+    void Window::setTitle(const std::string& title) {
         m_title = std::move(title);
         glfwSetWindowTitle(m_windowContext, m_title.c_str());
     }

@@ -7,7 +7,7 @@ namespace engine {
     }
 
 
-    void RenderCommand::clear(glm::vec4 color) {
+    void RenderCommand::clear(const glm::vec4& color) {
         getApi().setClearColor(color.r, color.g, color.b, color.a);
         getApi().clear();
     }

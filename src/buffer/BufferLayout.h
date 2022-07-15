@@ -35,7 +35,7 @@ namespace engine {
 
         }
 
-        BufferLayoutElement(std::string name, unsigned int count, LayoutElementType type, bool normalized = false);
+        BufferLayoutElement(const std::string& name, unsigned int count, LayoutElementType type, bool normalized = false);
 
     };
 
