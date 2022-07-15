@@ -40,7 +40,18 @@ namespace engine {
         static void unbindVertexArray();
         static void deleteVertexArray(unsigned int& id);
 
+        static unsigned int createShaderProgram();
+        static unsigned int compileShader(unsigned int type, const std::string& source);
+        static void attachShader(unsigned id, unsigned int shaderId);
+        static void compileShaderProgram(unsigned int id);
+        static void bindShader(unsigned int id);
+        static void deleteShader(unsigned int id);
+
         static int getUniformLocation(unsigned int id, const std::string& name);
+        static void setUniform3f(int location, const glm::vec3& value);
+        static void setUniform4f(int location, const glm::vec4& value);
+        static void setUniformMat3f(int location, const glm::mat3& value);
+        static void setUniformMat4f(int location, const glm::mat4& value);
 
         static void addVertexArrayAttribute(unsigned int index, int count, GLenum type, bool normalized, int stride, int offset);
 

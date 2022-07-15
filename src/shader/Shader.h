@@ -20,6 +20,7 @@ namespace engine {
         void bind() const;
         void setUniform3f(const std::string& name, const glm::vec3& value);
         void setUniform4f(const std::string& name, const glm::vec4& value);
+        void setUniformMat3f(const std::string& name, const glm::mat3& value);
         void setUniformMat4f(const std::string& name, const glm::mat4& value);
     };
 

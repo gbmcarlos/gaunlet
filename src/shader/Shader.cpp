@@ -2,12 +2,9 @@
 
 #include <string>
 #include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 #include "shader_utils.h"
 #include "../render/RenderCommand.h"
-
-#include <GL/glew.h>
 
 namespace engine {
 
@@ -16,41 +13,38 @@ namespace engine {
 
     Shader::~Shader() {
         if (m_rendererId) {
-            glDeleteProgram(m_rendererId);
+            RenderCommand::deleteShader(m_rendererId);
         }
     }
 
     void Shader::attach(unsigned int type, const std::string& shaderPath) {
 
         if (!m_rendererId) {
-            m_rendererId = glCreateProgram();
+            m_rendererId = RenderCommand::createShaderProgram();
         }
 
         std::string shaderSource = readFromFile(shaderPath);
-        unsigned int shader = compileShaderProgram(type, shaderSource);
-        glAttachShader(m_rendererId, shader);
-        glDeleteShader(shader);
+        unsigned int shaderId = RenderCommand::compileShader(type, shaderSource);
+        RenderCommand::attachShader(m_rendererId, shaderId);
+        RenderCommand::deleteShader(shaderId);
 
     }
 
     void Shader::compile() const {
-
-        glLinkProgram(m_rendererId);
-        glValidateProgram(m_rendererId);
-
+        RenderCommand::compileShaderProgram(m_rendererId);
     }
 
     void Shader::bind() const {
         if (!m_rendererId) {
             throw std::runtime_error("Shader must be compiled before binding it");
         }
-        glUseProgram(m_rendererId);
+        RenderCommand::bindShader(m_rendererId);
     }
 
     void Shader::setUniform3f(const std::string& name, const glm::vec3& value) {
 
         GLint location = getUniformLocation(name);
-        glUniform3f(location, value.x, value.y, value.z);
+        RenderCommand::setUniform3f(location, value);
 
     }
 
@@ -58,7 +52,15 @@ namespace engine {
 
         bind();
         GLint location = getUniformLocation(name);
-        glUniform4f(location, value.x, value.y, value.z, value.w);
+        RenderCommand::setUniform4f(location, value);
+
+    }
+
+    void Shader::setUniformMat3f(const std::string& name, const glm::mat3& value) {
+
+        bind();
+        GLint location = getUniformLocation(name);
+        RenderCommand::setUniformMat3f(location, value);
 
     }
 
@@ -66,7 +68,7 @@ namespace engine {
 
         bind();
         GLint location = getUniformLocation(name);
-        glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
+        RenderCommand::setUniformMat4f(location, value);
 
     }
 

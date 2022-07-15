@@ -68,9 +68,52 @@ namespace engine {
         getApi().deleteVertexArray(id);
     }
 
+
+    unsigned int RenderCommand::createShaderProgram() {
+        return (unsigned int) getApi().createShaderProgram();
+    }
+
+    unsigned int RenderCommand::compileShader(unsigned int type, const std::string &source) {
+        return (unsigned int) getApi().compileShader(type, source);
+    }
+
+    void RenderCommand::attachShader(unsigned int id, unsigned int shaderId) {
+        getApi().attachShader(id, shaderId);
+    }
+
+    void RenderCommand::compileShaderProgram(unsigned int id) {
+        getApi().compileShaderProgram(id);
+    }
+
+    void RenderCommand::bindShader(unsigned int id) {
+        getApi().bindShader(id);
+    }
+
+    void RenderCommand::deleteShader(unsigned int id) {
+        getApi().deleteShader(id);
+    }
+
+
     int RenderCommand::getUniformLocation(unsigned int id, const std::string& name) {
         return (int) getApi().getUniformLocation(id, name);
     }
+
+    void RenderCommand::setUniform3f(int location, const glm::vec3& value) {
+        getApi().setUniform3f(location, value);
+    }
+
+    void RenderCommand::setUniform4f(int location, const glm::vec4& value) {
+        getApi().setUniform4f(location, value);
+    }
+
+    void RenderCommand::setUniformMat3f(int location, const glm::mat3& value) {
+        getApi().setUniformMat3f(location, value);
+    }
+
+    void RenderCommand::setUniformMat4f(int location, const glm::mat4& value) {
+        getApi().setUniformMat4f(location, value);
+    }
+
 
     void RenderCommand::addVertexArrayAttribute(unsigned int index, int count, GLenum type, bool normalized, int stride, int offset) {
         getApi().addVertexArrayAttribute(index, count, type, normalized, stride, offset);

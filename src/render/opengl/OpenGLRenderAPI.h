@@ -3,6 +3,8 @@
 #include "../../buffer/VertexArray.h"
 
 #include <memory>
+#include <glm/glm.hpp>
+
 
 #include <GL/glew.h>
 
@@ -44,7 +46,18 @@ namespace engine {
         void unbindVertexArray();
         void deleteVertexArray(unsigned int& id);
 
+        GLuint createShaderProgram();
+        GLuint compileShader(unsigned int type, const std::string& source);
+        void attachShader(unsigned id, unsigned int shaderId);
+        void deleteShader(unsigned int id);
+        void compileShaderProgram(unsigned int id);
+        void bindShader(unsigned int id);
+
         GLint getUniformLocation(unsigned int id, const std::string& name);
+        void setUniform3f(int location, const glm::vec3& value);
+        void setUniform4f(int location, const glm::vec4& value);
+        void setUniformMat3f(int location, const glm::mat3& value);
+        void setUniformMat4f(int location, const glm::mat4& value);
 
         void addVertexArrayAttribute(unsigned int index, int count, GLenum type, bool normalized, int stride, int offset);
 
