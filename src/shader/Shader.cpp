@@ -1,12 +1,13 @@
-#include <GL/glew.h>
+#include "Shader.h"
 
 #include <string>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 #include "shader_utils.h"
+#include "../render/RenderCommand.h"
 
-#include "Shader.h"
+#include <GL/glew.h>
 
 namespace engine {
 
@@ -69,13 +70,13 @@ namespace engine {
 
     }
 
-    GLint Shader::getUniformLocation(const std::string& name) {
+    int Shader::getUniformLocation(const std::string& name) {
 
         if (m_uniformLocations.find(name) != m_uniformLocations.end()) {
             return m_uniformLocations[name];
         }
 
-        GLint location = glGetUniformLocation(m_rendererId, name.c_str());
+        int location = RenderCommand::getUniformLocation(m_rendererId, name);
         m_uniformLocations[name] = location;
         return location;
 

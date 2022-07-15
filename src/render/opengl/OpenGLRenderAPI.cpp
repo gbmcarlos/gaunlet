@@ -1,5 +1,8 @@
 #include "OpenGLRenderAPI.h"
 #include "opengl_utils.h"
+#include "../../buffer/VertexArray.h"
+
+#include <memory>
 
 #include <GL/glew.h>
 
@@ -90,7 +93,12 @@ namespace engine {
         glDeleteVertexArrays(1, &id);
     }
 
+    GLint OpenGLRenderApi::getUniformLocation(unsigned int id, const std::string& name) {
+        return glGetUniformLocation(id, name.c_str());
+    }
+
     void OpenGLRenderApi::addVertexArrayAttribute(unsigned int index, int count, GLenum type, bool normalized, int stride, int offset) {
+
         glEnableVertexAttribArray(index);
         glVertexAttribPointer(
                 index,
@@ -100,6 +108,10 @@ namespace engine {
                 stride,
                 (const void*) offset
         );
+    }
+
+    void OpenGLRenderApi::drawIndexedTriangles(const std::shared_ptr<VertexArray>& vertexArray) {
+        glDrawElements(GL_TRIANGLES, vertexArray->getIndexBuffer()->getCount(), GL_UNSIGNED_INT, nullptr);
     }
 
 }

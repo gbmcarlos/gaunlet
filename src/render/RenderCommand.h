@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 
 #include "opengl/OpenGLRenderAPI.h"
+#include "../buffer/VertexArray.h"
 
 namespace engine {
 
@@ -39,7 +40,11 @@ namespace engine {
         static void unbindVertexArray();
         static void deleteVertexArray(unsigned int& id);
 
+        static int getUniformLocation(unsigned int id, const std::string& name);
+
         static void addVertexArrayAttribute(unsigned int index, int count, GLenum type, bool normalized, int stride, int offset);
+
+        static void drawIndexedTriangles(const std::shared_ptr<VertexArray>& vertexArray);
 
     };
 

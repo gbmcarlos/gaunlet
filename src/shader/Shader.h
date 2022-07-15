@@ -10,8 +10,8 @@ namespace engine {
 
     private:
         unsigned int m_rendererId;
-        GLint getUniformLocation(const std::string& name);
-        std::unordered_map<std::string, GLint> m_uniformLocations;
+        int getUniformLocation(const std::string& name);
+        std::unordered_map<std::string, int> m_uniformLocations;
     public:
         Shader();
         ~Shader();

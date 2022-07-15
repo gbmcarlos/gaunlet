@@ -8,7 +8,7 @@ namespace engine {
     class VertexArray {
     private:
         unsigned int m_rendererId;
-        std::unique_ptr<IndexBuffer> m_indexBuffer;
+        std::shared_ptr<IndexBuffer> m_indexBuffer;
 
     public:
         VertexArray();
@@ -16,6 +16,7 @@ namespace engine {
         void bind();
         void unbind();
         void addBuffer(std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<IndexBuffer> indexBuffer);
+        inline const std::shared_ptr<IndexBuffer>& getIndexBuffer() {return m_indexBuffer;};
     };
 
 }

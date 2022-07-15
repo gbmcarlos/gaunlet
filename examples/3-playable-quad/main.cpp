@@ -80,7 +80,7 @@ public:
         };
 
         // Create an index buffer, which specifies how to use the vertices to draw triangles
-        indexBuffer = std::make_unique<engine::IndexBuffer>(indices, 12);
+        indexBuffer = std::make_shared<engine::IndexBuffer>(indices, 12);
 
         // Create a vertex array, and bind the vertex buffer and the index buffer into it
         vertexArray = std::make_shared<engine::VertexArray>();
@@ -113,7 +113,7 @@ public:
 
         engine::RenderCommand::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
 
-        glDrawElements(GL_TRIANGLES, indexBuffer->getCount(), GL_UNSIGNED_INT, nullptr);
+        engine::Renderer::submit(shader, vertexArray);
 
     }
 

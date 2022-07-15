@@ -1,5 +1,9 @@
 #pragma once
 
+#include "../../buffer/VertexArray.h"
+
+#include <memory>
+
 #include <GL/glew.h>
 
 namespace engine {
@@ -40,7 +44,11 @@ namespace engine {
         void unbindVertexArray();
         void deleteVertexArray(unsigned int& id);
 
+        GLint getUniformLocation(unsigned int id, const std::string& name);
+
         void addVertexArrayAttribute(unsigned int index, int count, GLenum type, bool normalized, int stride, int offset);
+
+        void drawIndexedTriangles(const std::shared_ptr<VertexArray>& vertexArray);
 
     };
 

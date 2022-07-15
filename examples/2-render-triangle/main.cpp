@@ -54,7 +54,7 @@ class RenderTriangleApplication : public engine::Application {
 
         engine::RenderCommand::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
 
-        glDrawElements(GL_TRIANGLES, indexBuffer->getCount(), GL_UNSIGNED_INT, nullptr);
+        engine::Renderer::submit(shader, vertexArray);
 
     }
 

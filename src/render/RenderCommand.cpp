@@ -68,8 +68,16 @@ namespace engine {
         getApi().deleteVertexArray(id);
     }
 
+    int RenderCommand::getUniformLocation(unsigned int id, const std::string& name) {
+        return (int) getApi().getUniformLocation(id, name);
+    }
+
     void RenderCommand::addVertexArrayAttribute(unsigned int index, int count, GLenum type, bool normalized, int stride, int offset) {
         getApi().addVertexArrayAttribute(index, count, type, normalized, stride, offset);
+    }
+
+    void RenderCommand::drawIndexedTriangles(const std::shared_ptr<VertexArray>& vertexArray) {
+        getApi().drawIndexedTriangles(vertexArray);
     }
 
 }
