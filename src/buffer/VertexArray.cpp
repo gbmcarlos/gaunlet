@@ -3,24 +3,24 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 
-#include "../render/Renderer.h"
+#include "../render/RenderCommand.h"
 
 namespace engine {
 
     VertexArray::VertexArray() {
-        Renderer::createVertexArray(m_rendererId);
-        Renderer::unbindVertexArray();
+        RenderCommand::createVertexArray(m_rendererId);
+        RenderCommand::unbindVertexArray();
     }
     VertexArray::~VertexArray() {
-        Renderer::deleteVertexArray(m_rendererId);
+        RenderCommand::deleteVertexArray(m_rendererId);
     }
 
     void VertexArray::bind() {
-        Renderer::bindVertexArray(m_rendererId);
+        RenderCommand::bindVertexArray(m_rendererId);
     }
 
     void VertexArray::unbind() {
-        Renderer::unbindVertexArray();
+        RenderCommand::unbindVertexArray();
     }
 
     void VertexArray::addBuffer(std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<IndexBuffer> indexBuffer) {
@@ -31,7 +31,7 @@ namespace engine {
         auto& elements = vertexBuffer->getBufferLayout().getElements();
         for (unsigned int i = 0; i < elements.size(); i++) {
             auto& element = elements[i];
-            Renderer::addVertexArrayAttribute(
+            RenderCommand::addVertexArrayAttribute(
                     i,
                     element.m_count,
                     BufferLayoutElement::layoutElementTypeToGLType(element.m_type),

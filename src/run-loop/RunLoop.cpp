@@ -1,6 +1,6 @@
 #include "RunLoop.h"
 
-#include "../render/Renderer.h"
+#include "../render/RenderCommand.h"
 #include "TimeStep.h"
 #include "../render/imgui/ImGuiRenderApi.h"
 
@@ -9,7 +9,7 @@ namespace engine {
     RunLoop::RunLoop(Window& window)
         : m_window(window), m_application(nullptr) {
 
-        Renderer::init();
+        RenderCommand::init();
 
         ImGuiRenderApi::init(window);
 

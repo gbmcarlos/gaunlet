@@ -111,7 +111,7 @@ public:
         // Submit the quad1's data
         vertexBuffer->setData(vertices, sizeof(quad1) * 2);
 
-        engine::Renderer::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
+        engine::RenderCommand::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
 
         glDrawElements(GL_TRIANGLES, indexBuffer->getCount(), GL_UNSIGNED_INT, nullptr);
 

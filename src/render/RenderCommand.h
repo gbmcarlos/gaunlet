@@ -8,12 +8,12 @@
 
 namespace engine {
 
-    class Renderer {
+    class RenderCommand {
 
     public:
-        Renderer() = delete;
-        Renderer(Renderer const&) = delete;
-        void operator=(Renderer const&)  = delete;
+        RenderCommand() = delete;
+        RenderCommand(RenderCommand const&) = delete;
+        void operator=(RenderCommand const&)  = delete;
 
     private:
         inline static OpenGLRenderApi& getApi() {return OpenGLRenderApi::getInstance();}

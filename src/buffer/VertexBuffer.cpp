@@ -1,21 +1,21 @@
 #include "VertexBuffer.h"
 
-#include "../render/Renderer.h"
+#include "../render/RenderCommand.h"
 
 namespace engine {
 
     VertexBuffer::VertexBuffer(BufferLayout& layout, const void *data, unsigned int size)
         : m_dynamic(false), m_layout{layout} {
-        Renderer::createVertexBuffer(m_rendererId, data, size);
+        RenderCommand::createVertexBuffer(m_rendererId, data, size);
     }
 
     VertexBuffer::VertexBuffer(BufferLayout& layout, unsigned int size)
             : m_dynamic(true), m_layout{layout} {
-        Renderer::createVertexBuffer(m_rendererId, size);
+        RenderCommand::createVertexBuffer(m_rendererId, size);
     }
 
     VertexBuffer::~VertexBuffer() {
-        Renderer::deleteBuffer(m_rendererId);
+        RenderCommand::deleteBuffer(m_rendererId);
     }
 
     void VertexBuffer::setData(const void *data, unsigned int size) {
@@ -25,14 +25,14 @@ namespace engine {
         }
 
         bind();
-        Renderer::submitVertexBufferData(data, size);
+        RenderCommand::submitVertexBufferData(data, size);
     }
 
     void VertexBuffer::bind() {
-        Renderer::bindVertexBuffer(m_rendererId);
+        RenderCommand::bindVertexBuffer(m_rendererId);
     }
     void VertexBuffer::unbind() {
-        Renderer::unbindVertexBuffer();
+        RenderCommand::unbindVertexBuffer();
     }
 
 }
