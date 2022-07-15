@@ -110,7 +110,7 @@ namespace engine {
             glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
             char* message = (char*)alloca(length * sizeof(char));
             glGetShaderInfoLog(id, length, &length, message);
-            std::cout << "Failed to compile " << (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << " shader. Error:" << std::endl;
+            std::cout << "Failed to compile " << (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << " m_shader. Error:" << std::endl;
             std::cout << message << std::endl;
             glDeleteShader(id);
             return 0;

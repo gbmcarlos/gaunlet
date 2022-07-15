@@ -2,8 +2,6 @@
 
 #include "Window.h"
 
-#include <GL/glew.h>
-
 namespace engine {
 
     Window::Window(int width, int height, const std::string& title)

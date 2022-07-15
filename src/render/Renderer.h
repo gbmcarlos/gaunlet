@@ -15,13 +15,18 @@ namespace engine {
         Renderer(Renderer const&) = delete;
         void operator=(Renderer const&)  = delete;
 
-    private:
-//        static std::shared_ptr<OrthographicCamera> m_orthographicCamera;
-
     public:
 
-//        static void beginScene(std::shared_ptr<OrthographicCamera> orthographicCamera);
+        static void beginScene(const std::shared_ptr<OrthographicCamera>& orthographicCamera);
         static void submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray);
+
+    private:
+
+        struct SceneData {
+            glm::mat4 m_viewProjectionMatrix;
+        };
+
+        static SceneData* m_sceneData;
 
     };
 
