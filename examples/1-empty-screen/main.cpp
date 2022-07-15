@@ -12,9 +12,7 @@ class EmptyScreenApplication : public engine::Application {
 
 int main() {
 
-    std::string title = "Empty Screen";
-
-    engine::Window window(title);
+    engine::Window window("Empty Screen");
     engine::RunLoop runLoop(window);
 
     EmptyScreenApplication app;

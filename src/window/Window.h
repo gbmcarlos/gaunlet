@@ -2,7 +2,7 @@
 
 #include <string>
 
-// GlEW needs to be included before GLFW
+// GLEW needs to be included before GLFW
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
