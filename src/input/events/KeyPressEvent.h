@@ -7,15 +7,15 @@ namespace engine {
     class KeyPressEvent : public Event {
 
     public:
-        KeyPressEvent(int key) : key(key) {}
+        KeyPressEvent(int key) : m_key(key) {}
         EventCategory getCategory() override {return EventCategory::Keyboard;}
         EventType getType() override {return EventType::KeyPress;}
 
     private:
-        int key{};
+        int m_key;
 
     public:
-        inline int getKey() {return key;}
+        inline int getKey() {return m_key;}
     };
 
 }

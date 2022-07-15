@@ -19,6 +19,5 @@ namespace engine {
     public:
         virtual EventCategory getCategory() = 0;
         virtual EventType getType() = 0;
-
     };
 }

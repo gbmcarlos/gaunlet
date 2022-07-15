@@ -10,11 +10,11 @@ namespace engine {
 
     class RunLoop {
     private:
-        Application* application;
-        Window window;
+        Application* m_application;
+        Window m_window;
     public:
-        RunLoop(const Window& window);
-        void run(Application* application);
+        RunLoop(Window& window);
+        void run(Application& application);
         void onEvent(Event& event);
     };
 

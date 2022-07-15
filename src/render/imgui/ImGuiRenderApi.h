@@ -8,7 +8,7 @@ namespace engine {
 
     public:
 
-        static void init(const Window& window);
+        static void init(Window& window);
         static void newFrame();
         static void render();
         static void shutdown();

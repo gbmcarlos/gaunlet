@@ -11,7 +11,7 @@ namespace engine {
     }
 
     void EventBus::setKeyboardEventCallback(std::function<void(Event&)> callback) {
-        eventCallback = std::move(callback);
+        eventCallback = callback;
     }
 
 }

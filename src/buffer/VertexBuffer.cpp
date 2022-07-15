@@ -5,22 +5,22 @@
 namespace engine {
 
     VertexBuffer::VertexBuffer(BufferLayout& layout, const void *data, unsigned int size)
-        : dynamic(false), layout{std::move(layout)} {
-        Renderer::createVertexBuffer(rendererId, data, size);
+        : m_dynamic(false), m_layout{layout} {
+        Renderer::createVertexBuffer(m_rendererId, data, size);
     }
 
     VertexBuffer::VertexBuffer(BufferLayout& layout, unsigned int size)
-            : dynamic(true), layout{std::move(layout)} {
-        Renderer::createVertexBuffer(rendererId, size);
+            : m_dynamic(true), m_layout{layout} {
+        Renderer::createVertexBuffer(m_rendererId, size);
     }
 
     VertexBuffer::~VertexBuffer() {
-        Renderer::deleteBuffer(rendererId);
+        Renderer::deleteBuffer(m_rendererId);
     }
 
     void VertexBuffer::setData(const void *data, unsigned int size) {
 
-        if (!dynamic) {
+        if (!m_dynamic) {
             throw std::runtime_error("Can't set data for non-dynamic vertex buffer");
         }
 
@@ -29,7 +29,7 @@ namespace engine {
     }
 
     void VertexBuffer::bind() {
-        Renderer::bindVertexBuffer(rendererId);
+        Renderer::bindVertexBuffer(m_rendererId);
     }
     void VertexBuffer::unbind() {
         Renderer::unbindVertexBuffer();

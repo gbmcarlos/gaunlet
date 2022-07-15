@@ -16,12 +16,12 @@ namespace engine {
 
     struct BufferLayoutElement {
 
-        std::string name;
-        unsigned int count;
-        LayoutElementType type;
-        unsigned int size;
-        unsigned int offset;
-        bool normalized;
+        std::string m_name;
+        unsigned int m_count;
+        LayoutElementType m_type;
+        unsigned int m_size;
+        unsigned int m_offset;
+        bool m_normalized;
 
         static GLenum layoutElementTypeToGLType(LayoutElementType type) {
 
@@ -31,7 +31,7 @@ namespace engine {
                 case LayoutElementType::Float:      return GL_FLOAT;
             }
 
-            throw std::runtime_error("Unknown layout element type");
+            throw std::runtime_error("Unknown m_layout element type");
 
         }
 
@@ -42,13 +42,13 @@ namespace engine {
     class BufferLayout {
 
     private:
-        std::vector<BufferLayoutElement> elements;
-        unsigned int stride;
+        std::vector<BufferLayoutElement> m_elements;
+        unsigned int m_stride;
     public:
         BufferLayout(const std::initializer_list<BufferLayoutElement>& elements);
         void calculateStrideAndOffsets();
-        inline std::vector<BufferLayoutElement> getElements() {return elements;}
-        inline unsigned int getStride() {return stride;}
+        inline std::vector<BufferLayoutElement>& getElements() {return m_elements;}
+        inline unsigned int getStride() {return m_stride;}
 
     };
 

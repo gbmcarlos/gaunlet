@@ -15,6 +15,9 @@ namespace engine {
         Renderer(Renderer const&) = delete;
         void operator=(Renderer const&)  = delete;
 
+    private:
+        inline static OpenGLRenderApi& getApi() {return OpenGLRenderApi::getInstance();}
+
     public:
         static void init();
         static void clear(glm::vec4 color);

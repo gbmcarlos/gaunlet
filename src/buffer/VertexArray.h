@@ -1,19 +1,21 @@
 #pragma once
 
 #include "VertexBuffer.h"
-#include "BufferLayout.h"
+#include "IndexBuffer.h"
 
 namespace engine {
 
     class VertexArray {
     private:
-        unsigned int rendererId;
+        unsigned int m_rendererId;
+        std::unique_ptr<IndexBuffer> m_indexBuffer;
+
     public:
         VertexArray();
         ~VertexArray();
         void bind();
         void unbind();
-        void addBuffer(VertexBuffer& vertexBuffer);
+        void addBuffer(std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<IndexBuffer> indexBuffer);
     };
 
 }

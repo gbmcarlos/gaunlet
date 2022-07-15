@@ -1,6 +1,6 @@
 #include <Core.h>
 
-class RenderTriangleApplication : public engine::Application {
+class EmptyScreenApplication : public engine::Application {
     void onReady() override {}
 
     void onUpdate(engine::TimeStep timeStep) override {}
@@ -12,12 +12,14 @@ class RenderTriangleApplication : public engine::Application {
 
 int main() {
 
-    engine::Window window("Empty Screen");
+    std::string title = "Empty Screen";
+
+    engine::Window window(title);
     engine::RunLoop runLoop(window);
 
-    RenderTriangleApplication app;
+    EmptyScreenApplication app;
 
-    runLoop.run(&app);
+    runLoop.run(app);
 
     return 0;
 

@@ -1,41 +1,47 @@
 #include "VertexArray.h"
 
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
+
 #include "../render/Renderer.h"
 
 namespace engine {
 
     VertexArray::VertexArray() {
-        Renderer::createVertexArray(rendererId);
+        Renderer::createVertexArray(m_rendererId);
+        Renderer::unbindVertexArray();
     }
     VertexArray::~VertexArray() {
-        Renderer::deleteVertexArray(rendererId);
+        Renderer::deleteVertexArray(m_rendererId);
     }
 
     void VertexArray::bind() {
-        Renderer::bindVertexArray(rendererId);
+        Renderer::bindVertexArray(m_rendererId);
     }
 
     void VertexArray::unbind() {
         Renderer::unbindVertexArray();
     }
 
-    void VertexArray::addBuffer(VertexBuffer &vertexBuffer) {
+    void VertexArray::addBuffer(std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<IndexBuffer> indexBuffer) {
 
         bind();
-        vertexBuffer.bind();
 
-        const auto& elements = vertexBuffer.getBufferLayout().getElements();
+        vertexBuffer->bind();
+        auto& elements = vertexBuffer->getBufferLayout().getElements();
         for (unsigned int i = 0; i < elements.size(); i++) {
-            const auto& element = elements[i];
+            auto& element = elements[i];
             Renderer::addVertexArrayAttribute(
                     i,
-                    element.count,
-                    BufferLayoutElement::layoutElementTypeToGLType(element.type),
-                    element.normalized,
-                    vertexBuffer.getBufferLayout().getStride(),
-                    element.offset
+                    element.m_count,
+                    BufferLayoutElement::layoutElementTypeToGLType(element.m_type),
+                    element.m_normalized,
+                    vertexBuffer->getBufferLayout().getStride(),
+                    element.m_offset
                 );
         }
+
+        indexBuffer->bind();
 
     }
 

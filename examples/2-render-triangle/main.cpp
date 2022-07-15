@@ -5,10 +5,10 @@
 
 class RenderTriangleApplication : public engine::Application {
 
-    std::unique_ptr<engine::VertexArray> vertexArray;
-    std::unique_ptr<engine::VertexBuffer> vertexBuffer;
-    std::unique_ptr<engine::IndexBuffer> indexBuffer;
-    std::unique_ptr<engine::Shader> shader;
+    std::shared_ptr<engine::VertexArray> vertexArray;
+    std::shared_ptr<engine::VertexBuffer> vertexBuffer;
+    std::shared_ptr<engine::IndexBuffer> indexBuffer;
+    std::shared_ptr<engine::Shader> shader;
 
     float color[4] = {
             1.0f, 1.0f, 1.0f, 1.0f
@@ -22,28 +22,25 @@ class RenderTriangleApplication : public engine::Application {
             0.0f, 0.5f
         };
 
-        // Create a vertex array, which will bind together the vertex buffer and the layout
-        vertexArray = std::make_unique<engine::VertexArray>();
-        vertexArray->bind();
-
         engine::BufferLayout layout = {
             {"a_position", 2, engine::LayoutElementType::Float}
         };
 
         // Create the vertex buffer, which contains the actual data
-        vertexBuffer = std::make_unique<engine::VertexBuffer>(layout, vertices, sizeof(vertices));
-
-        // Bind the vertex buffer and the layout into the vertex array
-        vertexArray->addBuffer(*vertexBuffer);
+        vertexBuffer = std::make_shared<engine::VertexBuffer>(layout, &vertices, sizeof(vertices));
 
         unsigned int indices[] = {
                 0, 1, 2
         };
 
         // Create an index buffer, which specifies how to use the vertices to draw triangles
-        indexBuffer = std::make_unique<engine::IndexBuffer>(indices, 3);
+        indexBuffer = std::make_shared<engine::IndexBuffer>(indices, 3);
 
-        shader = std::make_unique<engine::Shader>();
+        // Create a vertex array, and bind the vertex buffer and the index buffer into it
+        vertexArray = std::make_shared<engine::VertexArray>();
+        vertexArray->addBuffer(vertexBuffer, indexBuffer);
+
+        shader = std::make_shared<engine::Shader>();
         shader->attach(GL_VERTEX_SHADER, "res/shaders/vertex-position.glsl");
         shader->attach(GL_FRAGMENT_SHADER, "res/shaders/fragment-color.glsl");
         shader->compile();
@@ -79,7 +76,7 @@ int main() {
 
     RenderTriangleApplication app;
 
-    runLoop.run(&app);
+    runLoop.run(app);
 
     return 0;
 

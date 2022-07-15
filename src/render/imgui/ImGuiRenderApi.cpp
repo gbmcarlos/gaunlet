@@ -6,12 +6,12 @@
 
 namespace engine {
 
-    void ImGuiRenderApi::init(const Window& window) {
+    void ImGuiRenderApi::init(Window& window) {
 
         ::ImGui::CreateContext();
         ImGuiIO &io = ::ImGui::GetIO();
         io.IniFilename = "";
-        ImGui_ImplGlfw_InitForOpenGL(window.windowContext, true);
+        ImGui_ImplGlfw_InitForOpenGL(window.getContext(), true);
         ImGui_ImplOpenGL3_Init();
         ::ImGui::StyleColorsDark();
 

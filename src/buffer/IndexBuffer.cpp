@@ -5,15 +5,15 @@
 namespace engine {
 
     IndexBuffer::IndexBuffer(unsigned int* data, unsigned int count)
-        : count(count), rendererId(0) {
-        Renderer::createIndexBuffer(rendererId, data, count);
+        : m_count(count), m_rendererId(0) {
+        Renderer::createIndexBuffer(m_rendererId, data, count);
     }
     IndexBuffer::~IndexBuffer() {
-        Renderer::deleteBuffer(rendererId);
+        Renderer::deleteBuffer(m_rendererId);
     }
 
     void IndexBuffer::bind() {
-        Renderer::bindIndexBuffer(rendererId);
+        Renderer::bindIndexBuffer(m_rendererId);
     }
     void IndexBuffer::unbind() {
         Renderer::unbindIndexBuffer();

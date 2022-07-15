@@ -9,15 +9,15 @@ namespace engine {
     class KeyRepeatEvent : public Event {
 
     public:
-        KeyRepeatEvent(int key) : key(key) {}
+        KeyRepeatEvent(int key) : m_key(key) {}
         EventCategory getCategory() override {return EventCategory::Keyboard;}
         EventType getType() override {return EventType::KeyRepeat;}
 
     private:
-        int key;
+        int m_key;
 
     public:
-        inline int getKey() {return key;}
+        inline int getKey() {return m_key;}
     };
 
 }

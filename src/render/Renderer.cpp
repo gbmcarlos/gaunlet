@@ -3,72 +3,73 @@
 namespace engine {
 
     void Renderer::init() {
-        OpenGLRenderApi::getInstance().init();
+        getApi().init();
     }
 
+
     void Renderer::clear(glm::vec4 color) {
-        OpenGLRenderApi::getInstance().setClearColor(color.r, color.g, color.b, color.a);
-        OpenGLRenderApi::getInstance().clear();
+        getApi().setClearColor(color.r, color.g, color.b, color.a);
+        getApi().clear();
     }
 
 
     void Renderer::createVertexBuffer(unsigned int& id, unsigned int size) {
-        OpenGLRenderApi::getInstance().createVertexBuffer(id, size);
+        getApi().createVertexBuffer(id, size);
     }
 
     void Renderer::createVertexBuffer(unsigned int& id, const void *data, unsigned int size) {
-        OpenGLRenderApi::getInstance().createVertexBuffer(id, data, size);
+        getApi().createVertexBuffer(id, data, size);
     }
 
     void Renderer::bindVertexBuffer(unsigned int& id) {
-        OpenGLRenderApi::getInstance().bindVertexBuffer(id);
+        getApi().bindVertexBuffer(id);
     }
 
     void Renderer::submitVertexBufferData(const void *data, unsigned int size) {
-        OpenGLRenderApi::getInstance().submitVertexBufferData(data, size);
+        getApi().submitVertexBufferData(data, size);
     }
 
     void Renderer::unbindVertexBuffer() {
-        OpenGLRenderApi::getInstance().unbindVertexBuffer();
+        getApi().unbindVertexBuffer();
     }
 
 
     void Renderer::createIndexBuffer(unsigned int& id, unsigned int* data, unsigned int count) {
-        OpenGLRenderApi::getInstance().createIndexBuffer(id, data, count);
+        getApi().createIndexBuffer(id, data, count);
     }
 
     void Renderer::bindIndexBuffer(unsigned int& id) {
-        OpenGLRenderApi::getInstance().bindIndexBuffer(id);
+        getApi().bindIndexBuffer(id);
     }
 
     void Renderer::unbindIndexBuffer() {
-        OpenGLRenderApi::getInstance().unbindIndexBuffer();
+        getApi().unbindIndexBuffer();
     }
 
 
     void Renderer::deleteBuffer(unsigned int& id) {
-        OpenGLRenderApi::getInstance().deleteBuffer(id);
+        getApi().deleteBuffer(id);
     }
 
 
     void Renderer::createVertexArray(unsigned int& id) {
-        OpenGLRenderApi::getInstance().createVertexArray(id);
+        getApi().createVertexArray(id);
     }
 
     void Renderer::bindVertexArray(unsigned int& id) {
-        OpenGLRenderApi::getInstance().bindVertexArray(id);
+        getApi().bindVertexArray(id);
     }
 
     void Renderer::unbindVertexArray() {
-        OpenGLRenderApi::getInstance().unbindVertexArray();
+        getApi().unbindVertexArray();
     }
 
     void Renderer::deleteVertexArray(unsigned int& id) {
-        OpenGLRenderApi::getInstance().deleteVertexArray(id);
+        getApi().deleteVertexArray(id);
     }
 
     void Renderer::addVertexArrayAttribute(unsigned int index, int count, GLenum type, bool normalized, int stride, int offset) {
-        OpenGLRenderApi::getInstance().addVertexArrayAttribute(index, count, type, normalized, stride, offset);
+        getApi().addVertexArrayAttribute(index, count, type, normalized, stride, offset);
     }
 
 }

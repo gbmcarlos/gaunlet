@@ -11,8 +11,8 @@ namespace engine {
 
     public:
         static OpenGLRenderApi& getInstance(){
-            static OpenGLRenderApi instance;
-            return instance;
+            static OpenGLRenderApi m_instance;
+            return m_instance;
         }
         OpenGLRenderApi(OpenGLRenderApi const&) = delete;
         void operator=(OpenGLRenderApi const&)  = delete;

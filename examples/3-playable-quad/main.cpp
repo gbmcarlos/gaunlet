@@ -9,10 +9,10 @@ class PlayableQuadApplication : public engine::Application {
 
 private:
 
-    std::unique_ptr<engine::VertexArray> vertexArray;
-    std::unique_ptr<engine::VertexBuffer> vertexBuffer;
-    std::unique_ptr<engine::IndexBuffer> indexBuffer;
-    std::unique_ptr<engine::Shader> shader;
+    std::shared_ptr<engine::VertexArray> vertexArray;
+    std::shared_ptr<engine::VertexBuffer> vertexBuffer;
+    std::shared_ptr<engine::IndexBuffer> indexBuffer;
+    std::shared_ptr<engine::Shader> shader;
 
     // Quad properties
     glm::vec4 quadColor = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -64,18 +64,12 @@ public:
 
     void onReady() override {
 
-        // Create a vertex array, which will bind together the vertex buffer and the layout
-        vertexArray = std::make_unique<engine::VertexArray>();
-
         engine::BufferLayout layout = {
             {"a_position", 2, engine::LayoutElementType::Float}
         };
 
-        // Create the vertex buffer, which will contain the actual data (2 quads)
-        vertexBuffer = std::make_unique<engine::VertexBuffer>(layout, sizeof(Vertex) * 4 * 2);
-
-        // Bind the vertex buffer and the layout into the vertex array
-        vertexArray->addBuffer(*vertexBuffer);
+        // Create the vertex buffer, which will contain the actual data (2 quads), together with the layout of the data
+        vertexBuffer = std::make_shared<engine::VertexBuffer>(layout, sizeof(Vertex) * 4 * 2);
 
         unsigned int indices[] = {
                 0, 1, 2,
@@ -88,9 +82,11 @@ public:
         // Create an index buffer, which specifies how to use the vertices to draw triangles
         indexBuffer = std::make_unique<engine::IndexBuffer>(indices, 12);
 
-        vertexArray->bind();
+        // Create a vertex array, and bind the vertex buffer and the index buffer into it
+        vertexArray = std::make_shared<engine::VertexArray>();
+        vertexArray->addBuffer(vertexBuffer, indexBuffer);
 
-        shader = std::make_unique<engine::Shader>();
+        shader = std::make_shared<engine::Shader>();
         shader->attach(GL_VERTEX_SHADER, "res/shaders/vertex-position.glsl");
         shader->attach(GL_FRAGMENT_SHADER, "res/shaders/fragment-color.glsl");
         shader->compile();
@@ -175,7 +171,7 @@ int main() {
 
     PlayableQuadApplication app(window.getWidth(), window.getHeight());
 
-    runLoop.run(&app);
+    runLoop.run(app);
 
     return 0;
 

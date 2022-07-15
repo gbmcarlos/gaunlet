@@ -7,12 +7,12 @@
 namespace engine {
 
     Window::Window(int width, int height, std::string title)
-        : width(width), height(height), title(std::move(title)) {
+        : m_width(width), m_height(height), m_title(std::move(title)) {
         init();
     }
 
     Window::Window(std::string title)
-        : width(0), height(0), title(std::move(title)) {
+        : m_width(0), m_height(0), m_title(std::move(title)) {
         init();
     }
 
@@ -33,31 +33,36 @@ namespace engine {
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-        if (!width || !height) {
+        if (!m_width || !m_height) {
             const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-            width = mode->width;
-            height = mode->height;
+            m_width = mode->width;
+            m_height = mode->height;
         }
 
-        windowContext = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
+        m_windowContext = glfwCreateWindow(m_width, m_height, m_title.c_str(), nullptr, nullptr);
 
-        if (!windowContext) {
+        if (!m_windowContext) {
             glfwTerminate();
             throw std::runtime_error("GLFW Window context creation failed");
         }
 
-        glfwSetKeyCallback(windowContext, keyboardEventCallback);
+        glfwSetKeyCallback(m_windowContext, keyboardEventCallback);
 
         bind();
 
     }
 
+    bool Window::shouldRun() {
+        return !glfwWindowShouldClose(m_windowContext);
+    }
+
     void Window::setTitle(std::string title) {
-        glfwSetWindowTitle(windowContext, title.c_str());
+        m_title = std::move(title);
+        glfwSetWindowTitle(m_windowContext, m_title.c_str());
     }
 
     void Window::swap() {
-        glfwSwapBuffers(windowContext);
+        glfwSwapBuffers(m_windowContext);
     }
 
     void Window::pollEvents() {
@@ -66,11 +71,11 @@ namespace engine {
 
     void Window::bind() const {
 
-        if (!windowContext) {
+        if (!m_windowContext) {
             throw std::runtime_error("Window must be initialized before binding it");
         }
 
-        glfwMakeContextCurrent(windowContext);
+        glfwMakeContextCurrent(m_windowContext);
 
     }
 
