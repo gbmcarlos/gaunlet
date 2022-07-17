@@ -5,6 +5,7 @@
 #include "../shader/Shader.h"
 #include "../buffer/VertexArray.h"
 #include "../camera/OrthographicCamera.h"
+#include "../mesh/Mesh.h"
 
 namespace engine {
 
@@ -18,6 +19,10 @@ namespace engine {
     public:
 
         static void beginScene(const std::shared_ptr<OrthographicCamera>& orthographicCamera);
+        static void submit(const Mesh& mesh, const glm::mat4& transform);
+        static void beginBatch(const std::shared_ptr<Shader>& shader);
+        static void submitBatch();
+
         static void submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray);
 
     private:
@@ -27,6 +32,21 @@ namespace engine {
         };
 
         static SceneData* m_sceneData;
+
+        struct BatchData {
+
+            std::shared_ptr<Shader> m_shader;
+
+            std::vector<Vertex> m_vertices;
+            std::vector<int> m_indices;
+
+            explicit BatchData(std::shared_ptr<Shader> shader) : m_shader(shader) {
+                m_vertices = std::vector<Vertex> {};
+                m_indices = std::vector<int> {};
+            }
+        };
+
+        static BatchData* m_batchData;
 
     };
 

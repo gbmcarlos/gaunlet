@@ -10,6 +10,8 @@
 #include "buffer/IndexBuffer.h"
 #include "buffer/VertexArray.h"
 
+#include "mesh/Mesh.h"
+
 #include "shader/Shader.h"
 
 #include "render/RenderCommand.h"

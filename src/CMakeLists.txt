@@ -8,6 +8,7 @@ add_library(graphics-engine
         ${PROJECT_SOURCE_DIR}/src/buffer/VertexBuffer.cpp ${PROJECT_SOURCE_DIR}/src/buffer/BufferLayout.cpp ${PROJECT_SOURCE_DIR}/src/buffer/IndexBuffer.cpp ${PROJECT_SOURCE_DIR}/src/buffer/VertexArray.cpp
         ${PROJECT_SOURCE_DIR}/src/shader/Shader.cpp
         ${PROJECT_SOURCE_DIR}/src/camera/OrthographicCamera.cpp
+        ${PROJECT_SOURCE_DIR}/src/mesh/2d/samples/TriangleMesh.cpp ${PROJECT_SOURCE_DIR}/src/mesh/2d/samples/SquareMesh.cpp
 
         ${PROJECT_SOURCE_DIR}/vendor/imgui/imgui_impl_glfw.cpp ${PROJECT_SOURCE_DIR}/vendor/imgui/imgui_impl_opengl3.cpp
     )

@@ -1,12 +1,19 @@
 #include <Core.h>
 
+#include <mesh/2d/samples/TriangleMesh.h>
+#include <mesh/2d/samples/SquareMesh.h>
+
 #include <array>
 
 #include "glm/glm.hpp"
+#include <glm/gtc/matrix_transform.hpp>
 
 class PlayableQuadApplication : public engine::Application {
 
 private:
+
+    float m_windowWidth;
+    float m_windowHeight;
 
     std::shared_ptr<engine::VertexArray> m_vertexArray;
     std::shared_ptr<engine::VertexBuffer> m_vertexBuffer;
@@ -14,47 +21,21 @@ private:
     std::shared_ptr<engine::Shader> m_shader;
 
     std::shared_ptr<engine::OrthographicCamera> m_camera;
+    glm::vec2 m_cameraPosition = {0.0f, 0.0f};
+
+    engine::SquareMesh m_quadMesh;
+    engine::TriangleMesh m_triangleMesh;
+
+    // Triangle properties
+    glm::vec2 m_trianglePosition = {-3.0, -2.0f};
+    float m_triangleSize = 2.0f;
 
     // Quad properties
-    glm::vec4 m_quadColor = {1.0f, 1.0f, 1.0f, 1.0f};
-    glm::vec2 m_quad1Position = {
-            0.0f, 0.0f
-    };
-    float m_quadSize = 1.0f;
+    glm::vec2 m_quad1Position = {0.0f, 0.0f};
+    float m_quadSize = 3.0f;
     float m_quadTargetSpeed = m_quadSize * 3;
     glm::vec2 m_quad1Speed = {0.0f, 0.0f};
 
-    // Camera properties
-    glm::vec2 m_cameraPosition = {0.0f, 0.0f};
-
-    float m_windowWidth;
-    float m_windowHeight;
-
-    struct Vertex {
-        glm::vec2 m_position;
-    };
-
-    std::array<Vertex, 4> getQuad(float positionX, float positionY, float size) {
-
-        Vertex vertex0 = {
-            {positionX - (size/2), positionY - (size/2)}
-        };
-
-        Vertex vertex1 = {
-            {positionX + (size/2), positionY - (size/2)}
-        };
-
-        Vertex vertex2 = {
-            {positionX + (size/2), positionY + (size/2)}
-        };
-
-        Vertex vertex3 = {
-            {positionX - (size/2), positionY + (size/2)}
-        };
-
-        return {vertex0, vertex1, vertex2, vertex3};
-
-    }
 
 public:
 
@@ -67,57 +48,40 @@ public:
 
         m_camera = std::make_shared<engine::OrthographicCamera>(m_windowWidth, m_windowHeight, 100);
 
-        engine::BufferLayout layout = {
-            {"a_position", 2, engine::LayoutElementType::Float}
-        };
-
-        // Create the vertex buffer, which will contain the actual data (2 quads), together with the layout of the data
-        m_vertexBuffer = std::make_shared<engine::VertexBuffer>(layout, sizeof(Vertex) * 4 * 2);
-
-        unsigned int indices[] = {
-                0, 1, 2,
-                2, 3, 0,
-
-                4, 5, 6,
-                6, 7, 4
-        };
-
-        // Create an index buffer, which specifies how to use the vertices to draw triangles
-        m_indexBuffer = std::make_shared<engine::IndexBuffer>(indices, 12);
-
-        // Create a vertex array, and bind the vertex buffer and the index buffer into it
-        m_vertexArray = std::make_shared<engine::VertexArray>();
-        m_vertexArray->addBuffer(m_vertexBuffer, m_indexBuffer);
-
         m_shader = std::make_shared<engine::Shader>();
         m_shader->attach(GL_VERTEX_SHADER, "res/shaders/vertex-position.glsl");
         m_shader->attach(GL_FRAGMENT_SHADER, "res/shaders/fragment-color.glsl");
         m_shader->compile();
-        m_shader->bind();
-        m_shader->setUniform4f("u_color", glm::vec4(m_quadColor.x, m_quadColor.y, m_quadColor.z, m_quadColor.w));
 
     }
 
     void onUpdate(engine::TimeStep timeStep) override {
 
+        // Update the position of the quad based on its speed
         m_quad1Position.x += m_quad1Speed.x * timeStep;
         m_quad1Position.y += m_quad1Speed.y * timeStep;
 
-        // Prepare the quad1, positioned statically
-        auto quad1 = getQuad(m_quad1Position.x, m_quad1Position.y, m_quadSize);
-        auto quad2 = getQuad(3.0f, 3.0f, m_quadSize);
-        Vertex vertices[8];
-        memcpy(vertices, quad1.data(), quad1.size() * sizeof(Vertex));
-        memcpy(vertices + quad1.size(), quad2.data(), quad2.size() * sizeof(Vertex));
+        // Prepare the transform matrix of the quad
+        glm::mat4 quadTransform =
+            glm::translate(glm::mat4(1.0f), glm::vec3(m_quad1Position, 1.0f)) *
+            glm::scale(glm::mat4(1.0f), {m_quadSize, m_quadSize, 1.0f})
+        ;
 
-        // Submit the quad1's data
-        m_vertexBuffer->setData(vertices, sizeof(quad1) * 2);
+        // Prepare the transform matrix of the quad
+        glm::mat4 triangleTransform =
+            glm::translate(glm::mat4(1.0f), glm::vec3(m_trianglePosition, 0.0f)) *
+            glm::scale(glm::mat4(1.0f), {m_triangleSize, m_triangleSize, 1.0f})
+        ;
 
         engine::RenderCommand::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
 
         engine::Renderer::beginScene(m_camera);
+        engine::Renderer::beginBatch(m_shader);
 
-        engine::Renderer::submit(m_shader, m_vertexArray);
+        engine::Renderer::submit(m_quadMesh, quadTransform);
+        engine::Renderer::submit(m_triangleMesh, triangleTransform);
+
+        engine::Renderer::submitBatch();
 
     }
 
