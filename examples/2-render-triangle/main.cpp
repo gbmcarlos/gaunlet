@@ -66,7 +66,7 @@ class RenderTriangleApplication : public engine::Application {
 
     }
 
-    virtual void onEvent(engine::Event& event) override {}
+    virtual void onEvent(const engine::Event& event) override {}
 };
 
 int main() {

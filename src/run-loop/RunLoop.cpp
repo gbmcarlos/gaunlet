@@ -1,8 +1,9 @@
 #include "RunLoop.h"
 
-#include "../render/RenderCommand.h"
 #include "TimeStep.h"
+#include "../render/RenderCommand.h"
 #include "../render/imgui/ImGuiRenderApi.h"
+#include "../utils.h"
 
 namespace engine {
 
@@ -20,7 +21,7 @@ namespace engine {
         m_application = &applicationInstance;
 
         // Register the events callback
-        EventBus::getInstance().setKeyboardEventCallback(std::bind(&RunLoop::onEvent, this, std::placeholders::_1));
+        EventBus::getInstance().setKeyboardEventCallback(GE_BIND_CALLBACK_FN(RunLoop::onEvent));
 
         m_application->onReady();
 

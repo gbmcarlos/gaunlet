@@ -3,7 +3,6 @@
 #include <array>
 
 #include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
 
 class PlayableQuadApplication : public engine::Application {
 
@@ -19,9 +18,10 @@ private:
     // Quad properties
     glm::vec4 m_quadColor = {1.0f, 1.0f, 1.0f, 1.0f};
     glm::vec2 m_quad1Position = {
-            300.0f, 300.0f
+            0.0f, 0.0f
     };
-    float m_quadSize = 100;
+    float m_quadSize = 1.0f;
+    float m_quadTargetSpeed = m_quadSize * 3;
     glm::vec2 m_quad1Speed = {0.0f, 0.0f};
 
     // Camera properties
@@ -37,19 +37,19 @@ private:
     std::array<Vertex, 4> getQuad(float positionX, float positionY, float size) {
 
         Vertex vertex0 = {
-            {positionX, positionY}
+            {positionX - (size/2), positionY - (size/2)}
         };
 
         Vertex vertex1 = {
-            {positionX + size, positionY}
+            {positionX + (size/2), positionY - (size/2)}
         };
 
         Vertex vertex2 = {
-            {positionX + size, positionY + size}
+            {positionX + (size/2), positionY + (size/2)}
         };
 
         Vertex vertex3 = {
-            {positionX, positionY + size}
+            {positionX - (size/2), positionY + (size/2)}
         };
 
         return {vertex0, vertex1, vertex2, vertex3};
@@ -65,7 +65,7 @@ public:
 
     void onReady() override {
 
-        m_camera = std::make_shared<engine::OrthographicCamera>(0, m_windowWidth, 0, m_windowHeight);
+        m_camera = std::make_shared<engine::OrthographicCamera>(m_windowWidth, m_windowHeight, 100);
 
         engine::BufferLayout layout = {
             {"a_position", 2, engine::LayoutElementType::Float}
@@ -105,7 +105,7 @@ public:
 
         // Prepare the quad1, positioned statically
         auto quad1 = getQuad(m_quad1Position.x, m_quad1Position.y, m_quadSize);
-        auto quad2 = getQuad(100.0f, 100.0f, m_quadSize);
+        auto quad2 = getQuad(3.0f, 3.0f, m_quadSize);
         Vertex vertices[8];
         memcpy(vertices, quad1.data(), quad1.size() * sizeof(Vertex));
         memcpy(vertices + quad1.size(), quad2.data(), quad2.size() * sizeof(Vertex));
@@ -123,23 +123,37 @@ public:
 
     void onGuiRender() override {}
 
-    void onEvent(engine::Event& event) override {
+    void onEvent(const engine::Event& event) override {
 
-        float targetSpeed = 300;
+        if (event.getType() == engine::EventType::WindowResize) {
+            engine::WindowResizeEvent derivedEvent = dynamic_cast<const engine::WindowResizeEvent&>(event);
+            m_camera->onWindowResize(derivedEvent);
+        }
 
         if (event.getType() == engine::EventType::KeyPress) {
-            engine::KeyPressEvent derivedEvent = dynamic_cast<engine::KeyPressEvent&>(event);
+            engine::KeyPressEvent derivedEvent = dynamic_cast<const engine::KeyPressEvent&>(event);
+            if (derivedEvent.getKey() == GLFW_KEY_UP) {
+                m_camera->addZoomLevel(0.1f);
+                return;
+            } else if (derivedEvent.getKey() == GLFW_KEY_DOWN) {
+                m_camera->addZoomLevel(-0.1f);
+                return;
+            }
+        }
+
+        if (event.getType() == engine::EventType::KeyPress) {
+            engine::KeyPressEvent derivedEvent = dynamic_cast<const engine::KeyPressEvent&>(event);
             if (derivedEvent.getKey() == GLFW_KEY_RIGHT) {
-                m_quad1Speed.x = targetSpeed;
+                m_quad1Speed.x = m_quadTargetSpeed;
                 return;
             } else if (derivedEvent.getKey() == GLFW_KEY_LEFT) {
-                m_quad1Speed.x = -targetSpeed;
+                m_quad1Speed.x = -m_quadTargetSpeed;
                 return;
             }
         }
 
         if (event.getType() == engine::EventType::KeyRelease) {
-            engine::KeyReleaseEvent derivedEvent = dynamic_cast<engine::KeyReleaseEvent&>(event);
+            engine::KeyReleaseEvent derivedEvent = dynamic_cast<const engine::KeyReleaseEvent&>(event);
             if ((derivedEvent.getKey() == GLFW_KEY_RIGHT && m_quad1Speed.x > 0) || (derivedEvent.getKey() == GLFW_KEY_LEFT && m_quad1Speed.x < 0) ) {
                 m_quad1Speed.x = 0;
                 return;
@@ -147,18 +161,18 @@ public:
         }
 
         if (event.getType() == engine::EventType::KeyPress) {
-            engine::KeyPressEvent derivedEvent = dynamic_cast<engine::KeyPressEvent&>(event);
+            engine::KeyPressEvent derivedEvent = dynamic_cast<const engine::KeyPressEvent&>(event);
             if (derivedEvent.getKey() == GLFW_KEY_UP) {
-                m_quad1Speed.y = targetSpeed;
+                m_quad1Speed.y = m_quadTargetSpeed;
                 return;
             } else if (derivedEvent.getKey() == GLFW_KEY_DOWN) {
-                m_quad1Speed.y = -targetSpeed;
+                m_quad1Speed.y = -m_quadTargetSpeed;
                 return;
             }
         }
 
         if (event.getType() == engine::EventType::KeyRelease) {
-            engine::KeyReleaseEvent derivedEvent = dynamic_cast<engine::KeyReleaseEvent&>(event);
+            engine::KeyReleaseEvent derivedEvent = dynamic_cast<const engine::KeyReleaseEvent&>(event);
             if ((derivedEvent.getKey() == GLFW_KEY_UP && m_quad1Speed.y > 0) || (derivedEvent.getKey() == GLFW_KEY_DOWN && m_quad1Speed.y < 0) ) {
                 m_quad1Speed.y = 0;
                 return;

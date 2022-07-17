@@ -10,7 +10,7 @@ namespace engine {
         virtual void onReady() = 0;
         virtual void onUpdate(TimeStep timeStep) = 0;
         virtual void onGuiRender() = 0;
-        virtual void onEvent(engine::Event& event) = 0;
+        virtual void onEvent(const engine::Event& event) = 0;
     };
 
 }

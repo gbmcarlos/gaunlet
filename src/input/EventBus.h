@@ -1,9 +1,12 @@
 #pragma once
 
 #include <functional>
+
 #include "events/KeyPressEvent.h"
 #include "events/KeyRepeatEvent.h"
 #include "events/KeyReleaseEvent.h"
+
+#include "events/WindowResizeEvent.h"
 
 #include <GLFW/glfw3.h>
 

@@ -8,13 +8,13 @@ namespace engine {
 
     public:
         KeyReleaseEvent(int key) : m_key(key) {}
-        EventCategory getCategory() override {return EventCategory::Keyboard;}
-        EventType getType() override {return EventType::KeyRelease;}
+        EventCategory getCategory() const override {return EventCategory::Keyboard;}
+        EventType getType() const override {return EventType::KeyRelease;}
 
     private:
         int m_key;
 
     public:
-        inline int getKey() {return m_key;}
+        inline int getKey() const {return m_key;}
     };
 }

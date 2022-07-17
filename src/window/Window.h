@@ -21,6 +21,7 @@ namespace engine {
         void init();
 
         static void keyboardEventCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+        static void resizeEventCallback(GLFWwindow* window, int width, int height);
 
     public:
         Window(const std::string& title);

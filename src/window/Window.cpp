@@ -1,6 +1,6 @@
-#include <stdexcept>
-
 #include "Window.h"
+
+#include <stdexcept>
 
 namespace engine {
 
@@ -45,6 +45,7 @@ namespace engine {
         }
 
         glfwSetKeyCallback(m_windowContext, keyboardEventCallback);
+        glfwSetWindowSizeCallback(m_windowContext, resizeEventCallback);
 
         bind();
 
@@ -93,6 +94,13 @@ namespace engine {
             KeyReleaseEvent event(key);
             EventBus::getInstance().dispatchRawEvent(event);
         }
+
+    }
+
+    void Window::resizeEventCallback(GLFWwindow *window, int width, int height) {
+
+        WindowResizeEvent event(width, height);
+        EventBus::getInstance().dispatchRawEvent(event);
 
     }
 

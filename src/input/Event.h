@@ -17,7 +17,7 @@ namespace engine {
     class Event {
 
     public:
-        virtual EventCategory getCategory() = 0;
-        virtual EventType getType() = 0;
+        virtual EventCategory getCategory() const = 0;
+        virtual EventType getType() const = 0;
     };
 }
