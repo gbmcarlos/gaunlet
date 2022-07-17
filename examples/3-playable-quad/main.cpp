@@ -63,7 +63,7 @@ public:
 
         // Prepare the transform matrix of the quad
         glm::mat4 quadTransform =
-            glm::translate(glm::mat4(1.0f), glm::vec3(m_quad1Position, 1.0f)) *
+            glm::translate(glm::mat4(1.0f), glm::vec3(m_quad1Position, 0.0f)) *
             glm::scale(glm::mat4(1.0f), {m_quadSize, m_quadSize, 1.0f})
         ;
 

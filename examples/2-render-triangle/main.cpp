@@ -44,6 +44,7 @@ class RenderTriangleApplication : public engine::Application {
         shader->attach(GL_VERTEX_SHADER, "res/shaders/vertex-position.glsl");
         shader->attach(GL_FRAGMENT_SHADER, "res/shaders/fragment-color.glsl");
         shader->compile();
+        shader->setUniform4f("u_color", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
         shader->bind();
 
     }

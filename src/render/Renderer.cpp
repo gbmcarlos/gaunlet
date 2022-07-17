@@ -59,7 +59,6 @@ namespace engine {
 
         shader->bind();
         shader->setUniformMat4f("u_viewProjection", m_sceneData->m_viewProjectionMatrix);
-        shader->setUniform4f("u_color", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
         vertexArray->bind();
         vertexArray->getIndexBuffer()->bind();
