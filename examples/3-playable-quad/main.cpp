@@ -29,6 +29,7 @@ private:
     // Triangle properties
     glm::vec2 m_trianglePosition = {-3.0, -2.0f};
     float m_triangleSize = 2.0f;
+    glm::mat4 m_triangleTransform;
 
     // Quad properties
     glm::vec2 m_quad1Position = {0.0f, 0.0f};
@@ -53,6 +54,12 @@ public:
         m_shader->attach(GL_FRAGMENT_SHADER, "res/shaders/fragment-color.glsl");
         m_shader->compile();
 
+        // Prepare the transform matrix of the quad
+        m_triangleTransform =
+                glm::translate(glm::mat4(1.0f), glm::vec3(m_trianglePosition, 0.0f)) *
+                glm::scale(glm::mat4(1.0f), {m_triangleSize, m_triangleSize, 1.0f})
+        ;
+
     }
 
     void onUpdate(engine::TimeStep timeStep) override {
@@ -67,19 +74,13 @@ public:
             glm::scale(glm::mat4(1.0f), {m_quadSize, m_quadSize, 1.0f})
         ;
 
-        // Prepare the transform matrix of the quad
-        glm::mat4 triangleTransform =
-            glm::translate(glm::mat4(1.0f), glm::vec3(m_trianglePosition, 0.0f)) *
-            glm::scale(glm::mat4(1.0f), {m_triangleSize, m_triangleSize, 1.0f})
-        ;
-
         engine::RenderCommand::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
 
         engine::Renderer::beginScene(m_camera);
         engine::Renderer::beginBatch(m_shader);
 
         engine::Renderer::submit(m_quadMesh, quadTransform);
-        engine::Renderer::submit(m_triangleMesh, triangleTransform);
+        engine::Renderer::submit(m_triangleMesh, m_triangleTransform);
 
         engine::Renderer::submitBatch();
 
