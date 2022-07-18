@@ -19,9 +19,11 @@ namespace engine {
     public:
 
         static void beginScene(const std::shared_ptr<OrthographicCamera>& orthographicCamera);
-        static void submit(const Mesh& mesh, const glm::mat4& transform);
+        static void endScene();
+
         static void beginBatch(const std::shared_ptr<Shader>& shader);
-        static void submitBatch();
+        static void submit(const Mesh& mesh, const glm::mat4& transform);
+        static void flushBatch();
 
         static void submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray);
 

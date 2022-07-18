@@ -12,9 +12,6 @@ class PlayableQuadApplication : public engine::Application {
 
 private:
 
-    float m_viewportWidth;
-    float m_viewportHeight;
-
     std::shared_ptr<engine::VertexArray> m_vertexArray;
     std::shared_ptr<engine::VertexBuffer> m_vertexBuffer;
     std::shared_ptr<engine::IndexBuffer> m_indexBuffer;
@@ -41,13 +38,10 @@ private:
 public:
 
     PlayableQuadApplication(int viewportWidth, int viewportHeight) {
-        m_viewportWidth = (float ) viewportWidth;
-        m_viewportHeight = (float) viewportHeight;
+        m_camera = std::make_shared<engine::OrthographicCamera>(viewportWidth, viewportHeight, 100);
     }
 
     void onReady() override {
-
-        m_camera = std::make_shared<engine::OrthographicCamera>(m_viewportWidth, m_viewportHeight, 100);
 
         m_shader = std::make_shared<engine::Shader>();
         m_shader->attach(GL_VERTEX_SHADER, "res/shaders/vertex-position.glsl");
@@ -57,6 +51,7 @@ public:
         // Prepare the transform matrix of the quad
         m_triangleTransform =
                 glm::translate(glm::mat4(1.0f), glm::vec3(m_trianglePosition, 0.0f)) *
+                glm::rotate(glm::mat4(1.0f), glm::radians(45.0f), {0, 0, 1}) *
                 glm::scale(glm::mat4(1.0f), {m_triangleSize, m_triangleSize, 1.0f})
         ;
 
@@ -82,7 +77,8 @@ public:
         engine::Renderer::submit(m_quadMesh, quadTransform);
         engine::Renderer::submit(m_triangleMesh, m_triangleTransform);
 
-        engine::Renderer::submitBatch();
+        engine::Renderer::flushBatch();
+        engine::Renderer::endScene();
 
     }
 

@@ -11,6 +11,10 @@ namespace engine {
         m_sceneData->m_viewProjectionMatrix = orthographicCamera->getViewProjectionMatrix();
     }
 
+    void Renderer::endScene() {
+        m_sceneData = new SceneData{OrthographicCamera::getDefaultViewProjectionMatrix()};
+    }
+
     void Renderer::beginBatch(const std::shared_ptr<Shader> &shader) {
 
         Renderer::m_batchData = new BatchData(shader);
@@ -37,7 +41,7 @@ namespace engine {
 
     }
 
-    void Renderer::submitBatch() {
+    void Renderer::flushBatch() {
 
         engine::BufferLayout layout = {
                 {"a_position", 4, engine::LayoutElementType::Float},
@@ -52,6 +56,9 @@ namespace engine {
         vertexArray->addBuffer(vertexBuffer, indexBuffer);
 
         submit(m_batchData->m_shader, vertexArray);
+
+        delete m_batchData;
+        m_batchData = nullptr;
 
     }
 
