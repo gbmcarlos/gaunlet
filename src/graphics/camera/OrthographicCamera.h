@@ -13,7 +13,7 @@ namespace engine {
         OrthographicCamera(float viewportWidth, float viewportHeight, float viewportResolution);
         OrthographicCamera(float viewportLeft, float viewportRight, float viewportBottom, float viewportTop, float viewportResolution);
 
-        void onWindowResize(const WindowResizeEvent& event, bool adjustZoomLevel = false);
+        void onWindowResize(const WindowResizeEvent& event);
 
         inline const glm::vec3& getPosition() {return m_position;}
         void setPosition(const glm::vec3& position);

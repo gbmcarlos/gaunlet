@@ -5,6 +5,7 @@
 #include <graphics/mesh/2d/samples/SquareMesh.h>
 
 #include <array>
+#include <iostream>
 
 #include "glm/glm.hpp"
 #include <glm/gtc/matrix_transform.hpp>
@@ -84,61 +85,72 @@ public:
 
     void onEvent(const engine::Event& event) override {
 
-        if (event.getType() == engine::EventType::WindowResize) {
-            engine::WindowResizeEvent derivedEvent = dynamic_cast<const engine::WindowResizeEvent&>(event);
-            m_camera->onWindowResize(derivedEvent);
+        engine::EventDispatcher dispatcher(event);
+
+        dispatcher.dispatch<engine::WindowResizeEvent>(GE_BIND_CALLBACK_FN(PlayableQuadApplication::onWindowResizeEvent));
+        dispatcher.dispatch<engine::KeyPressEvent>(GE_BIND_CALLBACK_FN(PlayableQuadApplication::onKeyPressEvent));
+        dispatcher.dispatch<engine::KeyReleaseEvent>(GE_BIND_CALLBACK_FN(PlayableQuadApplication::onKeyReleaseEvent));
+        dispatcher.dispatch<engine::MouseButtonPress>(GE_BIND_CALLBACK_FN(PlayableQuadApplication::onMouseButtonPressEvent));
+        dispatcher.dispatch<engine::MouseButtonRelease>(GE_BIND_CALLBACK_FN(PlayableQuadApplication::onMouseButtonReleaseEvent));
+        dispatcher.dispatch<engine::CursorMoveEvent>(GE_BIND_CALLBACK_FN(PlayableQuadApplication::onCursorMoveEvent));
+        dispatcher.dispatch<engine::ScrollEvent>(GE_BIND_CALLBACK_FN(PlayableQuadApplication::onScrollEvent));
+
+    }
+
+    void onMouseButtonPressEvent(engine::MouseButtonPress& event) {
+        std::cout << "mouse button pressed, button:  " << event.getButton() << std::endl;
+    }
+
+    void onMouseButtonReleaseEvent(engine::MouseButtonRelease& event) {
+        std::cout << "mouse button pressed, button:  " << event.getButton() << std::endl;
+    }
+
+    void onCursorMoveEvent(engine::CursorMoveEvent& event) {
+        std::cout << "cursor move, x: " << event.getXPosition() << ", y: " << event.getYPosition() << std::endl;
+    }
+
+    void onScrollEvent(engine::ScrollEvent& event) {
+        std::cout << "scroll, x: " << event.getXOffset() << ", y: " << event.getXOffset() << std::endl;
+    }
+
+    void onWindowResizeEvent(engine::WindowResizeEvent& event) {
+        m_camera->onWindowResize(event);
+    }
+
+    void onKeyPressEvent(engine::KeyPressEvent& event) {
+
+        if (event.getKey() == GLFW_KEY_UP) {
+            m_camera->addZoomLevel(0.1f);
+            return;
+        } else if (event.getKey() == GLFW_KEY_DOWN) {
+            m_camera->addZoomLevel(-0.1f);
+            return;
         }
 
-        if (event.getType() == engine::EventType::KeyPress) {
-            engine::KeyPressEvent derivedEvent = dynamic_cast<const engine::KeyPressEvent&>(event);
-            if (derivedEvent.getKey() == GLFW_KEY_UP) {
-                m_camera->addZoomLevel(0.1f);
-                return;
-            } else if (derivedEvent.getKey() == GLFW_KEY_DOWN) {
-                m_camera->addZoomLevel(-0.1f);
-                return;
-            }
-        }
-
-        if (event.getType() == engine::EventType::KeyPress) {
-            engine::KeyPressEvent derivedEvent = dynamic_cast<const engine::KeyPressEvent&>(event);
-            if (derivedEvent.getKey() == GLFW_KEY_RIGHT) {
-                m_quad1Speed.x = m_quadTargetSpeed;
-                return;
-            } else if (derivedEvent.getKey() == GLFW_KEY_LEFT) {
-                m_quad1Speed.x = -m_quadTargetSpeed;
-                return;
-            }
-        }
-
-        if (event.getType() == engine::EventType::KeyRelease) {
-            engine::KeyReleaseEvent derivedEvent = dynamic_cast<const engine::KeyReleaseEvent&>(event);
-            if ((derivedEvent.getKey() == GLFW_KEY_RIGHT && m_quad1Speed.x > 0) || (derivedEvent.getKey() == GLFW_KEY_LEFT && m_quad1Speed.x < 0) ) {
-                m_quad1Speed.x = 0;
-                return;
-            }
-        }
-
-        if (event.getType() == engine::EventType::KeyPress) {
-            engine::KeyPressEvent derivedEvent = dynamic_cast<const engine::KeyPressEvent&>(event);
-            if (derivedEvent.getKey() == GLFW_KEY_UP) {
-                m_quad1Speed.y = m_quadTargetSpeed;
-                return;
-            } else if (derivedEvent.getKey() == GLFW_KEY_DOWN) {
-                m_quad1Speed.y = -m_quadTargetSpeed;
-                return;
-            }
-        }
-
-        if (event.getType() == engine::EventType::KeyRelease) {
-            engine::KeyReleaseEvent derivedEvent = dynamic_cast<const engine::KeyReleaseEvent&>(event);
-            if ((derivedEvent.getKey() == GLFW_KEY_UP && m_quad1Speed.y > 0) || (derivedEvent.getKey() == GLFW_KEY_DOWN && m_quad1Speed.y < 0) ) {
-                m_quad1Speed.y = 0;
-                return;
-            }
+        if (event.getKey() == GLFW_KEY_RIGHT) {
+            m_quad1Speed.x = m_quadTargetSpeed;
+            return;
+        } else if (event.getKey() == GLFW_KEY_LEFT) {
+            m_quad1Speed.x = -m_quadTargetSpeed;
+            return;
         }
 
     }
+
+    void onKeyReleaseEvent(engine::KeyReleaseEvent& event) {
+
+        if ((event.getKey() == GLFW_KEY_RIGHT && m_quad1Speed.x > 0) || (event.getKey() == GLFW_KEY_LEFT && m_quad1Speed.x < 0) ) {
+            m_quad1Speed.x = 0;
+            return;
+        }
+
+        if ((event.getKey() == GLFW_KEY_UP && m_quad1Speed.y > 0) || (event.getKey() == GLFW_KEY_DOWN && m_quad1Speed.y < 0) ) {
+            m_quad1Speed.y = 0;
+            return;
+        }
+
+    }
+
 };
 
 int main() {

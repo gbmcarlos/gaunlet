@@ -46,8 +46,11 @@ namespace engine {
 
         glfwGetWindowSize(m_windowContext, &m_viewportWidth, &m_viewportHeight);
 
-        glfwSetKeyCallback(m_windowContext, keyboardEventCallback);
         glfwSetWindowSizeCallback(m_windowContext, resizeEventCallback);
+        glfwSetKeyCallback(m_windowContext, keyboardEventCallback);
+        glfwSetMouseButtonCallback(m_windowContext, mouseEventCallback);
+        glfwSetCursorPosCallback(m_windowContext, cursorPositionCallback);
+        glfwSetScrollCallback(m_windowContext, scrollCallback);
 
         bind();
 
@@ -84,7 +87,14 @@ namespace engine {
         glfwMakeContextCurrent(nullptr);
     }
 
-    void Window::keyboardEventCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {
+    void Window::resizeEventCallback(GLFWwindow *window, int width, int height) {
+
+        WindowResizeEvent event(width, height);
+        EventBus::getInstance().dispatchRawEvent(event);
+
+    }
+
+    void Window::keyboardEventCallback(GLFWwindow *window, int key, int scanCode, int action, int mods) {
 
         if (action == GLFW_PRESS) {
             KeyPressEvent event(key);
@@ -99,11 +109,26 @@ namespace engine {
 
     }
 
-    void Window::resizeEventCallback(GLFWwindow *window, int width, int height) {
+    void Window::mouseEventCallback(GLFWwindow* window, int button, int action, int mods) {
 
-        WindowResizeEvent event(width, height);
+        if (action == GLFW_PRESS) {
+            MouseButtonPress event(button);
+            EventBus::getInstance().dispatchRawEvent(event);
+        } else if (action == GLFW_RELEASE) {
+            MouseButtonRelease event(button);
+            EventBus::getInstance().dispatchRawEvent(event);
+        }
+
+    }
+
+    void Window::cursorPositionCallback(GLFWwindow *window, double xPosition, double yPosition) {
+        CursorMoveEvent event((float) xPosition, (float) yPosition);
         EventBus::getInstance().dispatchRawEvent(event);
+    }
 
+    void Window::scrollCallback(GLFWwindow *window, double xOffset, double yOffset) {
+        ScrollEvent event((float) xOffset, (float) yOffset);
+        EventBus::getInstance().dispatchRawEvent(event);
     }
 
 }

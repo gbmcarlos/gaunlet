@@ -48,7 +48,7 @@ namespace engine {
 
     }
 
-    void OrthographicCamera::onWindowResize(const WindowResizeEvent& event, bool adjustZoomLevel) {
+    void OrthographicCamera::onWindowResize(const WindowResizeEvent& event) {
 
         m_viewportWidth = event.getWidth();
         m_viewportHeight = event.getHeight();

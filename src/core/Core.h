@@ -1,5 +1,6 @@
 #pragma once
 
+#include "utils.h" // Doesn't depend on anything
 #include "input/Input.h" // Doesn't depend on anything
 #include "window/Window.h" // Depends on GLFW and Input
 #include "render/RenderApi.h" // Doesn't depend on anything (it requires a cpp implementation to bind a RenderApi implementation to RenderCommand)

@@ -20,8 +20,11 @@ namespace engine {
 
         void init();
 
-        static void keyboardEventCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
         static void resizeEventCallback(GLFWwindow* window, int width, int height);
+        static void keyboardEventCallback(GLFWwindow* window, int key, int scanCode, int action, int mods);
+        static void mouseEventCallback(GLFWwindow* window, int button, int action, int mods);
+        static void cursorPositionCallback(GLFWwindow* window, double xPosition, double yPosition);
+        static void scrollCallback(GLFWwindow* window, double xOffset, double yOffset);
 
     public:
         Window(const std::string& title);

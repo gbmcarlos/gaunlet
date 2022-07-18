@@ -1,12 +1,8 @@
 #pragma once
 
+#include "Event.h"
+
 #include <functional>
-
-#include "events/KeyPressEvent.h"
-#include "events/KeyRepeatEvent.h"
-#include "events/KeyReleaseEvent.h"
-
-#include "events/WindowResizeEvent.h"
 
 namespace engine {
 
@@ -29,6 +25,31 @@ namespace engine {
 
         void dispatchRawEvent(Event& event);
         void setKeyboardEventCallback(const std::function<void(Event&)>& callback);
+
+    };
+
+    class EventDispatcher {
+
+        template<typename T>
+        using callbackFunction = std::function<void(T&)>;
+
+    public:
+        EventDispatcher(const Event& event) : m_event(event) {}
+
+    private:
+        const Event& m_event;
+
+    public:
+
+        template<typename T>
+        void dispatch(callbackFunction<T> eventCallbackFunction) {
+
+            if (m_event.getType() == T::getStaticType()) {
+                eventCallbackFunction(*(T*)& m_event);
+            }
+
+        }
+
 
     };
 

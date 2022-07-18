@@ -1,0 +1,22 @@
+#pragma once
+
+#include "../Event.h"
+
+namespace engine {
+
+    class CursorMoveEvent : public Event {
+
+    public:
+        CursorMoveEvent(float xPosition, float yPosition) : m_xPosition(xPosition), m_yPosition(yPosition) {}
+        EventCategory getCategory() const override {return EventCategory::Cursor;}
+        EVENT_TYPE(CursorMove)
+        inline float getXPosition() {return m_xPosition;}
+        inline float getYPosition() {return m_yPosition;}
+
+    private:
+        float m_xPosition;
+        float m_yPosition;
+
+    };
+
+}
