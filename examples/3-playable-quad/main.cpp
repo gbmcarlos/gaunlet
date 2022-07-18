@@ -1,7 +1,8 @@
-#include <Core.h>
+#include <core/Core.h>
+#include <graphics/Graphics.h>
 
-#include <mesh/2d/samples/TriangleMesh.h>
-#include <mesh/2d/samples/SquareMesh.h>
+#include <graphics/mesh/2d/samples/TriangleMesh.h>
+#include <graphics/mesh/2d/samples/SquareMesh.h>
 
 #include <array>
 
@@ -12,9 +13,6 @@ class PlayableQuadApplication : public engine::Application {
 
 private:
 
-    std::shared_ptr<engine::VertexArray> m_vertexArray;
-    std::shared_ptr<engine::VertexBuffer> m_vertexBuffer;
-    std::shared_ptr<engine::IndexBuffer> m_indexBuffer;
     std::shared_ptr<engine::Shader> m_shader;
 
     std::shared_ptr<engine::OrthographicCamera> m_camera;
@@ -72,7 +70,7 @@ public:
         engine::RenderCommand::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
 
         engine::Renderer::beginScene(m_camera);
-        engine::Renderer::beginBatch(m_shader);
+        engine::Renderer::beginBatch(m_shader, engine::MeshElementType::Face);
 
         engine::Renderer::submit(m_quadMesh, quadTransform);
         engine::Renderer::submit(m_triangleMesh, m_triangleTransform);

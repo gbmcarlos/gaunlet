@@ -1,13 +1,18 @@
 add_library(graphics-engine
-        ${PROJECT_SOURCE_DIR}/src/window/Window.cpp
-        ${PROJECT_SOURCE_DIR}/src/render/opengl/OpenGLRenderAPI.cpp
-        ${PROJECT_SOURCE_DIR}/src/render/RenderCommand.cpp ${PROJECT_SOURCE_DIR}/src/render/Renderer.cpp
-        ${PROJECT_SOURCE_DIR}/src/render/imgui/ImGuiRenderApi.cpp
-        ${PROJECT_SOURCE_DIR}/src/run-loop/RunLoop.cpp
-        ${PROJECT_SOURCE_DIR}/src/input/EventBus.cpp
-        ${PROJECT_SOURCE_DIR}/src/buffer/VertexBuffer.cpp ${PROJECT_SOURCE_DIR}/src/buffer/BufferLayout.cpp ${PROJECT_SOURCE_DIR}/src/buffer/IndexBuffer.cpp ${PROJECT_SOURCE_DIR}/src/buffer/VertexArray.cpp
-        ${PROJECT_SOURCE_DIR}/src/shader/Shader.cpp
-        ${PROJECT_SOURCE_DIR}/src/camera/OrthographicCamera.cpp
+#        Core
+        core/input/EventBus.cpp
+        core/window/Window.cpp
+        core/render/RenderApi.cpp
+        core/render/opengl/OpenGLRenderAPI.cpp
+        core/render/RenderCommand.cpp
+        core/imgui/ImGuiRenderApi.cpp
+        core/run-loop/RunLoop.cpp
+
+#        Graphics
+        graphics/renderer/Renderer.cpp
+        graphics/buffer/VertexBuffer.cpp graphics/buffer/BufferLayout.cpp graphics/buffer/IndexBuffer.cpp graphics/buffer/VertexArray.cpp
+        graphics/shader/Shader.cpp
+        graphics/camera/OrthographicCamera.cpp
 
         ${PROJECT_SOURCE_DIR}/vendor/imgui/imgui_impl_glfw.cpp ${PROJECT_SOURCE_DIR}/vendor/imgui/imgui_impl_opengl3.cpp
     )

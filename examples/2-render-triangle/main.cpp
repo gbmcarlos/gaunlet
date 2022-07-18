@@ -1,4 +1,5 @@
-#include <Core.h>
+#include <core/Core.h>
+#include <graphics/Graphics.h>
 #include <imgui.h>
 
 #include <memory>
@@ -23,7 +24,7 @@ class RenderTriangleApplication : public engine::Application {
         };
 
         engine::BufferLayout layout = {
-            {"a_position", 2, engine::LayoutElementType::Float}
+            {"a_position", 2, engine::VertexBufferLayoutElementType::Float}
         };
 
         // Create the vertex buffer, which contains the actual data
@@ -55,7 +56,7 @@ class RenderTriangleApplication : public engine::Application {
 
         engine::RenderCommand::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
 
-        engine::Renderer::submit(shader, vertexArray);
+        engine::Renderer::submitFaces(shader, vertexArray);
 
     }
 

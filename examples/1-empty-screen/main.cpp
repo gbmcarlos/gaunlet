@@ -1,4 +1,4 @@
-#include <Core.h>
+#include <core/Core.h>
 
 class EmptyScreenApplication : public engine::Application {
     void onReady() override {}
