@@ -13,8 +13,8 @@ namespace engine {
     class Window {
     private:
         std::string m_title;
-        int m_width;
-        int m_height;
+        int m_width, m_height;
+        int m_viewportWidth, m_viewportHeight;
 
         GLFWwindow* m_windowContext;
 
@@ -38,6 +38,8 @@ namespace engine {
         inline const std::string& getTitle() { return m_title;}
         inline int getWidth() { return m_width;}
         inline int getHeight() { return m_height;}
+        inline int getViewportWidth() { return m_viewportWidth;}
+        inline int getViewportHeight() { return m_viewportHeight;}
         inline GLFWwindow*& getContext() {return m_windowContext;}
 
     };

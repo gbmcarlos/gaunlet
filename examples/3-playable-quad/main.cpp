@@ -12,8 +12,8 @@ class PlayableQuadApplication : public engine::Application {
 
 private:
 
-    float m_windowWidth;
-    float m_windowHeight;
+    float m_viewportWidth;
+    float m_viewportHeight;
 
     std::shared_ptr<engine::VertexArray> m_vertexArray;
     std::shared_ptr<engine::VertexBuffer> m_vertexBuffer;
@@ -40,14 +40,14 @@ private:
 
 public:
 
-    PlayableQuadApplication(int windowWidth, int windowHeight) {
-        m_windowWidth = (float ) windowWidth;
-        m_windowHeight = (float) windowHeight;
+    PlayableQuadApplication(int viewportWidth, int viewportHeight) {
+        m_viewportWidth = (float ) viewportWidth;
+        m_viewportHeight = (float) viewportHeight;
     }
 
     void onReady() override {
 
-        m_camera = std::make_shared<engine::OrthographicCamera>(m_windowWidth, m_windowHeight, 100);
+        m_camera = std::make_shared<engine::OrthographicCamera>(m_viewportWidth, m_viewportHeight, 100);
 
         m_shader = std::make_shared<engine::Shader>();
         m_shader->attach(GL_VERTEX_SHADER, "res/shaders/vertex-position.glsl");
@@ -152,7 +152,7 @@ int main() {
     engine::Window window("Playable Quad");
     engine::RunLoop runLoop(window);
 
-    PlayableQuadApplication app(window.getWidth(), window.getHeight());
+    PlayableQuadApplication app(window.getViewportWidth(), window.getViewportHeight());
 
     runLoop.run(app);
 

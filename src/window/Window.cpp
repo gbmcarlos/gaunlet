@@ -5,12 +5,12 @@
 namespace engine {
 
     Window::Window(int width, int height, const std::string& title)
-        : m_width(width), m_height(height), m_title(title) {
+        : m_width(width), m_height(height), m_viewportWidth(0), m_viewportHeight(0), m_title(title) {
         init();
     }
 
     Window::Window(const std::string& title)
-        : m_width(0), m_height(0), m_title(title) {
+        : m_width(0), m_height(0), m_viewportWidth(0), m_viewportHeight(0), m_title(title) {
         init();
     }
 
@@ -43,6 +43,8 @@ namespace engine {
             glfwTerminate();
             throw std::runtime_error("GLFW Window context creation failed");
         }
+
+        glfwGetWindowSize(m_windowContext, &m_viewportWidth, &m_viewportHeight);
 
         glfwSetKeyCallback(m_windowContext, keyboardEventCallback);
         glfwSetWindowSizeCallback(m_windowContext, resizeEventCallback);
