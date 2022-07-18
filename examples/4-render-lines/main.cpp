@@ -1,7 +1,8 @@
-#include <Core.h>
+#include <core/Core.h>
+#include <graphics/Graphics.h>
 
-#include <mesh/2d/samples/TriangleMesh.h>
-#include <mesh/2d/samples/SquareMesh.h>
+#include <graphics/mesh/2d/samples/TriangleMesh.h>
+#include <graphics/mesh/2d/samples/SquareMesh.h>
 
 #include <array>
 
