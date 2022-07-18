@@ -5,6 +5,9 @@
 #include "run-loop/RunLoop.h"
 #include "input/Input.h"
 
+#include "render/RenderCommand.h"
+#include "render/Renderer.h"
+
 #include "buffer/VertexBuffer.h"
 #include "buffer/BufferLayout.h"
 #include "buffer/IndexBuffer.h"
@@ -13,6 +16,3 @@
 #include "mesh/Mesh.h"
 
 #include "shader/Shader.h"
-
-#include "render/RenderCommand.h"
-#include "render/Renderer.h"

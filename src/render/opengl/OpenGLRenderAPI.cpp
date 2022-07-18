@@ -3,8 +3,6 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-#include <GL/glew.h>
-
 namespace engine {
 
     void OpenGLRenderApi::init() {
@@ -22,6 +20,18 @@ namespace engine {
             glDebugMessageCallback(glDebugOutput, nullptr);
             glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
         }
+
+    }
+
+    GLenum OpenGLRenderApi::vertexBufferLayoutElementTypeToGLType(LayoutElementType type) {
+
+        switch (type) {
+            case LayoutElementType::Bool:       return GL_BOOL;
+            case LayoutElementType::Int:        return GL_INT;
+            case LayoutElementType::Float:      return GL_FLOAT;
+        }
+
+        throw std::runtime_error("Unknown layout element type");
 
     }
 
@@ -157,16 +167,16 @@ namespace engine {
         glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
     }
 
-    void OpenGLRenderApi::addVertexArrayAttribute(unsigned int index, int count, GLenum type, bool normalized, int stride, int offset) {
+    void OpenGLRenderApi::addVertexArrayAttribute(unsigned int index, int count, LayoutElementType type, bool normalized, int stride, int offset) {
 
         glEnableVertexAttribArray(index);
         glVertexAttribPointer(
-                index,
-                count,
-                type,
+            index,
+            count,
+            vertexBufferLayoutElementTypeToGLType(type),
                 normalized ? GL_TRUE : GL_FALSE,
-                stride,
-                (const void*) offset
+            stride,
+            (const void*) offset
         );
     }
 

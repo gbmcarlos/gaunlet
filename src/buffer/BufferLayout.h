@@ -4,8 +4,6 @@
 #include <exception>
 #include <vector>
 
-#include <GL/glew.h>
-
 namespace engine {
 
     enum class LayoutElementType {
@@ -22,18 +20,6 @@ namespace engine {
         unsigned int m_size;
         unsigned int m_offset;
         bool m_normalized;
-
-        static GLenum layoutElementTypeToGLType(LayoutElementType type) {
-
-            switch (type) {
-                case LayoutElementType::Bool:       return GL_BOOL;
-                case LayoutElementType::Int:        return GL_INT;
-                case LayoutElementType::Float:      return GL_FLOAT;
-            }
-
-            throw std::runtime_error("Unknown m_layout element type");
-
-        }
 
         BufferLayoutElement(const std::string& name, unsigned int count, LayoutElementType type, bool normalized = false);
 

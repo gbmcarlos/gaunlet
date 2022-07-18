@@ -1,11 +1,11 @@
 #pragma once
 
-#include <memory>
-
 #include "../shader/Shader.h"
 #include "../buffer/VertexArray.h"
 #include "../camera/OrthographicCamera.h"
 #include "../mesh/Mesh.h"
+
+#include <memory>
 
 namespace engine {
 

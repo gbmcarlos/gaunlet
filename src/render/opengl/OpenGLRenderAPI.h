@@ -1,12 +1,11 @@
 #pragma once
 
+#include <GL/glew.h>
+
 #include "../../buffer/VertexArray.h"
 
 #include <memory>
 #include <glm/glm.hpp>
-
-
-#include <GL/glew.h>
 
 namespace engine {
 
@@ -25,6 +24,8 @@ namespace engine {
 
     public:
         void init();
+
+        GLenum vertexBufferLayoutElementTypeToGLType(LayoutElementType type);
 
         void setClearColor(float red, float green, float blue, float alpha);
         void clear();
@@ -59,7 +60,7 @@ namespace engine {
         void setUniformMat3f(int location, const glm::mat3& value);
         void setUniformMat4f(int location, const glm::mat4& value);
 
-        void addVertexArrayAttribute(unsigned int index, int count, GLenum type, bool normalized, int stride, int offset);
+        void addVertexArrayAttribute(unsigned int index, int count, LayoutElementType type, bool normalized, int stride, int offset);
 
         void drawIndexedTriangles(const std::shared_ptr<VertexArray>& vertexArray);
 

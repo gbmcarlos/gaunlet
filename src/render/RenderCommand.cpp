@@ -114,8 +114,11 @@ namespace engine {
         getApi().setUniformMat4f(location, value);
     }
 
+    unsigned int RenderCommand::sizeOfLayoutElementType(LayoutElementType type) {
+        return sizeof(getApi().vertexBufferLayoutElementTypeToGLType(type));
+    }
 
-    void RenderCommand::addVertexArrayAttribute(unsigned int index, int count, GLenum type, bool normalized, int stride, int offset) {
+    void RenderCommand::addVertexArrayAttribute(unsigned int index, int count, LayoutElementType type, bool normalized, int stride, int offset) {
         getApi().addVertexArrayAttribute(index, count, type, normalized, stride, offset);
     }
 

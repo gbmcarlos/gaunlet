@@ -1,10 +1,10 @@
 #pragma once
 
-#include <string>
-#include <memory>
-
 #include "../window/Window.h"
 #include "../application/Application.h"
+
+#include <string>
+#include <memory>
 
 namespace engine {
 

@@ -1,12 +1,14 @@
 #include "BufferLayout.h"
 
+#include "../render/RenderCommand.h"
+
 namespace engine {
 
     BufferLayoutElement::BufferLayoutElement(const std::string& name, unsigned int count, LayoutElementType type, bool normalized)
         : m_name(std::move(name)),
           m_count(count),
           m_type(type),
-          m_size(count * sizeof(layoutElementTypeToGLType(type))),
+          m_size(count * RenderCommand::sizeOfLayoutElementType(type)),
           m_offset(0),
           m_normalized(normalized) {}
 

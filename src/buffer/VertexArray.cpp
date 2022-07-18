@@ -1,5 +1,7 @@
 #include "VertexArray.h"
 
+#include <utility>
+
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 
@@ -25,7 +27,7 @@ namespace engine {
 
     void VertexArray::addBuffer(std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<IndexBuffer> indexBuffer) {
 
-        m_indexBuffer = indexBuffer;
+        m_indexBuffer = std::move(indexBuffer);
 
         bind();
 
@@ -36,7 +38,7 @@ namespace engine {
             RenderCommand::addVertexArrayAttribute(
                     i,
                     element.m_count,
-                    BufferLayoutElement::layoutElementTypeToGLType(element.m_type),
+                    element.m_type,
                     element.m_normalized,
                     vertexBuffer->getBufferLayout().getStride(),
                     element.m_offset

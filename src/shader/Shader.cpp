@@ -1,10 +1,10 @@
 #include "Shader.h"
 
-#include <string>
-#include <glm/glm.hpp>
-
 #include "shader_utils.h"
 #include "../render/RenderCommand.h"
+
+#include <string>
+#include <glm/glm.hpp>
 
 namespace engine {
 

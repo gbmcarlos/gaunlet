@@ -1,11 +1,10 @@
 #pragma once
 
-#include "memory"
-
-#include <glm/glm.hpp>
-
 #include "opengl/OpenGLRenderAPI.h"
 #include "../buffer/VertexArray.h"
+
+#include <glm/glm.hpp>
+#include <memory>
 
 namespace engine {
 
@@ -53,7 +52,8 @@ namespace engine {
         static void setUniformMat3f(int location, const glm::mat3& value);
         static void setUniformMat4f(int location, const glm::mat4& value);
 
-        static void addVertexArrayAttribute(unsigned int index, int count, GLenum type, bool normalized, int stride, int offset);
+        static unsigned int sizeOfLayoutElementType(LayoutElementType type);
+        static void addVertexArrayAttribute(unsigned int index, int count, LayoutElementType type, bool normalized, int stride, int offset);
 
         static void drawIndexedTriangles(const std::shared_ptr<VertexArray>& vertexArray);
 

@@ -8,13 +8,10 @@
 
 #include "events/WindowResizeEvent.h"
 
-#include <GLFW/glfw3.h>
-
 namespace engine {
 
     class EventBus {
 
-    // Make it a singleton by 1) making the default constructor private, 2) deleting the copy-constructors (keep them public, to make the deletion known)
     private:
         EventBus() {}
     public:
