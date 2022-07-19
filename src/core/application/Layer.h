@@ -9,8 +9,8 @@ namespace engine {
 
     public:
         ~Layer() = default;
-        virtual void onUpdate(TimeStep timeStep) = 0;
-        virtual void onEvent(Event& event) = 0;
+        virtual void onUpdate(TimeStep timeStep);
+        virtual void onEvent(Event& event);
 
     };
 

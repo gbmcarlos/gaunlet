@@ -9,7 +9,7 @@
 #include "glm/glm.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
-class RenderLinesApplication : public engine::Application {
+class MainLayer : public engine::Layer {
 
 private:
 
@@ -36,11 +36,9 @@ private:
 
 public:
 
-    RenderLinesApplication(int viewportWidth, int viewportHeight) {
-        m_camera = std::make_shared<engine::OrthographicCamera>(viewportWidth, viewportHeight, 100);
-    }
+    MainLayer(int viewportWidth, int viewportHeight) {
 
-    void onReady() override {
+        m_camera = std::make_shared<engine::OrthographicCamera>(viewportWidth, viewportHeight, 100);
 
         m_shader = std::make_shared<engine::Shader>();
         m_shader->attach(GL_VERTEX_SHADER, "res/shaders/vertex-position.glsl");
@@ -76,19 +74,32 @@ public:
 
     }
 
-    void onGuiRender() override {}
+};
 
-    void onEvent(const engine::Event& event) override {}
+
+class RenderLinesApplication : public engine::Application {
+
+public:
+    RenderLinesApplication(const std::string &name) : engine::Application(name) {}
+
+    void onReady() override {
+
+        m_mainLayer = new MainLayer(m_window->getViewportWidth(), m_window->getViewportHeight());
+        pushLayer(m_mainLayer);
+
+    }
+
+private:
+    MainLayer* m_mainLayer;
+
 };
 
 int main() {
 
-    engine::Window window("Playable Quad");
-    engine::RunLoop runLoop(window);
+    RenderLinesApplication app("Playable Quad");
+    engine::RunLoop runLoop(app);
 
-    RenderLinesApplication app(window.getViewportWidth(), window.getViewportHeight());
-
-    runLoop.run(app);
+    runLoop.run();
 
     return 0;
 
