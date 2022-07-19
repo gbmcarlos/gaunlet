@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../../core/input/Input.h"
-
 #include "glm/glm.hpp"
 
 namespace engine {
@@ -13,7 +11,7 @@ namespace engine {
         OrthographicCamera(float viewportWidth, float viewportHeight, float viewportResolution);
         OrthographicCamera(float viewportLeft, float viewportRight, float viewportBottom, float viewportTop, float viewportResolution);
 
-        void onWindowResize(const WindowResizeEvent& event);
+        void onWindowResize(float viewportWidth, float viewportHeight);
 
         inline const glm::vec3& getPosition() {return m_position;}
         void setPosition(const glm::vec3& position);

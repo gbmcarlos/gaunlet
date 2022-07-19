@@ -1,5 +1,12 @@
 #include "Window.h"
 
+#include "../input/EventBus.h"
+#include "../input/events/WindowEvent.h"
+#include "../input/events/KeyEvent.h"
+#include "../input/events/MouseEvent.h"
+#include "../input/events/CursorEvent.h"
+#include "../input/events/ScrollEvent.h"
+
 #include <stdexcept>
 
 namespace engine {
@@ -46,7 +53,8 @@ namespace engine {
 
         glfwGetWindowSize(m_windowContext, &m_viewportWidth, &m_viewportHeight);
 
-        glfwSetWindowSizeCallback(m_windowContext, resizeEventCallback);
+        glfwSetWindowCloseCallback(m_windowContext, windowCloseEventCallback);
+        glfwSetWindowSizeCallback(m_windowContext, windowResizeEventCallback);
         glfwSetKeyCallback(m_windowContext, keyboardEventCallback);
         glfwSetMouseButtonCallback(m_windowContext, mouseEventCallback);
         glfwSetCursorPosCallback(m_windowContext, cursorPositionCallback);
@@ -54,10 +62,6 @@ namespace engine {
 
         bind();
 
-    }
-
-    bool Window::shouldRun() {
-        return !glfwWindowShouldClose(m_windowContext);
     }
 
     void Window::setTitle(const std::string& title) {
@@ -87,10 +91,21 @@ namespace engine {
         glfwMakeContextCurrent(nullptr);
     }
 
-    void Window::resizeEventCallback(GLFWwindow *window, int width, int height) {
+    void Window::close() {
+        glfwDestroyWindow(m_windowContext);
+    }
+
+    void Window::windowCloseEventCallback(GLFWwindow *window) {
+
+        WindowCloseEvent event;
+        EventBus::getInstance().publishEvent(event);
+
+    }
+
+    void Window::windowResizeEventCallback(GLFWwindow *window, int width, int height) {
 
         WindowResizeEvent event(width, height);
-        EventBus::getInstance().dispatchRawEvent(event);
+        EventBus::getInstance().publishEvent(event);
 
     }
 
@@ -98,13 +113,13 @@ namespace engine {
 
         if (action == GLFW_PRESS) {
             KeyPressEvent event(key);
-            EventBus::getInstance().dispatchRawEvent(event);
+            EventBus::getInstance().publishEvent(event);
         } else if (action == GLFW_REPEAT) {
             KeyRepeatEvent event(key);
-            EventBus::getInstance().dispatchRawEvent(event);
+            EventBus::getInstance().publishEvent(event);
         } else if (action == GLFW_RELEASE) {
             KeyReleaseEvent event(key);
-            EventBus::getInstance().dispatchRawEvent(event);
+            EventBus::getInstance().publishEvent(event);
         }
 
     }
@@ -113,22 +128,22 @@ namespace engine {
 
         if (action == GLFW_PRESS) {
             MouseButtonPress event(button);
-            EventBus::getInstance().dispatchRawEvent(event);
+            EventBus::getInstance().publishEvent(event);
         } else if (action == GLFW_RELEASE) {
             MouseButtonRelease event(button);
-            EventBus::getInstance().dispatchRawEvent(event);
+            EventBus::getInstance().publishEvent(event);
         }
 
     }
 
     void Window::cursorPositionCallback(GLFWwindow *window, double xPosition, double yPosition) {
         CursorMoveEvent event((float) xPosition, (float) yPosition);
-        EventBus::getInstance().dispatchRawEvent(event);
+        EventBus::getInstance().publishEvent(event);
     }
 
     void Window::scrollCallback(GLFWwindow *window, double xOffset, double yOffset) {
         ScrollEvent event((float) xOffset, (float) yOffset);
-        EventBus::getInstance().dispatchRawEvent(event);
+        EventBus::getInstance().publishEvent(event);
     }
 
 }

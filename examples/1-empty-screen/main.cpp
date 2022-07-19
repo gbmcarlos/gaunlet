@@ -1,23 +1,18 @@
 #include <core/Core.h>
 
 class EmptyScreenApplication : public engine::Application {
-    void onReady() override {}
 
-    void onUpdate(engine::TimeStep timeStep) override {}
+public:
+    explicit EmptyScreenApplication(const std::string& name) : engine::Application(name) {}
 
-    void onGuiRender() override {}
-
-    virtual void onEvent(const engine::Event& event) override {}
 };
 
 int main() {
 
-    engine::Window window("Empty Screen");
-    engine::RunLoop runLoop(window);
+    EmptyScreenApplication app("Empty Screen");
+    engine::RunLoop runLoop(app);
 
-    EmptyScreenApplication app;
-
-    runLoop.run(app);
+    runLoop.run();
 
     return 0;
 

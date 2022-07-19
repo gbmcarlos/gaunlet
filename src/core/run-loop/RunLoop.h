@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../window/Window.h"
 #include "../application/Application.h"
 
 #include <string>
@@ -9,13 +8,14 @@
 namespace engine {
 
     class RunLoop {
-    private:
-        Application* m_application;
-        Window m_window;
+
     public:
-        RunLoop(Window& window);
-        void run(Application& application);
-        void onEvent(Event& event);
+        RunLoop(Application& application);
+        void run();
+
+    private:
+        Application& m_application;
+
     };
 
 }

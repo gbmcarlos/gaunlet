@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../input/Input.h"
-
 // GLEW needs to be included before GLFW
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -20,7 +18,8 @@ namespace engine {
 
         void init();
 
-        static void resizeEventCallback(GLFWwindow* window, int width, int height);
+        static void windowCloseEventCallback(GLFWwindow* window);
+        static void windowResizeEventCallback(GLFWwindow* window, int width, int height);
         static void keyboardEventCallback(GLFWwindow* window, int key, int scanCode, int action, int mods);
         static void mouseEventCallback(GLFWwindow* window, int button, int action, int mods);
         static void cursorPositionCallback(GLFWwindow* window, double xPosition, double yPosition);
@@ -31,12 +30,12 @@ namespace engine {
         Window(int width, int height, const std::string& title);
         ~Window();
 
-        bool shouldRun();
         void setTitle(const std::string& title);
         void swap();
         void pollEvents();
         void bind() const;
         void unbind() const;
+        void close();
 
         inline const std::string& getTitle() { return m_title;}
         inline int getWidth() { return m_width;}

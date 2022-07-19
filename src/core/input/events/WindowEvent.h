@@ -4,6 +4,15 @@
 
 namespace engine {
 
+    class WindowCloseEvent : public Event {
+
+    public:
+        WindowCloseEvent() {}
+        EventCategory getCategory() const override {return EventCategory::Window;}
+        EVENT_TYPE(WindowClose)
+
+    };
+
     class WindowResizeEvent : public Event {
 
     public:

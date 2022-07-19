@@ -2,6 +2,8 @@ add_library(graphics-engine
 #        Core
         core/input/EventBus.cpp
         core/window/Window.cpp
+        core/application/LayerStack.cpp
+        core/application/Application.cpp
         core/render/RenderApi.cpp
         core/render/opengl/OpenGLRenderAPI.cpp
         core/render/RenderCommand.cpp

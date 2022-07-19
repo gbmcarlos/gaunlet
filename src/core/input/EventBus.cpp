@@ -4,13 +4,13 @@
 
 namespace engine {
 
-    void EventBus::dispatchRawEvent(Event& event) {
+    void EventBus::publishEvent(Event& event) {
         if (eventCallback) {
             eventCallback(event);
         }
     }
 
-    void EventBus::setKeyboardEventCallback(const std::function<void(Event&)>& callback) {
+    void EventBus::setEventCallback(const std::function<void(Event&)>& callback) {
         eventCallback = callback;
     }
 

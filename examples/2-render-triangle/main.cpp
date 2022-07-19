@@ -6,13 +6,16 @@
 
 class RenderTriangleApplication : public engine::Application {
 
+public:
+    explicit RenderTriangleApplication(const std::string& name) : engine::Application(name){}
+
     std::shared_ptr<engine::VertexArray> vertexArray;
     std::shared_ptr<engine::VertexBuffer> vertexBuffer;
     std::shared_ptr<engine::IndexBuffer> indexBuffer;
     std::shared_ptr<engine::Shader> shader;
 
     float color[4] = {
-            1.0f, 1.0f, 1.0f, 1.0f
+        1.0f, 1.0f, 1.0f, 1.0f
     };
 
     void onReady() override {
@@ -31,7 +34,7 @@ class RenderTriangleApplication : public engine::Application {
         vertexBuffer = std::make_shared<engine::VertexBuffer>(layout, &vertices, sizeof(vertices));
 
         unsigned int indices[] = {
-                0, 1, 2
+            0, 1, 2
         };
 
         // Create an index buffer, which specifies how to use the vertices to draw triangles
@@ -60,7 +63,7 @@ class RenderTriangleApplication : public engine::Application {
 
     }
 
-    void onGuiRender() override {
+    void onGuiRender() {
 
         ImGui::Begin("Controls");
         ImGui::ColorPicker4("Color", color);
@@ -68,17 +71,13 @@ class RenderTriangleApplication : public engine::Application {
 
     }
 
-    virtual void onEvent(const engine::Event& event) override {}
 };
 
 int main() {
 
-    engine::Window window("Render Triangle");
-    engine::RunLoop runLoop(window);
-
-    RenderTriangleApplication app;
-
-    runLoop.run(app);
+    RenderTriangleApplication app("Render Triangle");
+    engine::RunLoop runLoop(app);
+    runLoop.run();
 
     return 0;
 

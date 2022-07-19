@@ -1,34 +1,27 @@
 #include "RunLoop.h"
 
-#include "TimeStep.h"
 #include "../render/RenderCommand.h"
 #include "../imgui/ImGuiRenderApi.h"
-#include "../utils.h"
 
 namespace engine {
 
-    RunLoop::RunLoop(Window& window)
-        : m_window(window), m_application(nullptr) {
+    RunLoop::RunLoop(Application& application)
+        : m_application(application) {
 
         RenderCommand::init();
 
-        ImGuiRenderApi::init(window.getContext());
+        ImGuiRenderApi::init(m_application.getWindow()->getContext());
 
     }
 
-    void RunLoop::run(Application& applicationInstance) {
+    void RunLoop::run() {
 
-        m_application = &applicationInstance;
-
-        // Register the events callback
-        EventBus::getInstance().setKeyboardEventCallback(GE_BIND_CALLBACK_FN(RunLoop::onEvent));
-
-        m_application->onReady();
+        m_application.onReady();
 
         float lastFrameTime = 0;
 
         // Start the main loop
-        while (m_window.shouldRun()) {
+        while (m_application.isRunning()) {
 
             float time = (float) glfwGetTime();
             TimeStep ts(time - lastFrameTime);
@@ -38,24 +31,21 @@ namespace engine {
             ImGuiRenderApi::newFrame();
 
             // Delegate the update to the m_application
-            m_application->onUpdate(ts);
+            m_application.onUpdate(ts);
 
             // Delegate the GUI to the m_application
-            m_application->onGuiRender();
+            m_application.onGuiRender();
 
             ImGuiRenderApi::render();
 
-            m_window.swap();
-            m_window.pollEvents();
+            m_application.getWindow()->swap();
+            m_application.getWindow()->pollEvents();
 
         }
 
         ImGuiRenderApi::shutdown();
+        m_application.getWindow()->close();
 
-    }
-
-    void RunLoop::onEvent(Event& event) {
-        m_application->onEvent(event);
     }
 
 }

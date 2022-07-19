@@ -10,7 +10,7 @@ namespace engine {
         MouseButtonPress(int button) : m_button(button) {}
         EventCategory getCategory() const override {return EventCategory::Mouse;}
         EVENT_TYPE(MouseButtonPress)
-        inline int getButton() {return m_button;}
+        inline int getButton() const {return m_button;}
 
     private:
         int m_button;
@@ -23,7 +23,7 @@ namespace engine {
         MouseButtonRelease(int button) : m_button(button) {}
         EventCategory getCategory() const override {return EventCategory::Mouse;}
         EVENT_TYPE(MouseButtonRelease)
-        inline int getButton() {return m_button;}
+        inline int getButton() const {return m_button;}
 
     private:
         int m_button;

@@ -1,16 +1,36 @@
 #pragma once
 
-#include "../run-loop/TimeStep.h"
-#include "../input/Input.h"
+#include "LayerStack.h"
+#include "TimeStep.h"
+#include "../window/Window.h"
+#include "../input/Event.h"
+
+#include <string>
 
 namespace engine {
 
     class Application {
     public:
-        virtual void onReady() = 0;
-        virtual void onUpdate(TimeStep timeStep) = 0;
-        virtual void onGuiRender() = 0;
-        virtual void onEvent(const engine::Event& event) = 0;
+        explicit Application(const std::string& name);
+
+        virtual void onReady();
+        virtual void onEvent(Event& event);
+        virtual void onUpdate(TimeStep timeStep);
+        virtual void onGuiRender();
+
+        void pushLayer(Layer* layer);
+        void pushOverlay(Layer* overlay);
+
+        inline bool isRunning() const {return m_running; }
+        inline const std::unique_ptr<Window>& getWindow() {return m_window; }
+
+    protected:
+        std::unique_ptr<Window> m_window;
+        bool m_running;
+
+    private:
+        LayerStack m_layerStack;
+
     };
 
 }

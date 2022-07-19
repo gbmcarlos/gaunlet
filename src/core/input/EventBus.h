@@ -23,33 +23,8 @@ namespace engine {
             return m_instance;
         }
 
-        void dispatchRawEvent(Event& event);
-        void setKeyboardEventCallback(const std::function<void(Event&)>& callback);
-
-    };
-
-    class EventDispatcher {
-
-        template<typename T>
-        using callbackFunction = std::function<void(T&)>;
-
-    public:
-        EventDispatcher(const Event& event) : m_event(event) {}
-
-    private:
-        const Event& m_event;
-
-    public:
-
-        template<typename T>
-        void dispatch(callbackFunction<T> eventCallbackFunction) {
-
-            if (m_event.getType() == T::getStaticType()) {
-                eventCallbackFunction(*(T*)& m_event);
-            }
-
-        }
-
+        void publishEvent(Event& event);
+        void setEventCallback(const std::function<void(Event&)>& callback);
 
     };
 

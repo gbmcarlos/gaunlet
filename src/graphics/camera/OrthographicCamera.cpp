@@ -48,10 +48,10 @@ namespace engine {
 
     }
 
-    void OrthographicCamera::onWindowResize(const WindowResizeEvent& event) {
+    void OrthographicCamera::onWindowResize(float viewportWidth, float viewportHeight) {
 
-        m_viewportWidth = event.getWidth();
-        m_viewportHeight = event.getHeight();
+        m_viewportWidth = viewportWidth;
+        m_viewportHeight = viewportHeight;
 
         calculateProjectionMatrix();
         calculateViewProjectionMatrix();
