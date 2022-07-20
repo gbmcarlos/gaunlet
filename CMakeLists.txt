@@ -11,5 +11,5 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/src)
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/examples/1-empty-screen)
 add_subdirectory(${PROJECT_SOURCE_DIR}/examples/2-render-triangle)
-add_subdirectory(${PROJECT_SOURCE_DIR}/examples/3-playable-quad)
-add_subdirectory(${PROJECT_SOURCE_DIR}/examples/4-render-lines)
+add_subdirectory(${PROJECT_SOURCE_DIR}/examples/3-basic-rendering)
+add_subdirectory(${PROJECT_SOURCE_DIR}/examples/4-layered-controls)

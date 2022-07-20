@@ -10,7 +10,7 @@
 namespace engine {
 
     enum class MeshElementType {
-        Face, Edge
+        Face, Edge, Polygon
     };
 
     class Renderer {
@@ -29,10 +29,13 @@ namespace engine {
         static void submit(const Mesh& mesh, const glm::mat4& transform);
         static void flushBatch();
 
-        static void submitFaces(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray);
-        static void submitEdges(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray);
+        static void submitTriangles(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray);
+        static void submitLines(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray);
+        static void submitPolygons(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray);
 
     private:
+
+        static std::vector<unsigned int> getMeshVertices(const Mesh& mesh, MeshElementType meshElementType);
 
         struct SceneData {
             glm::mat4 m_viewProjectionMatrix;

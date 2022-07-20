@@ -59,7 +59,7 @@ public:
 
         engine::RenderCommand::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
 
-        engine::Renderer::submitFaces(shader, vertexArray);
+        engine::Renderer::submitTriangles(shader, vertexArray);
 
     }
 

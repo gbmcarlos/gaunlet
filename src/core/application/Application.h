@@ -20,6 +20,8 @@ namespace engine {
 
         void pushLayer(Layer* layer);
         void pushOverlay(Layer* overlay);
+        void popLayer(Layer* layer);
+        void popOverlay(Layer* overlay);
 
         inline bool isRunning() const {return m_running; }
         inline const std::unique_ptr<Window>& getWindow() {return m_window; }

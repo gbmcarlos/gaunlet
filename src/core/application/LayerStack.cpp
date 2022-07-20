@@ -16,6 +16,7 @@ namespace engine {
 
     void LayerStack::pushLayer(Layer *layer) {
         m_layerInsert = m_layers.emplace(m_layerInsert, layer);
+        m_layerInsert++; // Make sure to push layers at the top
     }
 
     void LayerStack::pushOverlay(Layer *overlay) {

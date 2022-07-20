@@ -38,12 +38,20 @@ namespace engine {
     }
     void Application::onGuiRender() {}
 
-    void Application::pushLayer(Layer *layer) {
+    void Application::pushLayer(Layer* layer) {
         m_layerStack.pushLayer(layer);
     }
 
-    void Application::pushOverlay(Layer *overlay) {
+    void Application::pushOverlay(Layer* overlay) {
         m_layerStack.pushOverlay(overlay);
+    }
+
+    void Application::popLayer(Layer* layer) {
+        m_layerStack.popLayer(layer);
+    }
+
+    void Application::popOverlay(Layer* overlay) {
+        m_layerStack.popOverlay(overlay);
     }
 
 }

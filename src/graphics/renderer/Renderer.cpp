@@ -23,7 +23,7 @@ namespace engine {
 
         auto vertices = mesh.getVertices();
 
-        auto indices = m_batchData->m_meshElementType == MeshElementType::Face ? mesh.getFaceIndices() : mesh.getEdgeIndices();
+        auto indices = getMeshVertices(mesh, m_batchData->m_meshElementType);
 
         // Transform the vertices
         for (auto& vertex : vertices) {
@@ -55,9 +55,9 @@ namespace engine {
         vertexArray->addBuffer(vertexBuffer, indexBuffer);
 
         if (m_batchData->m_meshElementType == MeshElementType::Face) {
-            submitFaces(m_batchData->m_shader, vertexArray);
+            submitTriangles(m_batchData->m_shader, vertexArray);
         } else {
-            submitEdges(m_batchData->m_shader, vertexArray);
+            submitLines(m_batchData->m_shader, vertexArray);
         }
 
         delete m_batchData;
@@ -65,7 +65,7 @@ namespace engine {
 
     }
 
-    void Renderer::submitFaces(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray) {
+    void Renderer::submitTriangles(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray) {
 
         shader->bind();
         shader->setUniformMat4f("u_viewProjection", m_sceneData->m_viewProjectionMatrix);
@@ -77,7 +77,7 @@ namespace engine {
 
     }
 
-    void Renderer::submitEdges(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray) {
+    void Renderer::submitLines(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray) {
 
         shader->bind();
         shader->setUniformMat4f("u_viewProjection", m_sceneData->m_viewProjectionMatrix);
@@ -86,6 +86,20 @@ namespace engine {
         vertexArray->getIndexBuffer()->bind();
 
         RenderCommand::drawIndexedLines(vertexArray->getIndexBuffer()->getCount());
+
+    }
+
+    std::vector<unsigned int> Renderer::getMeshVertices(const Mesh &mesh, MeshElementType meshElementType) {
+
+        if (meshElementType == MeshElementType::Face) {
+            return mesh.getFaceIndices();
+        } else if (meshElementType == MeshElementType::Edge) {
+            return mesh.getEdgeIndices();
+        } else if (meshElementType == MeshElementType::Polygon) {
+            return mesh.getPolygonIndices();
+        }
+
+        throw std::runtime_error("Unsupported mesh element type");
 
     }
 
