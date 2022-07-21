@@ -72,7 +72,7 @@ namespace engine {
         return (unsigned int) getApi().createShaderProgram();
     }
 
-    unsigned int RenderCommand::compileShader(unsigned int type, const std::string &source) {
+    unsigned int RenderCommand::compileShader(ShaderType type, const std::string &source) {
         return (unsigned int) getApi().compileShader(type, source);
     }
 

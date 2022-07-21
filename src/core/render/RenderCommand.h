@@ -40,7 +40,7 @@ namespace engine {
         static void deleteVertexArray(unsigned int& id);
 
         static unsigned int createShaderProgram();
-        static unsigned int compileShader(unsigned int type, const std::string& source);
+        static unsigned int compileShader(ShaderType type, const std::string& source);
         static void attachShader(unsigned id, unsigned int shaderId);
         static void compileShaderProgram(unsigned int id);
         static void bindShader(unsigned int id);

@@ -11,6 +11,11 @@ namespace engine {
         Float
     };
 
+    enum class ShaderType {
+        Vertex,
+        Fragment
+    };
+
     class RenderApi {
 
     public:
@@ -38,7 +43,7 @@ namespace engine {
         virtual void deleteVertexArray(unsigned int& id) = 0;
 
         virtual unsigned int createShaderProgram() = 0;
-        virtual unsigned int compileShader(unsigned int type, const std::string& source) = 0;
+        virtual unsigned int compileShader(ShaderType type, const std::string& source) = 0;
         virtual void attachShader(unsigned id, unsigned int shaderId) = 0;
         virtual void deleteShader(unsigned int id) = 0;
         virtual void compileShaderProgram(unsigned int id) = 0;

@@ -3,6 +3,7 @@
  glew/2.2.0
  imgui/1.79
  glm/0.9.9.8
+ entt/3.10.1
 
 [generators]
  cmake

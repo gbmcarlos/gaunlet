@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../../core/render/RenderApi.h"
+
 #include <string>
 #include <unordered_map>
 #include <glm/glm.hpp>
@@ -15,7 +17,7 @@ namespace engine {
     public:
         Shader();
         ~Shader();
-        void attach(unsigned int type, const std::string& shaderPath);
+        void attach(ShaderType type, const std::string& shaderPath);
         void compile() const;
         void bind() const;
         void setUniform3f(const std::string& name, const glm::vec3& value);

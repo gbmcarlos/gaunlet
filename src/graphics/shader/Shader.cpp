@@ -17,7 +17,7 @@ namespace engine {
         }
     }
 
-    void Shader::attach(unsigned int type, const std::string& shaderPath) {
+    void Shader::attach(ShaderType type, const std::string& shaderPath) {
 
         if (!m_rendererId) {
             m_rendererId = RenderCommand::createShaderProgram();

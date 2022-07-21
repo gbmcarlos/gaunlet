@@ -35,6 +35,17 @@ namespace engine {
 
     }
 
+    GLenum OpenGLRenderApi::convertShaderType(ShaderType type) {
+
+        switch (type) {
+            case ShaderType::Vertex:    return GL_VERTEX_SHADER;
+            case ShaderType::Fragment:    return GL_FRAGMENT_SHADER;
+        }
+
+        throw std::runtime_error("Unknown shader type");
+
+    }
+
     void OpenGLRenderApi::setClearColor(float red, float green, float blue, float alpha) {
         glClearColor(red, green, blue, alpha);
     }
@@ -106,9 +117,9 @@ namespace engine {
         return (unsigned int) glCreateProgram();
     }
 
-    unsigned int OpenGLRenderApi::compileShader(unsigned int type, const std::string& source) {
+    unsigned int OpenGLRenderApi::compileShader(ShaderType type, const std::string& source) {
 
-        unsigned int id = glCreateShader(type);
+        unsigned int id = glCreateShader(convertShaderType(type));
         const char* src = source.c_str();
         glShaderSource(id, 1, &src, nullptr);
         glCompileShader(id);
@@ -120,7 +131,7 @@ namespace engine {
             glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
             char* message = (char*)alloca(length * sizeof(char));
             glGetShaderInfoLog(id, length, &length, message);
-            std::cout << "Failed to compile " << (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << " m_shader. Error:" << std::endl;
+            std::cout << "Failed to compile " << (type == ShaderType::Vertex ? "vertex" : "fragment") << " m_shader. Error:" << std::endl;
             std::cout << message << std::endl;
             glDeleteShader(id);
             return 0;

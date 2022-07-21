@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../shader/Shader.h"
+#include "../shader/ShaderLibrary.h"
 #include "../camera/OrthographicCamera.h"
 #include "../buffer/VertexArray.h"
 #include "../mesh/Mesh.h"
@@ -22,20 +23,25 @@ namespace engine {
 
     public:
 
+        static void init();
+
         static void beginScene(const std::shared_ptr<OrthographicCamera>& orthographicCamera);
         static void endScene();
 
-        static void beginBatch(const std::shared_ptr<Shader>& shader, MeshElementType meshElementType);
-        static void submit(const Mesh& mesh, const glm::mat4& transform);
+        static void beginBatch(MeshElementType meshElementType);
+        static void submit(const Mesh& mesh, const glm::mat4& transform, glm::vec4 color);
         static void flushBatch();
 
         static void submitTriangles(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray);
         static void submitLines(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray);
-        static void submitPolygons(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray);
 
     private:
 
+        static void loadDefaultShaders();
+
         static std::vector<unsigned int> getMeshVertices(const Mesh& mesh, MeshElementType meshElementType);
+
+        static ShaderLibrary m_shaderLibrary;
 
         struct SceneData {
             glm::mat4 m_viewProjectionMatrix;
@@ -47,12 +53,10 @@ namespace engine {
 
             MeshElementType m_meshElementType;
 
-            std::shared_ptr<Shader> m_shader;
-
             std::vector<Vertex> m_vertices;
             std::vector<int> m_indices;
 
-            explicit BatchData(std::shared_ptr<Shader> shader, MeshElementType meshElementType) : m_shader(shader), m_meshElementType(meshElementType) {
+            explicit BatchData(MeshElementType meshElementType) : m_meshElementType(meshElementType) {
                 m_vertices = std::vector<Vertex> {};
                 m_indices = std::vector<int> {};
             }

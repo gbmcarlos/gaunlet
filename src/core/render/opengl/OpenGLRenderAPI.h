@@ -25,6 +25,7 @@ namespace engine {
 
     private:
         GLenum convertVertexBufferLayoutElementType(VertexBufferLayoutElementType type);
+        GLenum convertShaderType(ShaderType type);
 
     public:
 
@@ -51,7 +52,7 @@ namespace engine {
         void deleteVertexArray(unsigned int& id);
 
         unsigned int createShaderProgram();
-        unsigned int compileShader(unsigned int type, const std::string& source);
+        unsigned int compileShader(ShaderType type, const std::string& source);
         void attachShader(unsigned id, unsigned int shaderId);
         void deleteShader(unsigned int id);
         void compileShaderProgram(unsigned int id);

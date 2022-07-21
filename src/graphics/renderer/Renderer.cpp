@@ -1,9 +1,16 @@
 #include "Renderer.h"
 
+#include <map>
+
 namespace engine {
 
     Renderer::SceneData* Renderer::m_sceneData = new Renderer::SceneData{OrthographicCamera::getDefaultViewProjectionMatrix()};
     Renderer::BatchData* Renderer::m_batchData = nullptr;
+    ShaderLibrary Renderer::m_shaderLibrary = ShaderLibrary();
+
+    void Renderer::init() {
+        loadDefaultShaders();
+    }
 
     void Renderer::beginScene(const std::shared_ptr<OrthographicCamera>& orthographicCamera) {
         m_sceneData->m_viewProjectionMatrix = orthographicCamera->getViewProjectionMatrix();
@@ -13,13 +20,11 @@ namespace engine {
         m_sceneData = new SceneData{OrthographicCamera::getDefaultViewProjectionMatrix()};
     }
 
-    void Renderer::beginBatch(const std::shared_ptr<Shader> &shader, MeshElementType meshElementType) {
-
-        Renderer::m_batchData = new BatchData(shader, meshElementType);
-
+    void Renderer::beginBatch(MeshElementType meshElementType) {
+        Renderer::m_batchData = new BatchData(meshElementType);
     }
 
-    void Renderer::submit(const Mesh& mesh, const glm::mat4& transform) {
+    void Renderer::submit(const Mesh& mesh, const glm::mat4& transform, glm::vec4 color) {
 
         auto vertices = mesh.getVertices();
 
@@ -28,6 +33,7 @@ namespace engine {
         // Transform the vertices
         for (auto& vertex : vertices) {
             vertex.m_position = transform * vertex.m_position;
+            vertex.m_color = color;
         }
 
         // Transform the indices
@@ -55,9 +61,9 @@ namespace engine {
         vertexArray->addBuffer(vertexBuffer, indexBuffer);
 
         if (m_batchData->m_meshElementType == MeshElementType::Face) {
-            submitTriangles(m_batchData->m_shader, vertexArray);
+            submitTriangles(m_shaderLibrary.get("main"), vertexArray);
         } else {
-            submitLines(m_batchData->m_shader, vertexArray);
+            submitLines(m_shaderLibrary.get("main"), vertexArray);
         }
 
         delete m_batchData;
@@ -86,6 +92,16 @@ namespace engine {
         vertexArray->getIndexBuffer()->bind();
 
         RenderCommand::drawIndexedLines(vertexArray->getIndexBuffer()->getCount());
+
+    }
+
+    void Renderer::loadDefaultShaders() {
+
+        std::map<engine::ShaderType, std::string> shaderSource {
+            {engine::ShaderType::Vertex, ASSETS_PATH"/shaders/2d/polygon-vertex-shader.glsl"},
+            {engine::ShaderType::Fragment, ASSETS_PATH"/shaders/2d/polygon-fragment-shader.glsl"}
+        };
+        m_shaderLibrary.load("main", shaderSource);
 
     }
 
