@@ -97,6 +97,10 @@ namespace engine {
         return (int) getApi().getUniformLocation(id, name);
     }
 
+    void RenderCommand::setUniform1i(int location, int value) {
+        getApi().setUniform1i(location, value);
+    }
+
     void RenderCommand::setUniform3f(int location, const glm::vec3& value) {
         getApi().setUniform3f(location, value);
     }
@@ -119,6 +123,18 @@ namespace engine {
 
     void RenderCommand::addVertexArrayAttribute(unsigned int index, int count, VertexBufferLayoutElementType type, bool normalized, int stride, int offset) {
         getApi().addVertexArrayAttribute(index, count, type, normalized, stride, offset);
+    }
+
+    void RenderCommand::loadTexture(unsigned int& id, unsigned int width, unsigned int height, void* data) {
+        getApi().loadTexture(id, width, height, data);
+    }
+
+    void RenderCommand::bindTexture(unsigned int id, unsigned int slot) {
+        getApi().bindTexture(id, slot);
+    }
+
+    void RenderCommand::deleteTexture(unsigned int &id) {
+        getApi().deleteTexture(id);
     }
 
     void RenderCommand::drawIndexedTriangles(unsigned int indexCount) {

@@ -1,9 +1,11 @@
 #pragma once
 
 #include "../graphics/mesh/Mesh.h"
+#include "../graphics/texture/Texture.h"
 
 #include "glm/glm.hpp"
 #include <glm/gtc/matrix_transform.hpp>
+#include <utility>
 
 namespace engine {
 
@@ -44,11 +46,14 @@ namespace engine {
 
     struct MaterialComponent {
 
-        MaterialComponent() = default;
         MaterialComponent(const MaterialComponent&) = default;
-        MaterialComponent(glm::vec4 color) : m_color(color) {}
+        MaterialComponent() : m_color(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), m_texture(nullptr) {}
+        MaterialComponent(glm::vec4 color) : m_color(color), m_texture(nullptr) {}
+        MaterialComponent(std::shared_ptr<Texture> texture) : m_color(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), m_texture(std::move(texture)) {}
+        MaterialComponent(glm::vec4 color, std::shared_ptr<Texture> texture) : m_color(color), m_texture(std::move(texture)) {}
 
         glm::vec4 m_color;
+        std::shared_ptr<Texture> m_texture;
 
     };
 

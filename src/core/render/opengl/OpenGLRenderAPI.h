@@ -23,10 +23,6 @@ namespace engine {
         OpenGLRenderApi(OpenGLRenderApi const&) = delete;
         void operator=(OpenGLRenderApi const&)  = delete;
 
-    private:
-        GLenum convertVertexBufferLayoutElementType(VertexBufferLayoutElementType type);
-        GLenum convertShaderType(ShaderType type);
-
     public:
 
         void init();
@@ -59,6 +55,7 @@ namespace engine {
         void bindShader(unsigned int id);
 
         unsigned int getUniformLocation(unsigned int id, const std::string& name);
+        void setUniform1i(int location, int value);
         void setUniform3f(int location, const glm::vec3& value);
         void setUniform4f(int location, const glm::vec4& value);
         void setUniformMat3f(int location, const glm::mat3& value);
@@ -67,8 +64,16 @@ namespace engine {
         unsigned int sizeOfVertexBufferLayoutElementType(VertexBufferLayoutElementType type);
         void addVertexArrayAttribute(unsigned int index, int count, VertexBufferLayoutElementType type, bool normalized, int stride, int offset);
 
+        void loadTexture(unsigned int& id, unsigned int width, unsigned int height, void* data);
+        void bindTexture(unsigned int id, unsigned int slot);
+        void deleteTexture(unsigned int& id);
+
         void drawIndexedTriangles(unsigned int indexCount);
         void drawIndexedLines(unsigned int indexCount);
+
+    private:
+        GLenum convertVertexBufferLayoutElementType(VertexBufferLayoutElementType type);
+        GLenum convertShaderType(ShaderType type);
 
     };
 

@@ -17,17 +17,16 @@ namespace engine {
 
         engine::RenderCommand::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
 
-        engine::Renderer::beginBatch(engine::MeshElementType::Face);
-
         auto group = m_registry.group<MeshComponent>(entt::get<TransformComponent, MaterialComponent>);
         for (auto entity : group) {
 
-            auto [mesh, transform, material] = group.get<MeshComponent, TransformComponent, MaterialComponent>(entity);
-            Renderer::submit(mesh.m_mesh, transform.getTransformationMatrix(), material.m_color);
+            auto [mesh, transform,  material] = group.get<MeshComponent, TransformComponent, MaterialComponent>(entity);
+
+            Renderer::submit(mesh.m_mesh, transform.getTransformationMatrix(), material.m_color, material.m_texture);
 
         }
 
-        engine::Renderer::flushBatch();
+        engine::Renderer::flush();
 
     }
 

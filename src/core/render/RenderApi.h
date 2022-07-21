@@ -50,6 +50,7 @@ namespace engine {
         virtual void bindShader(unsigned int id) = 0;
 
         virtual unsigned int getUniformLocation(unsigned int id, const std::string& name) = 0;
+        virtual void setUniform1i(int location, int value) = 0;
         virtual void setUniform3f(int location, const glm::vec3& value) = 0;
         virtual void setUniform4f(int location, const glm::vec4& value) = 0;
         virtual void setUniformMat3f(int location, const glm::mat3& value) = 0;
@@ -57,6 +58,10 @@ namespace engine {
 
         virtual unsigned int sizeOfVertexBufferLayoutElementType(VertexBufferLayoutElementType type) = 0;
         virtual void addVertexArrayAttribute(unsigned int index, int count, VertexBufferLayoutElementType type, bool normalized, int stride, int offset) = 0;
+
+        virtual void loadTexture(unsigned int& id, unsigned int width, unsigned int height, void* data) = 0;
+        virtual void bindTexture(unsigned int id, unsigned int slot) = 0;
+        virtual void deleteTexture(unsigned int& id) = 0;
 
         virtual void drawIndexedTriangles(unsigned int indexCount) = 0;
         virtual void drawIndexedLines(unsigned int indexCount) = 0;

@@ -47,6 +47,7 @@ namespace engine {
         static void deleteShader(unsigned int id);
 
         static int getUniformLocation(unsigned int id, const std::string& name);
+        static void setUniform1i(int location, int value);
         static void setUniform3f(int location, const glm::vec3& value);
         static void setUniform4f(int location, const glm::vec4& value);
         static void setUniformMat3f(int location, const glm::mat3& value);
@@ -54,6 +55,10 @@ namespace engine {
 
         static unsigned int sizeOfLayoutElementType(VertexBufferLayoutElementType type);
         static void addVertexArrayAttribute(unsigned int index, int count, VertexBufferLayoutElementType type, bool normalized, int stride, int offset);
+
+        static void loadTexture(unsigned int& id, unsigned int width, unsigned int height, void* data);
+        static void bindTexture(unsigned int id, unsigned int slot);
+        static void deleteTexture(unsigned int& id);
 
         static void drawIndexedTriangles(unsigned int indexCount);
         static void drawIndexedLines(unsigned int indexCount);

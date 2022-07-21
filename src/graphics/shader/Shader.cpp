@@ -41,9 +41,18 @@ namespace engine {
         RenderCommand::bindShader(m_rendererId);
     }
 
+    void Shader::setUniform1i(const std::string& name, int value) {
+
+        bind();
+        int location = getUniformLocation(name);
+        RenderCommand::setUniform1i(location, value);
+
+    }
+
     void Shader::setUniform3f(const std::string& name, const glm::vec3& value) {
 
-        unsigned int location = getUniformLocation(name);
+        bind();
+        int location = getUniformLocation(name);
         RenderCommand::setUniform3f(location, value);
 
     }
@@ -51,7 +60,7 @@ namespace engine {
     void Shader::setUniform4f(const std::string& name, const glm::vec4& value) {
 
         bind();
-        unsigned int location = getUniformLocation(name);
+        int location = getUniformLocation(name);
         RenderCommand::setUniform4f(location, value);
 
     }
@@ -59,7 +68,7 @@ namespace engine {
     void Shader::setUniformMat3f(const std::string& name, const glm::mat3& value) {
 
         bind();
-        unsigned int location = getUniformLocation(name);
+        int location = getUniformLocation(name);
         RenderCommand::setUniformMat3f(location, value);
 
     }
@@ -67,7 +76,7 @@ namespace engine {
     void Shader::setUniformMat4f(const std::string& name, const glm::mat4& value) {
 
         bind();
-        unsigned int location = getUniformLocation(name);
+        int location = getUniformLocation(name);
         RenderCommand::setUniformMat4f(location, value);
 
     }

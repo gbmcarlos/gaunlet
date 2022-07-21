@@ -86,7 +86,7 @@ public:
         m_camera = std::make_shared<engine::OrthographicCamera>(viewportWidth, viewportHeight, 100);
         m_quadEntity.addComponent<engine::MeshComponent>(m_quadMesh);
         m_quadEntity.addComponent<engine::TransformComponent>();
-        m_quadEntity.addComponent<engine::MaterialComponent>(glm::vec4(0.8f, 0.8f, 0.8f, 1.0f));
+//        m_quadEntity.addComponent<engine::MaterialComponent>(glm::vec4(0.8f, 0.8f, 0.8f, 1.0f));
         m_quadEntity.addComponent<engine::SpeedComponent>();
 
     }

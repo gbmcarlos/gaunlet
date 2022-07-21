@@ -26,6 +26,8 @@ public:
 
         engine::Renderer::init();
         m_camera = std::make_shared<engine::OrthographicCamera>(viewportWidth, viewportHeight, 100);
+        std::shared_ptr<engine::Texture> texture1 = std::make_shared<engine::Texture>("assets/texture-1.jpeg");
+        std::shared_ptr<engine::Texture> texture2 = std::make_shared<engine::Texture>("assets/texture-2.jpeg");
 
         // TRIANGLE 1
         auto triangle1 = m_scene.createEntity();
@@ -45,7 +47,7 @@ public:
             glm::vec3(0.0f, 0.0f, -20.0f),
             glm::vec3(2.0f, 2.0f, 1.0f)
         );
-        triangle2.addComponent<engine::MaterialComponent>(glm::vec4(0.0f, 0.8f, 0.0f, 1.0f));
+        triangle2.addComponent<engine::MaterialComponent>(texture1);
 
         // TRIANGLE 3
         auto triangle3 = m_scene.createEntity();
@@ -55,7 +57,7 @@ public:
             glm::vec3(0.0f, 0.0f, -40.0f),
             glm::vec3(3.0f, 3.0f, 1.0f)
         );
-        triangle3.addComponent<engine::MaterialComponent>(glm::vec4(0.0f, 0.0f, 0.8f, 1.0f));
+        triangle3.addComponent<engine::MaterialComponent>(glm::vec4(0.0f, 0.0f, 0.8f, 1.0f), texture1);
 
         // SQUARE 1
         auto square1 = m_scene.createEntity();
@@ -75,7 +77,7 @@ public:
             glm::vec3(0.0f, 0.0f, -20.0f),
             glm::vec3(2.0f, 2.0f, 1.0f)
         );
-        square2.addComponent<engine::MaterialComponent>(glm::vec4(0.0f, 0.0f, 0.8f, 1.0f));
+        square2.addComponent<engine::MaterialComponent>(texture2);
 
         // SQUARE 3
         auto square3 = m_scene.createEntity();
@@ -85,7 +87,7 @@ public:
             glm::vec3(0.0f, 0.0f, -40.0f),
             glm::vec3(3.0f, 3.0f, 1.0f)
         );
-        square3.addComponent<engine::MaterialComponent>(glm::vec4(0.8f, 0.0f, 0.0f, 1.0f));
+        square3.addComponent<engine::MaterialComponent>(glm::vec4(0.8f, 0.0f, 0.0f, 1.0f), texture2);
 
     }
 

@@ -18,6 +18,7 @@ add_library(graphics-engine
         graphics/shader/Shader.cpp
         graphics/shader/ShaderLibrary.cpp
         graphics/camera/OrthographicCamera.cpp
+        graphics/texture/Texture.cpp
 
 #        Scene
         scene/Scene.cpp

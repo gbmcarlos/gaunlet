@@ -10,22 +10,14 @@ namespace engine {
 
         TriangleMesh() {
 
-            m_vertices.push_back(Vertex{{-0.5f, -0.5f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f, 1.0f}});
-            m_vertices.push_back(Vertex{{0.5f, -0.5f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f, 1.0f}});
-            m_vertices.push_back(Vertex{{0.0f, sqrt(3)/2 - 0.5, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f, 1.0f}});
+            float triangleHeight = sqrt(3)/2;
 
-            m_faceIndices = std::vector<unsigned int>{
+            m_vertices.push_back(Vertex{{-0.5f, -0.5f, 1.0f, 1.0f}, {0.0f, 0.0f}, 0, {1.0f, 1.0f, 1.0f, 1.0f}});
+            m_vertices.push_back(Vertex{{0.5f, -0.5f, 1.0f, 1.0f}, {0.0f, 1.0f}, 0, {1.0f, 1.0f, 1.0f, 1.0f}});
+            m_vertices.push_back(Vertex{{0.0f, triangleHeight - 0.5, 1.0f, 1.0f}, {0.5f, triangleHeight}, 0, {1.0f, 1.0f, 1.0f, 1.0f}});
+
+            m_indices = std::vector<unsigned int>{
                 0, 1, 2
-            };
-            m_edgeIndices = std::vector<unsigned int>{
-                0, 1,
-                1, 2,
-                2, 0
-            };
-            m_polygonIndices = std::vector<unsigned int>{
-                0, 1,
-                1, 2,
-                2, 0
             };
 
         }
