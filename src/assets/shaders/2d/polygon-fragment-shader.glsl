@@ -12,6 +12,14 @@ out vec4 color;
 uniform sampler2D texture0;
 uniform sampler2D texture1;
 uniform sampler2D texture2;
+uniform sampler2D texture3;
+uniform sampler2D texture4;
+uniform sampler2D texture5;
+uniform sampler2D texture6;
+uniform sampler2D texture7;
+uniform sampler2D texture8;
+uniform sampler2D texture9;
+uniform sampler2D texture10;
 
 vec4 sampleTexture(int textureIndex, vec2 textureCoordinates);
 
@@ -29,6 +37,22 @@ vec4 sampleTexture(int textureIndex, vec2 textureCoordinates) {
         return texture(texture1, textureCoordinates);
     } else if (textureIndex == 2) {
         return texture(texture2, textureCoordinates);
+    } else if (textureIndex == 3) {
+        return texture(texture3, textureCoordinates);
+    } else if (textureIndex == 4) {
+        return texture(texture4, textureCoordinates);
+    } else if (textureIndex == 5) {
+        return texture(texture5, textureCoordinates);
+    } else if (textureIndex == 6) {
+        return texture(texture6, textureCoordinates);
+    } else if (textureIndex == 7) {
+        return texture(texture7, textureCoordinates);
+    } else if (textureIndex == 8) {
+        return texture(texture8, textureCoordinates);
+    } else if (textureIndex == 9) {
+        return texture(texture9, textureCoordinates);
+    } else if (textureIndex == 10) {
+        return texture(texture10, textureCoordinates);
     }
 
     return vec4(1.0f, 1.0f, 1.0f, 1.0f);

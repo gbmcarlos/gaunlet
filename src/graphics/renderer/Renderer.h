@@ -27,7 +27,7 @@ namespace engine {
         static void endScene();
 
         static void submit(const Mesh& mesh, const glm::mat4& transform, glm::vec4 color);
-        static void submit(const Mesh& mesh, const glm::mat4& transform, glm::vec4 color, std::shared_ptr<Texture> texture);
+        static void submit(const Mesh& mesh, const glm::mat4& transform, glm::vec4 color, const std::shared_ptr<Texture>& texture);
         static void flush();
 
         static void submitTriangles(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray);
@@ -40,7 +40,7 @@ namespace engine {
 
         struct RendererStorage {
 
-            static const unsigned int m_maxVertices = 5;
+            static const unsigned int m_maxVertices = 100;
             std::vector<Vertex> m_vertices = {};
 
             static const unsigned int m_maxIndices = m_maxVertices * 2;

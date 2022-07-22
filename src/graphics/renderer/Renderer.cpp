@@ -27,7 +27,7 @@ namespace engine {
 
     }
 
-    void Renderer::submit(const Mesh& mesh, const glm::mat4& transform, glm::vec4 color, std::shared_ptr<Texture> texture) {
+    void Renderer::submit(const Mesh& mesh, const glm::mat4& transform, glm::vec4 color, const std::shared_ptr<Texture>& texture) {
 
         auto vertices = mesh.getVertices();
         auto indices = mesh.getFaceIndices();
@@ -142,9 +142,11 @@ namespace engine {
             {engine::ShaderType::Fragment, ASSETS_PATH"/shaders/2d/polygon-fragment-shader.glsl"}
         };
         auto shader = m_shaderLibrary.load("main", shaderSource);
-        shader->setUniform1i("texture0", 0);
-        shader->setUniform1i("texture1", 1);
-        shader->setUniform1i("texture2", 2);
+
+        for (int i = 0; i < m_rendererStorage->m_maxTextures; i++) {
+            auto textureName = std::string("texture") + std::to_string(i);
+            shader->setUniform1i(textureName, i);
+        }
 
 
     }
