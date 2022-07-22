@@ -1,9 +1,7 @@
 #include <Core.h>
 #include <Graphics.h>
-#include <Scene.h>
 
 #include "glm/glm.hpp"
-#include <glm/gtc/matrix_transform.hpp>
 
 #include <array>
 
@@ -31,63 +29,93 @@ public:
 
         // TRIANGLE 1
         auto triangle1 = m_scene.createEntity();
-        triangle1.addComponent<engine::MeshComponent>(m_triangleMesh);
+        triangle1.addComponent<engine::PolygonComponent>(m_triangleMesh);
         triangle1.addComponent<engine::TransformComponent>(
-            glm::vec3(-5.0f, 2.0f, 0.0f),
+            glm::vec3(-5.0f, 3.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec3(1.0f, 1.0f, 1.0f)
+            glm::vec3(0.8f, 0.8f, 1.0f)
         );
         triangle1.addComponent<engine::MaterialComponent>(glm::vec4(0.8f, 0.0f, 0.0f, 1.0f));
 
         // TRIANGLE 2
         auto triangle2 = m_scene.createEntity();
-        triangle2.addComponent<engine::MeshComponent>(m_triangleMesh);
+        triangle2.addComponent<engine::PolygonComponent>(m_triangleMesh);
         triangle2.addComponent<engine::TransformComponent>(
-            glm::vec3(-0.5f, 2.0f, 0.0f),
+            glm::vec3(-5.0f, 0.5f, 0.0f),
             glm::vec3(0.0f, 0.0f, -20.0f),
-            glm::vec3(2.0f, 2.0f, 1.0f)
+            glm::vec3(1.2f, 1.2f, 1.0f)
         );
         triangle2.addComponent<engine::MaterialComponent>(texture1);
 
         // TRIANGLE 3
         auto triangle3 = m_scene.createEntity();
-        triangle3.addComponent<engine::MeshComponent>(m_triangleMesh);
+        triangle3.addComponent<engine::PolygonComponent>(m_triangleMesh);
         triangle3.addComponent<engine::TransformComponent>(
-            glm::vec3(5.0f, 2.0f, 0.0f),
+            glm::vec3(-5.0f, -2.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, -40.0f),
-            glm::vec3(3.0f, 3.0f, 1.0f)
+            glm::vec3(1.8f, 1.8f, 1.0f)
         );
         triangle3.addComponent<engine::MaterialComponent>(glm::vec4(0.0f, 0.0f, 0.8f, 1.0f), texture2);
 
         // SQUARE 1
         auto square1 = m_scene.createEntity();
-        square1.addComponent<engine::MeshComponent>(m_quadMesh);
+        square1.addComponent<engine::PolygonComponent>(m_quadMesh);
         square1.addComponent<engine::TransformComponent>(
-            glm::vec3(-5.0f, -2.0f, 0.0f),
+            glm::vec3(0.0f, 3.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec3(1.0f, 1.0f, 1.0f)
+            glm::vec3(0.8f, 0.8f, 1.0f)
         );
         square1.addComponent<engine::MaterialComponent>(glm::vec4(0.0f, 0.8f, 0.0f, 1.0f));
 
         // SQUARE 2
         auto square2 = m_scene.createEntity();
-        square2.addComponent<engine::MeshComponent>(m_quadMesh);
+        square2.addComponent<engine::PolygonComponent>(m_quadMesh);
         square2.addComponent<engine::TransformComponent>(
-            glm::vec3(-0.5f, -2.0f, 0.0f),
+            glm::vec3(0.0f, 0.5f, 0.0f),
             glm::vec3(0.0f, 0.0f, -20.0f),
-            glm::vec3(2.0f, 2.0f, 1.0f)
+            glm::vec3(1.2f, 1.2f, 1.0f)
         );
         square2.addComponent<engine::MaterialComponent>(texture1);
 
         // SQUARE 3
         auto square3 = m_scene.createEntity();
-        square3.addComponent<engine::MeshComponent>(m_quadMesh);
+        square3.addComponent<engine::PolygonComponent>(m_quadMesh);
         square3.addComponent<engine::TransformComponent>(
-            glm::vec3(5.0f, -2.0f, 0.0f),
+            glm::vec3(0.0f, -2.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, -40.0f),
-            glm::vec3(3.0f, 3.0f, 1.0f)
+            glm::vec3(1.8f, 1.8f, 1.0f)
         );
         square3.addComponent<engine::MaterialComponent>(glm::vec4(0.8f, 0.0f, 0.0f, 1.0f), texture2);
+
+        // CIRCLE 1
+        auto circle1 = m_scene.createEntity();
+        circle1.addComponent<engine::CircleComponent>(0.1f, 0.01f);
+        circle1.addComponent<engine::TransformComponent>(
+            glm::vec3(5.0f, 3.0f, 0.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(0.8f, 0.8f, 1.0f)
+        );
+        circle1.addComponent<engine::MaterialComponent>(glm::vec4(0.0f, 0.0f, 0.8f, 1.0f));
+
+        // CIRCLE 2
+        auto circle2 = m_scene.createEntity();
+        circle2.addComponent<engine::CircleComponent>(0.5, 0.1f);
+        circle2.addComponent<engine::TransformComponent>(
+            glm::vec3(5.0f, 0.5f, 0.0f),
+            glm::vec3(0.0f, 0.0f, -20.0f),
+            glm::vec3(1.5f, 1.2f, 1.0f)
+        );
+        circle2.addComponent<engine::MaterialComponent>(texture1);
+
+        // CIRCLE 3
+        auto circle3 = m_scene.createEntity();
+        circle3.addComponent<engine::CircleComponent>(1.0f, 0.3f);
+        circle3.addComponent<engine::TransformComponent>(
+            glm::vec3(5.0f, -2.0f, 0.0f),
+            glm::vec3(0.0f, 0.0f, -40.0f),
+            glm::vec3(1.8f, 2.2f, 1.0f)
+        );
+        circle3.addComponent<engine::MaterialComponent>(glm::vec4(0.0f, 0.8f, 0.0f, 1.0f), texture2);
 
     }
 

@@ -21,7 +21,7 @@ add_library(graphics-engine
         graphics/texture/Texture.cpp
 
 #        Scene
-        scene/Scene.cpp
+        graphics/scene/Scene.cpp
 
         ${PROJECT_SOURCE_DIR}/vendor/imgui/imgui_impl_glfw.cpp ${PROJECT_SOURCE_DIR}/vendor/imgui/imgui_impl_opengl3.cpp
     )

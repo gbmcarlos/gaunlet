@@ -1,7 +1,8 @@
 #pragma once
 
-#include "../graphics/mesh/Mesh.h"
-#include "../graphics/texture/Texture.h"
+#include "../mesh/PolygonMesh.h"
+#include "../mesh/CircleMesh.h"
+#include "../texture/Texture.h"
 
 #include "glm/glm.hpp"
 #include <glm/gtc/matrix_transform.hpp>
@@ -19,7 +20,7 @@ namespace engine {
         glm::vec3 m_rotation;
         glm::vec3 m_scale;
 
-        glm::mat4 getTransformationMatrix() {
+        glm::mat4 getTransformationMatrix() const {
 
             glm::mat4 translationsMatrix = glm::translate(glm::mat4(1.0f), m_position);
 
@@ -34,13 +35,35 @@ namespace engine {
 
     };
 
-    struct MeshComponent {
+    struct PolygonComponent {
 
-        MeshComponent() = default;
-        MeshComponent(const MeshComponent&) = default;
-        MeshComponent(Mesh& mesh) : m_mesh(mesh) {}
+        PolygonComponent() = default;
+        PolygonComponent(const PolygonComponent&) = default;
+        PolygonComponent(PolygonMesh mesh) : m_mesh(std::move(mesh)) {}
 
-        Mesh m_mesh;
+        PolygonMesh m_mesh;
+
+    };
+
+    struct CircleComponent {
+
+        CircleComponent(const CircleComponent&) = default;
+
+        CircleComponent() :
+            m_thickness(0.5f),
+            m_fade(0.01f) {}
+
+        CircleComponent(float thickness) :
+            m_thickness(thickness),
+            m_fade(0.01f){}
+
+        CircleComponent(float thickness, float fade) :
+            m_thickness(thickness),
+            m_fade(fade) {}
+
+        CircleMesh m_mesh;
+        float m_thickness;
+        float m_fade;
 
     };
 

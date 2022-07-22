@@ -1,5 +1,3 @@
-- self-managed batch rendering
-- texture library
 - collision
 
 - pong

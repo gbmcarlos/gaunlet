@@ -13,6 +13,7 @@ namespace engine {
 
     enum class ShaderType {
         Vertex,
+        Geometry,
         Fragment
     };
 

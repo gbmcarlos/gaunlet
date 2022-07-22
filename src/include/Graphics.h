@@ -7,8 +7,12 @@
 #include "../graphics/shader/Shader.h" // Depends on RenderCommand
 #include "../graphics/shader/ShaderLibrary.h" // Depends on Shader
 
+#include "../graphics/scene/Scene.h" // Depends on ENTT
+#include "../graphics/scene/Component.h" // Depends on PolygonMesh
+#include "../graphics/scene/Entity.h" // Depends on Scene
+
 #include "../graphics/camera/OrthographicCamera.h" // Doesn't depend on anything
-#include "../graphics/mesh/Mesh.h" // Doesn't depend on anything
+#include "../graphics/mesh/PolygonMesh.h" // Doesn't depend on anything
 #include "../graphics/mesh/2d/samples/TriangleMesh.h"
 #include "../graphics/mesh/2d/samples/SquareMesh.h"
-#include "../graphics/renderer/Renderer.h" // Depends on Shader, OrthographicCamera, VertexArray, and Mesh
+#include "../graphics/renderer/Renderer.h" // Depends on Shader, OrthographicCamera, VertexArray, and PolygonMesh
