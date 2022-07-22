@@ -17,12 +17,24 @@ namespace engine {
 
         engine::RenderCommand::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
 
-        auto group = m_registry.group<MeshComponent>(entt::get<TransformComponent, MaterialComponent>);
+        auto group = m_registry.group<MeshComponent>(entt::get<TransformComponent>);
         for (auto entity : group) {
 
-            auto [mesh, transform,  material] = group.get<MeshComponent, TransformComponent, MaterialComponent>(entity);
+            auto [mesh, transform] = group.get<MeshComponent, TransformComponent>(entity);
 
-            Renderer::submit(mesh.m_mesh, transform.getTransformationMatrix(), material.m_color, material.m_texture);
+            // MaterialComponent is optional
+            glm::vec4 color;
+            std::shared_ptr<Texture> texture;
+            if (m_registry.all_of<MaterialComponent>(entity)) {
+                auto& material = m_registry.get<MaterialComponent>(entity);
+                color = material.m_color;
+                texture = material.m_texture;
+            } else {
+                color = glm::vec4(1.0f);
+                texture = nullptr;
+            }
+
+            Renderer::submit(mesh.m_mesh, transform.getTransformationMatrix(), color, texture);
 
         }
 

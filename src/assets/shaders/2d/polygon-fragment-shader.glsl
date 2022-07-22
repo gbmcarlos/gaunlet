@@ -13,15 +13,24 @@ uniform sampler2D texture0;
 uniform sampler2D texture1;
 uniform sampler2D texture2;
 
+vec4 sampleTexture(int textureIndex, vec2 textureCoordinates);
+
 void main() {
 
-    if (v_textureIndex == 0) {
-        color = texture(texture0, v_textureCoordinates);
-    } else if (v_textureIndex == 1) {
-        color = texture(texture1, v_textureCoordinates);
-    } else if (v_textureIndex == 2) {
-        color = texture(texture2, v_textureCoordinates);
+    vec4 textureColor = sampleTexture(v_textureIndex, v_textureCoordinates);
+    color = textureColor * v_color;
+}
+
+vec4 sampleTexture(int textureIndex, vec2 textureCoordinates) {
+
+    if (textureIndex == 0) {
+        return texture(texture0, textureCoordinates);
+    } else if (textureIndex == 1) {
+        return texture(texture1, textureCoordinates);
+    } else if (textureIndex == 2) {
+        return texture(texture2, textureCoordinates);
     }
 
-    color = color * v_color;
+    return vec4(1.0f, 1.0f, 1.0f, 1.0f);
+
 }

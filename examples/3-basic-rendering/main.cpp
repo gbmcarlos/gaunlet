@@ -57,7 +57,7 @@ public:
             glm::vec3(0.0f, 0.0f, -40.0f),
             glm::vec3(3.0f, 3.0f, 1.0f)
         );
-        triangle3.addComponent<engine::MaterialComponent>(glm::vec4(0.0f, 0.0f, 0.8f, 1.0f), texture1);
+        triangle3.addComponent<engine::MaterialComponent>(glm::vec4(0.0f, 0.0f, 0.8f, 1.0f), texture2);
 
         // SQUARE 1
         auto square1 = m_scene.createEntity();
@@ -77,7 +77,7 @@ public:
             glm::vec3(0.0f, 0.0f, -20.0f),
             glm::vec3(2.0f, 2.0f, 1.0f)
         );
-        square2.addComponent<engine::MaterialComponent>(texture2);
+        square2.addComponent<engine::MaterialComponent>(texture1);
 
         // SQUARE 3
         auto square3 = m_scene.createEntity();

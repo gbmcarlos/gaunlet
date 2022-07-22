@@ -15,7 +15,7 @@ flat out int v_textureIndex;
 out vec4 v_color;
 
 void main() {
-   // interpolated values
+
    v_textureCoordinates = a_textureCoordinates;
    v_textureIndex  = a_textureIndex;
    v_color = a_color;
