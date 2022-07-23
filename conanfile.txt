@@ -2,12 +2,15 @@
  glfw/3.3.7
  glew/2.2.0
  imgui/1.79
+ stb/cci.20210910
  glm/0.9.9.8
  entt/3.10.1
- stb/cci.20210910
+ box2d/2.4.1
 
 [generators]
  cmake
+ CMakeDeps
+ CMakeToolchain
 
  [imports]
  ./res/bindings, imgui_impl_glfw.h -> ../vendor/imgui

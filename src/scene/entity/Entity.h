@@ -8,6 +8,7 @@ namespace engine {
 
     public:
 
+        Entity() = default;
         Entity(entt::entity entityHandle, Scene* scene) : m_handle(entityHandle), m_scene(scene) {}
 
         template<typename T>
@@ -29,8 +30,8 @@ namespace engine {
         }
 
     private:
-        entt::entity m_handle;
-        Scene* m_scene;
+        entt::entity m_handle = entt::null;
+        Scene* m_scene = nullptr;
 
     };
 

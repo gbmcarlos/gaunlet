@@ -11,17 +11,17 @@ namespace engine {
 
     struct TransformComponent {
 
-        TransformComponent() : m_position(glm::vec3(0.0f, 0.0f, 0.0f)), m_rotation(glm::vec3(0.0f, 0.0f, 0.0f)), m_scale(glm::vec3(1.0f, 1.0f, 1.0f)) {}
+        TransformComponent() : m_translation(glm::vec3(0.0f, 0.0f, 0.0f)), m_rotation(glm::vec3(0.0f, 0.0f, 0.0f)), m_scale(glm::vec3(1.0f, 1.0f, 1.0f)) {}
         TransformComponent(const TransformComponent&) = default;
-        TransformComponent(glm::vec3 position,  glm::vec3 rotation, glm::vec3 scale) : m_position(position), m_rotation(rotation), m_scale(scale) {}
+        TransformComponent(glm::vec3 position,  glm::vec3 rotation, glm::vec3 scale) : m_translation(position), m_rotation(rotation), m_scale(scale) {}
 
-        glm::vec3 m_position;
+        glm::vec3 m_translation;
         glm::vec3 m_rotation;
         glm::vec3 m_scale;
 
         glm::mat4 getTransformationMatrix() const {
 
-            glm::mat4 translationsMatrix = glm::translate(glm::mat4(1.0f), m_position);
+            glm::mat4 translationsMatrix = glm::translate(glm::mat4(1.0f), m_translation);
 
             glm::mat4 rotationMatrixX = glm::rotate(glm::mat4(1.0f), glm::radians(m_rotation.x), {1, 0, 0});
             glm::mat4 rotationMatrixY = glm::rotate(glm::mat4(1.0f), glm::radians(m_rotation.y), {0, 1, 0});

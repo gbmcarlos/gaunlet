@@ -6,7 +6,7 @@
 namespace engine {
 
     Application::Application(const std::string& name)
-        : m_window(std::make_unique<Window>(name)), m_running(true) {
+        : m_window(Window::create(name, 0, 0)), m_running(true) {
         EventBus::getInstance().setEventCallback(GE_BIND_CALLBACK_FN(Application::onEvent));
     }
 

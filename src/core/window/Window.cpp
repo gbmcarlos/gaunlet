@@ -8,17 +8,20 @@
 #include "../input/events/ScrollEvent.h"
 
 #include <stdexcept>
+#include <utility>
 
 namespace engine {
 
-    Window::Window(int width, int height, const std::string& title)
-        : m_width(width), m_height(height), m_viewportWidth(0), m_viewportHeight(0), m_title(title) {
-        init();
+    std::shared_ptr<Window> Window::m_instance = nullptr;
+
+    Window::Window(std::string  title, int width, int height)
+        : m_width(width), m_height(height), m_viewportWidth(0), m_viewportHeight(0), m_title(std::move(title)) {
     }
 
-    Window::Window(const std::string& title)
-        : m_width(0), m_height(0), m_viewportWidth(0), m_viewportHeight(0), m_title(title) {
-        init();
+    const std::shared_ptr<Window>& Window::create(const std::string& title, int width, int height) {
+        m_instance = std::shared_ptr<Window>(new Window(title, width, height));
+        m_instance->init();
+        return m_instance;
     }
 
     Window::~Window() {
@@ -92,6 +95,13 @@ namespace engine {
 
     void Window::close() {
         glfwDestroyWindow(m_windowContext);
+    }
+
+    bool Window::isKeyPressed(int keyCode) {
+
+        auto state = glfwGetKey(m_windowContext, keyCode);
+        return state == GLFW_PRESS || state == GLFW_REPEAT;
+
     }
 
     void Window::windowCloseEventCallback(GLFWwindow *window) {

@@ -1,64 +1,25 @@
 #include <Scene.h>
 
-#include <array>
 #include <glm/glm.hpp>
+#include <box2d/box2d.h>
 
-class QuadControlLayer : public engine::Layer {
+class NativeScriptExample : public engine::NativeScript {
 
-public:
+    void onUpdate(engine::TimeStep timeStep) {
 
-    engine::Entity& m_quadEntity;
+        if (hasComponent<engine::BoxColliderComponent>()) {
 
-    explicit QuadControlLayer(engine::Entity& quadEntity) : m_quadEntity(quadEntity) {}
+            auto& boxColliderComponent = getComponent<engine::BoxColliderComponent>();
+            auto fixture = static_cast<b2Fixture*>(boxColliderComponent.m_runtimeFixture);
+            auto body = fixture->GetBody();
 
-    void onEvent(engine::Event &event) override {
+            if (engine::Input::isKeyPressed(GE_KEY_UP) && body->GetLinearVelocity().y < 0.01f) {
+                
+                body->ApplyForceToCenter(b2Vec2(0.0f, 100.0f), true);
 
-        engine::EventDispatcher dispatcher(event);
+            }
 
-        dispatcher.dispatch<engine::KeyPressEvent>(GE_BIND_CALLBACK_FN(QuadControlLayer::onKeyPressEvent));
-        dispatcher.dispatch<engine::KeyReleaseEvent>(GE_BIND_CALLBACK_FN(QuadControlLayer::onKeyReleaseEvent));
-
-    }
-
-    bool onKeyPressEvent(engine::KeyPressEvent& event) {
-
-        auto& speed = m_quadEntity.getComponent<engine::SpeedComponent>();
-
-        if (event.getKey() == GE_KEY_UP) {
-            speed.m_speed.y = 10;
-            return true;
-        } else if (event.getKey() == GE_KEY_DOWN) {
-            speed.m_speed.y = -10;
-            return true;
         }
-
-        if (event.getKey() == GE_KEY_RIGHT) {
-            speed.m_speed.x = 10;
-            return true;
-        } else if (event.getKey() == GE_KEY_LEFT) {
-            speed.m_speed.x = -10;
-            return true;
-        }
-
-        return false;
-
-    }
-
-    bool onKeyReleaseEvent(engine::KeyReleaseEvent& event) {
-
-        auto& speed = m_quadEntity.getComponent<engine::SpeedComponent>();
-
-        if ((event.getKey() == GE_KEY_RIGHT && speed.m_speed.x > 0) || (event.getKey() == GE_KEY_LEFT && speed.m_speed.x < 0) ) {
-            speed.m_speed.x = 0;
-            return true;
-        }
-
-        if ((event.getKey() == GE_KEY_UP && speed.m_speed.y > 0) || (event.getKey() == GE_KEY_DOWN && speed.m_speed.y < 0) ) {
-            speed.m_speed.y = 0;
-            return true;
-        }
-
-        return false;
 
     }
 
@@ -69,41 +30,52 @@ class SceneLayer : public engine::Layer {
 private:
 
     std::shared_ptr<engine::OrthographicCamera> m_camera;
-    std::shared_ptr<engine::Shader> m_shader;
 
     engine::SquareMesh m_quadMesh;
 
     engine::Scene m_scene;
-    engine::Entity m_quadEntity;
 
 public:
 
-    SceneLayer(float viewportWidth, float viewportHeight) : m_quadEntity(m_scene.createEntity()) {
+    SceneLayer(float viewportWidth, float viewportHeight) {
 
         engine::Renderer::init();
+
         m_camera = std::make_shared<engine::OrthographicCamera>(viewportWidth, viewportHeight, 100);
-        m_quadEntity.addComponent<engine::PolygonComponent>(m_quadMesh);
-        m_quadEntity.addComponent<engine::TransformComponent>();
-        m_quadEntity.addComponent<engine::SpeedComponent>();
-        m_quadEntity.addComponent<engine::MaterialComponent>(glm::vec4(0.8f, 0.8f, 0.8f, 1.0f));
+
+        engine:: Entity quad = m_scene.createEntity();
+        quad.addComponent<engine::PolygonComponent>(m_quadMesh);
+        quad.addComponent<engine::TransformComponent>(
+            glm::vec3(0.0f, 4.0f, 0.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(1.0f, 1.0f, 1.0f)
+        );
+        quad.addComponent<engine::MaterialComponent>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+        quad.addComponent<engine::RigidBodyComponent>(engine::RigidBodyComponent::Type::Dynamic);
+        quad.addComponent<engine::BoxColliderComponent>();
+        quad.addComponent<engine::NativeScriptComponent>().bind<NativeScriptExample>();
+
+        auto ground = m_scene.createEntity();
+        ground.addComponent<engine::PolygonComponent>(m_quadMesh);
+        ground.addComponent<engine::TransformComponent>(
+            glm::vec3(0.0f, -3.0f, 0.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(5.0f, 1.0f, 1.0f)
+        );
+        ground.addComponent<engine::RigidBodyComponent>(engine::RigidBodyComponent::Type::Static);
+        ground.addComponent<engine::BoxColliderComponent>();
+
+        m_scene.start();
 
     }
 
     void onUpdate(engine::TimeStep timeStep) override {
-
-        // Update the position of the quad based on its speed
-        auto& transform = m_quadEntity.getComponent<engine::TransformComponent>();
-        auto& speed = m_quadEntity.getComponent<engine::SpeedComponent>();
-        transform.m_position.x += speed.m_speed.x * timeStep;
-        transform.m_position.y += speed.m_speed.y * timeStep;
 
         engine::Renderer::beginScene(m_camera);
         m_scene.onUpdate(timeStep);
         engine::Renderer::endScene();
 
     }
-
-    inline engine::Entity& getQuadEntity() {return m_quadEntity; }
 
 };
 
@@ -115,15 +87,17 @@ public:
 private:
 
     SceneLayer* m_sceneLayer;
-    QuadControlLayer* m_quadControlLayer;
 
 public:
 
     void onReady() override {
-        m_sceneLayer = new SceneLayer(m_window->getViewportWidth(), m_window->getViewportHeight());
-        m_quadControlLayer = new QuadControlLayer(m_sceneLayer->getQuadEntity());
+
+        m_sceneLayer = new SceneLayer(
+            m_window->getViewportWidth(),
+            m_window->getViewportHeight()
+        );
         pushLayer(m_sceneLayer);
-        pushLayer(m_quadControlLayer);
+
     }
 
 };
