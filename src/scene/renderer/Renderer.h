@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../buffer/VertexArray.h"
-#include "../texture/Texture.h"
+#include "../../graphics/buffer/VertexArray.h"
+#include "../../graphics/texture/Texture.h"
 
-#include "../shader/Shader.h"
-#include "../shader/ShaderLibrary.h"
+#include "../../graphics/shader/Shader.h"
+#include "../../graphics/shader/ShaderLibrary.h"
 
-#include "../scene/Component.h"
+#include "../entity/GraphicsComponents.h"
 
 #include "../camera/OrthographicCamera.h"
 
@@ -33,6 +33,7 @@ namespace engine {
         static void submit(const PolygonComponent& polygonComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent);
         static void submit(const CircleComponent& circleComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent);
 
+        // Flush batches
         static void flushPolygons();
         static void flushCircles();
 
@@ -42,9 +43,11 @@ namespace engine {
 
     private:
 
+        // Init loaders
         static void loadDefaultShaders();
         static void loadDefaultWhiteTexture();
 
+        // Internal batch checks
         static bool shouldFlushPolygon(const std::vector<PolygonVertex>& vertices, const std::vector<unsigned int>& indices, const std::shared_ptr<Texture>& texture);
         static bool shouldFlushCircles(const std::vector<CircleVertex>& vertices, const std::shared_ptr<Texture>& texture);
 
@@ -70,22 +73,15 @@ namespace engine {
             std::vector<std::shared_ptr<Texture> > m_circleTextures = {};
 
             // Shared
+            glm::mat4 m_viewProjectionMatrix;
             std::shared_ptr<Texture> m_whiteTexture = nullptr;
             ShaderLibrary m_shaderLibrary;
 
-            RendererStorage() = default;
+            RendererStorage() : m_viewProjectionMatrix(OrthographicCamera::getDefaultViewProjectionMatrix()) {}
 
         };
 
         static RendererStorage* m_rendererStorage;
-
-        static ShaderLibrary m_shaderLibrary;
-
-        struct SceneData {
-            glm::mat4 m_viewProjectionMatrix;
-        };
-
-        static SceneData* m_sceneData;
 
     };
 

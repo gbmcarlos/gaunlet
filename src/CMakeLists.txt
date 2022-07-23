@@ -13,15 +13,18 @@ add_library(graphics-engine
         core/run-loop/RunLoop.cpp
 
 #        Graphics
-        graphics/renderer/Renderer.cpp
-        graphics/buffer/VertexBuffer.cpp graphics/buffer/BufferLayout.cpp graphics/buffer/IndexBuffer.cpp graphics/buffer/VertexArray.cpp
+        graphics/buffer/BufferLayout.cpp
+        graphics/buffer/VertexBuffer.cpp
+        graphics/buffer/IndexBuffer.cpp
+        graphics/buffer/VertexArray.cpp
         graphics/shader/Shader.cpp
         graphics/shader/ShaderLibrary.cpp
-        graphics/camera/OrthographicCamera.cpp
         graphics/texture/Texture.cpp
 
 #        Scene
-        graphics/scene/Scene.cpp
+        scene/camera/OrthographicCamera.cpp
+        scene/renderer/Renderer.cpp
+        scene/Scene.cpp
 
         ${PROJECT_SOURCE_DIR}/vendor/imgui/imgui_impl_glfw.cpp ${PROJECT_SOURCE_DIR}/vendor/imgui/imgui_impl_opengl3.cpp
     )

@@ -20,8 +20,6 @@ namespace engine {
 
     void VertexArray::addBuffer(std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<IndexBuffer> indexBuffer) {
 
-        m_indexBuffer = std::move(indexBuffer);
-
         bind();
 
         vertexBuffer->bind();
@@ -37,7 +35,9 @@ namespace engine {
                     element.m_offset
                 );
         }
-        vertexBuffer->unbind();
+
+        indexBuffer->bind();
+        m_indexBuffer = std::move(indexBuffer);
 
     }
 

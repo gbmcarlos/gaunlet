@@ -1,5 +1,4 @@
-#include <Core.h>
-#include <Graphics.h>
+#include <Scene.h>
 
 #include <array>
 #include <glm/glm.hpp>

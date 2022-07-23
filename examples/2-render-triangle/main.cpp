@@ -60,7 +60,7 @@ public:
 
         engine::RenderCommand::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
 
-        engine::Renderer::submitTriangles(m_shaderLibrary.get("main"), m_vertexArray);
+        engine::RenderCommand::drawIndexedTriangles(m_vertexArray->getIndexBuffer()->getCount());
 
     }
 

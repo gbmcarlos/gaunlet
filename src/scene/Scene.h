@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../core/application/TimeStep.h"
+#include "../core/application/TimeStep.h"
 #include "entt/entt.hpp"
 
 namespace engine {
@@ -19,10 +19,12 @@ namespace engine {
         void onUpdate(TimeStep timeStep);
 
     private:
+
         entt::registry m_registry;
 
-        void renderPolygons(TimeStep timeStep);
-        void renderCircles(TimeStep timeStep);
+        void renderScene();
+        void renderPolygons();
+        void renderCircles();
 
     };
 

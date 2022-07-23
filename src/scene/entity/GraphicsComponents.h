@@ -2,9 +2,8 @@
 
 #include "../mesh/PolygonMesh.h"
 #include "../mesh/CircleMesh.h"
-#include "../texture/Texture.h"
+#include "../../graphics/texture/Texture.h"
 
-#include "glm/glm.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include <utility>
 
@@ -77,16 +76,6 @@ namespace engine {
 
         glm::vec4 m_color;
         std::shared_ptr<Texture> m_texture;
-
-    };
-
-    struct SpeedComponent {
-
-        SpeedComponent() = default;
-        SpeedComponent(const SpeedComponent&) = default;
-        SpeedComponent(glm::vec3 speed) : m_speed(speed) {}
-
-        glm::vec3 m_speed;
 
     };
 
