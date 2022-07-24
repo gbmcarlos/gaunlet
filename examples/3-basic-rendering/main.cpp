@@ -14,9 +14,6 @@ private:
 
     engine::Scene m_scene;
 
-    engine::SquareMesh m_quadMesh;
-    engine::TriangleMesh m_triangleMesh;
-
 public:
 
     MainLayer(int viewportWidth, int viewportHeight) {
@@ -28,7 +25,7 @@ public:
 
         // TRIANGLE 1
         auto triangle1 = m_scene.createEntity();
-        triangle1.addComponent<engine::PolygonComponent>(m_triangleMesh);
+        triangle1.addComponent<engine::PolygonComponent>(engine::TriangleMesh());
         triangle1.addComponent<engine::TransformComponent>(
             glm::vec3(-5.0f, 3.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
@@ -38,7 +35,7 @@ public:
 
         // TRIANGLE 2
         auto triangle2 = m_scene.createEntity();
-        triangle2.addComponent<engine::PolygonComponent>(m_triangleMesh);
+        triangle2.addComponent<engine::PolygonComponent>(engine::TriangleMesh());
         triangle2.addComponent<engine::TransformComponent>(
             glm::vec3(-5.0f, 0.5f, 0.0f),
             glm::vec3(0.0f, 0.0f, -20.0f),
@@ -48,7 +45,7 @@ public:
 
         // TRIANGLE 3
         auto triangle3 = m_scene.createEntity();
-        triangle3.addComponent<engine::PolygonComponent>(m_triangleMesh);
+        triangle3.addComponent<engine::PolygonComponent>(engine::TriangleMesh());
         triangle3.addComponent<engine::TransformComponent>(
             glm::vec3(-5.0f, -2.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, -40.0f),
@@ -58,7 +55,7 @@ public:
 
         // SQUARE 1
         auto square1 = m_scene.createEntity();
-        square1.addComponent<engine::PolygonComponent>(m_quadMesh);
+        square1.addComponent<engine::PolygonComponent>(engine::SquareMesh());
         square1.addComponent<engine::TransformComponent>(
             glm::vec3(0.0f, 3.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
@@ -68,7 +65,7 @@ public:
 
         // SQUARE 2
         auto square2 = m_scene.createEntity();
-        square2.addComponent<engine::PolygonComponent>(m_quadMesh);
+        square2.addComponent<engine::PolygonComponent>(engine::SquareMesh());
         square2.addComponent<engine::TransformComponent>(
             glm::vec3(0.0f, 0.5f, 0.0f),
             glm::vec3(0.0f, 0.0f, -20.0f),
@@ -78,7 +75,7 @@ public:
 
         // SQUARE 3
         auto square3 = m_scene.createEntity();
-        square3.addComponent<engine::PolygonComponent>(m_quadMesh);
+        square3.addComponent<engine::PolygonComponent>(engine::SquareMesh());
         square3.addComponent<engine::TransformComponent>(
             glm::vec3(0.0f, -2.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, -40.0f),

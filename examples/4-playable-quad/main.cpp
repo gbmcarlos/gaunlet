@@ -29,8 +29,6 @@ private:
 
     std::shared_ptr<engine::OrthographicCamera> m_camera;
 
-    engine::SquareMesh m_quadMesh;
-
     engine::Scene m_scene;
 
 public:
@@ -42,7 +40,7 @@ public:
         m_camera = std::make_shared<engine::OrthographicCamera>(viewportWidth, viewportHeight, 100);
 
         engine:: Entity quad = m_scene.createEntity();
-        quad.addComponent<engine::PolygonComponent>(m_quadMesh);
+        quad.addComponent<engine::PolygonComponent>(engine::SquareMesh());
         quad.addComponent<engine::TransformComponent>(
             glm::vec3(0.0f, 4.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
@@ -54,7 +52,7 @@ public:
         quad.addComponent<engine::NativeScriptComponent>().bind<NativeScriptExample>();
 
         auto ground = m_scene.createEntity();
-        ground.addComponent<engine::PolygonComponent>(m_quadMesh);
+        ground.addComponent<engine::PolygonComponent>(engine::SquareMesh());
         ground.addComponent<engine::TransformComponent>(
             glm::vec3(0.0f, -3.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
