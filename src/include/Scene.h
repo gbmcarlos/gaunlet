@@ -13,5 +13,5 @@
 #include "../scene/mesh/2d/samples/SquareMesh.h" // Depends on PolygonMesh
 
 #include "../scene/entity/GraphicsComponents.h" // Depends on PolygonMesh and CircleMesh
-#include "../scene/entity/PhysicsComponents.h" // Doesn't depend on anything
+#include "../scene/entity/PhysicsComponents.h" // Depends on box2d
 #include "../scene/entity/ScriptComponents.h" // Depends on Entity
