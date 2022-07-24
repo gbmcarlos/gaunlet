@@ -1,20 +1,33 @@
 #include <Scene.h>
 
 #include <glm/glm.hpp>
-#include <box2d/box2d.h>
 
 class NativeScriptExample : public engine::NativeScript {
 
     void onUpdate(engine::TimeStep timeStep) {
 
-        if (hasComponent<engine::BoxColliderComponent>()) {
+        if (hasComponent<engine::CircleColliderComponent>()) {
 
-            auto& boxCollider = getComponent<engine::BoxColliderComponent>();
+            float targetSpeed = 3.0f;
 
-            if (engine::Input::isKeyPressed(GE_KEY_UP) && boxCollider.getBody()->GetLinearVelocity().y < 0.01f && boxCollider.getBody()->GetLinearVelocity().y > -0.01f) {
+            auto& collider = getComponent<engine::CircleColliderComponent>();
+            auto body = collider.getBody();
+            auto currentSpeed = body->GetLinearVelocity();
 
-                boxCollider.getBody()->ApplyLinearImpulseToCenter(b2Vec2(0.0f, 5.0f), true);
+            if (engine::Input::isKeyPressed(GE_KEY_LEFT)) {
+                body->SetLinearVelocity({-targetSpeed, currentSpeed.y});
+            }
 
+            if (engine::Input::isKeyPressed(GE_KEY_RIGHT)) {
+                body->SetLinearVelocity({targetSpeed, currentSpeed.y});
+            }
+
+            if (engine::Input::isKeyPressed(GE_KEY_DOWN)) {
+                body->SetLinearVelocity({currentSpeed.x, -targetSpeed});
+            }
+
+            if (engine::Input::isKeyPressed(GE_KEY_UP)) {
+                body->SetLinearVelocity({currentSpeed.x, targetSpeed});
             }
 
         }
@@ -39,30 +52,72 @@ public:
 
         m_camera = std::make_shared<engine::OrthographicCamera>(viewportWidth, viewportHeight, 100);
 
-        engine:: Entity quad = m_scene.createEntity();
-        quad.addComponent<engine::PolygonComponent>(engine::SquareMesh());
+        createRoom();
+
+        engine::Entity quad = m_scene.createEntity();
         quad.addComponent<engine::TransformComponent>(
-            glm::vec3(0.0f, 4.0f, 0.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f)
         );
+        quad.addComponent<engine::CircleComponent>(1.0f);
         quad.addComponent<engine::MaterialComponent>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
-        quad.addComponent<engine::RigidBodyComponent>(engine::RigidBodyComponent::Type::Dynamic);
-        quad.addComponent<engine::BoxColliderComponent>();
+        quad.addComponent<engine::RigidBodyComponent>(engine::RigidBodyComponent::Type::Dynamic, false);
+        quad.addComponent<engine::CircleColliderComponent>(-0.01f, 1.0f, 0.0f, 1.0f, 0.05f);
         quad.addComponent<engine::NativeScriptComponent>().bind<NativeScriptExample>();
 
-        auto ground = m_scene.createEntity();
-        ground.addComponent<engine::PolygonComponent>(engine::SquareMesh());
-        ground.addComponent<engine::TransformComponent>(
-            glm::vec3(0.0f, -3.0f, 0.0f),
+        m_scene.start({0.0f, 0.0f});
+
+    }
+
+    void createRoom() {
+
+        glm::vec2 projectionSize = m_camera->getProjectionSize();
+        float leftWallX = -projectionSize.x/2;
+        float rightWallX = projectionSize.x/2;
+        float groundY = -projectionSize.y/2;
+        float ceilingY = projectionSize.y/2;
+
+        auto leftWall = m_scene.createEntity();
+        leftWall.addComponent<engine::RigidBodyComponent>(engine::RigidBodyComponent::Type::Static);
+        leftWall.addComponent<engine::BoxColliderComponent>();
+        leftWall.addComponent<engine::TransformComponent>(
+            glm::vec3(leftWallX - 0.5f, 0.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec3(5.0f, 1.0f, 1.0f)
+            glm::vec3(1.0f, projectionSize.y, 1.0f)
         );
+
+        auto rightWall = m_scene.createEntity();
+        rightWall.addComponent<engine::RigidBodyComponent>(engine::RigidBodyComponent::Type::Static);
+        rightWall.addComponent<engine::BoxColliderComponent>();
+        rightWall.addComponent<engine::TransformComponent>(
+            glm::vec3(rightWallX + 0.5f, 0.0f, 0.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(1.0f, projectionSize.y, 1.0f)
+        );
+
+        auto ground = m_scene.createEntity();
         ground.addComponent<engine::RigidBodyComponent>(engine::RigidBodyComponent::Type::Static);
         ground.addComponent<engine::BoxColliderComponent>();
+        ground.addComponent<engine::TransformComponent>(
+            glm::vec3(0.0f, groundY - 0.5f, 0.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(projectionSize.x, 1.0f, 1.0f)
+        );
 
-        m_scene.start();
+        auto ceiling = m_scene.createEntity();
+        ceiling.addComponent<engine::RigidBodyComponent>(engine::RigidBodyComponent::Type::Static);
+        ceiling.addComponent<engine::BoxColliderComponent>();
+        ceiling.addComponent<engine::TransformComponent>(
+            glm::vec3(0.0f, ceilingY + 0.5f, 0.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(projectionSize.x, 1.0f, 1.0f)
+        );
 
+    }
+
+    ~SceneLayer() {
+        m_scene.stop();
     }
 
     void onUpdate(engine::TimeStep timeStep) override {

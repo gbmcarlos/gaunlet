@@ -1,7 +1,6 @@
 #include "Scene.h"
 
 #include "entity/Entity.h"
-#include "entity/GraphicsComponents.h"
 #include "entity/ScriptComponents.h"
 #include "renderer/Renderer.h"
 
@@ -9,12 +8,12 @@
 
 namespace engine {
 
-    Scene::Scene() {
-        m_physicsWorld = new b2World({0.0f, -9.8f});
-    }
-
     Scene::~Scene() {
-        delete m_physicsWorld;
+
+        if (m_physicsWorld) {
+            destroyPhysics();
+        }
+
     }
 
     Entity Scene::createEntity() {
@@ -22,50 +21,96 @@ namespace engine {
         return {entityHandle, this};
     }
 
-    void Scene::start() {
+    void Scene::start(glm::vec2 gravity) {
 
+        initPhysics(gravity);
         initScripts();
-        initPhysics();
 
     }
 
-    void Scene::initPhysics() {
+    void Scene::stop() {
+
+        destroyScripts();
+        destroyPhysics();
+
+    }
+
+    void Scene::initPhysics(glm::vec2 gravity) {
+
+        m_physicsWorld = new b2World({gravity.x, gravity.y});
 
         auto group = m_registry.group<RigidBodyComponent>(entt::get<TransformComponent>);
         for (auto e : group) {
 
             Entity entity = {e, this};
+
             auto [rigidBody, transform] = group.get<RigidBodyComponent, TransformComponent>(e);
-
-            b2BodyDef bodyDefinition;
-            bodyDefinition.type = convertRigidBodyType(rigidBody.m_type);
-            bodyDefinition.position.Set(transform.m_translation.x, transform.m_translation.y);
-            bodyDefinition.angle = glm::radians(transform.m_rotation.z);
-            b2Body* body = m_physicsWorld->CreateBody(&bodyDefinition);
-
-            rigidBody.m_runtimeBody = body;
+            createRigidBody(rigidBody, transform);
 
             if (entity.hasComponent<BoxColliderComponent>()) {
-
                 auto& boxCollider = entity.getComponent<BoxColliderComponent>();
-
-                b2PolygonShape box;
-                box.SetAsBox(
-                    (boxCollider.m_size.x * transform.m_scale.x) + boxCollider.m_padding.x,
-                    (boxCollider.m_size.y * transform.m_scale.y) + boxCollider.m_padding.y
-                );
-
-                b2FixtureDef fixtureDef;
-                fixtureDef.shape = &box;
-                fixtureDef.density = boxCollider.m_density;
-
-                auto fixture = body->CreateFixture(&fixtureDef);
-                boxCollider.m_runtimeFixture = fixture;
-
+                createBoxFixture(rigidBody.m_runtimeBody, boxCollider, transform);
             }
 
+            if (entity.hasComponent<CircleColliderComponent>()) {
+                auto& circleCollider = entity.getComponent<CircleColliderComponent>();
+                createCircleFixture(rigidBody.m_runtimeBody, circleCollider, transform);
+            }
 
         }
+
+    }
+
+    void Scene::createRigidBody(RigidBodyComponent& rigidBody, TransformComponent transform) {
+
+        b2BodyDef bodyDefinition;
+        bodyDefinition.type = convertRigidBodyType(rigidBody.m_type);
+        bodyDefinition.position.Set(transform.m_translation.x, transform.m_translation.y);
+        bodyDefinition.fixedRotation = rigidBody.m_fixedRotation;
+        bodyDefinition.angle = glm::radians(transform.m_rotation.z);
+
+        b2Body* body = m_physicsWorld->CreateBody(&bodyDefinition);
+        rigidBody.m_runtimeBody = body;
+
+    }
+
+    void Scene::createBoxFixture(b2Body* body, BoxColliderComponent& boxCollider, TransformComponent transform) {
+
+        b2PolygonShape shape;
+        shape.SetAsBox(
+            (boxCollider.m_size.x * transform.m_scale.x) + boxCollider.m_padding.x,
+            (boxCollider.m_size.y * transform.m_scale.y) + boxCollider.m_padding.y
+        );
+
+        b2FixtureDef fixtureDef;
+        fixtureDef.shape = &shape;
+        fixtureDef.density = boxCollider.m_density;
+        fixtureDef.friction = boxCollider.m_friction;
+        fixtureDef.restitution = boxCollider.m_restitution;
+        fixtureDef.restitutionThreshold = boxCollider.m_restitutionThreshold;
+
+        auto fixture = body->CreateFixture(&fixtureDef);
+        boxCollider.m_runtimeFixture = fixture;
+
+    }
+
+    void Scene::createCircleFixture(b2Body* body, CircleColliderComponent& boxCollider, TransformComponent transform) {
+
+        b2CircleShape shape;
+
+        float scale = std::max(transform.m_scale.x, transform.m_scale.x);
+        shape.m_p.Set(0.0f, 0.0f); // Position the fixture relative to the center of the body' position
+        shape.m_radius = (boxCollider.m_radius * scale) + boxCollider.m_padding;
+
+        b2FixtureDef fixtureDef;
+        fixtureDef.shape = &shape;
+        fixtureDef.density = boxCollider.m_density;
+        fixtureDef.friction = boxCollider.m_friction;
+        fixtureDef.restitution = boxCollider.m_restitution;
+        fixtureDef.restitutionThreshold = boxCollider.m_restitutionThreshold;
+
+        auto fixture = body->CreateFixture(&fixtureDef);
+        boxCollider.m_runtimeFixture = fixture;
 
     }
 
@@ -80,6 +125,22 @@ namespace engine {
             // Call the native script's onCreate
             nativeScriptComponent.m_nativeScriptInstance->onCreate();
 
+        });
+
+    }
+
+    void Scene::destroyPhysics() {
+
+        m_physicsWorld->ClearForces();
+        delete m_physicsWorld;
+
+    }
+
+    void Scene::destroyScripts() {
+
+        m_registry.view<NativeScriptComponent>().each([=](entt::entity entity, NativeScriptComponent& nativeScriptComponent) {
+            // Destroy the instance of the native script
+            nativeScriptComponent.m_destroyScriptFunction(&nativeScriptComponent);
         });
 
     }

@@ -2,6 +2,7 @@
 
 #include "Graphics.h"
 
+#include <box2d/box2d.h> // Expose box2d to the client
 
 #include "../scene/renderer/Renderer.h" // Depends on Graphics
 #include "../scene/Scene.h" // Depends on ENTT

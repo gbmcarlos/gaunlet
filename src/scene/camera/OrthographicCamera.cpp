@@ -21,23 +21,23 @@ namespace engine {
     void OrthographicCamera::calculateProjectionMatrix() {
 
         m_projectionSize = {
-                (m_viewportWidth / m_viewportResolution),
-                (m_viewportHeight / m_viewportResolution),
+                (m_viewportWidth / m_viewportResolution) * m_zoomLevel,
+                (m_viewportHeight / m_viewportResolution) * m_zoomLevel,
         };
 
-        m_projectionMatrix = glm::ortho(-m_projectionSize.x/2 * m_zoomLevel, m_projectionSize.x/2 * m_zoomLevel, -m_projectionSize.y/2 * m_zoomLevel, m_projectionSize.y/2 * m_zoomLevel, -1.0f, 1.0f);
+        m_projectionMatrix = glm::ortho(-m_projectionSize.x/2, m_projectionSize.x/2, -m_projectionSize.y/2, m_projectionSize.y/2, -1.0f, 1.0f);
 
     }
 
     void OrthographicCamera::calculateViewProjectionMatrix() {
 
-        // Calculate the position matrix based on our vec3 m_position
+        // Calculate the translation matrix based on our vec3 m_position
         glm::mat4 position = glm::translate(glm::mat4(1.0f), m_position);
 
         // Calculate the rotation matrix based on our float rotation (rotate only along the z axis)
         glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), glm::radians(m_rotation), glm::vec3(0, 0, 1));
 
-        // The transform of the camera is the position * rotation
+        // The transform of the camera is the position * rotation (there is no scale)
         glm::mat4 transform = position * rotation;
 
         // Moving the camera actually means moving the whole world, so we invert its transform
