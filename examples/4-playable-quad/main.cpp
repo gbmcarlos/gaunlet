@@ -9,13 +9,11 @@ class NativeScriptExample : public engine::NativeScript {
 
         if (hasComponent<engine::BoxColliderComponent>()) {
 
-            auto& boxColliderComponent = getComponent<engine::BoxColliderComponent>();
-            auto fixture = static_cast<b2Fixture*>(boxColliderComponent.m_runtimeFixture);
-            auto body = fixture->GetBody();
+            auto& boxCollider = getComponent<engine::BoxColliderComponent>();
 
-            if (engine::Input::isKeyPressed(GE_KEY_UP) && body->GetLinearVelocity().y < 0.01f) {
-                
-                body->ApplyForceToCenter(b2Vec2(0.0f, 100.0f), true);
+            if (engine::Input::isKeyPressed(GE_KEY_UP) && boxCollider.getBody()->GetLinearVelocity().y < 0.01f && boxCollider.getBody()->GetLinearVelocity().y > -0.01f) {
+
+                boxCollider.getBody()->ApplyLinearImpulseToCenter(b2Vec2(0.0f, 5.0f), true);
 
             }
 
