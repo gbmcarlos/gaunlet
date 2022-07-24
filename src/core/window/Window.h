@@ -9,27 +9,11 @@
 namespace engine {
 
     class Window {
-
-    public:
-
-        static const std::shared_ptr<Window>& create(const std::string& title, int width, int height);
-        inline static const std::shared_ptr<Window>& getInstance() {
-            return m_instance;
-        }
-
     private:
-        Window(std::string  title, int width, int height);
-        Window& operator=(Window const&) = default;
-
-    public:
-        Window(Window const&) = delete;
-
-    private:
-        static std::shared_ptr<Window> m_instance;
-
         std::string m_title;
         int m_width, m_height;
         int m_viewportWidth, m_viewportHeight;
+
         GLFWwindow* m_windowContext;
 
         void init();
@@ -42,6 +26,8 @@ namespace engine {
         static void scrollCallback(GLFWwindow* window, double xOffset, double yOffset);
 
     public:
+        Window(const std::string& title);
+        Window(int width, int height, const std::string& title);
         ~Window();
 
         void setTitle(const std::string& title);
@@ -56,9 +42,11 @@ namespace engine {
         inline const std::string& getTitle() { return m_title;}
         inline int getWidth() { return m_width;}
         inline int getHeight() { return m_height;}
-        inline int getViewportWidth() const { return m_viewportWidth;}
-        inline int getViewportHeight() const { return m_viewportHeight;}
+        inline int getViewportWidth() { return m_viewportWidth;}
+        inline int getViewportHeight() { return m_viewportHeight;}
         inline GLFWwindow*& getContext() {return m_windowContext;}
+
+        static Window* getCurrentInstance();
 
     };
 

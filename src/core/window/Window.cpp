@@ -8,20 +8,17 @@
 #include "../input/events/ScrollEvent.h"
 
 #include <stdexcept>
-#include <utility>
 
 namespace engine {
 
-    std::shared_ptr<Window> Window::m_instance = nullptr;
-
-    Window::Window(std::string  title, int width, int height)
-        : m_width(width), m_height(height), m_viewportWidth(0), m_viewportHeight(0), m_title(std::move(title)) {
+    Window::Window(int width, int height, const std::string& title)
+        : m_width(width), m_height(height), m_viewportWidth(0), m_viewportHeight(0), m_title(title) {
+        init();
     }
 
-    const std::shared_ptr<Window>& Window::create(const std::string& title, int width, int height) {
-        m_instance = std::shared_ptr<Window>(new Window(title, width, height));
-        m_instance->init();
-        return m_instance;
+    Window::Window(const std::string& title)
+        : m_width(0), m_height(0), m_viewportWidth(0), m_viewportHeight(0), m_title(title) {
+        init();
     }
 
     Window::~Window() {
@@ -63,6 +60,8 @@ namespace engine {
         glfwSetScrollCallback(m_windowContext, scrollCallback);
 
         bind();
+
+        glfwSetWindowUserPointer(m_windowContext, this);
 
     }
 
@@ -153,6 +152,14 @@ namespace engine {
     void Window::scrollCallback(GLFWwindow *window, double xOffset, double yOffset) {
         ScrollEvent event((float) xOffset, (float) yOffset);
         EventBus::getInstance().publishEvent(event);
+    }
+
+    Window* Window::getCurrentInstance() {
+
+        GLFWwindow* currentContext = glfwGetCurrentContext();
+        auto* currentWindow = (Window*) glfwGetWindowUserPointer(currentContext);
+        return currentWindow;
+
     }
 
 }

@@ -9,7 +9,7 @@ namespace engine {
     public:
 
         static bool isKeyPressed(int keyCode) {
-            return Window::getInstance()->isKeyPressed(keyCode);
+            return Window::getCurrentInstance()->isKeyPressed(keyCode);
         }
 
     };
