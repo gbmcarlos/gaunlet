@@ -24,6 +24,7 @@ add_library(graphics-engine
 #        Scene
         scene/camera/OrthographicCamera.cpp
         scene/renderer/Renderer.cpp
+        scene/physics/PhysicsWorld.cpp
         scene/Scene.cpp
 
         ${PROJECT_SOURCE_DIR}/vendor/imgui/imgui_impl_glfw.cpp ${PROJECT_SOURCE_DIR}/vendor/imgui/imgui_impl_opengl3.cpp

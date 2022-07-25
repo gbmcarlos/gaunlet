@@ -4,17 +4,7 @@
 #include "entity/ScriptComponents.h"
 #include "renderer/Renderer.h"
 
-#include <iostream>
-
 namespace engine {
-
-    Scene::~Scene() {
-
-        if (m_physicsWorld) {
-            destroyPhysics();
-        }
-
-    }
 
     Entity Scene::createEntity() {
         entt::entity entityHandle = m_registry.create();
@@ -28,16 +18,24 @@ namespace engine {
 
     }
 
+    void Scene::onUpdate(TimeStep timeStep) {
+
+        runScripts(timeStep);
+        simulatePhysics(timeStep);
+        renderElements();
+
+    }
+
     void Scene::stop() {
 
         destroyScripts();
-        destroyPhysics();
+        m_physicsWorld.destroyPhysics();
 
     }
 
     void Scene::initPhysics(glm::vec2 gravity) {
 
-        m_physicsWorld = new b2World({gravity.x, gravity.y});
+        m_physicsWorld.initPhysics(gravity);
 
         auto group = m_registry.group<RigidBodyComponent>(entt::get<TransformComponent>);
         for (auto e : group) {
@@ -45,72 +43,35 @@ namespace engine {
             Entity entity = {e, this};
 
             auto [rigidBody, transform] = group.get<RigidBodyComponent, TransformComponent>(e);
-            createRigidBody(rigidBody, transform);
+            m_physicsWorld.createRigidBody(rigidBody, transform);
 
             if (entity.hasComponent<BoxColliderComponent>()) {
                 auto& boxCollider = entity.getComponent<BoxColliderComponent>();
-                createBoxFixture(rigidBody.m_runtimeBody, boxCollider, transform);
+                m_physicsWorld.createBoxFixture(rigidBody.m_runtimeBody, boxCollider, transform);
             }
 
             if (entity.hasComponent<CircleColliderComponent>()) {
                 auto& circleCollider = entity.getComponent<CircleColliderComponent>();
-                createCircleFixture(rigidBody.m_runtimeBody, circleCollider, transform);
+                m_physicsWorld.createCircleFixture(rigidBody.m_runtimeBody, circleCollider, transform);
             }
 
         }
 
     }
 
-    void Scene::createRigidBody(RigidBodyComponent& rigidBody, TransformComponent transform) {
+    void Scene::simulatePhysics(TimeStep timeStep) {
 
-        b2BodyDef bodyDefinition;
-        bodyDefinition.type = convertRigidBodyType(rigidBody.m_type);
-        bodyDefinition.position.Set(transform.m_translation.x, transform.m_translation.y);
-        bodyDefinition.fixedRotation = rigidBody.m_fixedRotation;
-        bodyDefinition.angle = glm::radians(transform.m_rotation.z);
+        m_physicsWorld.simulatePhysics(timeStep);
 
-        b2Body* body = m_physicsWorld->CreateBody(&bodyDefinition);
-        rigidBody.m_runtimeBody = body;
+        auto group = m_registry.group<RigidBodyComponent>(entt::get<TransformComponent>);
+        for (auto e : group) {
 
-    }
+            Entity entity = {e, this};
+            auto [rigidBody, transform] = group.get<RigidBodyComponent, TransformComponent>(e);
 
-    void Scene::createBoxFixture(b2Body* body, BoxColliderComponent& boxCollider, TransformComponent transform) {
+            m_physicsWorld.updateBody(rigidBody, transform);
 
-        b2PolygonShape shape;
-        shape.SetAsBox(
-            (boxCollider.m_size.x * transform.m_scale.x) + boxCollider.m_padding.x,
-            (boxCollider.m_size.y * transform.m_scale.y) + boxCollider.m_padding.y
-        );
-
-        b2FixtureDef fixtureDef;
-        fixtureDef.shape = &shape;
-        fixtureDef.density = boxCollider.m_density;
-        fixtureDef.friction = boxCollider.m_friction;
-        fixtureDef.restitution = boxCollider.m_restitution;
-        fixtureDef.restitutionThreshold = boxCollider.m_restitutionThreshold;
-
-        auto fixture = body->CreateFixture(&fixtureDef);
-        boxCollider.m_runtimeFixture = fixture;
-
-    }
-
-    void Scene::createCircleFixture(b2Body* body, CircleColliderComponent& boxCollider, TransformComponent transform) {
-
-        b2CircleShape shape;
-
-        float scale = std::max(transform.m_scale.x, transform.m_scale.x);
-        shape.m_p.Set(0.0f, 0.0f); // Position the fixture relative to the center of the body' position
-        shape.m_radius = (boxCollider.m_radius * scale) + boxCollider.m_padding;
-
-        b2FixtureDef fixtureDef;
-        fixtureDef.shape = &shape;
-        fixtureDef.density = boxCollider.m_density;
-        fixtureDef.friction = boxCollider.m_friction;
-        fixtureDef.restitution = boxCollider.m_restitution;
-        fixtureDef.restitutionThreshold = boxCollider.m_restitutionThreshold;
-
-        auto fixture = body->CreateFixture(&fixtureDef);
-        boxCollider.m_runtimeFixture = fixture;
+        }
 
     }
 
@@ -129,10 +90,11 @@ namespace engine {
 
     }
 
-    void Scene::destroyPhysics() {
+    void Scene::runScripts(TimeStep timeStep) {
 
-        m_physicsWorld->ClearForces();
-        delete m_physicsWorld;
+        m_registry.view<NativeScriptComponent>().each([=](entt::entity entity, NativeScriptComponent& nativeScriptComponent) {
+            nativeScriptComponent.m_nativeScriptInstance->onUpdate(timeStep);
+        });
 
     }
 
@@ -142,42 +104,6 @@ namespace engine {
             // Destroy the instance of the native script
             nativeScriptComponent.m_destroyScriptFunction(&nativeScriptComponent);
         });
-
-    }
-
-    void Scene::onUpdate(TimeStep timeStep) {
-
-        runScripts(timeStep);
-        simulatePhysics(timeStep);
-        renderElements();
-
-    }
-
-    void Scene::runScripts(TimeStep timeStep) {
-
-        m_registry.view<NativeScriptComponent>().each([=](entt::entity entity, NativeScriptComponent& nativeScriptComponent) {
-            nativeScriptComponent.m_nativeScriptInstance->onUpdate(timeStep);
-        });
-
-    }
-
-    void Scene::simulatePhysics(TimeStep timeStep) {
-
-        m_physicsWorld->Step(timeStep.getSeconds(), 6, 2);
-
-        auto group = m_registry.group<RigidBodyComponent>(entt::get<TransformComponent>);
-        for (auto e : group) {
-
-            Entity entity = {e, this};
-            auto [rigidBody, transform] = group.get<RigidBodyComponent, TransformComponent>(e);
-
-            auto* body = (b2Body*) rigidBody.m_runtimeBody;
-            const auto& position = body->GetPosition();
-            transform.m_translation.x = position.x;
-            transform.m_translation.y = position.y;
-            transform.m_rotation.z = glm::degrees(body->GetAngle());
-
-        }
 
     }
 

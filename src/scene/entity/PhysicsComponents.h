@@ -1,7 +1,6 @@
 #pragma once
 
-#include "glm/glm.hpp"
-
+#include <glm/glm.hpp>
 #include <box2d/box2d.h>
 
 namespace engine {
@@ -46,7 +45,7 @@ namespace engine {
         float m_density = 1.0f;
         float m_friction = 0.0f;
         float m_restitution = 0.0f;
-        float m_restitutionThreshold = 0.05f;
+        float m_restitutionThreshold = 1.0f;
 
         b2Fixture* m_runtimeFixture = nullptr;
 
@@ -73,7 +72,7 @@ namespace engine {
         float m_density = 1.0f;
         float m_friction = 0.0f;
         float m_restitution = 0.0f;
-        float m_restitutionThreshold = 0.05f;
+        float m_restitutionThreshold = 1.0f;
 
         b2Fixture* m_runtimeFixture = nullptr;
 

@@ -2,32 +2,31 @@
 
 #include <glm/glm.hpp>
 
-class NativeScriptExample : public engine::NativeScript {
+class BallController : public engine::NativeScript {
 
-    void onUpdate(engine::TimeStep timeStep) {
+    void onUpdate(engine::TimeStep timeStep) override {
 
         if (hasComponent<engine::CircleColliderComponent>()) {
 
-            float targetSpeed = 3.0f;
+            float targetImpulse = 0.5f;
 
             auto& collider = getComponent<engine::CircleColliderComponent>();
             auto body = collider.getBody();
-            auto currentSpeed = body->GetLinearVelocity();
 
             if (engine::Input::isKeyPressed(GE_KEY_LEFT)) {
-                body->SetLinearVelocity({-targetSpeed, currentSpeed.y});
+                body->ApplyLinearImpulseToCenter({-targetImpulse, 0.0f}, true);
             }
 
             if (engine::Input::isKeyPressed(GE_KEY_RIGHT)) {
-                body->SetLinearVelocity({targetSpeed, currentSpeed.y});
+                body->ApplyLinearImpulseToCenter({targetImpulse, 0.0f}, true);
             }
 
             if (engine::Input::isKeyPressed(GE_KEY_DOWN)) {
-                body->SetLinearVelocity({currentSpeed.x, -targetSpeed});
+                body->ApplyLinearImpulseToCenter({0.0f, -targetImpulse}, true);
             }
 
             if (engine::Input::isKeyPressed(GE_KEY_UP)) {
-                body->SetLinearVelocity({currentSpeed.x, targetSpeed});
+                body->ApplyLinearImpulseToCenter({0.0f, targetImpulse}, true);
             }
 
         }
@@ -41,7 +40,6 @@ class SceneLayer : public engine::Layer {
 private:
 
     std::shared_ptr<engine::OrthographicCamera> m_camera;
-
     engine::Scene m_scene;
 
 public:
@@ -60,13 +58,12 @@ public:
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f)
         );
-        quad.addComponent<engine::CircleComponent>(1.0f);
-        quad.addComponent<engine::MaterialComponent>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
-        quad.addComponent<engine::RigidBodyComponent>(engine::RigidBodyComponent::Type::Dynamic, false);
-        quad.addComponent<engine::CircleColliderComponent>(-0.01f, 1.0f, 0.0f, 1.0f, 0.05f);
-        quad.addComponent<engine::NativeScriptComponent>().bind<NativeScriptExample>();
+        quad.addComponent<engine::CircleComponent>(1.0f, 0.01);
+        quad.addComponent<engine::RigidBodyComponent>(engine::RigidBodyComponent::Type::Dynamic, true);
+        quad.addComponent<engine::CircleColliderComponent>(0.0f, 1.0f, 0.1f, 0.8f, 0.9f);
+        quad.addComponent<engine::NativeScriptComponent>().bind<BallController>();
 
-        m_scene.start({0.0f, 0.0f});
+        m_scene.start({0.0f, -9.8f});
 
     }
 
@@ -98,7 +95,7 @@ public:
 
         auto ground = m_scene.createEntity();
         ground.addComponent<engine::RigidBodyComponent>(engine::RigidBodyComponent::Type::Static);
-        ground.addComponent<engine::BoxColliderComponent>();
+        ground.addComponent<engine::BoxColliderComponent>(glm::vec2(0.0f, 0.0f), 1.0f, 0.05f, 0.0f, 1.0f);
         ground.addComponent<engine::TransformComponent>(
             glm::vec3(0.0f, groundY - 0.5f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
@@ -130,14 +127,14 @@ public:
 
 };
 
-class PlayableQuadApplication : public engine::Application {
+class PlayableBallApplication : public engine::Application {
 
 public:
-    explicit PlayableQuadApplication(const std::string& name) : engine::Application(name) {}
+    explicit PlayableBallApplication(const std::string& name) : engine::Application(name) {}
 
 private:
 
-    SceneLayer* m_sceneLayer;
+    SceneLayer* m_sceneLayer = nullptr;
 
 public:
 
@@ -155,7 +152,7 @@ public:
 
 int main() {
 
-    PlayableQuadApplication app("Layered Controls");
+    PlayableBallApplication app("Playable Ball");
     engine::RunLoop runLoop(app);
     runLoop.run();
 
