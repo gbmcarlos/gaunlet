@@ -39,18 +39,15 @@ class SceneLayer : public engine::Layer {
 
 private:
 
-    std::shared_ptr<engine::OrthographicCamera> m_camera;
     engine::Scene m_scene;
 
 public:
 
     SceneLayer(float viewportWidth, float viewportHeight) {
 
-        engine::Renderer::init();
+        auto camera = std::make_shared<engine::OrthographicCamera>(viewportWidth, viewportHeight, 100);
 
-        m_camera = std::make_shared<engine::OrthographicCamera>(viewportWidth, viewportHeight, 100);
-
-        createRoom();
+        createRoom(camera);
 
         engine::Entity quad = m_scene.createEntity();
         quad.addComponent<engine::TransformComponent>(
@@ -63,13 +60,14 @@ public:
         quad.addComponent<engine::CircleColliderComponent>(0.0f, 1.0f, 0.1f, 0.8f, 0.9f);
         quad.addComponent<engine::NativeScriptComponent>().bind<BallController>();
 
-        m_scene.start({0.0f, -9.8f});
+        m_scene.enablePhysics({0.0f, -9.8f});
+        m_scene.start(camera);
 
     }
 
-    void createRoom() {
+    void createRoom(const std::shared_ptr<engine::OrthographicCamera>& camera) {
 
-        glm::vec2 projectionSize = m_camera->getProjectionSize();
+        glm::vec2 projectionSize = camera->getProjectionSize();
         float leftWallX = -projectionSize.x/2;
         float rightWallX = projectionSize.x/2;
         float groundY = -projectionSize.y/2;
@@ -118,11 +116,7 @@ public:
     }
 
     void onUpdate(engine::TimeStep timeStep) override {
-
-        engine::Renderer::beginScene(m_camera);
         m_scene.onUpdate(timeStep);
-        engine::Renderer::endScene();
-
     }
 
 };
@@ -132,21 +126,13 @@ class PlayableBallApplication : public engine::Application {
 public:
     explicit PlayableBallApplication(const std::string& name) : engine::Application(name) {}
 
-private:
-
-    SceneLayer* m_sceneLayer = nullptr;
-
-public:
-
     void onReady() override {
-
-        m_sceneLayer = new SceneLayer(
-            m_window->getViewportWidth(),
-            m_window->getViewportHeight()
-        );
+        m_sceneLayer = new SceneLayer(m_window->getViewportWidth(),m_window->getViewportHeight());
         pushLayer(m_sceneLayer);
-
     }
+
+private:
+    SceneLayer* m_sceneLayer = nullptr;
 
 };
 

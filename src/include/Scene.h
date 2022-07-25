@@ -4,7 +4,7 @@
 
 #include <box2d/box2d.h> // Expose box2d to the client
 
-#include "../scene/renderer/Renderer.h" // Depends on Graphics
+#include "../scene/renderer/Renderer.h" // Depends on Graphics and GraphicsComponents
 #include "../scene/Scene.h" // Depends on ENTT
 #include "../scene/entity/Entity.h" // Depends on Scene
 

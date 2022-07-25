@@ -8,18 +8,12 @@ class MainLayer : public engine::Layer {
 
 private:
 
-    // Camera
-    std::shared_ptr<engine::OrthographicCamera> m_camera;
-    glm::vec2 m_cameraPosition = {0.0f, 0.0f};
-
     engine::Scene m_scene;
 
 public:
 
     MainLayer(int viewportWidth, int viewportHeight) {
 
-        engine::Renderer::init();
-        m_camera = std::make_shared<engine::OrthographicCamera>(viewportWidth, viewportHeight, 100);
         std::shared_ptr<engine::Texture> texture1 = std::make_shared<engine::Texture>("assets/texture-1.jpeg");
         std::shared_ptr<engine::Texture> texture2 = std::make_shared<engine::Texture>("assets/texture-2.jpeg");
 
@@ -113,40 +107,36 @@ public:
         );
         circle3.addComponent<engine::MaterialComponent>(glm::vec4(0.0f, 0.8f, 0.0f, 1.0f), texture2);
 
+        auto camera = std::make_shared<engine::OrthographicCamera>((float) viewportWidth, (float) viewportHeight, 100);
+        m_scene.start(camera);
+
     }
 
     void onUpdate(engine::TimeStep timeStep) override {
-
-        engine::RenderCommand::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
-
-        engine::Renderer::beginScene(m_camera);
         m_scene.onUpdate(timeStep);
-        engine::Renderer::endScene();
-
     }
 
 };
 
 
-class RenderLinesApplication : public engine::Application {
+class BasicRenderingApplication : public engine::Application {
 
 public:
-    RenderLinesApplication(const std::string &name) : engine::Application(name) {}
+    explicit BasicRenderingApplication(const std::string &name) : engine::Application(name) {}
 
     void onReady() override {
         m_mainLayer = new MainLayer(m_window->getViewportWidth(), m_window->getViewportHeight());
         pushLayer(m_mainLayer);
-
     }
 
 private:
-    MainLayer* m_mainLayer;
+    MainLayer* m_mainLayer = nullptr;
 
 };
 
 int main() {
 
-    RenderLinesApplication app("Basic Rendering");
+    BasicRenderingApplication app("Basic Rendering");
     engine::RunLoop runLoop(app);
 
     runLoop.run();

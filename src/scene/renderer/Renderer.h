@@ -8,9 +8,7 @@
 
 #include "../entity/GraphicsComponents.h"
 
-#include "../camera/OrthographicCamera.h"
-
-#include <array>
+#include <glm/gtc/matrix_transform.hpp>
 #include <memory>
 
 namespace engine {
@@ -26,7 +24,7 @@ namespace engine {
 
         static void init();
 
-        static void beginScene(const std::shared_ptr<OrthographicCamera>& orthographicCamera);
+        static void beginScene(glm::mat4 viewProjectionMatrix);
         static void endScene();
 
         // Batched draw calls
@@ -77,7 +75,7 @@ namespace engine {
             std::shared_ptr<Texture> m_whiteTexture = nullptr;
             ShaderLibrary m_shaderLibrary;
 
-            RendererStorage() : m_viewProjectionMatrix(OrthographicCamera::getDefaultViewProjectionMatrix()) {}
+            RendererStorage() : m_viewProjectionMatrix(glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f)) {}
 
         };
 

@@ -11,8 +11,8 @@ namespace engine {
         loadDefaultWhiteTexture();
     }
 
-    void Renderer::beginScene(const std::shared_ptr<OrthographicCamera>& orthographicCamera) {
-        m_rendererStorage->m_viewProjectionMatrix = orthographicCamera->getViewProjectionMatrix();
+    void Renderer::beginScene(glm::mat4 viewProjectionMatrix) {
+        m_rendererStorage->m_viewProjectionMatrix = viewProjectionMatrix;
     }
 
     void Renderer::endScene() {
@@ -28,7 +28,7 @@ namespace engine {
         }
 
         // Reset the view*projection matrix to the default
-        m_rendererStorage->m_viewProjectionMatrix = OrthographicCamera::getDefaultViewProjectionMatrix();
+        m_rendererStorage->m_viewProjectionMatrix = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
 
     }
 

@@ -13,29 +13,27 @@ namespace engine {
 
         void onWindowResize(float viewportWidth, float viewportHeight);
 
-        inline const glm::vec3& getPosition() {return m_position;}
+        inline const glm::vec3& getPosition() const {return m_position;}
         void setPosition(const glm::vec3& position);
         void movePosition(const glm::vec3& positionDelta);
 
-        inline float getRotation() {return m_rotation;}
+        inline float getRotation() const {return m_rotation;}
         void setRotation(float rotation);
         void addRotation(float rotationDelta);
 
-        inline float getZoomLevel() {return m_zoomLevel;}
+        inline float getZoomLevel() const {return m_zoomLevel;}
         void setZoomLevel(float zoomLevel);
         void addZoomLevel(float zoomLevelDelta);
 
-        inline const glm::vec2 getProjectionSize() {return m_projectionSize;}
+        inline const glm::vec2 getProjectionSize() const {return m_projectionSize;}
 
-        inline const glm::mat4& getProjectionMatrix() {return m_projectionMatrix;}
-        inline const glm::mat4& getViewMatrix() {return m_viewMatrix;}
-        inline const glm::mat4& getViewProjectionMatrix() {return m_viewProjectionMatrix;}
-
-        static glm::mat4 getDefaultViewProjectionMatrix();
+        inline const glm::mat4& getProjectionMatrix() const {return m_projectionMatrix;}
+        inline const glm::mat4& getViewMatrix() const {return m_viewMatrix;}
+        inline const glm::mat4& getViewProjectionMatrix() const {return m_viewProjectionMatrix;}
 
     private:
 
-        float m_viewportWidth, m_viewportHeight, m_viewportResolution;
+        float m_viewportWidth, m_viewportHeight, m_viewportResolution = 0;
 
         glm::vec2 m_projectionSize;
         glm::mat4 m_projectionMatrix;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../core/application/TimeStep.h"
+#include "camera/OrthographicCamera.h"
 #include "entity/GraphicsComponents.h"
 #include "entity/PhysicsComponents.h"
 #include "physics/PhysicsWorld.h"
@@ -16,20 +17,23 @@ namespace engine {
         friend class Entity;
 
     public:
-        Scene() = default;
+        Scene();
+        ~Scene();
 
         Entity createEntity();
 
-        void start(glm::vec2 gravity);
+        void enablePhysics(glm::vec2 gravity);
+        void start(const std::shared_ptr<OrthographicCamera>& camera);
         void onUpdate(TimeStep timeStep);
         void stop();
 
     private:
 
         entt::registry m_registry;
-        PhysicsWorld m_physicsWorld;
+        std::shared_ptr<OrthographicCamera> m_camera = nullptr;
+        PhysicsWorld* m_physicsWorld = nullptr;
 
-        void initPhysics(glm::vec2 gravity);
+        void initPhysics();
         void simulatePhysics(TimeStep timeStep);
 
         void initScripts();

@@ -89,8 +89,4 @@ namespace engine {
         calculateViewProjectionMatrix();
     }
 
-    glm::mat4 OrthographicCamera::getDefaultViewProjectionMatrix() {
-        return glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
-    }
-
 }

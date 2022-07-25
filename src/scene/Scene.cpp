@@ -6,36 +6,53 @@
 
 namespace engine {
 
+    Scene::Scene() {
+        engine::Renderer::init();
+    }
+
+    Scene::~Scene() {
+        destroyScripts();
+        delete m_physicsWorld;
+    }
+
     Entity Scene::createEntity() {
         entt::entity entityHandle = m_registry.create();
         return {entityHandle, this};
     }
 
-    void Scene::start(glm::vec2 gravity) {
+    void Scene::enablePhysics(glm::vec2 gravity) {
+        m_physicsWorld = new PhysicsWorld(gravity);
+    }
 
-        initPhysics(gravity);
+    void Scene::start(const std::shared_ptr<OrthographicCamera>& camera) {
+
+        m_camera = camera;
+
+        if (m_physicsWorld) {
+            initPhysics();
+        }
+
         initScripts();
 
     }
 
     void Scene::onUpdate(TimeStep timeStep) {
 
+        if (m_camera == nullptr) {
+            throw std::runtime_error("Scene hasn't been started with ::start");
+        }
+
         runScripts(timeStep);
-        simulatePhysics(timeStep);
+        if (m_physicsWorld) {
+            simulatePhysics(timeStep);
+        }
         renderElements();
 
     }
 
-    void Scene::stop() {
+    void Scene::stop() {}
 
-        destroyScripts();
-        m_physicsWorld.destroyPhysics();
-
-    }
-
-    void Scene::initPhysics(glm::vec2 gravity) {
-
-        m_physicsWorld.initPhysics(gravity);
+    void Scene::initPhysics() {
 
         auto group = m_registry.group<RigidBodyComponent>(entt::get<TransformComponent>);
         for (auto e : group) {
@@ -43,16 +60,16 @@ namespace engine {
             Entity entity = {e, this};
 
             auto [rigidBody, transform] = group.get<RigidBodyComponent, TransformComponent>(e);
-            m_physicsWorld.createRigidBody(rigidBody, transform);
+            m_physicsWorld->createRigidBody(rigidBody, transform);
 
             if (entity.hasComponent<BoxColliderComponent>()) {
                 auto& boxCollider = entity.getComponent<BoxColliderComponent>();
-                m_physicsWorld.createBoxFixture(rigidBody.m_runtimeBody, boxCollider, transform);
+                m_physicsWorld->createBoxFixture(rigidBody.m_runtimeBody, boxCollider, transform);
             }
 
             if (entity.hasComponent<CircleColliderComponent>()) {
                 auto& circleCollider = entity.getComponent<CircleColliderComponent>();
-                m_physicsWorld.createCircleFixture(rigidBody.m_runtimeBody, circleCollider, transform);
+                m_physicsWorld->createCircleFixture(rigidBody.m_runtimeBody, circleCollider, transform);
             }
 
         }
@@ -61,7 +78,7 @@ namespace engine {
 
     void Scene::simulatePhysics(TimeStep timeStep) {
 
-        m_physicsWorld.simulatePhysics(timeStep);
+        m_physicsWorld->simulatePhysics(timeStep);
 
         auto group = m_registry.group<RigidBodyComponent>(entt::get<TransformComponent>);
         for (auto e : group) {
@@ -69,7 +86,7 @@ namespace engine {
             Entity entity = {e, this};
             auto [rigidBody, transform] = group.get<RigidBodyComponent, TransformComponent>(e);
 
-            m_physicsWorld.updateBody(rigidBody, transform);
+            m_physicsWorld->updateBody(rigidBody, transform);
 
         }
 
@@ -110,12 +127,12 @@ namespace engine {
     void Scene::renderElements() {
 
         engine::RenderCommand::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
+        engine::Renderer::beginScene(m_camera->getViewProjectionMatrix());
 
         renderPolygons();
         renderCircles();
 
-        engine::Renderer::flushPolygons();
-        engine::Renderer::flushCircles();
+        engine::Renderer::endScene();
 
     }
 
@@ -134,6 +151,8 @@ namespace engine {
 
         }
 
+        engine::Renderer::flushPolygons();
+
     }
 
     void Scene::renderCircles() {
@@ -150,6 +169,8 @@ namespace engine {
             Renderer::submit(circle, transform, material);
 
         }
+
+        engine::Renderer::flushCircles();
 
     }
 

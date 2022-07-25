@@ -2,7 +2,7 @@
 
 namespace engine {
 
-    void PhysicsWorld::initPhysics(glm::vec2 gravity) {
+    PhysicsWorld::PhysicsWorld(glm::vec2 gravity) {
 
         m_physicsWorld = new b2World({gravity.x, gravity.y});
         m_physicsWorld->SetAutoClearForces(false);
