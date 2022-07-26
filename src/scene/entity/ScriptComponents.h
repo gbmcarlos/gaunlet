@@ -46,7 +46,7 @@ namespace engine {
         void (*m_destroyScriptFunction)(NativeScriptComponent*) = nullptr;
 
         template<typename T>
-        void bind() {
+        NativeScriptComponent& bind() {
 
             // Create a lambda that will create a new instance of the native script
             m_instantiateScriptFunction = []() {
@@ -59,7 +59,11 @@ namespace engine {
                 nativeScriptComponent->m_nativeScriptInstance = nullptr;
             };
 
+            return *this;
+
         }
+
+        inline NativeScript* getScriptInstance() {return m_nativeScriptInstance;}
 
     };
 

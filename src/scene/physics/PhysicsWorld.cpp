@@ -18,6 +18,10 @@ namespace engine {
 
     }
 
+    void PhysicsWorld::setContactListener(b2ContactListener *contactListener) {
+        m_physicsWorld->SetContactListener(contactListener);
+    }
+
     void PhysicsWorld::createRigidBody(RigidBodyComponent& rigidBody, TransformComponent transform) {
 
         b2BodyDef bodyDefinition;

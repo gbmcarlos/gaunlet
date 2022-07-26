@@ -1,3 +1,3 @@
 #pragma once
 
-#define GE_BIND_CALLBACK_FN(fn) [this](auto && PH1) { fn(std::forward<decltype(PH1)>(PH1)); }
+#define GE_BIND_CALLBACK_FN(fn) std::bind(&fn, this, std::placeholders::_1)

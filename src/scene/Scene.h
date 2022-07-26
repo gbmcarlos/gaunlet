@@ -22,16 +22,20 @@ namespace engine {
 
         Entity createEntity();
 
-        void enablePhysics(glm::vec2 gravity);
+        const std::shared_ptr<PhysicsWorld>& enablePhysics(glm::vec2 gravity);
         void start(const std::shared_ptr<OrthographicCamera>& camera);
+        void play();
+        void pause();
+        void togglePlay();
         void onUpdate(TimeStep timeStep);
         void stop();
 
     private:
 
+        bool m_playing = false;
         entt::registry m_registry;
         std::shared_ptr<OrthographicCamera> m_camera = nullptr;
-        PhysicsWorld* m_physicsWorld = nullptr;
+        std::shared_ptr<PhysicsWorld> m_physicsWorld = nullptr;
 
         void initPhysics();
         void simulatePhysics(TimeStep timeStep);

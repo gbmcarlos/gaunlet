@@ -17,6 +17,8 @@ namespace engine {
         explicit PhysicsWorld(glm::vec2 gravity);
         ~PhysicsWorld();
 
+        void setContactListener(b2ContactListener* contactListener);
+
         void createRigidBody(RigidBodyComponent& rigidBody, TransformComponent transform);
         void createBoxFixture(b2Body* body, BoxColliderComponent& boxCollider, TransformComponent transform);
         void createCircleFixture(b2Body* body, CircleColliderComponent& circleCollider, TransformComponent transform);

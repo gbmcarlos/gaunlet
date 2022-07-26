@@ -7,8 +7,8 @@ namespace engine {
     class KeyPressEvent : public Event {
 
     public:
-        KeyPressEvent(int key) : m_key(key) {}
-        EventCategory getCategory() const override {return EventCategory::Keyboard;}
+        explicit KeyPressEvent(int key) : m_key(key) {}
+        inline EventCategory getCategory() const override {return EventCategory::Keyboard;}
 
         EVENT_TYPE(KeyPress)
 
@@ -22,8 +22,8 @@ namespace engine {
     class KeyReleaseEvent : public Event {
 
     public:
-        KeyReleaseEvent(int key) : m_key(key) {}
-        EventCategory getCategory() const override {return EventCategory::Keyboard;}
+        explicit KeyReleaseEvent(int key) : m_key(key) {}
+        inline EventCategory getCategory() const override {return EventCategory::Keyboard;}
         EVENT_TYPE(KeyRelease)
 
     private:
@@ -36,8 +36,8 @@ namespace engine {
     class KeyRepeatEvent : public Event {
 
     public:
-        KeyRepeatEvent(int key) : m_key(key) {}
-        EventCategory getCategory() const override {return EventCategory::Keyboard;}
+        explicit KeyRepeatEvent(int key) : m_key(key) {}
+        inline EventCategory getCategory() const override {return EventCategory::Keyboard;}
         EVENT_TYPE(KeyRepeat)
 
     private:

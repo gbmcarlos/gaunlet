@@ -12,7 +12,7 @@ namespace engine {
 
     Scene::~Scene() {
         destroyScripts();
-        delete m_physicsWorld;
+        m_physicsWorld->destroyPhysics();
     }
 
     Entity Scene::createEntity() {
@@ -20,8 +20,9 @@ namespace engine {
         return {entityHandle, this};
     }
 
-    void Scene::enablePhysics(glm::vec2 gravity) {
-        m_physicsWorld = new PhysicsWorld(gravity);
+    const std::shared_ptr<PhysicsWorld>& Scene::enablePhysics(glm::vec2 gravity) {
+        m_physicsWorld = std::make_shared<PhysicsWorld>(gravity);
+        return m_physicsWorld;
     }
 
     void Scene::start(const std::shared_ptr<OrthographicCamera>& camera) {
@@ -34,6 +35,20 @@ namespace engine {
 
         initScripts();
 
+        play();
+
+    }
+
+    void Scene::play() {
+        m_playing = true;
+    }
+
+    void Scene::pause() {
+        m_playing = false;
+    }
+
+    void Scene::togglePlay() {
+        m_playing = !m_playing;
     }
 
     void Scene::onUpdate(TimeStep timeStep) {
@@ -42,10 +57,15 @@ namespace engine {
             throw std::runtime_error("Scene hasn't been started with ::start");
         }
 
-        runScripts(timeStep);
-        if (m_physicsWorld) {
-            simulatePhysics(timeStep);
+        if (m_playing) {
+
+            runScripts(timeStep);
+            if (m_physicsWorld) {
+                simulatePhysics(timeStep);
+            }
+
         }
+
         renderElements();
 
     }
