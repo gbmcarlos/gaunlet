@@ -17,27 +17,23 @@ public:
 
         auto currentVelocity = body->GetLinearVelocity();
 
-        if (engine::Input::isKeyPressed(GE_KEY_S)) {
-            body->SetLinearVelocity({currentVelocity.x, -targetVelocity});
-            return;
+        float velocityX = 0.0f;
+
+        if (engine::Input::isKeyPressed(GE_KEY_A) && !engine::Input::isKeyPressed(GE_KEY_D)) {
+            velocityX = -targetVelocity;
+        } else if (!engine::Input::isKeyPressed(GE_KEY_A) && engine::Input::isKeyPressed(GE_KEY_D)) {
+            velocityX = targetVelocity;
         }
 
-        if (engine::Input::isKeyPressed(GE_KEY_W)) {
-            body->SetLinearVelocity({currentVelocity.x, targetVelocity});
-            return;
+        float velocityY = 0.0f;
+
+        if (engine::Input::isKeyPressed(GE_KEY_S) && !engine::Input::isKeyPressed(GE_KEY_W)) {
+            velocityY = -targetVelocity;
+        } else if (!engine::Input::isKeyPressed(GE_KEY_S) && engine::Input::isKeyPressed(GE_KEY_W)) {
+            velocityY = targetVelocity;
         }
 
-        if (engine::Input::isKeyPressed(GE_KEY_A)) {
-            body->SetLinearVelocity({-targetVelocity, currentVelocity.y});
-            return;
-        }
-
-        if (engine::Input::isKeyPressed(GE_KEY_D)) {
-            body->SetLinearVelocity({targetVelocity, currentVelocity.y});
-            return;
-        }
-
-        body->SetLinearVelocity({0.0f, 0.0f});
+        body->SetLinearVelocity({velocityX, velocityY});
 
     }
 
@@ -201,10 +197,10 @@ public:
 
 };
 
-class PlayableBallApplication : public engine::Application {
+class BasicPhysicsApplication : public engine::Application {
 
 public:
-    explicit PlayableBallApplication(const std::string& name) : engine::Application(name) {}
+    explicit BasicPhysicsApplication(const std::string& name) : engine::Application(name) {}
 
     void onReady() override {
         m_sceneLayer = new SceneLayer(m_window->getViewportWidth(),m_window->getViewportHeight());
@@ -218,7 +214,7 @@ private:
 
 int main() {
 
-    PlayableBallApplication app("Playable Ball");
+    BasicPhysicsApplication app("Basic Physics");
     engine::RunLoop runLoop(app);
     runLoop.run();
 
