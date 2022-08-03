@@ -56,7 +56,7 @@ namespace engine {
         static unsigned int sizeOfLayoutElementType(VertexBufferLayoutElementType type);
         static void addVertexArrayAttribute(unsigned int index, int count, VertexBufferLayoutElementType type, bool normalized, int stride, int offset);
 
-        static void loadTexture(unsigned int& id, unsigned int width, unsigned int height, void* data);
+        static void loadTexture(unsigned int& id, TextureFormat internalFormat, TextureFormat dataFormat, unsigned int width, unsigned int height, void* data);
         static void bindTexture(unsigned int id, unsigned int slot);
         static void deleteTexture(unsigned int& id);
 

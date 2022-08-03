@@ -2,20 +2,11 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <algorithm>
-
 namespace engine {
 
     OrthographicCamera::OrthographicCamera(float viewportWidth, float viewportHeight, float viewportResolution)
-        : m_viewportWidth(viewportWidth), m_viewportHeight(viewportHeight), m_viewportResolution(viewportResolution), m_viewMatrix(glm::mat4(1.0f)) {
-        calculateProjectionMatrix();
-        calculateViewProjectionMatrix();
-    }
-
-    OrthographicCamera::OrthographicCamera(float viewportLeft, float viewportRight, float viewportBottom, float viewportTop, float viewportResolution)
-        : m_viewportWidth(viewportRight - viewportLeft), m_viewportHeight(viewportTop - viewportBottom), m_viewportResolution(viewportResolution), m_viewMatrix(glm::mat4(1.0f)) {
-        calculateProjectionMatrix();
-        calculateViewProjectionMatrix();
+        : m_viewportWidth(viewportWidth), m_viewportHeight(viewportHeight), m_viewportResolution(viewportResolution) {
+        OrthographicCamera::calculateProjectionMatrix();
     }
 
     void OrthographicCamera::calculateProjectionMatrix() {
@@ -29,64 +20,12 @@ namespace engine {
 
     }
 
-    void OrthographicCamera::calculateViewProjectionMatrix() {
-
-        // Calculate the translation matrix based on our vec3 m_position
-        glm::mat4 position = glm::translate(glm::mat4(1.0f), m_position);
-
-        // Calculate the rotation matrix based on our float rotation (rotate only along the z axis)
-        glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), glm::radians(m_rotation), glm::vec3(0, 0, 1));
-
-        // The transform of the camera is the position * rotation (there is no scale)
-        glm::mat4 transform = position * rotation;
-
-        // Moving the camera actually means moving the whole world, so we invert its transform
-        m_viewMatrix = glm::inverse(transform);
-
-        // These 2 can be multiplied already, for ready use
-        m_viewProjectionMatrix = m_projectionMatrix * m_viewMatrix;
-
-    }
-
     void OrthographicCamera::onWindowResize(float viewportWidth, float viewportHeight) {
 
         m_viewportWidth = viewportWidth;
         m_viewportHeight = viewportHeight;
 
         calculateProjectionMatrix();
-        calculateViewProjectionMatrix();
-    }
-
-    void OrthographicCamera::setPosition(const glm::vec3 &position) {
-        m_position = position;
-        calculateViewProjectionMatrix();
-    }
-
-    void OrthographicCamera::movePosition(const glm::vec3 &positionDelta) {
-        m_position += positionDelta;
-        calculateViewProjectionMatrix();
-    }
-
-    void OrthographicCamera::setRotation(float rotation) {
-        m_rotation = rotation;
-        calculateViewProjectionMatrix();
-    }
-
-    void OrthographicCamera::addRotation(float rotationDelta) {
-        m_rotation += rotationDelta;
-        calculateViewProjectionMatrix();
-    }
-
-    void OrthographicCamera::setZoomLevel(float zoomLevel) {
-        m_zoomLevel = std::max(-zoomLevel, 0.1f);
-        calculateProjectionMatrix();
-        calculateViewProjectionMatrix();
-    }
-
-    void OrthographicCamera::addZoomLevel(float zoomLevelDelta) {
-        m_zoomLevel = std::max(m_zoomLevel - zoomLevelDelta, 0.1f);
-        calculateProjectionMatrix();
-        calculateViewProjectionMatrix();
     }
 
 }

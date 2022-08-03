@@ -22,7 +22,9 @@ add_library(graphics-engine
         graphics/texture/Texture.cpp
 
 #        Scene
+        scene/camera/Camera.cpp
         scene/camera/OrthographicCamera.cpp
+        scene/camera/PerspectiveCamera.cpp
         scene/renderer/Renderer.cpp
         scene/physics/PhysicsWorld.cpp
         scene/Scene.cpp

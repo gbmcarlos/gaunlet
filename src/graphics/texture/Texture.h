@@ -1,14 +1,19 @@
 #pragma once
 
+#include "../../core/render/RenderCommand.h"
 #include <string>
 
 namespace engine {
 
     class Texture {
 
+        enum class Format {
+            RGB, RGBA
+        };
+
     public:
         Texture(const std::string& path);
-        Texture(unsigned int width, unsigned int height, void* data);
+        Texture(TextureFormat internalFormat, TextureFormat dataFormat, unsigned int width, unsigned int height, void* data);
         ~Texture();
 
         void bind(unsigned int slot = 0);

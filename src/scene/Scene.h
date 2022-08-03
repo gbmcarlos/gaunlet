@@ -23,7 +23,7 @@ namespace engine {
         Entity createEntity();
 
         const std::shared_ptr<PhysicsWorld>& enablePhysics(glm::vec2 gravity);
-        void start(const std::shared_ptr<OrthographicCamera>& camera);
+        void start(const std::shared_ptr<Camera>& camera);
         void play();
         void pause();
         void togglePlay();
@@ -34,7 +34,7 @@ namespace engine {
 
         bool m_playing = false;
         entt::registry m_registry;
-        std::shared_ptr<OrthographicCamera> m_camera = nullptr;
+        std::shared_ptr<Camera> m_camera = nullptr;
         std::shared_ptr<PhysicsWorld> m_physicsWorld = nullptr;
 
         void initPhysics();

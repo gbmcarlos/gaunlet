@@ -22,6 +22,9 @@ namespace engine {
             glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
         }
 
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
+
         std::cout << "OpenGL Specs:" << std::endl;
         std::cout << "openGL version: " << glGetString(GL_VERSION) << std::endl;
         std::cout << "vendor: " << glGetString(GL_VENDOR) << std::endl;
@@ -183,7 +186,7 @@ namespace engine {
         ));
     }
 
-    void OpenGLRenderApi::loadTexture(unsigned int& id, unsigned int width, unsigned int height, void* data) {
+    void OpenGLRenderApi::loadTexture(unsigned int& id, TextureFormat internalFormat, TextureFormat dataFormat, unsigned int width, unsigned int height, void* data) {
 
         glCall(glGenTextures(1, &id));
         glCall(glBindTexture(GL_TEXTURE_2D, id));
@@ -191,7 +194,10 @@ namespace engine {
         glCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR));
         glCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
 
-        glCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data));
+        GLenum glInternalFormat = convertTextureFormat(internalFormat);
+        GLenum glDataFormat = convertTextureFormat(dataFormat);
+
+        glCall(glTexImage2D(GL_TEXTURE_2D, 0, glInternalFormat, width, height, 0, glDataFormat, GL_UNSIGNED_BYTE, data));
         glCall(glGenerateMipmap(GL_TEXTURE_2D));
 
     }
@@ -230,11 +236,20 @@ namespace engine {
 
         switch (type) {
             case ShaderType::Vertex:    return GL_VERTEX_SHADER;
-            case ShaderType::Geometry:    return GL_GEOMETRY_SHADER;
-            case ShaderType::Fragment:    return GL_FRAGMENT_SHADER;
+            case ShaderType::Geometry:  return GL_GEOMETRY_SHADER;
+            case ShaderType::Fragment:  return GL_FRAGMENT_SHADER;
         }
 
         throw std::runtime_error("Unknown shader type");
+
+    }
+
+    GLenum OpenGLRenderApi::convertTextureFormat(TextureFormat format) {
+
+        switch (format) {
+            case TextureFormat::RGB:  return GL_RGB;
+            case TextureFormat::RGBA:  return GL_RGBA;
+        }
 
     }
 

@@ -64,7 +64,7 @@ namespace engine {
         unsigned int sizeOfVertexBufferLayoutElementType(VertexBufferLayoutElementType type);
         void addVertexArrayAttribute(unsigned int index, int count, VertexBufferLayoutElementType type, bool normalized, int stride, int offset);
 
-        void loadTexture(unsigned int& id, unsigned int width, unsigned int height, void* data);
+        void loadTexture(unsigned int& id, TextureFormat internalFormat, TextureFormat dataFormat, unsigned int width, unsigned int height, void* data);
         void bindTexture(unsigned int id, unsigned int slot);
         void deleteTexture(unsigned int& id);
 
@@ -74,6 +74,7 @@ namespace engine {
     private:
         GLenum convertVertexBufferLayoutElementType(VertexBufferLayoutElementType type);
         GLenum convertShaderType(ShaderType type);
+        GLenum convertTextureFormat(TextureFormat format);
 
     };
 

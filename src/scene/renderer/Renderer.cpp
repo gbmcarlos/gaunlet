@@ -308,7 +308,7 @@ namespace engine {
 
         // Create a 1x1 white texture, to be used as default
         unsigned int whiteTextureData = 0xffffff;
-        std::shared_ptr<engine::Texture> whiteTexture = std::make_shared<engine::Texture>(1, 1, &whiteTextureData);
+        std::shared_ptr<engine::Texture> whiteTexture = std::make_shared<engine::Texture>(TextureFormat::RGB, TextureFormat::RGB, 1, 1, &whiteTextureData);
         m_rendererStorage->m_whiteTexture = whiteTexture;
 
         // Add it to the polygon and circle texture vectors

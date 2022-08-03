@@ -125,8 +125,8 @@ namespace engine {
         getApi().addVertexArrayAttribute(index, count, type, normalized, stride, offset);
     }
 
-    void RenderCommand::loadTexture(unsigned int& id, unsigned int width, unsigned int height, void* data) {
-        getApi().loadTexture(id, width, height, data);
+    void RenderCommand::loadTexture(unsigned int& id, TextureFormat internalFormat, TextureFormat dataFormat, unsigned int width, unsigned int height, void* data) {
+        getApi().loadTexture(id, internalFormat, dataFormat, width, height, data);
     }
 
     void RenderCommand::bindTexture(unsigned int id, unsigned int slot) {

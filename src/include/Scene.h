@@ -8,10 +8,13 @@
 #include "../scene/Scene.h" // Depends on ENTT
 #include "../scene/entity/Entity.h" // Depends on Scene
 
+#include "../scene/camera/Camera.h" // Doesn't depend on anything
+#include "../scene/camera/PerspectiveCamera.h" // Doesn't depend on anything
 #include "../scene/camera/OrthographicCamera.h" // Doesn't depend on anything
 #include "../scene/mesh/PolygonMesh.h" // Doesn't depend on anything
-#include "../scene/mesh/2d/samples/TriangleMesh.h" // Depends on PolygonMesh
-#include "../scene/mesh/2d/samples/SquareMesh.h" // Depends on PolygonMesh
+#include "../scene/mesh/sprites/2d/TriangleMesh.h" // Depends on PolygonMesh
+#include "../scene/mesh/sprites/2d/SquareMesh.h" // Depends on PolygonMesh
+#include "../scene/mesh/sprites/2d/CubeMesh.h" // Depends on PolygonMesh
 
 #include "../scene/entity/GraphicsComponents.h" // Depends on PolygonMesh and CircleMesh
 #include "../scene/entity/PhysicsComponents.h" // Depends on box2d

@@ -25,7 +25,7 @@ namespace engine {
         return m_physicsWorld;
     }
 
-    void Scene::start(const std::shared_ptr<OrthographicCamera>& camera) {
+    void Scene::start(const std::shared_ptr<Camera>& camera) {
 
         m_camera = camera;
 
