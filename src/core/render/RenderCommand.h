@@ -56,9 +56,17 @@ namespace engine {
         static unsigned int sizeOfLayoutElementType(VertexBufferLayoutElementType type);
         static void addVertexArrayAttribute(unsigned int index, int count, VertexBufferLayoutElementType type, bool normalized, int stride, int offset);
 
-        static void loadTexture(unsigned int& id, TextureFormat internalFormat, TextureFormat dataFormat, unsigned int width, unsigned int height, void* data);
+        static void loadTexture(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data);
         static void bindTexture(unsigned int id, unsigned int slot);
         static void deleteTexture(unsigned int& id);
+
+        static void createFramebuffer(unsigned int& id);
+        static void bindFramebuffer(unsigned int id);
+        static void unbindFramebuffer(unsigned int id);
+        static void deleteFramebuffer(unsigned int& id);
+        static void framebufferAttach(TextureType type, FramebufferAttachmentType attachment, unsigned int textureId);
+        static void setDrawBuffers(const std::vector<FramebufferAttachmentType>& drawBuffers);
+        static void checkFramebufferCompleteness(unsigned int id);
 
         static void drawIndexedTriangles(unsigned int indexCount);
         static void drawIndexedLines(unsigned int indexCount);

@@ -167,7 +167,7 @@ public:
         );
         quad.addComponent<engine::PolygonComponent>(engine::SquareMesh());
         quad.addComponent<engine::RigidBodyComponent>(engine::RigidBodyComponent::Type::Kinematic, true);
-        quad.addComponent<engine::BoxColliderComponent>(glm::vec2(0.0f, 0.0f), 1.0f, 0.0f, 1.0f, 0.0f);
+        quad.addComponent<engine::BoxColliderComponent>(glm::vec2(0.0f, 0.0f), 1.0f, 0.0f, 0.0f, 1.0f);
         quad.addComponent<engine::NativeScriptComponent>().bind<QuadController>();
 
     }
@@ -197,10 +197,10 @@ public:
 
 };
 
-class BasicPhysicsApplication : public engine::Application {
+class Physics2DApplication : public engine::Application {
 
 public:
-    explicit BasicPhysicsApplication(const std::string& name) : engine::Application(name) {}
+    explicit Physics2DApplication(const std::string& name) : engine::Application(name) {}
 
     void onReady() override {
         m_sceneLayer = new SceneLayer(m_window->getViewportWidth(),m_window->getViewportHeight());
@@ -214,7 +214,7 @@ private:
 
 int main() {
 
-    BasicPhysicsApplication app("Basic Physics");
+    Physics2DApplication app("Physics 2D");
     engine::RunLoop runLoop(app);
     runLoop.run();
 

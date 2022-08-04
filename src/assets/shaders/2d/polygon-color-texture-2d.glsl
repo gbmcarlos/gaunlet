@@ -6,7 +6,7 @@ flat in int v_textureIndex;
 in vec4 v_color;
 
 // Outputs
-out vec4 o_color;
+layout(location = 0) out vec4 o_color;
 
 // Textures
 uniform sampler2D texture0;

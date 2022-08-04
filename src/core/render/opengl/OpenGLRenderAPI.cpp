@@ -186,7 +186,7 @@ namespace engine {
         ));
     }
 
-    void OpenGLRenderApi::loadTexture(unsigned int& id, TextureFormat internalFormat, TextureFormat dataFormat, unsigned int width, unsigned int height, void* data) {
+    void OpenGLRenderApi::loadTexture(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data) {
 
         glCall(glGenTextures(1, &id));
         glCall(glBindTexture(GL_TEXTURE_2D, id));
@@ -194,8 +194,8 @@ namespace engine {
         glCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR));
         glCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
 
-        GLenum glInternalFormat = convertTextureFormat(internalFormat);
-        GLenum glDataFormat = convertTextureFormat(dataFormat);
+        GLenum glInternalFormat = convertTextureImageFormat(internalFormat);
+        GLenum glDataFormat = convertTextureImageFormat(dataFormat);
 
         glCall(glTexImage2D(GL_TEXTURE_2D, 0, glInternalFormat, width, height, 0, glDataFormat, GL_UNSIGNED_BYTE, data));
         glCall(glGenerateMipmap(GL_TEXTURE_2D));
@@ -209,6 +209,50 @@ namespace engine {
 
     void OpenGLRenderApi::deleteTexture(unsigned int& id) {
         glCall(glDeleteTextures(1, &id));
+    }
+
+    void OpenGLRenderApi::createFramebuffer(unsigned int &id) {
+        glCall(glGenFramebuffers(1, &id));
+    }
+
+    void OpenGLRenderApi::bindFramebuffer(unsigned int id) {
+        glCall(glBindFramebuffer(GL_FRAMEBUFFER, id));
+    }
+
+    void OpenGLRenderApi::unbindFramebuffer(unsigned int id) {
+        glCall(glBindFramebuffer(GL_FRAMEBUFFER, id));
+    }
+
+    void OpenGLRenderApi::deleteFramebuffer(unsigned int& id) {
+        glCall(glDeleteFramebuffers(1, &id));
+    }
+
+    void OpenGLRenderApi::framebufferAttach(TextureType type, FramebufferAttachmentType attachment, unsigned int textureId) {
+
+        GLenum glTextureType = convertTextureType(type);
+        GLenum glAttachmentType = convertFramebufferAttachmentType(attachment);
+
+        glCall(glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, glAttachmentType, glTextureType, textureId, 0));
+        glCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+
+    }
+
+    void OpenGLRenderApi::setDrawBuffers(const std::vector<FramebufferAttachmentType>& drawBuffers) {
+
+        std::vector<GLenum> glBufferAttachments = {};
+
+        for (auto& drawBuffer : drawBuffers) {
+            glBufferAttachments.push_back(convertFramebufferAttachmentType(drawBuffer));
+        }
+
+        glCall(glDrawBuffers(drawBuffers.size(), (const unsigned int*) &glBufferAttachments[0]));
+    }
+
+    void OpenGLRenderApi::checkFramebufferCompleteness(unsigned int id) {
+        GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+        if (status != GL_FRAMEBUFFER_COMPLETE) {
+            throw std::runtime_error("Framebuffer is not complete");
+        }
     }
 
     void OpenGLRenderApi::drawIndexedTriangles(unsigned int indexCount) {
@@ -244,12 +288,38 @@ namespace engine {
 
     }
 
-    GLenum OpenGLRenderApi::convertTextureFormat(TextureFormat format) {
+    GLenum OpenGLRenderApi::convertTextureImageFormat(TextureDataFormat format) {
 
         switch (format) {
-            case TextureFormat::RGB:  return GL_RGB;
-            case TextureFormat::RGBA:  return GL_RGBA;
+            case TextureDataFormat::RGB:  return GL_RGB;
+            case TextureDataFormat::RGBA:  return GL_RGBA;
         }
+
+        throw std::runtime_error("Unknown texture format");
+
+    }
+
+    GLenum OpenGLRenderApi::convertTextureType(TextureType type) {
+
+        switch (type) {
+            case TextureType::Image2D:  return GL_TEXTURE_2D;
+            case TextureType::CubeMap:  return GL_TEXTURE_CUBE_MAP;
+        }
+
+        throw std::runtime_error("Unknown texture format");
+
+    }
+
+    GLenum OpenGLRenderApi::convertFramebufferAttachmentType(FramebufferAttachmentType type) {
+
+        switch (type) {
+            case FramebufferAttachmentType::None: return GL_NONE;
+            case FramebufferAttachmentType::Color: return GL_COLOR_ATTACHMENT0;
+            case FramebufferAttachmentType::Depth:  return GL_DEPTH_ATTACHMENT;
+            case FramebufferAttachmentType::Stencil:  return GL_STENCIL_ATTACHMENT;
+        }
+
+        throw std::runtime_error("Unknown texture format");
 
     }
 

@@ -5,6 +5,7 @@
 #include "../RenderCommand.h"
 #include "../RenderApi.h"
 
+#include <vector>
 #include <memory>
 #include <glm/glm.hpp>
 
@@ -64,9 +65,17 @@ namespace engine {
         unsigned int sizeOfVertexBufferLayoutElementType(VertexBufferLayoutElementType type);
         void addVertexArrayAttribute(unsigned int index, int count, VertexBufferLayoutElementType type, bool normalized, int stride, int offset);
 
-        void loadTexture(unsigned int& id, TextureFormat internalFormat, TextureFormat dataFormat, unsigned int width, unsigned int height, void* data);
+        void loadTexture(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data);
         void bindTexture(unsigned int id, unsigned int slot);
         void deleteTexture(unsigned int& id);
+
+        void createFramebuffer(unsigned int& id);
+        void bindFramebuffer(unsigned int id);
+        void unbindFramebuffer(unsigned int id);
+        void deleteFramebuffer(unsigned int& id);
+        void framebufferAttach(TextureType type, FramebufferAttachmentType attachment, unsigned int textureId);
+        void setDrawBuffers(const std::vector<FramebufferAttachmentType>& drawBuffers);
+        void checkFramebufferCompleteness(unsigned int id);
 
         void drawIndexedTriangles(unsigned int indexCount);
         void drawIndexedLines(unsigned int indexCount);
@@ -74,7 +83,9 @@ namespace engine {
     private:
         GLenum convertVertexBufferLayoutElementType(VertexBufferLayoutElementType type);
         GLenum convertShaderType(ShaderType type);
-        GLenum convertTextureFormat(TextureFormat format);
+        GLenum convertTextureImageFormat(TextureDataFormat format);
+        GLenum convertTextureType(TextureType type);
+        GLenum convertFramebufferAttachmentType(FramebufferAttachmentType type);
 
     };
 

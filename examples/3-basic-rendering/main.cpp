@@ -14,8 +14,8 @@ public:
 
     MainLayer(int viewportWidth, int viewportHeight) {
 
-        std::shared_ptr<engine::Texture> texture1 = std::make_shared<engine::Texture>("assets/texture-1.jpeg");
-        std::shared_ptr<engine::Texture> texture2 = std::make_shared<engine::Texture>("assets/texture-2.jpeg");
+        std::shared_ptr<engine::TextureImage2D> texture1 = std::make_shared<engine::TextureImage2D>("assets/texture-1.jpeg");
+        std::shared_ptr<engine::TextureImage2D> texture2 = std::make_shared<engine::TextureImage2D>("assets/texture-2.jpeg");
 
         // TRIANGLE 1
         auto triangle1 = m_scene.createEntity();

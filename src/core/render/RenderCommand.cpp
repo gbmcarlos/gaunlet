@@ -125,7 +125,7 @@ namespace engine {
         getApi().addVertexArrayAttribute(index, count, type, normalized, stride, offset);
     }
 
-    void RenderCommand::loadTexture(unsigned int& id, TextureFormat internalFormat, TextureFormat dataFormat, unsigned int width, unsigned int height, void* data) {
+    void RenderCommand::loadTexture(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data) {
         getApi().loadTexture(id, internalFormat, dataFormat, width, height, data);
     }
 
@@ -135,6 +135,34 @@ namespace engine {
 
     void RenderCommand::deleteTexture(unsigned int &id) {
         getApi().deleteTexture(id);
+    }
+
+    void RenderCommand::createFramebuffer(unsigned int &id) {
+        getApi().createFramebuffer(id);
+    }
+
+    void RenderCommand::bindFramebuffer(unsigned int id) {
+        getApi().bindFramebuffer(id);
+    }
+
+    void RenderCommand::unbindFramebuffer(unsigned int id) {
+        getApi().unbindFramebuffer(id);
+    }
+
+    void RenderCommand::deleteFramebuffer(unsigned int& id) {
+        getApi().deleteFramebuffer(id);
+    }
+
+    void RenderCommand::framebufferAttach(TextureType type, FramebufferAttachmentType attachment, unsigned int textureId) {
+        getApi().framebufferAttach(type, attachment, textureId);
+    }
+
+    void RenderCommand::setDrawBuffers(const std::vector<FramebufferAttachmentType>& drawBuffers) {
+        getApi().setDrawBuffers(drawBuffers);
+    }
+
+    void RenderCommand::checkFramebufferCompleteness(unsigned int id) {
+        getApi().checkFramebufferCompleteness(id);
     }
 
     void RenderCommand::drawIndexedTriangles(unsigned int indexCount) {

@@ -1,4 +1,4 @@
-#include "Texture.h"
+#include "TextureImage2D.h"
 
 #include "../../core/render/RenderCommand.h"
 
@@ -7,7 +7,7 @@
 
 namespace engine {
 
-    Texture::Texture(const std::string &path) {
+    TextureImage2D::TextureImage2D(const std::string &path) {
 
         int width, height, channels;
         stbi_set_flip_vertically_on_load(true);
@@ -17,15 +17,15 @@ namespace engine {
             throw std::runtime_error("Failed to load texture file");
         }
 
-        TextureFormat internalFormat;
-        TextureFormat dataFormat;
+        TextureDataFormat internalFormat;
+        TextureDataFormat dataFormat;
 
         if (channels == 3) {
-            internalFormat = TextureFormat::RGB;
-            dataFormat = TextureFormat::RGB;
+            internalFormat = TextureDataFormat::RGB;
+            dataFormat = TextureDataFormat::RGB;
         } else if (channels == 4) {
-            internalFormat = TextureFormat::RGBA;
-            dataFormat = TextureFormat::RGBA;
+            internalFormat = TextureDataFormat::RGBA;
+            dataFormat = TextureDataFormat::RGBA;
         } else {
             throw std::runtime_error("Unknown texture data format");
         }
@@ -39,7 +39,7 @@ namespace engine {
 
     }
 
-    Texture::Texture(TextureFormat internalFormat, TextureFormat dataFormat, unsigned int width, unsigned int height, void* data) {
+    TextureImage2D::TextureImage2D(TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data) {
 
         RenderCommand::loadTexture(m_rendererId, internalFormat, dataFormat, (unsigned int) width, (unsigned int) height, data);
 
@@ -48,11 +48,11 @@ namespace engine {
 
     }
 
-    Texture::~Texture() {
+    TextureImage2D::~TextureImage2D() {
         RenderCommand::deleteTexture(m_rendererId);
     }
 
-    void Texture::bind(unsigned int slot) {
+    void TextureImage2D::bind(unsigned int slot) {
         RenderCommand::bindTexture(m_rendererId, slot);
     }
 

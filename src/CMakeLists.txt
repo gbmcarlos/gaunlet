@@ -19,7 +19,8 @@ add_library(graphics-engine
         graphics/buffer/VertexArray.cpp
         graphics/shader/Shader.cpp
         graphics/shader/ShaderLibrary.cpp
-        graphics/texture/Texture.cpp
+        graphics/texture/TextureImage2D.cpp
+        graphics/framebuffer/Framebuffer.cpp
 
 #        Scene
         scene/camera/Camera.cpp

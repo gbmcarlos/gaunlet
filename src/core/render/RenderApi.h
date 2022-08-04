@@ -17,8 +17,21 @@ namespace engine {
         Fragment
     };
 
-    enum class TextureFormat {
-        RGB, RGBA
+    enum class TextureDataFormat {
+        RGB, RGBA,
+        Depth, Stencil
+    };
+
+    enum class TextureType {
+        Image2D,
+        CubeMap
+    };
+
+    enum class FramebufferAttachmentType {
+        None,
+        Color,
+        Depth,
+        Stencil
     };
 
     class RenderApi {
@@ -64,9 +77,17 @@ namespace engine {
         virtual unsigned int sizeOfVertexBufferLayoutElementType(VertexBufferLayoutElementType type) = 0;
         virtual void addVertexArrayAttribute(unsigned int index, int count, VertexBufferLayoutElementType type, bool normalized, int stride, int offset) = 0;
 
-        virtual void loadTexture(unsigned int& id, TextureFormat internalFormat, TextureFormat dataFormat, unsigned int width, unsigned int height, void* data) = 0;
+        virtual void loadTexture(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data) = 0;
         virtual void bindTexture(unsigned int id, unsigned int slot) = 0;
         virtual void deleteTexture(unsigned int& id) = 0;
+
+        virtual void createFramebuffer(unsigned int& id) = 0;
+        virtual void bindFramebuffer(unsigned int id) = 0;
+        virtual void unbindFramebuffer(unsigned int id) = 0;
+        virtual void deleteFramebuffer(unsigned int& id) = 0;
+        virtual void framebufferAttach(TextureType type, FramebufferAttachmentType attachment, unsigned int textureId) = 0;
+        virtual void setDrawBuffers(const std::vector<FramebufferAttachmentType>& drawBuffers) = 0;
+        virtual void checkFramebufferCompleteness(unsigned int id) = 0;
 
         virtual void drawIndexedTriangles(unsigned int indexCount) = 0;
         virtual void drawIndexedLines(unsigned int indexCount) = 0;

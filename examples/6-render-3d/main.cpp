@@ -11,8 +11,8 @@ public:
 
     SceneLayer(float viewportWidth, float viewportHeight) {
 
-        std::shared_ptr<engine::Texture> texture1 = std::make_shared<engine::Texture>("assets/texture-1.jpeg");
-        std::shared_ptr<engine::Texture> texture2 = std::make_shared<engine::Texture>("assets/texture-2.png");
+        std::shared_ptr<engine::TextureImage2D> texture1 = std::make_shared<engine::TextureImage2D>("assets/texture-1.jpeg");
+        std::shared_ptr<engine::TextureImage2D> texture2 = std::make_shared<engine::TextureImage2D>("assets/texture-2.png");
 
         engine::Entity cube1 = m_scene.createEntity();
         cube1.addComponent<engine::TransformComponent>(
@@ -26,7 +26,7 @@ public:
         engine::Entity cube2 = m_scene.createEntity();
         cube2.addComponent<engine::TransformComponent>(
             glm::vec3(1.0f, 0.0f, 0.0f),
-            glm::vec3(20.0f, 110.0f, 0.0f),
+            glm::vec3(20.0f, -30.0f, 0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f)
         );
         cube2.addComponent<engine::PolygonComponent>(engine::CubeMesh());
@@ -48,10 +48,10 @@ public:
 
 };
 
-class Basic3DApplication : public engine::Application {
+class Render3DApplication : public engine::Application {
 
 public:
-    explicit Basic3DApplication(const std::string& name) : engine::Application(name) {}
+    explicit Render3DApplication(const std::string& name) : engine::Application(name) {}
 
     void onReady() override {
         m_sceneLayer = new SceneLayer(m_window->getViewportWidth(),m_window->getViewportHeight());
@@ -65,7 +65,7 @@ private:
 
 int main() {
 
-    Basic3DApplication app("Basic 3D");
+    Render3DApplication app("Render 3D");
     engine::RunLoop runLoop(app);
     runLoop.run();
 
