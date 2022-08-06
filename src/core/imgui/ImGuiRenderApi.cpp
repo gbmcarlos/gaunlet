@@ -1,8 +1,8 @@
 #include "ImGuiRenderApi.h"
 
 #include <imgui.h>
-#include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
+#include "imgui/imgui_impl_glfw.h"
 
 namespace engine {
 
@@ -10,6 +10,8 @@ namespace engine {
 
         ::ImGui::CreateContext();
         ImGuiIO &io = ::ImGui::GetIO();
+//        io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+//        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         io.IniFilename = "";
         ImGui_ImplGlfw_InitForOpenGL(windowContext, true);
         ImGui_ImplOpenGL3_Init();
@@ -27,8 +29,15 @@ namespace engine {
 
     void ImGuiRenderApi::render() {
 
+        ImGuiIO &io = ::ImGui::GetIO();
+
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+            ImGui::UpdatePlatformWindows();
+            ImGui::RenderPlatformWindowsDefault();
+        }
 
     }
 

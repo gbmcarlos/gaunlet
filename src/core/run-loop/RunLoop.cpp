@@ -27,19 +27,19 @@ namespace engine {
             TimeStep ts(time - lastFrameTime);
             lastFrameTime = time;
 
-            // Start ImGUI rendering
-            ImGuiRenderApi::newFrame();
+            m_application.getWindow()->pollEvents();
 
             // Delegate the update to the m_application
             m_application.onUpdate(ts);
 
-            // Delegate the GUI to the m_application
+            // Start ImGUI rendering
+            ImGuiRenderApi::newFrame();
+            // Delegate the GUI to the application
             m_application.onGuiRender();
 
             ImGuiRenderApi::render();
 
             m_application.getWindow()->swap();
-            m_application.getWindow()->pollEvents();
 
         }
 
