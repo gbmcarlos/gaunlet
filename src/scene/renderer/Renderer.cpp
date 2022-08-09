@@ -1,5 +1,7 @@
 #include "Renderer.h"
 
+#include "../../graphics/texture/TextureImage2D.h"
+
 #include <map>
 
 namespace engine {
@@ -307,8 +309,8 @@ namespace engine {
     void Renderer::loadDefaultWhiteTexture() {
 
         // Create a 1x1 white texture, to be used as default
-        unsigned int whiteTextureData = 0xffffff;
-        std::shared_ptr<engine::TextureImage2D> whiteTexture = std::make_shared<engine::TextureImage2D>(TextureDataFormat::RGB, TextureDataFormat::RGB, 1, 1, &whiteTextureData);
+        unsigned int whiteTextureData = 0xffffffff;
+        std::shared_ptr<engine::Texture> whiteTexture = std::make_shared<engine::TextureImage2D>(TextureDataFormat::RGBA, TextureDataFormat::RGBA, 1, 1, &whiteTextureData);
         m_rendererStorage->m_whiteTexture = whiteTexture;
 
         // Add it to the polygon and circle texture vectors

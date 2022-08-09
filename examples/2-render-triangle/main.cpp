@@ -1,6 +1,4 @@
-#include <Core.h>
 #include <Graphics.h>
-#include <imgui.h>
 
 #include <memory>
 

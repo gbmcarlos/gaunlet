@@ -7,7 +7,7 @@
 namespace engine {
 
     Scene::Scene() {
-        engine::Renderer::init();
+        Renderer::init();
     }
 
     Scene::~Scene() {
@@ -25,9 +25,7 @@ namespace engine {
         return m_physicsWorld;
     }
 
-    void Scene::start(const std::shared_ptr<Camera>& camera) {
-
-        m_camera = camera;
+    void Scene::start() {
 
         if (m_physicsWorld) {
             initPhysics();
@@ -51,11 +49,7 @@ namespace engine {
         m_playing = !m_playing;
     }
 
-    void Scene::onUpdate(TimeStep timeStep) {
-
-        if (m_camera == nullptr) {
-            throw std::runtime_error("Scene hasn't been started with ::start");
-        }
+    void Scene::onUpdate(TimeStep timeStep, const std::shared_ptr<Camera>& camera) {
 
         if (m_playing) {
 
@@ -66,7 +60,22 @@ namespace engine {
 
         }
 
-        renderElements();
+        renderElements(camera, nullptr);
+
+    }
+
+    void Scene::onUpdate(TimeStep timeStep, const std::shared_ptr<Camera>& camera, const std::shared_ptr<Framebuffer>& framebuffer) {
+
+        if (m_playing) {
+
+            runScripts(timeStep);
+            if (m_physicsWorld) {
+                simulatePhysics(timeStep);
+            }
+
+        }
+
+        renderElements(camera, framebuffer);
 
     }
 
@@ -144,15 +153,23 @@ namespace engine {
 
     }
 
-    void Scene::renderElements() {
+    void Scene::renderElements(const std::shared_ptr<Camera>& camera, const std::shared_ptr<Framebuffer>& framebuffer) {
 
-        engine::RenderCommand::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
-        engine::Renderer::beginScene(m_camera->getViewProjectionMatrix());
+        if (framebuffer != nullptr) {
+            framebuffer->bind();
+        }
+
+        RenderCommand::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
+        Renderer::beginScene(camera->getViewProjectionMatrix());
 
         renderPolygons();
         renderCircles();
 
-        engine::Renderer::endScene();
+        Renderer::endScene();
+
+        if (framebuffer != nullptr) {
+            framebuffer->unbind();
+        }
 
     }
 
@@ -171,7 +188,7 @@ namespace engine {
 
         }
 
-        engine::Renderer::flushPolygons();
+        Renderer::flushPolygons();
 
     }
 
@@ -190,7 +207,7 @@ namespace engine {
 
         }
 
-        engine::Renderer::flushCircles();
+        Renderer::flushCircles();
 
     }
 

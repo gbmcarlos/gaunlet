@@ -13,10 +13,6 @@ namespace engine {
 
         void bind(unsigned int slot) override;
 
-    private:
-        unsigned int m_width;
-        unsigned int m_height;
-
     };
 
 }

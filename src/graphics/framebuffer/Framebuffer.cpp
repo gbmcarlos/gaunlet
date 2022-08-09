@@ -43,11 +43,11 @@ namespace engine {
         }
 
         // Set which buffers are for drawing
-        RenderCommand::setDrawBuffers(drawBuffers);
+//        RenderCommand::setDrawBuffers(drawBuffers);
 
         // Check correctness and unbind
         RenderCommand::checkFramebufferCompleteness(m_rendererId);
-        RenderCommand::unbindFramebuffer(m_rendererId);
+        RenderCommand::unbindFramebuffer();
 
     }
 
@@ -60,7 +60,7 @@ namespace engine {
     }
 
     void Framebuffer::unbind() {
-        RenderCommand::bindFramebuffer(m_rendererId);
+        RenderCommand::unbindFramebuffer();
     }
 
 }

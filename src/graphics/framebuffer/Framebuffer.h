@@ -27,6 +27,7 @@ namespace engine {
         ~Framebuffer();
         void bind();
         void unbind();
+        inline std::vector<std::shared_ptr<Texture> >& getTextures() {return m_textures; }
 
     private:
         std::vector<FramebufferAttachmentSpecs> m_attachmentSpecs;

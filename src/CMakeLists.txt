@@ -10,6 +10,7 @@ add_library(graphics-engine
         core/render/opengl/OpenGLRenderAPI.cpp
         core/render/RenderCommand.cpp
         core/imgui/ImGuiRenderApi.cpp
+        core/imgui/ViewportLayout.cpp
         core/run-loop/RunLoop.cpp
 
 #        Graphics

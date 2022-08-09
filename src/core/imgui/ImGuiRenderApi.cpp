@@ -1,9 +1,5 @@
 #include "ImGuiRenderApi.h"
 
-#include <imgui.h>
-#include "imgui/imgui_impl_opengl3.h"
-#include "imgui/imgui_impl_glfw.h"
-
 namespace engine {
 
     void ImGuiRenderApi::init(GLFWwindow* windowContext) {
@@ -11,7 +7,7 @@ namespace engine {
         ::ImGui::CreateContext();
         ImGuiIO &io = ::ImGui::GetIO();
 //        io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-//        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         io.IniFilename = "";
         ImGui_ImplGlfw_InitForOpenGL(windowContext, true);
         ImGui_ImplOpenGL3_Init();

@@ -6,6 +6,10 @@ namespace engine {
 
     std::shared_ptr<Shader> ShaderLibrary::load(const std::string& name, const std::map<ShaderType, std::string>& shaderSources) {
 
+        if (m_shaders.find(name) != m_shaders.end()) {
+            return m_shaders[name];
+        }
+
         std::shared_ptr<Shader> shader = std::make_shared<engine::Shader>();
 
         for (const auto& shaderSource : shaderSources) {

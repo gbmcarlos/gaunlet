@@ -6,11 +6,14 @@ class SceneLayer : public engine::Layer {
 
 private:
     engine::Scene m_scene;
+    std::shared_ptr<engine::PerspectiveCamera> m_camera;
 
 public:
 
     SceneLayer(float viewportWidth, float viewportHeight) {
 
+        m_camera = std::make_shared<engine::PerspectiveCamera>(45.0f, (float) viewportWidth /(float) viewportHeight, 100, 1.0f, 100.0f);
+        m_camera->setTranslation({0.0f, 0.0f, 10.0f});
         std::shared_ptr<engine::TextureImage2D> texture1 = std::make_shared<engine::TextureImage2D>("assets/texture-1.jpeg");
         std::shared_ptr<engine::TextureImage2D> texture2 = std::make_shared<engine::TextureImage2D>("assets/texture-2.png");
 
@@ -34,7 +37,7 @@ public:
 
         auto camera = std::make_shared<engine::PerspectiveCamera>(45.0f, (float) viewportWidth /(float) viewportHeight, 100, 1.0f, 100.0f);
         camera->setTranslation({0.0f, 0.0f, 10.0f});
-        m_scene.start(camera);
+        m_scene.start();
 
     }
 
@@ -43,7 +46,7 @@ public:
     }
 
     void onUpdate(engine::TimeStep timeStep) override {
-        m_scene.onUpdate(timeStep);
+        m_scene.onUpdate(timeStep, m_camera);
     }
 
 };

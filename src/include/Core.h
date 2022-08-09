@@ -17,3 +17,6 @@
 
 #include "../core/input/Input.h" // Depends on Window
 #include "../core/run-loop/RunLoop.h" // Depends on Window, Application, ImGuiRenderApi, and RenderCommand
+#include <imgui.h>
+#include <imgui_internal.h>
+#include "../core/imgui/ViewportLayout.h"

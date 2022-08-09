@@ -191,14 +191,13 @@ namespace engine {
         glCall(glGenTextures(1, &id));
         glCall(glBindTexture(GL_TEXTURE_2D, id));
 
-        glCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR));
-        glCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-
         GLenum glInternalFormat = convertTextureImageFormat(internalFormat);
         GLenum glDataFormat = convertTextureImageFormat(dataFormat);
 
         glCall(glTexImage2D(GL_TEXTURE_2D, 0, glInternalFormat, width, height, 0, glDataFormat, GL_UNSIGNED_BYTE, data));
-        glCall(glGenerateMipmap(GL_TEXTURE_2D));
+
+        glCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+        glCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
 
     }
 
@@ -219,8 +218,8 @@ namespace engine {
         glCall(glBindFramebuffer(GL_FRAMEBUFFER, id));
     }
 
-    void OpenGLRenderApi::unbindFramebuffer(unsigned int id) {
-        glCall(glBindFramebuffer(GL_FRAMEBUFFER, id));
+    void OpenGLRenderApi::unbindFramebuffer() {
+        glCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
     }
 
     void OpenGLRenderApi::deleteFramebuffer(unsigned int& id) {
@@ -233,7 +232,6 @@ namespace engine {
         GLenum glAttachmentType = convertFramebufferAttachmentType(attachment);
 
         glCall(glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, glAttachmentType, glTextureType, textureId, 0));
-        glCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 
     }
 

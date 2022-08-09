@@ -18,3 +18,4 @@
  ./res/bindings, imgui_impl_opengl3.h -> ../vendor/imgui
  ./res/bindings, imgui_impl_opengl3.cpp -> ../vendor/imgui
  ./res/bindings, imgui_impl_opengl3_loader.h -> ../vendor/imgui
+ ./include, imgui_internal.h -> ../vendor/imgui

@@ -76,19 +76,20 @@ class SceneLayer : public engine::Layer {
 private:
 
     engine::Scene m_scene;
+    std::shared_ptr<engine::OrthographicCamera> m_camera;
 
 public:
 
     SceneLayer(float viewportWidth, float viewportHeight) {
 
-        auto camera = std::make_shared<engine::OrthographicCamera>(viewportWidth, viewportHeight, 100);
+        m_camera = std::make_shared<engine::OrthographicCamera>(viewportWidth, viewportHeight, 100);
 
-        createRoom(camera->getProjectionSize());
+        createRoom(m_camera->getProjectionSize());
         createBall();
         createQuad();
 
         auto& physicsWorld = m_scene.enablePhysics({0.0f, -9.8f});
-        m_scene.start(camera);
+        m_scene.start();
 
     }
 
@@ -192,7 +193,7 @@ public:
     }
 
     void onUpdate(engine::TimeStep timeStep) override {
-        m_scene.onUpdate(timeStep);
+        m_scene.onUpdate(timeStep, m_camera);
     }
 
 };

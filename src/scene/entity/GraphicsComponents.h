@@ -2,7 +2,7 @@
 
 #include "../mesh/PolygonMesh.h"
 #include "../mesh/CircleMesh.h"
-#include "../../graphics/texture/TextureImage2D.h"
+#include "../../graphics/texture/Texture.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <utility>
@@ -71,11 +71,11 @@ namespace engine {
         MaterialComponent(const MaterialComponent&) = default;
         MaterialComponent() : m_color(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), m_texture(nullptr) {}
         MaterialComponent(glm::vec4 color) : m_color(color), m_texture(nullptr) {}
-        MaterialComponent(std::shared_ptr<TextureImage2D> texture) : m_color(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), m_texture(std::move(texture)) {}
-        MaterialComponent(glm::vec4 color, std::shared_ptr<TextureImage2D> texture) : m_color(color), m_texture(std::move(texture)) {}
+        MaterialComponent(std::shared_ptr<Texture> texture) : m_color(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), m_texture(std::move(texture)) {}
+        MaterialComponent(glm::vec4 color, std::shared_ptr<Texture> texture) : m_color(color), m_texture(std::move(texture)) {}
 
         glm::vec4 m_color;
-        std::shared_ptr<TextureImage2D> m_texture;
+        std::shared_ptr<Texture> m_texture;
 
     };
 

@@ -83,7 +83,7 @@ namespace engine {
 
         virtual void createFramebuffer(unsigned int& id) = 0;
         virtual void bindFramebuffer(unsigned int id) = 0;
-        virtual void unbindFramebuffer(unsigned int id) = 0;
+        virtual void unbindFramebuffer() = 0;
         virtual void deleteFramebuffer(unsigned int& id) = 0;
         virtual void framebufferAttach(TextureType type, FramebufferAttachmentType attachment, unsigned int textureId) = 0;
         virtual void setDrawBuffers(const std::vector<FramebufferAttachmentType>& drawBuffers) = 0;

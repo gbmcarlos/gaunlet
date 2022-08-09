@@ -145,8 +145,8 @@ namespace engine {
         getApi().bindFramebuffer(id);
     }
 
-    void RenderCommand::unbindFramebuffer(unsigned int id) {
-        getApi().unbindFramebuffer(id);
+    void RenderCommand::unbindFramebuffer() {
+        getApi().unbindFramebuffer();
     }
 
     void RenderCommand::deleteFramebuffer(unsigned int& id) {
