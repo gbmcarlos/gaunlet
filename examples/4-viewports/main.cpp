@@ -40,16 +40,8 @@ public:
     }
 
     void onGuiRender() override {
-
-        ImGui::Begin("Scene");
-        auto& texture = m_framebuffer->getTextures()[0];
-        ImGui::Image(
-            (void *)(intptr_t)texture->getRendererId(),
-            ImGui::GetWindowSize(),
-            ImVec2(0, 1), ImVec2(1, 0)
-        );
-        ImGui::End();
-
+        // Render the framebuffer's texture to the "Scene" window
+        engine::ViewportLayout::renderTexture("Scene", m_framebuffer->getTextures()[0]);
     }
 
 };
@@ -78,6 +70,7 @@ public:
 
         // Init the layout
         layout.begin("Main Window");
+        // Here we can add stuff to the main window
         layout.end();
 
         // Left dock, with the demo window

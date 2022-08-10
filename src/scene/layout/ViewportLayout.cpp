@@ -62,6 +62,18 @@ namespace engine {
         ImGui::End();
     }
 
+    void ViewportLayout::renderTexture(const char* windowId, const std::shared_ptr<Texture>& texture) {
+
+        ImGui::Begin(windowId);
+        ImGui::Image(
+            (void *)(intptr_t)texture->getRendererId(),
+            ImGui::GetWindowSize(),
+            ImVec2(0, 1), ImVec2(1, 0)
+        );
+        ImGui::End();
+
+    }
+
     void ViewportLayout::generateDockSpaces(ImGuiID& mainDockSpaceId) {
 
         for (auto& dockSpaceSpec : m_dockSpaceSpecs) {

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../graphics/texture/Texture.h"
+
 #include <imgui.h>
 
 #include <glm/glm.hpp>
@@ -22,8 +24,8 @@ namespace engine {
 
         DockSpacePosition m_position;
         float m_sizeRatio = 0.0f;
-        std::vector<const char*> m_windowIds;
-        int m_dockNodeFlags;
+        std::vector<const char*> m_windowIds = {};
+        int m_dockNodeFlags = 0;
 
     };
 
@@ -31,10 +33,11 @@ namespace engine {
 
     public:
         ViewportLayout(const std::initializer_list<DockSpaceSpecs>& dockSpaceSpecs, glm::vec2 position, glm::vec2 size, int windowFlags = 0);
+
         void begin(const char* name);
         void end();
 
-        ImGuiDir convertDockSpacePosition(DockSpacePosition position);
+        static void renderTexture(const char* name, const std::shared_ptr<Texture>& texture);
 
     private:
         std::vector<DockSpaceSpecs> m_dockSpaceSpecs;
@@ -43,6 +46,7 @@ namespace engine {
         int m_windowFlags = 0;
 
         void generateDockSpaces(ImGuiID& mainDockSpaceId);
+        ImGuiDir convertDockSpacePosition(DockSpacePosition position);
 
     };
 
