@@ -10,7 +10,6 @@ add_library(graphics-engine
         core/render/opengl/OpenGLRenderAPI.cpp
         core/render/RenderCommand.cpp
         core/imgui/ImGuiRenderApi.cpp
-        core/imgui/ViewportLayout.cpp
         core/run-loop/RunLoop.cpp
 
 #        Graphics
@@ -29,6 +28,7 @@ add_library(graphics-engine
         scene/camera/PerspectiveCamera.cpp
         scene/renderer/Renderer.cpp
         scene/physics/PhysicsWorld.cpp
+        scene/layout/ViewportLayout.cpp
         scene/Scene.cpp
 
         ${PROJECT_SOURCE_DIR}/vendor/imgui/imgui_impl_glfw.cpp ${PROJECT_SOURCE_DIR}/vendor/imgui/imgui_impl_opengl3.cpp

@@ -10,6 +10,7 @@ namespace engine {
     public:
         ~Layer() = default;
         virtual void onUpdate(TimeStep timeStep);
+        virtual void onGuiRender();
         virtual void onEvent(Event& event);
 
     };

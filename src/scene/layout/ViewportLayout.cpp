@@ -4,10 +4,10 @@
 
 namespace engine {
 
-    ViewportLayout::ViewportLayout(const std::initializer_list<DockSpaceSpecs> &dockSpaceSpecs, glm::vec2 position, glm::vec2 size)
-    : m_dockSpaceSpecs(dockSpaceSpecs), m_position(position), m_size(size) {}
+    ViewportLayout::ViewportLayout(const std::initializer_list<DockSpaceSpecs> &dockSpaceSpecs, glm::vec2 position, glm::vec2 size, int windowFlags)
+    : m_dockSpaceSpecs(dockSpaceSpecs), m_position(position), m_size(size), m_windowFlags(windowFlags) {}
 
-    void ViewportLayout::init() {
+    void ViewportLayout::begin(const char* name) {
 
         bool open = true;
 
@@ -16,9 +16,10 @@ namespace engine {
 
         // Prepare the main window, which will contain all the dock nodes
         // Prepare the flags
-        ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-        window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-        window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+        ImGuiWindowFlags windowDefaultFlags = ImGuiWindowFlags_NoDocking;
+        windowDefaultFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+        windowDefaultFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+        windowDefaultFlags |= m_windowFlags;
 
         // Prepare the properties and styles
         ImGui::SetNextWindowPos(viewport->Pos);
@@ -29,7 +30,7 @@ namespace engine {
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 
         // Create the window (and remove the styles we've added)
-        ImGui::Begin("Layout Main Window", &open, window_flags);
+        ImGui::Begin(name, &open, windowDefaultFlags);
         ImGui::PopStyleVar(3);
 
         // Only needs to be created once
@@ -51,11 +52,14 @@ namespace engine {
 
         }
 
-        // Add the dock space and finish the main window
+        // Add the dock space
         ImGuiID dockspaceId = ImGui::GetID("Layout Main DockSpace");
         ImGui::DockSpace(dockspaceId, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_CentralNode);
-        ImGui::End();
 
+    }
+
+    void ViewportLayout::end() {
+        ImGui::End();
     }
 
     void ViewportLayout::generateDockSpaces(ImGuiID& mainDockSpaceId) {
@@ -75,6 +79,11 @@ namespace engine {
                     NULL,
                     &mainDockSpaceId
                 );
+            }
+
+            if (dockSpaceSpec.m_dockNodeFlags != 1) {
+                ImGuiDockNode* node = ImGui::DockBuilderGetNode(dockPositionId);
+                node->LocalFlags |= dockSpaceSpec.m_dockNodeFlags;
             }
 
             // Assign all the windows in the spec

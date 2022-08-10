@@ -18,7 +18,6 @@ public:
 
         m_camera = std::make_shared<engine::OrthographicCamera>((float) viewportWidth, (float) viewportHeight, 100);
 
-        // Main Scene
         m_framebuffer = std::make_shared<engine::Framebuffer>(std::initializer_list<engine::FramebufferAttachmentSpecs>{
             {engine::TextureDataFormat::RGBA, engine::TextureType::Image2D, (float) viewportWidth, (float) viewportHeight, engine::FramebufferAttachmentType::Color, true}
         });
@@ -30,15 +29,26 @@ public:
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(5.0f, 5.0f, 1.0f)
         );
-        triangle.addComponent<engine::MaterialComponent>(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+        triangle.addComponent<engine::MaterialComponent>(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
 
         m_mainScene.start();
 
     }
 
     void onUpdate(engine::TimeStep timeStep) override {
-
         m_mainScene.onUpdate(timeStep, m_camera, m_framebuffer);
+    }
+
+    void onGuiRender() override {
+
+        ImGui::Begin("Scene");
+        auto& texture = m_framebuffer->getTextures()[0];
+        ImGui::Image(
+            (void *)(intptr_t)texture->getRendererId(),
+            ImGui::GetWindowSize(),
+            ImVec2(0, 1), ImVec2(1, 0)
+        );
+        ImGui::End();
 
     }
 
@@ -57,29 +67,24 @@ public:
 
     void onGuiRender() override {
 
-        engine::ViewportLayout layout({
-            {engine::DockSpacePosition::Left, 0.2f, {"Tools"}},
-            {engine::DockSpacePosition::Center, 0.0f, {"Scene"}},
-            {engine::DockSpacePosition::Right, 0.25f, {"Layers"}},
-        }, {0, 0}, {m_window->getViewportWidth(), m_window->getViewportHeight()});
-
-        layout.init();
-
-        ImGui::Begin("Tools");
-        ImGui::Text("Lorem Ipsum");
-        ImGui::End();
-
-        ImGui::Begin("Scene");
-        auto& texture = m_mainLayer->m_framebuffer->getTextures()[0];
-        ImGui::Image(
-            (void *)(intptr_t)texture->getRendererId(),
-            ImVec2(texture->getWidth(), texture->getHeight())
+        engine::ViewportLayout layout(
+            {
+                {engine::DockSpacePosition::Left,   0.3f,  {"Dear ImGui Demo"}},
+                {engine::DockSpacePosition::Center, 0.0f,  {"Scene"}, ImGuiDockNodeFlags_NoTabBar | ImGuiDockNodeFlags_NoResizeFlagsMask_}
+            },
+            {0, 0},
+            {m_window->getViewportWidth(), m_window->getViewportHeight()}
         );
-        ImGui::End();
 
-        ImGui::Begin("Layers");
-        ImGui::Text("Lorem Ipsum");
-        ImGui::End();
+        // Init the layout
+        layout.begin("Main Window");
+        layout.end();
+
+        // Left dock, with the demo window
+        ImGui::ShowDemoWindow();
+
+        // Delegate to the layers
+        engine::Application::onGuiRender();
 
     }
 

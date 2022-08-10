@@ -36,7 +36,13 @@ namespace engine {
         }
 
     }
-    void Application::onGuiRender() {}
+    void Application::onGuiRender() {
+
+        for (auto layer : m_layerStack) {
+            layer->onGuiRender();
+        }
+
+    }
 
     void Application::pushLayer(Layer* layer) {
         m_layerStack.pushLayer(layer);
