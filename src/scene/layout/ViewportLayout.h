@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../graphics/texture/Texture.h"
+#include "../graphics/framebuffer/Framebuffer.h"
 
 #include <imgui.h>
 
@@ -37,7 +37,7 @@ namespace engine {
         void begin(const char* name);
         void end();
 
-        static void renderTexture(const char* name, const std::shared_ptr<Texture>& texture);
+        static void renderFramebuffer(const std::shared_ptr<Framebuffer>& framebuffer, unsigned int colorAttachmentIndex);
 
     private:
         std::vector<DockSpaceSpecs> m_dockSpaceSpecs;

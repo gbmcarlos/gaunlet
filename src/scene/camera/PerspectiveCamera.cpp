@@ -13,9 +13,9 @@ namespace engine {
 
     }
 
-    void PerspectiveCamera::onWindowResize(float viewportWidth, float viewportHeight) {
+    void PerspectiveCamera::resize(unsigned int viewportWidth, unsigned int viewportHeight) {
 
-        m_aspectRatio = viewportWidth / viewportHeight;
+        m_aspectRatio = ((float) viewportWidth) / ((float) viewportHeight);
 
         calculateProjectionMatrix();
     }

@@ -11,6 +11,14 @@ namespace engine {
         getApi().clear();
     }
 
+    void RenderCommand::getViewport(unsigned int& x0, unsigned int& y0, unsigned int& x1, unsigned int& y1) {
+        getApi().getViewport(x0, y0, x1, y1);
+    }
+
+    void RenderCommand::setViewport(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1) {
+        getApi().setViewport(x0, y0, x1, y1);
+    }
+
 
     void RenderCommand::createVertexBuffer(unsigned int& id, unsigned int size) {
         getApi().createVertexBuffer(id, size);

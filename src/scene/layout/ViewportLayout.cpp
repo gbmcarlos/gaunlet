@@ -62,15 +62,15 @@ namespace engine {
         ImGui::End();
     }
 
-    void ViewportLayout::renderTexture(const char* windowId, const std::shared_ptr<Texture>& texture) {
+    void ViewportLayout::renderFramebuffer(const std::shared_ptr<Framebuffer>& framebuffer, unsigned int colorAttachmentIndex) {
 
-        ImGui::Begin(windowId);
+        auto& texture = framebuffer->getTextures()[colorAttachmentIndex];
+
         ImGui::Image(
             (void *)(intptr_t)texture->getRendererId(),
-            ImGui::GetWindowSize(),
+            ImGui::GetContentRegionAvail(),
             ImVec2(0, 1), ImVec2(1, 0)
         );
-        ImGui::End();
 
     }
 

@@ -4,7 +4,7 @@
 
 namespace engine {
 
-    OrthographicCamera::OrthographicCamera(float viewportWidth, float viewportHeight, float viewportResolution)
+    OrthographicCamera::OrthographicCamera(unsigned int viewportWidth, unsigned int viewportHeight, float viewportResolution)
         : m_viewportWidth(viewportWidth), m_viewportHeight(viewportHeight), m_viewportResolution(viewportResolution) {
         OrthographicCamera::calculateProjectionMatrix();
     }
@@ -20,7 +20,7 @@ namespace engine {
 
     }
 
-    void OrthographicCamera::onWindowResize(float viewportWidth, float viewportHeight) {
+    void OrthographicCamera::resize(unsigned int viewportWidth, unsigned int viewportHeight) {
 
         m_viewportWidth = viewportWidth;
         m_viewportHeight = viewportHeight;

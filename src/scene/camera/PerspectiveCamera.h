@@ -9,7 +9,7 @@ namespace engine {
     public:
         PerspectiveCamera() : PerspectiveCamera(45.0f, 1.0f, 100.0f, 1.0f, 10.0f) {}
         PerspectiveCamera(float fieldOfView, float aspectRatio, float viewportResolution, float near, float far);
-        void onWindowResize(float viewportWidth, float viewportHeight) override;
+        void resize(unsigned int viewportWidth, unsigned int viewportHeight) override;
 
     private:
         float m_fieldOfView, m_aspectRatio, m_viewportResolution = 0;

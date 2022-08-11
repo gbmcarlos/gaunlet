@@ -8,13 +8,14 @@ namespace engine {
 
     public:
         OrthographicCamera() : OrthographicCamera(2.0f, 2.0f, 100.0f) {}
-        OrthographicCamera(float viewportWidth, float viewportHeight, float viewportResolution);
-        void onWindowResize(float viewportWidth, float viewportHeight) override;
+        OrthographicCamera(unsigned int viewportWidth, unsigned int viewportHeight, float viewportResolution);
+        void resize(unsigned int viewportWidth, unsigned int viewportHeight) override;
 
         inline const glm::vec2& getProjectionSize() const {return m_projectionSize;}
 
     private:
-        float m_viewportWidth, m_viewportHeight, m_viewportResolution = 0;
+        unsigned int m_viewportWidth, m_viewportHeight;
+        float m_viewportResolution = 0;
 
         glm::vec2 m_projectionSize;
 

@@ -22,6 +22,9 @@ namespace engine {
         static void init();
         static void clear(const glm::vec4& color);
 
+        static void getViewport(unsigned int& x0, unsigned int& y0, unsigned int& x1, unsigned int& y1);
+        static void setViewport(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1);
+
         static void createVertexBuffer(unsigned int& id, unsigned int size);
         static void createVertexBuffer(unsigned int& id, const void *data, unsigned int size);
         static void bindVertexBuffer(unsigned int& id);

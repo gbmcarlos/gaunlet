@@ -11,7 +11,7 @@ namespace engine {
     public:
 
         glm::mat4 getViewProjectionMatrix();
-        virtual void onWindowResize(float viewportWidth, float viewportHeight) = 0;
+        virtual void resize(unsigned int viewportWidth, unsigned int viewportHeight) = 0;
 
         void setTranslation(const glm::vec3& translation);
         void setRotation(const glm::vec3& rotation);

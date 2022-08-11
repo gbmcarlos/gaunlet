@@ -14,20 +14,20 @@ public:
 
 public:
 
-    MainLayer(int viewportWidth, int viewportHeight) {
+    MainLayer(unsigned int viewportWidth, unsigned int viewportHeight) {
 
-        m_camera = std::make_shared<engine::OrthographicCamera>((float) viewportWidth, (float) viewportHeight, 100);
+        m_camera = std::make_shared<engine::OrthographicCamera>(viewportWidth, viewportHeight, 1);
 
         m_framebuffer = std::make_shared<engine::Framebuffer>(std::initializer_list<engine::FramebufferAttachmentSpecs>{
-            {engine::TextureDataFormat::RGBA, engine::TextureType::Image2D, (float) viewportWidth, (float) viewportHeight, engine::FramebufferAttachmentType::Color, true}
-        });
+            {engine::TextureDataFormat::RGBA, engine::TextureType::Image2D, engine::FramebufferAttachmentType::Color, true}
+        }, viewportWidth, viewportHeight);
 
         auto triangle = m_mainScene.createEntity();
-        triangle.addComponent<engine::PolygonComponent>(engine::TriangleMesh());
+        triangle.addComponent<engine::PolygonComponent>(engine::SquareMesh());
         triangle.addComponent<engine::TransformComponent>(
-            glm::vec3(-4.0f, -1.0f, 0.0f),
+            glm::vec3(0, 0, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec3(5.0f, 5.0f, 1.0f)
+            glm::vec3(100.0f, 100.0f, 1.0f)
         );
         triangle.addComponent<engine::MaterialComponent>(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
 
@@ -40,12 +40,25 @@ public:
     }
 
     void onGuiRender() override {
+
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+        ImGui::Begin("Scene");
+        ImVec2 windowSize = ImGui::GetContentRegionAvail();
+
+        if (m_framebuffer->getWidth() != windowSize.x || m_framebuffer->getHeight() != windowSize.y) {
+            m_framebuffer->resize((unsigned int) windowSize.x, (unsigned int) windowSize.y);
+            m_camera->resize((unsigned int) windowSize.x, (unsigned int) windowSize.y);
+        }
+
+        auto& texture = m_framebuffer->getTextures()[0];
+
         // Render the framebuffer's texture to the "Scene" window
-        engine::ViewportLayout::renderTexture("Scene", m_framebuffer->getTextures()[0]);
+        engine::ViewportLayout::renderFramebuffer(m_framebuffer,0);
+        ImGui::End();
+        ImGui::PopStyleVar(1);
     }
 
 };
-
 
 class BasicRenderingApplication : public engine::Application {
 
@@ -61,7 +74,7 @@ public:
 
         engine::ViewportLayout layout(
             {
-                {engine::DockSpacePosition::Left,   0.3f,  {"Dear ImGui Demo"}},
+                {engine::DockSpacePosition::Left, 0.3f,  {"Dear ImGui Demo"}, ImGuiDockNodeFlags_NoTabBar | ImGuiDockNodeFlags_NoResizeFlagsMask_},
                 {engine::DockSpacePosition::Center, 0.0f,  {"Scene"}, ImGuiDockNodeFlags_NoTabBar | ImGuiDockNodeFlags_NoResizeFlagsMask_}
             },
             {0, 0},
@@ -70,7 +83,6 @@ public:
 
         // Init the layout
         layout.begin("Main Window");
-        // Here we can add stuff to the main window
         layout.end();
 
         // Left dock, with the demo window
@@ -88,7 +100,7 @@ private:
 
 int main() {
 
-    BasicRenderingApplication app("Basic Rendering");
+    BasicRenderingApplication app("Viewports");
     engine::RunLoop runLoop(app);
 
     runLoop.run();

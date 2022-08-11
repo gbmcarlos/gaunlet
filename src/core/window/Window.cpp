@@ -11,7 +11,7 @@
 
 namespace engine {
 
-    Window::Window(int width, int height, const std::string& title)
+    Window::Window(unsigned int width, unsigned int height, const std::string& title)
         : m_width(width), m_height(height), m_viewportWidth(0), m_viewportHeight(0), m_title(title) {
         init();
     }
@@ -51,6 +51,7 @@ namespace engine {
         }
 
         glfwGetWindowSize(m_windowContext, &m_viewportWidth, &m_viewportHeight);
+        glfwGetFramebufferSize(m_windowContext, &m_framebufferWidth, &m_framebufferHeight);
 
         glfwSetWindowCloseCallback(m_windowContext, windowCloseEventCallback);
         glfwSetWindowSizeCallback(m_windowContext, windowResizeEventCallback);
@@ -111,6 +112,12 @@ namespace engine {
     }
 
     void Window::windowResizeEventCallback(GLFWwindow *window, int width, int height) {
+
+        Window* instance = getCurrentInstance();
+        instance->m_width = width;
+        instance->m_height = height;
+        glfwGetWindowSize(instance->m_windowContext, &instance->m_viewportWidth, &instance->m_viewportHeight);
+        glfwGetFramebufferSize(instance->m_windowContext, &instance->m_framebufferWidth, &instance->m_framebufferHeight);
 
         WindowResizeEvent event(width, height);
         EventBus::getInstance().publishEvent(event);

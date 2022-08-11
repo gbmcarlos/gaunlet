@@ -13,6 +13,7 @@ namespace engine {
         std::string m_title;
         int m_width, m_height;
         int m_viewportWidth, m_viewportHeight;
+        int m_framebufferWidth, m_framebufferHeight;
 
         GLFWwindow* m_windowContext;
 
@@ -26,8 +27,8 @@ namespace engine {
         static void scrollCallback(GLFWwindow* window, double xOffset, double yOffset);
 
     public:
-        Window(const std::string& title);
-        Window(int width, int height, const std::string& title);
+        explicit Window(const std::string& title);
+        Window(unsigned int width, unsigned int height, const std::string& title);
         ~Window();
 
         void setTitle(const std::string& title);
@@ -40,10 +41,16 @@ namespace engine {
         bool isKeyPressed(int keyCode);
 
         inline const std::string& getTitle() { return m_title;}
-        inline int getWidth() { return m_width;}
-        inline int getHeight() { return m_height;}
-        inline int getViewportWidth() { return m_viewportWidth;}
-        inline int getViewportHeight() { return m_viewportHeight;}
+
+        inline unsigned int getWidth() const { return (unsigned int) m_width;}
+        inline unsigned int getHeight() const { return (unsigned int) m_height;}
+
+        inline unsigned int getViewportWidth() const { return (unsigned int) m_viewportWidth;}
+        inline unsigned int getViewportHeight() const { return (unsigned int) m_viewportHeight;}
+
+        inline unsigned int getFramebufferWidth() const { return (unsigned int) m_framebufferWidth;}
+        inline unsigned int getFramebufferHeight() const { return (unsigned int) m_framebufferHeight;}
+
         inline GLFWwindow*& getContext() {return m_windowContext;}
 
         static Window* getCurrentInstance();

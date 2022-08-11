@@ -31,6 +31,9 @@ namespace engine {
         void setClearColor(float red, float green, float blue, float alpha);
         void clear();
 
+        void getViewport(unsigned int& x0, unsigned int& y0, unsigned int& x1, unsigned int& y1);
+        void setViewport(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1);
+
         void createVertexBuffer(unsigned int& id, unsigned int size);
         void createVertexBuffer(unsigned int& id, const void *data, unsigned int size);
         void bindVertexBuffer(unsigned int& id);
