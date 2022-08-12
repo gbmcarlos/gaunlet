@@ -115,7 +115,7 @@ public:
     }
 
     void onUpdate(engine::TimeStep timeStep) override {
-        m_mainScene.onUpdate(timeStep, m_camera);
+        m_mainScene.render(m_camera);
     }
 
 };

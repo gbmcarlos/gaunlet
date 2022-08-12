@@ -88,7 +88,7 @@ public:
         createBall();
         createQuad();
 
-        auto& physicsWorld = m_scene.enablePhysics({0.0f, -9.8f});
+        m_scene.enablePhysics({0.0f, -9.8f});
         m_scene.start();
 
     }
@@ -193,7 +193,8 @@ public:
     }
 
     void onUpdate(engine::TimeStep timeStep) override {
-        m_scene.onUpdate(timeStep, m_camera);
+        m_scene.update(timeStep);
+        m_scene.render(m_camera);
     }
 
 };

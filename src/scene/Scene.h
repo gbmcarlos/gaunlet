@@ -28,8 +28,9 @@ namespace engine {
         void play();
         void pause();
         void togglePlay();
-        void onUpdate(TimeStep timeStep, const std::shared_ptr<Camera>& camera);
-        void onUpdate(TimeStep timeStep, const std::shared_ptr<Camera>& camera, const std::shared_ptr<Framebuffer>& framebuffer);
+
+        void update(TimeStep timeStep);
+        void render(const std::shared_ptr<Camera>& camera, const std::shared_ptr<Framebuffer>& framebuffer = nullptr);
         void stop();
 
     private:
@@ -46,7 +47,6 @@ namespace engine {
         void runScripts(TimeStep timeStep);
         void destroyScripts();
 
-        void renderElements(const std::shared_ptr<Camera>& camera, const std::shared_ptr<Framebuffer>& framebuffer = nullptr);
         void renderPolygons();
         void renderCircles();
 

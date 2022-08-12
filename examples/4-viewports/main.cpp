@@ -36,7 +36,7 @@ public:
     }
 
     void onUpdate(engine::TimeStep timeStep) override {
-        m_mainScene.onUpdate(timeStep, m_camera, m_framebuffer);
+        m_mainScene.render(m_camera, m_framebuffer);
     }
 
     void onGuiRender() override {

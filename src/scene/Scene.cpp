@@ -48,8 +48,7 @@ namespace engine {
     void Scene::togglePlay() {
         m_playing = !m_playing;
     }
-
-    void Scene::onUpdate(TimeStep timeStep, const std::shared_ptr<Camera>& camera) {
+    void Scene::update(TimeStep timeStep) {
 
         if (m_playing) {
 
@@ -59,23 +58,26 @@ namespace engine {
             }
 
         }
-
-        renderElements(camera, nullptr);
 
     }
 
-    void Scene::onUpdate(TimeStep timeStep, const std::shared_ptr<Camera>& camera, const std::shared_ptr<Framebuffer>& framebuffer) {
+    void Scene::render(const std::shared_ptr<Camera>& camera, const std::shared_ptr<Framebuffer>& framebuffer) {
 
-        if (m_playing) {
-
-            runScripts(timeStep);
-            if (m_physicsWorld) {
-                simulatePhysics(timeStep);
-            }
-
+        if (framebuffer != nullptr) {
+            framebuffer->bind();
         }
 
-        renderElements(camera, framebuffer);
+        RenderCommand::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
+        Renderer::beginScene(camera->getViewProjectionMatrix());
+
+        renderPolygons();
+        renderCircles();
+
+        Renderer::endScene();
+
+        if (framebuffer != nullptr) {
+            framebuffer->unbind();
+        }
 
     }
 
@@ -150,26 +152,6 @@ namespace engine {
             // Destroy the instance of the native script
             nativeScriptComponent.m_destroyScriptFunction(&nativeScriptComponent);
         });
-
-    }
-
-    void Scene::renderElements(const std::shared_ptr<Camera>& camera, const std::shared_ptr<Framebuffer>& framebuffer) {
-
-        if (framebuffer != nullptr) {
-            framebuffer->bind();
-        }
-
-        RenderCommand::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
-        Renderer::beginScene(camera->getViewProjectionMatrix());
-
-        renderPolygons();
-        renderCircles();
-
-        Renderer::endScene();
-
-        if (framebuffer != nullptr) {
-            framebuffer->unbind();
-        }
 
     }
 

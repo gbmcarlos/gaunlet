@@ -19,18 +19,18 @@ public:
 
         engine::Entity cube1 = m_scene.createEntity();
         cube1.addComponent<engine::TransformComponent>(
-            glm::vec3(-1.0f, 0.0f, 0.0f),
+            glm::vec3(-2.0f, 0.0f, 0.0f),
             glm::vec3(20.0f, 110.0f, 0.0f),
-            glm::vec3(1.0f, 1.0f, 1.0f)
+            glm::vec3(2.0f, 2.0f, 2.0f)
         );
         cube1.addComponent<engine::PolygonComponent>(engine::CubeMesh());
         cube1.addComponent<engine::MaterialComponent>(texture1);
 
         engine::Entity cube2 = m_scene.createEntity();
         cube2.addComponent<engine::TransformComponent>(
-            glm::vec3(1.0f, 0.0f, 0.0f),
+            glm::vec3(2.0f, 0.0f, 0.0f),
             glm::vec3(20.0f, -30.0f, 0.0f),
-            glm::vec3(1.0f, 1.0f, 1.0f)
+            glm::vec3(2.0f, 2.0f, 2.0f)
         );
         cube2.addComponent<engine::PolygonComponent>(engine::CubeMesh());
         cube2.addComponent<engine::MaterialComponent>(texture2);
@@ -46,7 +46,7 @@ public:
     }
 
     void onUpdate(engine::TimeStep timeStep) override {
-        m_scene.onUpdate(timeStep, m_camera);
+        m_scene.render(m_camera);
     }
 
 };
