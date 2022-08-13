@@ -14,10 +14,10 @@ namespace engine {
 
     struct FramebufferAttachmentSpec {
 
-        FramebufferAttachmentSpec(FramebufferDataFormat framebufferDataFormat, FramebufferAttachmentType attachmentType);
+        FramebufferAttachmentSpec(FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat);
 
-        FramebufferDataFormat m_dataFormat;
         FramebufferAttachmentType m_attachmentType;
+        FramebufferDataFormat m_dataFormat;
 
     };
 
@@ -41,7 +41,7 @@ namespace engine {
         unsigned int m_rendererId = 0;
 
         std::vector<FramebufferAttachmentSpec> m_colorAttachmentSpecs = {};
-        FramebufferAttachmentSpec m_depthAttachmentSpec = {FramebufferDataFormat::Depth, FramebufferAttachmentType::None};
+        FramebufferAttachmentSpec m_depthAttachmentSpec = {FramebufferAttachmentType::None, FramebufferDataFormat::Depth};
 
         std::vector<std::shared_ptr<Texture> > m_textures;
 

@@ -19,8 +19,8 @@ public:
         m_camera = std::make_shared<engine::OrthographicCamera>(viewportWidth, viewportHeight, 100);
 
         m_framebuffer = std::make_shared<engine::Framebuffer>(std::initializer_list<engine::FramebufferAttachmentSpec>{
-            {engine::FramebufferDataFormat::RGBA, engine::FramebufferAttachmentType::Color},
-            {engine::FramebufferDataFormat::Depth, engine::FramebufferAttachmentType::Depth}
+            {engine::FramebufferAttachmentType::Color, engine::FramebufferDataFormat::RGBA},
+            {engine::FramebufferAttachmentType::Depth, engine::FramebufferDataFormat::Depth}
         }, viewportWidth, viewportHeight);
 
         auto triangle1 = m_mainScene.createEntity();
@@ -68,10 +68,10 @@ public:
 
 };
 
-class BasicRenderingApplication : public engine::Application {
+class ViewportLayoutApplication : public engine::Application {
 
 public:
-    explicit BasicRenderingApplication(const std::string &name) : engine::Application(name) {}
+    explicit ViewportLayoutApplication(const std::string &name) : engine::Application(name) {}
 
     void onReady() override {
         m_mainLayer = new MainLayer(m_window->getViewportWidth(), m_window->getViewportHeight());
@@ -108,7 +108,7 @@ private:
 
 int main() {
 
-    BasicRenderingApplication app("Viewports");
+    ViewportLayoutApplication app("Viewport Layout");
     engine::RunLoop runLoop(app);
 
     runLoop.run();

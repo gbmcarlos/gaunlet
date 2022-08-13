@@ -121,10 +121,10 @@ public:
 };
 
 
-class BasicRenderingApplication : public engine::Application {
+class ViewportLayoutApplication : public engine::Application {
 
 public:
-    explicit BasicRenderingApplication(const std::string &name) : engine::Application(name) {}
+    explicit ViewportLayoutApplication(const std::string &name) : engine::Application(name) {}
 
     void onReady() override {
         m_mainLayer = new MainLayer(m_window->getViewportWidth(), m_window->getViewportHeight());
@@ -138,7 +138,7 @@ private:
 
 int main() {
 
-    BasicRenderingApplication app("Basic Rendering");
+    ViewportLayoutApplication app("Basic Rendering");
     engine::RunLoop runLoop(app);
 
     runLoop.run();

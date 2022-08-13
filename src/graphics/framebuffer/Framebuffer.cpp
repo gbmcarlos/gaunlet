@@ -4,8 +4,8 @@
 
 namespace engine {
 
-    FramebufferAttachmentSpec::FramebufferAttachmentSpec(FramebufferDataFormat framebufferDataFormat, FramebufferAttachmentType attachmentType)
-        : m_dataFormat(framebufferDataFormat), m_attachmentType(attachmentType) {
+    FramebufferAttachmentSpec::FramebufferAttachmentSpec(FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat)
+        : m_attachmentType(attachmentType), m_dataFormat(framebufferDataFormat) {
     }
 
     Framebuffer::Framebuffer(const std::initializer_list<FramebufferAttachmentSpec>& attachmentSpecs, unsigned int width, unsigned int height) : m_width(width), m_height(height) {
