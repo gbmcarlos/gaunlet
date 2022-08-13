@@ -207,8 +207,8 @@ namespace engine {
         glCall(glGenTextures(1, &id));
         glCall(glBindTexture(GL_TEXTURE_2D, id));
 
-        GLenum glInternalFormat = convertTextureImageFormat(internalFormat);
-        GLenum glDataFormat = convertTextureImageFormat(dataFormat);
+        GLenum glInternalFormat = convertTextureDataFormat(internalFormat);
+        GLenum glDataFormat = convertTextureDataFormat(dataFormat);
 
         glCall(glTexImage2D(GL_TEXTURE_2D, 0, glInternalFormat, width, height, 0, glDataFormat, GL_UNSIGNED_BYTE, data));
 
@@ -242,10 +242,14 @@ namespace engine {
         glCall(glDeleteFramebuffers(1, &id));
     }
 
-    void OpenGLRenderApi::framebufferAttach(TextureType type, FramebufferAttachmentType attachment, unsigned int textureId) {
+    void OpenGLRenderApi::framebufferAttach(TextureType textureType, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, unsigned int textureId) {
 
-        GLenum glTextureType = convertTextureType(type);
-        GLenum glAttachmentType = convertFramebufferAttachmentType(attachment);
+        GLenum glTextureType = convertTextureType(textureType);
+        GLenum glAttachmentType = convertFramebufferAttachmentType(attachmentType);
+
+        if (attachmentType == FramebufferAttachmentType::Color) {
+            glAttachmentType += attachmentIndex;
+        }
 
         glCall(glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, glAttachmentType, glTextureType, textureId, 0));
 
@@ -255,8 +259,13 @@ namespace engine {
 
         std::vector<GLenum> glBufferAttachments = {};
 
-        for (auto& drawBuffer : drawBuffers) {
-            glBufferAttachments.push_back(convertFramebufferAttachmentType(drawBuffer));
+        for (unsigned int i = 0; i < drawBuffers.size(); i++) {
+            FramebufferAttachmentType drawBuffer = drawBuffers[i];
+            GLenum glDrawBuffer = convertFramebufferAttachmentType(drawBuffer);
+            if (drawBuffer == FramebufferAttachmentType::Color) {
+                glDrawBuffer += i;
+            }
+            glBufferAttachments.push_back(glDrawBuffer);
         }
 
         glCall(glDrawBuffers(drawBuffers.size(), (const unsigned int*) &glBufferAttachments[0]));
@@ -302,11 +311,13 @@ namespace engine {
 
     }
 
-    GLenum OpenGLRenderApi::convertTextureImageFormat(TextureDataFormat format) {
+    GLenum OpenGLRenderApi::convertTextureDataFormat(TextureDataFormat format) {
 
         switch (format) {
             case TextureDataFormat::RGB:  return GL_RGB;
             case TextureDataFormat::RGBA:  return GL_RGBA;
+            case TextureDataFormat::Depth:  return GL_DEPTH_COMPONENT;
+            case TextureDataFormat::Stencil:  return GL_STENCIL_INDEX;
         }
 
         throw std::runtime_error("Unknown texture format");

@@ -161,8 +161,8 @@ namespace engine {
         getApi().deleteFramebuffer(id);
     }
 
-    void RenderCommand::framebufferAttach(TextureType type, FramebufferAttachmentType attachment, unsigned int textureId) {
-        getApi().framebufferAttach(type, attachment, textureId);
+    void RenderCommand::framebufferAttach(TextureType textureType, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, unsigned int textureId) {
+        getApi().framebufferAttach(textureType, attachmentType, attachmentIndex, textureId);
     }
 
     void RenderCommand::setDrawBuffers(const std::vector<FramebufferAttachmentType>& drawBuffers) {

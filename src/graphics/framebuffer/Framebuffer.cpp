@@ -4,11 +4,20 @@
 
 namespace engine {
 
-    FramebufferAttachmentSpecs::FramebufferAttachmentSpecs(TextureDataFormat textureDataFormat, TextureType textureType, FramebufferAttachmentType attachmentType, bool draw)
-        : m_textureDataFormat(textureDataFormat), m_textureType(textureType), m_attachmentType(attachmentType), m_draw(draw) {
+    FramebufferAttachmentSpecs::FramebufferAttachmentSpecs(TextureDataFormat textureDataFormat, TextureType textureType, FramebufferAttachmentType attachmentType)
+        : m_textureDataFormat(textureDataFormat), m_textureType(textureType), m_attachmentType(attachmentType) {
     }
 
-    Framebuffer::Framebuffer(const std::initializer_list<FramebufferAttachmentSpecs>& attachmentSpecs, unsigned int width, unsigned int height) : m_attachmentSpecs(attachmentSpecs), m_width(width), m_height(height) {
+    Framebuffer::Framebuffer(const std::initializer_list<FramebufferAttachmentSpecs>& attachmentSpecs, unsigned int width, unsigned int height) : m_width(width), m_height(height) {
+
+        for (auto& attachmentSpec : attachmentSpecs) {
+            if (attachmentSpec.m_attachmentType == FramebufferAttachmentType::Color) {
+                m_colorAttachmentSpecs.emplace_back(attachmentSpec);
+            } else if (attachmentSpec.m_attachmentType == FramebufferAttachmentType::Depth) {
+                m_depthAttachmentSpec = attachmentSpec;
+            }
+        }
+
         recreate();
     }
 
@@ -57,14 +66,14 @@ namespace engine {
         RenderCommand::createFramebuffer(m_rendererId);
         RenderCommand::bindFramebuffer(m_rendererId);
 
-        std::vector<FramebufferAttachmentType> drawBuffers;
+        std::vector<FramebufferAttachmentType> drawBuffers = {};
 
-        // Create a texture for each attachment, and attach it
-        for (auto& attachment : m_attachmentSpecs) {
-
+        // Create and attach the color textures
+        for (unsigned int i = 0; i < m_colorAttachmentSpecs.size(); i++) {
+            auto& colorAttachmentSpec = m_colorAttachmentSpecs[i];
             // Create the buffer texture
             std::shared_ptr<Texture> texture = std::make_shared<TextureImage2D>(
-                attachment.m_textureDataFormat, attachment.m_textureDataFormat,
+                colorAttachmentSpec.m_textureDataFormat, colorAttachmentSpec.m_textureDataFormat,
                 m_width, m_height,
                 nullptr
             );
@@ -72,19 +81,42 @@ namespace engine {
 
             // Attach the texture to the framebuffer
             RenderCommand::framebufferAttach(
-                attachment.m_textureType,
-                attachment.m_attachmentType,
+                colorAttachmentSpec.m_textureType,
+                colorAttachmentSpec.m_attachmentType,
+                i,
                 texture->getRendererId()
             );
 
-            if (attachment.m_draw) {
-                drawBuffers.push_back(attachment.m_attachmentType);
-            } else {
-                drawBuffers.push_back(FramebufferAttachmentType::None);
-            }
+            drawBuffers.emplace_back(FramebufferAttachmentType::Color);
 
+        }
+
+        // Create and attach the depth texture, if any
+        if (m_depthAttachmentSpec.m_attachmentType != FramebufferAttachmentType::None) {
+
+            // Create the buffer texture
+            std::shared_ptr<Texture> texture = std::make_shared<TextureImage2D>(
+                m_depthAttachmentSpec.m_textureDataFormat, m_depthAttachmentSpec.m_textureDataFormat,
+                m_width, m_height,
+                nullptr
+            );
+            m_textures.push_back(texture);
+
+            // Attach the texture to the framebuffer
+            RenderCommand::framebufferAttach(
+                m_depthAttachmentSpec.m_textureType,
+                m_depthAttachmentSpec.m_attachmentType,
+                0,
+                texture->getRendererId()
+            );
+
+            drawBuffers.emplace_back(FramebufferAttachmentType::None);
+
+        }
+
+        // If there are more than one color attachment, tell opengl about them
+        if (m_colorAttachmentSpecs.size() > 1) {
             RenderCommand::setDrawBuffers(drawBuffers);
-
         }
 
         // Check correctness and unbind

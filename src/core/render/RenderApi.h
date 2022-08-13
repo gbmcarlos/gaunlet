@@ -88,7 +88,7 @@ namespace engine {
         virtual void bindFramebuffer(unsigned int id) = 0;
         virtual void unbindFramebuffer() = 0;
         virtual void deleteFramebuffer(unsigned int& id) = 0;
-        virtual void framebufferAttach(TextureType type, FramebufferAttachmentType attachment, unsigned int textureId) = 0;
+        virtual void framebufferAttach(TextureType textureType, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, unsigned int textureId) = 0;
         virtual void setDrawBuffers(const std::vector<FramebufferAttachmentType>& drawBuffers) = 0;
         virtual void checkFramebufferCompleteness(unsigned int id) = 0;
 

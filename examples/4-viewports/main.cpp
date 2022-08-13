@@ -16,20 +16,30 @@ public:
 
     MainLayer(unsigned int viewportWidth, unsigned int viewportHeight) {
 
-        m_camera = std::make_shared<engine::OrthographicCamera>(viewportWidth, viewportHeight, 1);
+        m_camera = std::make_shared<engine::OrthographicCamera>(viewportWidth, viewportHeight, 100);
 
         m_framebuffer = std::make_shared<engine::Framebuffer>(std::initializer_list<engine::FramebufferAttachmentSpecs>{
-            {engine::TextureDataFormat::RGBA, engine::TextureType::Image2D, engine::FramebufferAttachmentType::Color, true}
+            {engine::TextureDataFormat::RGBA, engine::TextureType::Image2D, engine::FramebufferAttachmentType::Color},
+            {engine::TextureDataFormat::Depth, engine::TextureType::Image2D, engine::FramebufferAttachmentType::Depth}
         }, viewportWidth, viewportHeight);
 
-        auto triangle = m_mainScene.createEntity();
-        triangle.addComponent<engine::PolygonComponent>(engine::SquareMesh());
-        triangle.addComponent<engine::TransformComponent>(
-            glm::vec3(0, 0, 0.0f),
+        auto triangle1 = m_mainScene.createEntity();
+        triangle1.addComponent<engine::PolygonComponent>(engine::TriangleMesh());
+        triangle1.addComponent<engine::TransformComponent>(
+            glm::vec3(-0.5f, 0.0f, 0.5f),
             glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec3(100.0f, 100.0f, 1.0f)
+            glm::vec3(2.0f, 2.0f, 1.0f)
         );
-        triangle.addComponent<engine::MaterialComponent>(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
+        triangle1.addComponent<engine::MaterialComponent>(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
+
+        auto triangle2 = m_mainScene.createEntity();
+        triangle2.addComponent<engine::PolygonComponent>(engine::TriangleMesh());
+        triangle2.addComponent<engine::TransformComponent>(
+            glm::vec3(0.5f, 0.0f, 0.6f),
+            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(2.0f, 2.0f, 1.0f)
+        );
+        triangle2.addComponent<engine::MaterialComponent>(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
 
         m_mainScene.start();
 
@@ -49,8 +59,6 @@ public:
             m_framebuffer->resize((unsigned int) windowSize.x, (unsigned int) windowSize.y);
             m_camera->resize((unsigned int) windowSize.x, (unsigned int) windowSize.y);
         }
-
-        auto& texture = m_framebuffer->getTextures()[0];
 
         // Render the framebuffer's texture to the "Scene" window
         engine::ViewportLayout::renderFramebuffer(m_framebuffer,0);

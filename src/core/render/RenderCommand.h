@@ -67,7 +67,7 @@ namespace engine {
         static void bindFramebuffer(unsigned int id);
         static void unbindFramebuffer();
         static void deleteFramebuffer(unsigned int& id);
-        static void framebufferAttach(TextureType type, FramebufferAttachmentType attachment, unsigned int textureId);
+        static void framebufferAttach(TextureType textureType, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, unsigned int textureId);
         static void setDrawBuffers(const std::vector<FramebufferAttachmentType>& drawBuffers);
         static void checkFramebufferCompleteness(unsigned int id);
 

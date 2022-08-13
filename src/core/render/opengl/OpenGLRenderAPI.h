@@ -76,7 +76,7 @@ namespace engine {
         void bindFramebuffer(unsigned int id);
         void unbindFramebuffer();
         void deleteFramebuffer(unsigned int& id);
-        void framebufferAttach(TextureType type, FramebufferAttachmentType attachment, unsigned int textureId);
+        void framebufferAttach(TextureType textureType, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, unsigned int textureId);
         void setDrawBuffers(const std::vector<FramebufferAttachmentType>& drawBuffers);
         void checkFramebufferCompleteness(unsigned int id);
 
@@ -86,7 +86,7 @@ namespace engine {
     private:
         GLenum convertVertexBufferLayoutElementType(VertexBufferLayoutElementType type);
         GLenum convertShaderType(ShaderType type);
-        GLenum convertTextureImageFormat(TextureDataFormat format);
+        GLenum convertTextureDataFormat(TextureDataFormat format);
         GLenum convertTextureType(TextureType type);
         GLenum convertFramebufferAttachmentType(FramebufferAttachmentType type);
 

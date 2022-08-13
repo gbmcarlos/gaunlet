@@ -64,10 +64,10 @@ namespace engine {
 
     void ViewportLayout::renderFramebuffer(const std::shared_ptr<Framebuffer>& framebuffer, unsigned int colorAttachmentIndex) {
 
-        auto& texture = framebuffer->getTextures()[colorAttachmentIndex];
+        auto& colorAttachmentTexture = framebuffer->getColorAttachment(colorAttachmentIndex);
 
         ImGui::Image(
-            (void *)(intptr_t)texture->getRendererId(),
+            (void *)(intptr_t)colorAttachmentTexture->getRendererId(),
             ImGui::GetContentRegionAvail(),
             ImVec2(0, 1), ImVec2(1, 0)
         );
