@@ -19,6 +19,7 @@ namespace engine {
 
     enum class TextureDataFormat {
         RGB, RGBA,
+        RedInteger32, RedInteger,
         Depth, Stencil
     };
 

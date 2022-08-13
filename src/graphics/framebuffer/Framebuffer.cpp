@@ -4,11 +4,11 @@
 
 namespace engine {
 
-    FramebufferAttachmentSpecs::FramebufferAttachmentSpecs(TextureDataFormat textureDataFormat, TextureType textureType, FramebufferAttachmentType attachmentType)
-        : m_textureDataFormat(textureDataFormat), m_textureType(textureType), m_attachmentType(attachmentType) {
+    FramebufferAttachmentSpec::FramebufferAttachmentSpec(FramebufferDataFormat framebufferDataFormat, FramebufferAttachmentType attachmentType)
+        : m_dataFormat(framebufferDataFormat), m_attachmentType(attachmentType) {
     }
 
-    Framebuffer::Framebuffer(const std::initializer_list<FramebufferAttachmentSpecs>& attachmentSpecs, unsigned int width, unsigned int height) : m_width(width), m_height(height) {
+    Framebuffer::Framebuffer(const std::initializer_list<FramebufferAttachmentSpec>& attachmentSpecs, unsigned int width, unsigned int height) : m_width(width), m_height(height) {
 
         for (auto& attachmentSpec : attachmentSpecs) {
             if (attachmentSpec.m_attachmentType == FramebufferAttachmentType::Color) {
@@ -70,23 +70,9 @@ namespace engine {
 
         // Create and attach the color textures
         for (unsigned int i = 0; i < m_colorAttachmentSpecs.size(); i++) {
+
             auto& colorAttachmentSpec = m_colorAttachmentSpecs[i];
-            // Create the buffer texture
-            std::shared_ptr<Texture> texture = std::make_shared<TextureImage2D>(
-                colorAttachmentSpec.m_textureDataFormat, colorAttachmentSpec.m_textureDataFormat,
-                m_width, m_height,
-                nullptr
-            );
-            m_textures.push_back(texture);
-
-            // Attach the texture to the framebuffer
-            RenderCommand::framebufferAttach(
-                colorAttachmentSpec.m_textureType,
-                colorAttachmentSpec.m_attachmentType,
-                i,
-                texture->getRendererId()
-            );
-
+            attachColor(colorAttachmentSpec, i);
             drawBuffers.emplace_back(FramebufferAttachmentType::Color);
 
         }
@@ -94,22 +80,7 @@ namespace engine {
         // Create and attach the depth texture, if any
         if (m_depthAttachmentSpec.m_attachmentType != FramebufferAttachmentType::None) {
 
-            // Create the buffer texture
-            std::shared_ptr<Texture> texture = std::make_shared<TextureImage2D>(
-                m_depthAttachmentSpec.m_textureDataFormat, m_depthAttachmentSpec.m_textureDataFormat,
-                m_width, m_height,
-                nullptr
-            );
-            m_textures.push_back(texture);
-
-            // Attach the texture to the framebuffer
-            RenderCommand::framebufferAttach(
-                m_depthAttachmentSpec.m_textureType,
-                m_depthAttachmentSpec.m_attachmentType,
-                0,
-                texture->getRendererId()
-            );
-
+            attachDepth(m_depthAttachmentSpec);
             drawBuffers.emplace_back(FramebufferAttachmentType::None);
 
         }
@@ -122,6 +93,61 @@ namespace engine {
         // Check correctness and unbind
         RenderCommand::checkFramebufferCompleteness(m_rendererId);
         RenderCommand::unbindFramebuffer();
+
+    }
+
+    void Framebuffer::attachColor(FramebufferAttachmentSpec colorAttachmentSpec, unsigned int index) {
+
+        TextureDataFormat internalFormat;
+        TextureDataFormat format;
+
+        switch (colorAttachmentSpec.m_dataFormat) {
+            case FramebufferDataFormat::RGBA:
+                internalFormat = TextureDataFormat::RGBA;
+                format = TextureDataFormat::RGBA;
+                break;
+            case FramebufferDataFormat::Integer:
+                internalFormat = TextureDataFormat::RedInteger32;
+                format = TextureDataFormat::RedInteger;
+                break;
+            case FramebufferDataFormat::Depth:
+                throw std::runtime_error("Invalid framebuffer data format");
+        }
+
+        std::shared_ptr<Texture> texture = std::make_shared<TextureImage2D>(
+            internalFormat, format,
+            m_width, m_height,
+            nullptr
+        );
+        m_textures.push_back(texture);
+
+        // Attach the texture to the framebuffer
+        RenderCommand::framebufferAttach(
+            engine::TextureType::Image2D,
+            colorAttachmentSpec.m_attachmentType,
+            index,
+            texture->getRendererId()
+        );
+
+    }
+
+    void Framebuffer::attachDepth(FramebufferAttachmentSpec depthAttachmentSpec) {
+
+        // Create the buffer texture
+        std::shared_ptr<Texture> texture = std::make_shared<TextureImage2D>(
+            TextureDataFormat::Depth, TextureDataFormat::Depth,
+            m_width, m_height,
+            nullptr
+        );
+        m_textures.push_back(texture);
+
+        // Attach the texture to the framebuffer
+        RenderCommand::framebufferAttach(
+            engine::TextureType::Image2D,
+            m_depthAttachmentSpec.m_attachmentType,
+            0,
+            texture->getRendererId()
+        );
 
     }
 

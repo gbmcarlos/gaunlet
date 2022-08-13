@@ -18,9 +18,9 @@ public:
 
         m_camera = std::make_shared<engine::OrthographicCamera>(viewportWidth, viewportHeight, 100);
 
-        m_framebuffer = std::make_shared<engine::Framebuffer>(std::initializer_list<engine::FramebufferAttachmentSpecs>{
-            {engine::TextureDataFormat::RGBA, engine::TextureType::Image2D, engine::FramebufferAttachmentType::Color},
-            {engine::TextureDataFormat::Depth, engine::TextureType::Image2D, engine::FramebufferAttachmentType::Depth}
+        m_framebuffer = std::make_shared<engine::Framebuffer>(std::initializer_list<engine::FramebufferAttachmentSpec>{
+            {engine::FramebufferDataFormat::RGBA, engine::FramebufferAttachmentType::Color},
+            {engine::FramebufferDataFormat::Depth, engine::FramebufferAttachmentType::Depth}
         }, viewportWidth, viewportHeight);
 
         auto triangle1 = m_mainScene.createEntity();

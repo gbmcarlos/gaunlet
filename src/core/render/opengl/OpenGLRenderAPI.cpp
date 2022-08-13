@@ -316,6 +316,8 @@ namespace engine {
         switch (format) {
             case TextureDataFormat::RGB:  return GL_RGB;
             case TextureDataFormat::RGBA:  return GL_RGBA;
+            case TextureDataFormat::RedInteger32:  return GL_R32I;
+            case TextureDataFormat::RedInteger:  return GL_RED_INTEGER;
             case TextureDataFormat::Depth:  return GL_DEPTH_COMPONENT;
             case TextureDataFormat::Stencil:  return GL_STENCIL_INDEX;
         }
