@@ -3,7 +3,7 @@
 namespace engine {
 
     PerspectiveCamera::PerspectiveCamera(float fieldOfView, float aspectRatio, float viewportResolution, float near, float far)
-        : m_fieldOfView(fieldOfView), m_aspectRatio(aspectRatio), m_viewportResolution(viewportResolution), m_near(near), m_far(far) {
+        : m_fieldOfView(fieldOfView), m_aspectRatio(aspectRatio), m_near(near), m_far(far) {
         PerspectiveCamera::calculateProjectionMatrix();
     }
 

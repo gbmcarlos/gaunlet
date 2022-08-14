@@ -1,10 +1,11 @@
-#include <Scene.h>
+#include <Layout.h>
 
 #include "glm/glm.hpp"
 
 #include <array>
+#include <utility>
 
-class MainLayer : public engine::Layer {
+class SceneLayer : public engine::Layer {
 
 public:
 
@@ -14,14 +15,14 @@ public:
 
 public:
 
-    MainLayer(unsigned int viewportWidth, unsigned int viewportHeight) {
+    SceneLayer(unsigned int viewportWidth, unsigned int viewportHeight, unsigned int framebufferWidth, unsigned int framebufferHeight) {
 
         m_camera = std::make_shared<engine::OrthographicCamera>(viewportWidth, viewportHeight, 100);
 
         m_framebuffer = std::make_shared<engine::Framebuffer>(std::initializer_list<engine::FramebufferAttachmentSpec>{
             {engine::FramebufferAttachmentType::Color, engine::FramebufferDataFormat::RGBA},
             {engine::FramebufferAttachmentType::Depth, engine::FramebufferDataFormat::Depth}
-        }, viewportWidth, viewportHeight);
+        }, framebufferWidth, framebufferHeight);
 
         auto triangle1 = m_mainScene.createEntity();
         triangle1.addComponent<engine::PolygonComponent>(engine::TriangleMesh());
@@ -49,21 +50,40 @@ public:
         m_mainScene.render(m_camera, m_framebuffer);
     }
 
+};
+
+class SettingsNode : public engine::GuiDockedNode {
+
     void onGuiRender() override {
 
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-        ImGui::Begin("Scene");
-        ImVec2 windowSize = ImGui::GetContentRegionAvail();
+        ImGui::Text("Window size: %d %d", getNodeWidth(), getNodeHeight());
 
-        if (m_framebuffer->getWidth() != windowSize.x || m_framebuffer->getHeight() != windowSize.y) {
-            m_framebuffer->resize((unsigned int) windowSize.x, (unsigned int) windowSize.y);
-            m_camera->resize((unsigned int) windowSize.x, (unsigned int) windowSize.y);
+        if (isHovered()) {
+            ImGui::Text("%d %d", getMousePositionX(), getMousePositionY());
         }
 
-        // Render the framebuffer's texture to the "Scene" window
-        engine::ViewportLayout::renderFramebuffer(m_framebuffer,0);
-        ImGui::End();
-        ImGui::PopStyleVar(1);
+    }
+
+};
+
+class ToolsNode : public engine::GuiDockedNode {
+
+    void onGuiRender() override {
+
+        ImGui::Text("Window size: %d %d", getNodeWidth(), getNodeHeight());
+
+        if (isHovered()) {
+            ImGui::Text("%d %d", getMousePositionX(), getMousePositionY());
+        }
+
+    }
+
+};
+
+class SceneViewportNode : public engine::RenderDockedNode {
+
+    void onEvent() override {
+
     }
 
 };
@@ -74,35 +94,30 @@ public:
     explicit ViewportLayoutApplication(const std::string &name) : engine::Application(name) {}
 
     void onReady() override {
-        m_mainLayer = new MainLayer(m_window->getViewportWidth(), m_window->getViewportHeight());
-        pushLayer(m_mainLayer);
-    }
 
-    void onGuiRender() override {
+        // Create the layer that will render to a framebuffer
+        m_sceneLayer = new SceneLayer(m_window->getViewportWidth(), m_window->getViewportHeight(), m_window->getFramebufferWidth(), m_window->getFramebufferHeight());
 
-        engine::ViewportLayout layout(
-            {
-                {engine::DockSpacePosition::Left, 0.3f,  {"Dear ImGui Demo"}, ImGuiDockNodeFlags_NoTabBar | ImGuiDockNodeFlags_NoResizeFlagsMask_},
-                {engine::DockSpacePosition::Center, 0.0f,  {"Scene"}, ImGuiDockNodeFlags_NoTabBar | ImGuiDockNodeFlags_NoResizeFlagsMask_}
-            },
-            {0, 0},
-            {m_window->getViewportWidth(), m_window->getViewportHeight()}
-        );
+        // Create and set up the layer that will show the different dock nodes
+        m_editorLayer = new engine::LayoutLayer(m_window);
+        m_editorLayer->setLayoutSpec({
+{
+                    {engine::DockSpacePosition::Left, 0.25f,  {"Settings"}},
+                    {engine::DockSpacePosition::Center, 0.0f,  {"Scene"}, ImGuiDockNodeFlags_NoTabBar},
+                    {engine::DockSpacePosition::Right, 0.3f,  {"Tools"}},
+               }, m_window->getViewportWidth(), m_window->getViewportHeight()
+        });
+        m_editorLayer->pushNode("Settings", new SettingsNode);
+        m_editorLayer->pushNode("Tools", new ToolsNode);
+        m_editorLayer->pushNode("Scene", new SceneViewportNode, m_sceneLayer->m_camera, m_sceneLayer->m_framebuffer, 0);
 
-        // Init the layout
-        layout.begin("Main Window");
-        layout.end();
-
-        // Left dock, with the demo window
-        ImGui::ShowDemoWindow();
-
-        // Delegate to the layers
-        engine::Application::onGuiRender();
-
+        pushLayer(m_sceneLayer);
+        pushLayer(m_editorLayer);
     }
 
 private:
-    MainLayer* m_mainLayer = nullptr;
+    SceneLayer* m_sceneLayer = nullptr;
+    engine::LayoutLayer* m_editorLayer = nullptr;
 
 };
 

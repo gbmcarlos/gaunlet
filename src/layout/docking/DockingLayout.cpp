@@ -1,13 +1,10 @@
-#include "ViewportLayout.h"
+#include "DockingLayout.h"
 
-#include <imgui/imgui_internal.h>
+#include "imgui/imgui_internal.h"
 
 namespace engine {
 
-    ViewportLayout::ViewportLayout(const std::initializer_list<DockSpaceSpecs> &dockSpaceSpecs, glm::vec2 position, glm::vec2 size, int windowFlags)
-    : m_dockSpaceSpecs(dockSpaceSpecs), m_position(position), m_size(size), m_windowFlags(windowFlags) {}
-
-    void ViewportLayout::begin(const char* name) {
+    void DockingLayout::begin(const char* name) {
 
         bool open = true;
 
@@ -19,11 +16,11 @@ namespace engine {
         ImGuiWindowFlags windowDefaultFlags = ImGuiWindowFlags_NoDocking;
         windowDefaultFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
         windowDefaultFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-        windowDefaultFlags |= m_windowFlags;
+        windowDefaultFlags |= m_dockingLayoutSpec.m_windowFlags;
 
         // Prepare the properties and styles
         ImGui::SetNextWindowPos(viewport->Pos);
-        ImGui::SetNextWindowSize(ImVec2(m_size.x, m_size.y));
+        ImGui::SetNextWindowSize(ImVec2((float) m_dockingLayoutSpec.m_width, (float) m_dockingLayoutSpec.m_height));
         ImGui::SetNextWindowViewport(viewport->ID);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
@@ -42,7 +39,7 @@ namespace engine {
             // Clear out the existing layout, and add an empty new one
             ImGui::DockBuilderRemoveNode(dockspaceId); // Clear out existing layout
             ImGui::DockBuilderAddNode(dockspaceId); // Add empty node
-            ImGui::DockBuilderSetNodeSize(dockspaceId, ImVec2(m_size.x, m_size.y));
+            ImGui::DockBuilderSetNodeSize(dockspaceId, ImVec2((float) m_dockingLayoutSpec.m_width, (float) m_dockingLayoutSpec.m_height));
 
             // Prepare the dock spaces, according to the specs
             generateDockSpaces(dockspaceId);
@@ -58,25 +55,13 @@ namespace engine {
 
     }
 
-    void ViewportLayout::end() {
+    void DockingLayout::end() {
         ImGui::End();
     }
 
-    void ViewportLayout::renderFramebuffer(const std::shared_ptr<Framebuffer>& framebuffer, unsigned int colorAttachmentIndex) {
+    void DockingLayout::generateDockSpaces(ImGuiID& mainDockSpaceId) {
 
-        auto& colorAttachmentTexture = framebuffer->getColorAttachment(colorAttachmentIndex);
-
-        ImGui::Image(
-            (void *)(intptr_t)colorAttachmentTexture->getRendererId(),
-            ImGui::GetContentRegionAvail(),
-            ImVec2(0, 1), ImVec2(1, 0)
-        );
-
-    }
-
-    void ViewportLayout::generateDockSpaces(ImGuiID& mainDockSpaceId) {
-
-        for (auto& dockSpaceSpec : m_dockSpaceSpecs) {
+        for (auto& dockSpaceSpec : m_dockingLayoutSpec.m_dockSpaceSpecs) {
 
             ImGuiID dockPositionId;
 
@@ -107,7 +92,7 @@ namespace engine {
 
     }
 
-    ImGuiDir ViewportLayout::convertDockSpacePosition(DockSpacePosition position) {
+    ImGuiDir DockingLayout::convertDockSpacePosition(DockSpacePosition position) {
 
         switch (position) {
             case DockSpacePosition::Left: return ImGuiDir_Left;

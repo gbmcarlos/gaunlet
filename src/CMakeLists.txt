@@ -28,9 +28,13 @@ add_library(graphics-engine
         scene/camera/PerspectiveCamera.cpp
         scene/renderer/Renderer.cpp
         scene/physics/PhysicsWorld.cpp
-        scene/layout/ViewportLayout.cpp
         scene/Scene.cpp
 
+#        Layout
+        layout/docking/DockingLayout.cpp
+        layout/application/LayoutLayer.cpp
+
+#        Dear ImGui
         ${PROJECT_SOURCE_DIR}/vendor/imgui/imgui_impl_glfw.cpp ${PROJECT_SOURCE_DIR}/vendor/imgui/imgui_impl_opengl3.cpp
     )
 

@@ -51,6 +51,8 @@ namespace engine {
         inline unsigned int getFramebufferWidth() const { return (unsigned int) m_framebufferWidth;}
         inline unsigned int getFramebufferHeight() const { return (unsigned int) m_framebufferHeight;}
 
+        inline float getDPI() const {return m_framebufferWidth / m_viewportWidth; }
+
         inline GLFWwindow*& getContext() {return m_windowContext;}
 
         static Window* getCurrentInstance();

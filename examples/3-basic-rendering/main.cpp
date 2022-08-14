@@ -4,7 +4,7 @@
 
 #include <array>
 
-class MainLayer : public engine::Layer {
+class SceneLayer : public engine::Layer {
 
 private:
 
@@ -13,7 +13,7 @@ private:
 
 public:
 
-    MainLayer(int viewportWidth, int viewportHeight) {
+    SceneLayer(int viewportWidth, int viewportHeight) {
 
         m_camera = std::make_shared<engine::OrthographicCamera>((float) viewportWidth, (float) viewportHeight, 100);
         std::shared_ptr<engine::TextureImage2D> texture1 = std::make_shared<engine::TextureImage2D>("assets/texture-1.jpeg");
@@ -127,12 +127,12 @@ public:
     explicit ViewportLayoutApplication(const std::string &name) : engine::Application(name) {}
 
     void onReady() override {
-        m_mainLayer = new MainLayer(m_window->getViewportWidth(), m_window->getViewportHeight());
-        pushLayer(m_mainLayer);
+        m_sceneLayer = new SceneLayer(m_window->getViewportWidth(), m_window->getViewportHeight());
+        pushLayer(m_sceneLayer);
     }
 
 private:
-    MainLayer* m_mainLayer = nullptr;
+    SceneLayer* m_sceneLayer = nullptr;
 
 };
 

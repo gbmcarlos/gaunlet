@@ -10,7 +10,7 @@ namespace engine {
         OrthographicCamera() : OrthographicCamera(2.0f, 2.0f, 100.0f) {}
         OrthographicCamera(unsigned int viewportWidth, unsigned int viewportHeight, float viewportResolution);
         void resize(unsigned int viewportWidth, unsigned int viewportHeight) override;
-
+        inline float getAspectRatio() const override {return ((float) m_viewportWidth) / ((float) m_viewportHeight); }
         inline const glm::vec2& getProjectionSize() const {return m_projectionSize;}
 
     private:

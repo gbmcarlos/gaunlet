@@ -19,5 +19,3 @@
 #include "../scene/entity/GraphicsComponents.h" // Depends on PolygonMesh and CircleMesh
 #include "../scene/entity/PhysicsComponents.h" // Depends on box2d
 #include "../scene/entity/ScriptComponents.h" // Depends on Entity
-
-#include "../scene/layout/ViewportLayout.h"
