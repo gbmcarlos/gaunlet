@@ -28,8 +28,8 @@ namespace engine {
         static void endScene();
 
         // Batched draw calls
-        static void submit(const PolygonComponent& polygonComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent);
-        static void submit(const CircleComponent& circleComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent);
+        static void submit(const PolygonModelComponent& polygonComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent);
+        static void submit(const CircleModelComponent& circleComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent);
 
         // Flush batches
         static void flushPolygons();

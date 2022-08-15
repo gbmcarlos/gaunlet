@@ -23,8 +23,8 @@ public:
             glm::vec3(20.0f, 110.0f, 0.0f),
             glm::vec3(2.0f, 2.0f, 2.0f)
         );
-        cube1.addComponent<engine::PolygonComponent>(engine::CubeMesh());
-        cube1.addComponent<engine::MaterialComponent>(texture1);
+        cube1.addComponent<engine::PolygonModelComponent>(engine::CubeModel());
+        cube1.addComponent<engine::MaterialComponent>(glm::vec4(0.8f, 0.2f, 0.2f, 1.0f));
 
         engine::Entity cube2 = m_scene.createEntity();
         cube2.addComponent<engine::TransformComponent>(
@@ -32,8 +32,8 @@ public:
             glm::vec3(20.0f, -30.0f, 0.0f),
             glm::vec3(2.0f, 2.0f, 2.0f)
         );
-        cube2.addComponent<engine::PolygonComponent>(engine::CubeMesh());
-        cube2.addComponent<engine::MaterialComponent>(texture2);
+        cube2.addComponent<engine::PolygonModelComponent>(engine::CubeModel());
+        cube2.addComponent<engine::MaterialComponent>(glm::vec4(0.8f, 0.2f, 0.2f, 1.0f));
 
         auto camera = std::make_shared<engine::PerspectiveCamera>(45.0f, (float) viewportWidth /(float) viewportHeight, 100, 1.0f, 100.0f);
         camera->setTranslation({0.0f, 0.0f, 10.0f});

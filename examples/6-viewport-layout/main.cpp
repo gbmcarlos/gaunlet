@@ -25,22 +25,13 @@ public:
         }, framebufferWidth, framebufferHeight);
 
         auto triangle1 = m_mainScene.createEntity();
-        triangle1.addComponent<engine::PolygonComponent>(engine::TriangleMesh());
+        triangle1.addComponent<engine::PolygonModelComponent>(engine::Triangle2DModel());
         triangle1.addComponent<engine::TransformComponent>(
-            glm::vec3(-0.5f, 0.0f, 0.5f),
             glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec3(2.0f, 2.0f, 1.0f)
-        );
-        triangle1.addComponent<engine::MaterialComponent>(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
-
-        auto triangle2 = m_mainScene.createEntity();
-        triangle2.addComponent<engine::PolygonComponent>(engine::TriangleMesh());
-        triangle2.addComponent<engine::TransformComponent>(
-            glm::vec3(0.5f, 0.0f, 0.6f),
             glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec3(2.0f, 2.0f, 1.0f)
+            glm::vec3(1.0f, 1.0f, 1.0f)
         );
-        triangle2.addComponent<engine::MaterialComponent>(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+        triangle1.addComponent<engine::MaterialComponent>(glm::vec4(0.8f, 1.0f, 1.0f, 1.0f));
 
         m_mainScene.start();
 

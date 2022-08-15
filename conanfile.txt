@@ -6,6 +6,7 @@
  glm/0.9.9.8
  entt/3.10.1
  box2d/2.4.1
+ assimp/5.2.2
 
 [generators]
  cmake

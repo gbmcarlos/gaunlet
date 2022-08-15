@@ -166,7 +166,7 @@ public:
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(0.5f, 0.5f, 1.0f)
         );
-        quad.addComponent<engine::PolygonComponent>(engine::SquareMesh());
+        quad.addComponent<engine::PolygonModelComponent>(engine::Square2DModel());
         quad.addComponent<engine::RigidBodyComponent>(engine::RigidBodyComponent::Type::Kinematic, true);
         quad.addComponent<engine::BoxColliderComponent>(glm::vec2(0.0f, 0.0f), 1.0f, 0.0f, 0.0f, 1.0f);
         quad.addComponent<engine::NativeScriptComponent>().bind<QuadController>();
@@ -181,7 +181,7 @@ public:
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f)
         );
-        ball.addComponent<engine::CircleComponent>(1.0f, 0.01);
+        ball.addComponent<engine::CircleModelComponent>(1.0f, 0.01);
         ball.addComponent<engine::RigidBodyComponent>(engine::RigidBodyComponent::Type::Dynamic, true);
         ball.addComponent<engine::CircleColliderComponent>(0.0f, 1.0f, 0.05f, 0.8f, 1.0f);
         ball.addComponent<engine::NativeScriptComponent>().bind<BallController>();

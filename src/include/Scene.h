@@ -11,10 +11,11 @@
 #include "../scene/camera/Camera.h" // Doesn't depend on anything
 #include "../scene/camera/PerspectiveCamera.h" // Doesn't depend on anything
 #include "../scene/camera/OrthographicCamera.h" // Doesn't depend on anything
-#include "../scene/mesh/PolygonMesh.h" // Doesn't depend on anything
-#include "../scene/mesh/sprites/2d/TriangleMesh.h" // Depends on PolygonMesh
-#include "../scene/mesh/sprites/2d/SquareMesh.h" // Depends on PolygonMesh
-#include "../scene/mesh/sprites/2d/CubeMesh.h" // Depends on PolygonMesh
+
+#include "../scene/model/Model.h"
+#include "../scene/model/polygon-mesh/PolygonMesh.h" // Doesn't depend on anything
+#include "../scene/model/circle-mesh/CircleMesh.h" // Doesn't depend on anything
+#include "../scene/model/Sprites.h"
 
 #include "../scene/entity/GraphicsComponents.h" // Depends on PolygonMesh and CircleMesh
 #include "../scene/entity/PhysicsComponents.h" // Depends on box2d

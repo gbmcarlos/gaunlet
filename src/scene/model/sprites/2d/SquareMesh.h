@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../PolygonMesh.h"
+#include "../../polygon-mesh/PolygonMesh.h"
 
 namespace engine {
 

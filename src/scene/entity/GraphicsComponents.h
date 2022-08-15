@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../mesh/PolygonMesh.h"
-#include "../mesh/CircleMesh.h"
+#include "../model/Model.h"
+#include "../model/circle-mesh/CircleMesh.h"
 #include "../../graphics/texture/Texture.h"
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -34,29 +34,29 @@ namespace engine {
 
     };
 
-    struct PolygonComponent {
+    struct PolygonModelComponent {
 
-        PolygonComponent() = default;
-        PolygonComponent(const PolygonComponent&) = default;
-        PolygonComponent(PolygonMesh mesh) : m_mesh(std::move(mesh)) {}
+        PolygonModelComponent() = default;
+        PolygonModelComponent(const PolygonModelComponent&) = default;
+        PolygonModelComponent(Model mesh) : m_model(std::move(mesh)) {}
 
-        PolygonMesh m_mesh;
+        Model m_model;
 
     };
 
-    struct CircleComponent {
+    struct CircleModelComponent {
 
-        CircleComponent(const CircleComponent&) = default;
+        CircleModelComponent(const CircleModelComponent&) = default;
 
-        CircleComponent() :
+        CircleModelComponent() :
             m_thickness(0.5f),
             m_fade(0.01f) {}
 
-        CircleComponent(float thickness) :
+        CircleModelComponent(float thickness) :
             m_thickness(thickness),
             m_fade(0.01f){}
 
-        CircleComponent(float thickness, float fade) :
+        CircleModelComponent(float thickness, float fade) :
             m_thickness(thickness),
             m_fade(fade) {}
 
@@ -70,8 +70,8 @@ namespace engine {
 
         MaterialComponent(const MaterialComponent&) = default;
         MaterialComponent() : m_color(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), m_texture(nullptr) {}
-        MaterialComponent(glm::vec4 color) : m_color(color), m_texture(nullptr) {}
-        MaterialComponent(std::shared_ptr<Texture> texture) : m_color(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), m_texture(std::move(texture)) {}
+        explicit MaterialComponent(glm::vec4 color) : m_color(color), m_texture(nullptr) {}
+        explicit MaterialComponent(std::shared_ptr<Texture> texture) : m_color(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), m_texture(std::move(texture)) {}
         MaterialComponent(glm::vec4 color, std::shared_ptr<Texture> texture) : m_color(color), m_texture(std::move(texture)) {}
 
         glm::vec4 m_color;

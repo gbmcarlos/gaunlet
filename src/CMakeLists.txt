@@ -23,6 +23,8 @@ add_library(graphics-engine
         graphics/framebuffer/Framebuffer.cpp
 
 #        Scene
+        scene/model/Model.cpp
+        scene/model/circle-mesh/CircleMesh.cpp
         scene/camera/Camera.cpp
         scene/camera/OrthographicCamera.cpp
         scene/camera/PerspectiveCamera.cpp

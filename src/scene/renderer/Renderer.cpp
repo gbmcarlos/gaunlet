@@ -34,13 +34,18 @@ namespace engine {
 
     }
 
-    void Renderer::submit(const PolygonComponent& polygonComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent) {
+    void Renderer::submit(const PolygonModelComponent& polygonComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent) {
 
-        // Get the vertices and indices to be added
-        auto vertices = polygonComponent.m_mesh.getVertices();
-        auto indices = polygonComponent.m_mesh.getIndices();
+        std::vector<PolygonVertex> vertices = {};
+        std::vector<unsigned int> indices = {};
 
-        // Check if we need to flush before rendering the current polygon
+        // Get the vertices and indices of all the meshes of the model
+        for (auto& mesh : polygonComponent.m_model.getMeshes()) {
+            vertices.insert(vertices.end(), mesh.getVertices().begin(), mesh.getVertices().end());
+            indices.insert(indices.end(), mesh.getIndices().begin(), mesh.getIndices().end());
+        }
+
+        // Check if we need to flush before rendering the current model
         if (shouldFlushPolygon(vertices, indices, materialComponent.m_texture)) {
             flushPolygons();
         }
@@ -62,7 +67,7 @@ namespace engine {
 
         }
 
-        // Transform the vertices, according to the polygon's transform and material components
+        // Transform the vertices, according to the model's transform and material components
         for (auto& vertex : vertices) {
             vertex.m_position = transformComponent.getTransformationMatrix() * vertex.m_position;
             vertex.m_textureIndex = textureIndex;
@@ -80,7 +85,7 @@ namespace engine {
 
     }
 
-    void Renderer::submit(const CircleComponent& circleComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent) {
+    void Renderer::submit(const CircleModelComponent& circleComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent) {
 
         // Get the vertices and indices to be added
         auto vertices = circleComponent.m_mesh.getVertices();
@@ -180,6 +185,7 @@ namespace engine {
         // Create a layout, based on the structure of PolygonVertex
         static engine::BufferLayout layout = {
                 {"a_position", 4, engine::VertexBufferLayoutElementType::Float},
+                {"a_normal", 4, engine::VertexBufferLayoutElementType::Float},
                 {"a_textureCoordinates", 2, engine::VertexBufferLayoutElementType::Float},
                 {"a_textureIndex", 1, engine::VertexBufferLayoutElementType::Int},
                 {"a_color", 4, engine::VertexBufferLayoutElementType::Float},

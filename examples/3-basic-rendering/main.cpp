@@ -21,7 +21,7 @@ public:
 
         // TRIANGLE 1
         auto triangle1 = m_mainScene.createEntity();
-        triangle1.addComponent<engine::PolygonComponent>(engine::TriangleMesh());
+        triangle1.addComponent<engine::PolygonModelComponent>(engine::Triangle2DModel());
         triangle1.addComponent<engine::TransformComponent>(
             glm::vec3(-5.0f, 3.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
@@ -31,7 +31,7 @@ public:
 
         // TRIANGLE 2
         auto triangle2 = m_mainScene.createEntity();
-        triangle2.addComponent<engine::PolygonComponent>(engine::TriangleMesh());
+        triangle2.addComponent<engine::PolygonModelComponent>(engine::Triangle2DModel());
         triangle2.addComponent<engine::TransformComponent>(
             glm::vec3(-5.0f, 0.5f, 0.0f),
             glm::vec3(0.0f, 0.0f, -20.0f),
@@ -41,7 +41,7 @@ public:
 
         // TRIANGLE 3
         auto triangle3 = m_mainScene.createEntity();
-        triangle3.addComponent<engine::PolygonComponent>(engine::TriangleMesh());
+        triangle3.addComponent<engine::PolygonModelComponent>(engine::Triangle2DModel());
         triangle3.addComponent<engine::TransformComponent>(
             glm::vec3(-5.0f, -2.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, -40.0f),
@@ -51,7 +51,7 @@ public:
 
         // SQUARE 1
         auto square1 = m_mainScene.createEntity();
-        square1.addComponent<engine::PolygonComponent>(engine::SquareMesh());
+        square1.addComponent<engine::PolygonModelComponent>(engine::Square2DModel());
         square1.addComponent<engine::TransformComponent>(
             glm::vec3(0.0f, 3.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
@@ -61,7 +61,7 @@ public:
 
         // SQUARE 2
         auto square2 = m_mainScene.createEntity();
-        square2.addComponent<engine::PolygonComponent>(engine::SquareMesh());
+        square2.addComponent<engine::PolygonModelComponent>(engine::Square2DModel());
         square2.addComponent<engine::TransformComponent>(
             glm::vec3(0.0f, 0.5f, 0.0f),
             glm::vec3(0.0f, 0.0f, -20.0f),
@@ -71,7 +71,7 @@ public:
 
         // SQUARE 3
         auto square3 = m_mainScene.createEntity();
-        square3.addComponent<engine::PolygonComponent>(engine::SquareMesh());
+        square3.addComponent<engine::PolygonModelComponent>(engine::Square2DModel());
         square3.addComponent<engine::TransformComponent>(
             glm::vec3(0.0f, -2.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, -40.0f),
@@ -81,7 +81,7 @@ public:
 
         // CIRCLE 1
         auto circle1 = m_mainScene.createEntity();
-        circle1.addComponent<engine::CircleComponent>(0.1f, 0.01f);
+        circle1.addComponent<engine::CircleModelComponent>(0.1f, 0.01f);
         circle1.addComponent<engine::TransformComponent>(
             glm::vec3(5.0f, 3.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
@@ -91,7 +91,7 @@ public:
 
         // CIRCLE 2
         auto circle2 = m_mainScene.createEntity();
-        circle2.addComponent<engine::CircleComponent>(0.5, 0.1f);
+        circle2.addComponent<engine::CircleModelComponent>(0.5, 0.1f);
         circle2.addComponent<engine::TransformComponent>(
             glm::vec3(5.0f, 0.5f, 0.0f),
             glm::vec3(0.0f, 0.0f, -20.0f),
@@ -101,7 +101,7 @@ public:
 
         // CIRCLE 3
         auto circle3 = m_mainScene.createEntity();
-        circle3.addComponent<engine::CircleComponent>(1.0f, 0.3f);
+        circle3.addComponent<engine::CircleModelComponent>(1.0f, 0.3f);
         circle3.addComponent<engine::TransformComponent>(
             glm::vec3(5.0f, -2.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, -40.0f),
