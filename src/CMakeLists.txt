@@ -55,6 +55,11 @@ target_compile_definitions(graphics-engine
         PUBLIC ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets"
 )
 
+target_precompile_headers(
+        graphics-engine
+        PRIVATE pch.h
+)
+
 # Installation instructions
 include(GNUInstallDirs)
 set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/graphics-engine)
@@ -63,9 +68,9 @@ install(TARGETS graphics-engine
         EXPORT graphics-engine-targets
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        )
+)
 
-#This is required so that the exported target has the name JSONUtils and not jsonutils
+#This is required so that the exported target has the name GraphicsEngine and not graphics-engine
 set_target_properties(graphics-engine PROPERTIES EXPORT_NAME GraphicsEngine)
 
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})

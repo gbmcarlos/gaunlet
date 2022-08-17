@@ -2,7 +2,6 @@
 
 #include "../Mesh.h"
 
-#include <utility>
 #include "PolygonVertex.h"
 
 namespace engine {

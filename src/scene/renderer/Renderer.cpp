@@ -2,8 +2,6 @@
 
 #include "../../graphics/texture/TextureImage2D.h"
 
-#include <map>
-
 namespace engine {
 
     Renderer::RendererStorage* Renderer::m_rendererStorage = new RendererStorage;
@@ -35,6 +33,8 @@ namespace engine {
     }
 
     void Renderer::submit(const PolygonModelComponent& polygonComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent) {
+
+        GE_PROFILE_FUNCTION;
 
         std::vector<PolygonVertex> vertices = {};
         std::vector<unsigned int> indices = {};
@@ -69,7 +69,7 @@ namespace engine {
 
         // Transform the vertices, according to the model's transform and material components
         for (auto& vertex : vertices) {
-            vertex.m_position = transformComponent.getTransformationMatrix() * vertex.m_position;
+            vertex.m_position = transformComponent.getTransformationMatrix() * vertex.m_position; // TODO BOTTLENECK move this to the vertex shader, using a uniform buffer
             vertex.m_textureIndex = textureIndex;
             vertex.m_color = materialComponent.m_color;
         }
@@ -86,6 +86,8 @@ namespace engine {
     }
 
     void Renderer::submit(const CircleModelComponent& circleComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent) {
+
+        GE_PROFILE_FUNCTION;
 
         // Get the vertices and indices to be added
         auto vertices = circleComponent.m_mesh.getVertices();
@@ -182,6 +184,8 @@ namespace engine {
 
     void Renderer::flushPolygons() {
 
+        GE_PROFILE_FUNCTION;
+
         // Create a layout, based on the structure of PolygonVertex
         static engine::BufferLayout layout = {
                 {"a_position", 4, engine::VertexBufferLayoutElementType::Float},
@@ -216,6 +220,8 @@ namespace engine {
     }
 
     void Renderer::flushCircles() {
+
+        GE_PROFILE_FUNCTION;
 
         // Create a layout, based on the structure of CircleVertex
         static engine::BufferLayout layout = {
@@ -254,6 +260,8 @@ namespace engine {
 
     void Renderer::submitTriangles(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray) {
 
+        GE_PROFILE_FUNCTION;
+
         // Bind the shader and submit the view*projection matrix as a uniform
         shader->bind();
         shader->setUniformMat4f("u_viewProjection", m_rendererStorage->m_viewProjectionMatrix);
@@ -269,6 +277,8 @@ namespace engine {
 
     void Renderer::submitCircles(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray) {
 
+        GE_PROFILE_FUNCTION;
+
         // Bind the shader and submit the view*projection matrix as a uniform
         shader->bind();
         shader->setUniformMat4f("u_viewProjection", m_rendererStorage->m_viewProjectionMatrix);
@@ -283,6 +293,8 @@ namespace engine {
     }
 
     void Renderer::loadDefaultShaders() {
+
+        GE_PROFILE_FUNCTION;
 
         // Create the polygon shader
         std::map<engine::ShaderType, std::string> polygonShaderSource {
@@ -313,6 +325,8 @@ namespace engine {
     }
 
     void Renderer::loadDefaultWhiteTexture() {
+
+        GE_PROFILE_FUNCTION;
 
         // Create a 1x1 white texture, to be used as default
         unsigned int whiteTextureData = 0xffffffff;

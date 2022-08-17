@@ -9,7 +9,8 @@
 #include "../entity/GraphicsComponents.h"
 
 #include <glm/gtc/matrix_transform.hpp>
-#include <memory>
+
+#include "../pch.h"
 
 namespace engine {
 

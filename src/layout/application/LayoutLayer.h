@@ -10,8 +10,7 @@
 
 #include "../docking/DockingLayout.h"
 
-#include <memory>
-#include <vector>
+#include "../pch.h"
 
 namespace engine {
 

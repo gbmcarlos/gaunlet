@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-#include <algorithm>
+#include "../pch.h"
 
 namespace engine {
 

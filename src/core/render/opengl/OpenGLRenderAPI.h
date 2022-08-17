@@ -5,9 +5,7 @@
 #include "../RenderCommand.h"
 #include "../RenderApi.h"
 
-#include <vector>
-#include <memory>
-#include <glm/glm.hpp>
+#include "../pch.h"
 
 namespace engine {
 

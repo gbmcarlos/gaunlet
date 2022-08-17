@@ -1,7 +1,6 @@
 #pragma once
 
-#include <glm/glm.hpp>
-#include <memory>
+#include "../pch.h"
 
 namespace engine {
 

@@ -2,8 +2,7 @@
 
 #include "../application/Application.h"
 
-#include <string>
-#include <memory>
+#include "../pch.h"
 
 namespace engine {
 

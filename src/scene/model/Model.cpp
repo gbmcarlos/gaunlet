@@ -23,6 +23,8 @@ namespace engine {
 
     void Model::processModelNode(aiNode* node, const aiScene* scene) {
 
+        GE_PROFILE_FUNCTION;
+
         // process all the node's meshes (if any)
         for (unsigned int i = 0; i < node->mNumMeshes; i++) {
             PolygonMesh mesh = processNodeMesh(scene->mMeshes[node->mMeshes[i]]);
@@ -37,6 +39,8 @@ namespace engine {
     }
 
     PolygonMesh Model::processNodeMesh(aiMesh *mesh) {
+
+        GE_PROFILE_FUNCTION;
 
         std::vector<PolygonVertex> vertices;
         std::vector<unsigned int> indices;

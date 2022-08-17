@@ -2,13 +2,9 @@
 
 #include "../../graphics/framebuffer/Framebuffer.h"
 
+#include "../pch.h"
+
 #include <imgui.h>
-
-#include <glm/glm.hpp>
-
-#include <utility>
-#include <vector>
-#include <string>
 
 namespace engine {
 

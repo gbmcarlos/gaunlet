@@ -8,6 +8,10 @@ namespace engine {
     RunLoop::RunLoop(Application& application)
         : m_application(application) {
 
+        GE_PROFILE_BEGIN_SESSION("main", ASSETS_PATH"/result.json")
+
+        GE_PROFILE_SCOPE("init");
+
         RenderCommand::init();
 
         ImGuiRenderApi::init(m_application.getWindow()->getContext());
@@ -22,6 +26,8 @@ namespace engine {
 
         // Start the main loop
         while (m_application.isRunning()) {
+
+            GE_PROFILE_SCOPE("loop");
 
             float time = (float) glfwGetTime();
             TimeStep ts(time - lastFrameTime);
@@ -45,6 +51,8 @@ namespace engine {
 
         ImGuiRenderApi::shutdown();
         m_application.getWindow()->close();
+
+        GE_PROFILE_END_SESSION();
 
     }
 

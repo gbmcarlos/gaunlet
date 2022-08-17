@@ -5,7 +5,6 @@
 #include "../../graphics/texture/Texture.h"
 
 #include <glm/gtc/matrix_transform.hpp>
-#include <utility>
 
 namespace engine {
 

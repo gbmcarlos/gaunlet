@@ -2,8 +2,7 @@
 
 #include "RenderApi.h"
 
-#include <glm/glm.hpp>
-#include <memory>
+#include "../pch.h"
 
 namespace engine {
 

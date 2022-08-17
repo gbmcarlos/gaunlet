@@ -7,8 +7,6 @@
 #include "../input/events/CursorEvent.h"
 #include "../input/events/ScrollEvent.h"
 
-#include <stdexcept>
-
 namespace engine {
 
     Window::Window(unsigned int width, unsigned int height, const std::string& title)

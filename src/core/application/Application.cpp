@@ -31,12 +31,17 @@ namespace engine {
 
     void Application::onUpdate(TimeStep timeStep) {
 
+        GE_PROFILE_FUNCTION;
+
         for (auto layer : m_layerStack) {
             layer->onUpdate(timeStep);
         }
 
     }
+
     void Application::onGuiRender() {
+
+        GE_PROFILE_FUNCTION;
 
         for (auto layer : m_layerStack) {
             layer->onGuiRender();
