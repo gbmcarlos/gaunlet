@@ -69,7 +69,7 @@ namespace engine {
         }
 
         RenderCommand::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
-        Renderer::beginScene(camera->getViewProjectionMatrix());
+        Renderer::beginScene(camera->getViewMatrix(), camera->getProjectionMatrix());
 
         renderPolygons();
         renderCircles();
@@ -167,11 +167,9 @@ namespace engine {
             // MaterialComponent is optional
             auto material = entity.hasComponent<MaterialComponent>() ? entity.getComponent<MaterialComponent>() : MaterialComponent();
 
-            Renderer::submit(polygon, transform, material);
+            Renderer::submit(entity.getId(), polygon, transform, material);
 
         }
-
-        Renderer::flushPolygons();
 
     }
 
@@ -186,11 +184,9 @@ namespace engine {
             // MaterialComponent is optional
             auto material = entity.hasComponent<MaterialComponent>() ? entity.getComponent<MaterialComponent>() : MaterialComponent();
 
-            Renderer::submit(circle, transform, material);
+            Renderer::submit(entity.getId(), circle, transform, material);
 
         }
-
-        Renderer::flushCircles();
 
     }
 

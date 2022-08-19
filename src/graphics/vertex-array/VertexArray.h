@@ -1,7 +1,7 @@
 #pragma once
 
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
+#include "../vertex-buffer/VertexBuffer.h"
+#include "../index-buffer/IndexBuffer.h"
 
 namespace engine {
 
@@ -15,7 +15,7 @@ namespace engine {
         ~VertexArray();
         void bind();
         void unbind();
-        void addBuffer(std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<IndexBuffer> indexBuffer);
+        void addBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer, std::shared_ptr<IndexBuffer> indexBuffer);
         inline const std::shared_ptr<IndexBuffer>& getIndexBuffer() {return m_indexBuffer;};
     };
 

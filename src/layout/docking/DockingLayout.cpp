@@ -99,6 +99,7 @@ namespace engine {
             case DockSpacePosition::Right: return ImGuiDir_Right;
             case DockSpacePosition::Up: return ImGuiDir_Up;
             case DockSpacePosition::Down: return ImGuiDir_Down;
+            case DockSpacePosition::Center: return 0;
         }
 
         throw std::runtime_error("Unknown dock space position");

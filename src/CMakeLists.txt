@@ -13,13 +13,15 @@ add_library(graphics-engine
         core/run-loop/RunLoop.cpp
 
 #        Graphics
-        graphics/buffer/BufferLayout.cpp
-        graphics/buffer/VertexBuffer.cpp
-        graphics/buffer/IndexBuffer.cpp
-        graphics/buffer/VertexArray.cpp
+        graphics/vertex-buffer/BufferLayout.cpp
+        graphics/vertex-buffer/VertexBuffer.cpp
+        graphics/index-buffer/IndexBuffer.cpp
+        graphics/vertex-array/VertexArray.cpp
+        graphics/uniform-buffer/UniformBuffer.cpp
         graphics/shader/Shader.cpp
         graphics/shader/ShaderLibrary.cpp
         graphics/texture/TextureImage2D.cpp
+        graphics/texture/TextureLibrary.cpp
         graphics/framebuffer/Framebuffer.cpp
 
 #        Scene

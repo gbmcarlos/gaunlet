@@ -55,6 +55,7 @@ public:
     void onUpdate(engine::TimeStep timeStep) override {
 
         m_vertexArray->bind();
+        m_indexBuffer->bind();
 
         m_shaderLibrary.get("main")->setUniform4f("u_color", glm::vec4(color[0], color[1], color[2], color[3]));
 

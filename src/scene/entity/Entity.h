@@ -11,6 +11,10 @@ namespace engine {
         Entity() = default;
         Entity(entt::entity entityHandle, Scene* scene) : m_handle(entityHandle), m_scene(scene) {}
 
+        unsigned int getId() {
+            return (unsigned int) m_handle;
+        }
+
         template<typename T>
         bool hasComponent() {
             return m_scene->m_registry.all_of<T>(m_handle);

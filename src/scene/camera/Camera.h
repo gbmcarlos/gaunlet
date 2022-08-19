@@ -10,6 +10,8 @@ namespace engine {
 
     public:
 
+        glm::mat4 getProjectionMatrix();
+        glm::mat4 getViewMatrix();
         glm::mat4 getViewProjectionMatrix();
         virtual float getAspectRatio() const = 0;
         virtual void resize(unsigned int viewportWidth, unsigned int viewportHeight) = 0;

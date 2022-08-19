@@ -18,11 +18,10 @@ namespace engine {
         RenderCommand::unbindVertexArray();
     }
 
-    void VertexArray::addBuffer(std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<IndexBuffer> indexBuffer) {
+    void VertexArray::addBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer, std::shared_ptr<IndexBuffer> indexBuffer) {
 
         bind();
 
-        vertexBuffer->bind();
         auto& elements = vertexBuffer->getBufferLayout().getElements();
         for (unsigned int i = 0; i < elements.size(); i++) {
             auto& element = elements[i];
@@ -36,7 +35,6 @@ namespace engine {
                 );
         }
 
-        indexBuffer->bind();
         m_indexBuffer = std::move(indexBuffer);
 
     }

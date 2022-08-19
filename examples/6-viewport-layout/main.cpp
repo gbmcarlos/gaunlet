@@ -10,14 +10,17 @@ class SceneLayer : public engine::Layer {
 public:
 
     engine::Scene m_mainScene;
-    std::shared_ptr<engine::OrthographicCamera> m_camera;
+    std::shared_ptr<engine::PerspectiveCamera> m_camera;
     std::shared_ptr<engine::Framebuffer> m_framebuffer = nullptr;
 
 public:
 
     SceneLayer(unsigned int viewportWidth, unsigned int viewportHeight, unsigned int framebufferWidth, unsigned int framebufferHeight) {
 
-        m_camera = std::make_shared<engine::OrthographicCamera>(viewportWidth, viewportHeight, 100);
+        GE_PROFILE_FUNCTION
+
+        m_camera = std::make_shared<engine::PerspectiveCamera>(45.0f, (float) viewportWidth /(float) viewportHeight, 100, 1.0f, 100.0f);
+        m_camera->setTranslation({0.0f, 2.0f, 10.0f});
 
         m_framebuffer = std::make_shared<engine::Framebuffer>(std::initializer_list<engine::FramebufferAttachmentSpec>{
             {engine::FramebufferAttachmentType::Color, engine::FramebufferDataFormat::RGBA},
@@ -31,7 +34,7 @@ public:
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f)
         );
-        triangle1.addComponent<engine::MaterialComponent>(glm::vec4(0.8f, 1.0f, 1.0f, 1.0f));
+        triangle1.addComponent<engine::MaterialComponent>(glm::vec4(0.8f, 0.0f, 0.0f, 1.0f));
 
         m_mainScene.start();
 

@@ -1,12 +1,23 @@
 #version 410 core
 
+struct EntityProperties {
+    mat4 transform;
+    vec4 color;
+    uint textureIndex;
+    uint entityId;
+};
+
+// Uniforms
+layout (std140) uniform EntityPropertiesBlock {
+    EntityProperties properties[100];
+};
+
 // Inputs
 in vec2 v_textureCoordinates;
-flat in int v_textureIndex;
-in vec4 v_color;
+flat in uint v_entityIndex;
 
 // Outputs
-layout(location = 0) out vec4 o_color;
+layout (location = 0) out vec4 o_color;
 
 // Textures
 uniform sampler2D texture0;
@@ -21,15 +32,16 @@ uniform sampler2D texture8;
 uniform sampler2D texture9;
 uniform sampler2D texture10;
 
-vec4 sampleTexture(int textureIndex, vec2 textureCoordinates);
+vec4 sampleTexture(uint textureIndex, vec2 textureCoordinates);
 
 void main() {
 
-    vec4 textureColor = sampleTexture(v_textureIndex, v_textureCoordinates);
-    o_color = textureColor * v_color;
+    vec4 textureColor = sampleTexture(properties[v_entityIndex].textureIndex, v_textureCoordinates);
+    o_color = textureColor * properties[v_entityIndex].color;
+    //o_color = vec4(v_textureCoordinates.x, v_entityIndex, 1.0f, 1.0f);
 }
 
-vec4 sampleTexture(int textureIndex, vec2 textureCoordinates) {
+vec4 sampleTexture(uint textureIndex, vec2 textureCoordinates) {
 
     if (textureIndex == 0) {
         return texture(texture0, textureCoordinates);

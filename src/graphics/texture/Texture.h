@@ -6,7 +6,11 @@
 
 namespace engine {
 
+    class TextureLibrary;
+
     class Texture {
+
+        friend TextureLibrary;
 
     public:
         virtual void bind(unsigned int slot) = 0;

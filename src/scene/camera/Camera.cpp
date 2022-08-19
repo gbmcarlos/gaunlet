@@ -4,6 +4,14 @@
 
 namespace engine {
 
+    glm::mat4 Camera::getProjectionMatrix() {
+        return m_projectionMatrix;
+    }
+
+    glm::mat4 Camera::getViewMatrix() {
+        return glm::inverse(m_transform.getTransformationMatrix());
+    }
+
     glm::mat4 Camera::getViewProjectionMatrix() {
         return m_projectionMatrix * glm::inverse(m_transform.getTransformationMatrix());
     }

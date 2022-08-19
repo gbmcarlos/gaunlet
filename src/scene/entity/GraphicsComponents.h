@@ -37,7 +37,7 @@ namespace engine {
 
         PolygonModelComponent() = default;
         PolygonModelComponent(const PolygonModelComponent&) = default;
-        PolygonModelComponent(Model mesh) : m_model(std::move(mesh)) {}
+        PolygonModelComponent(Model model) : m_model(std::move(model)) {}
 
         Model m_model;
 

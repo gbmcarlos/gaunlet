@@ -116,6 +116,24 @@ namespace engine {
         glCall(glDeleteVertexArrays(1, &id));
     }
 
+
+    unsigned int OpenGLRenderApi::sizeOfVertexBufferLayoutElementType(VertexBufferLayoutElementType type) {
+        return sizeof(convertVertexBufferLayoutElementType(type));
+    }
+
+    void OpenGLRenderApi::addVertexArrayAttribute(unsigned int index, int count, VertexBufferLayoutElementType type, bool normalized, int stride, int offset) {
+
+        glCall(glEnableVertexAttribArray(index));
+        glCall(glVertexAttribPointer(
+            index,
+            count,
+            convertVertexBufferLayoutElementType(type),
+            normalized ? GL_TRUE : GL_FALSE,
+            stride,
+            (const void*) offset
+        ));
+    }
+
     unsigned int OpenGLRenderApi::createShaderProgram() {
         return (unsigned int) glCreateProgram();
     }
@@ -148,13 +166,12 @@ namespace engine {
         glCall(glDeleteShader(id));
     }
 
-    void OpenGLRenderApi::attachShader(unsigned int id, unsigned int shaderId) {
-        glCall(glAttachShader(id, shaderId));
+    void OpenGLRenderApi::attachShader(unsigned int programId, unsigned int shaderId) {
+        glCall(glAttachShader(programId, shaderId));
     }
 
     void OpenGLRenderApi::compileShaderProgram(unsigned int id) {
         glCall(glLinkProgram(id));
-        glCall(glValidateProgram(id));
     }
 
     void OpenGLRenderApi::bindShader(unsigned int id) {
@@ -185,22 +202,45 @@ namespace engine {
         glCall(glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value)));
     }
 
-    unsigned int OpenGLRenderApi::sizeOfVertexBufferLayoutElementType(VertexBufferLayoutElementType type) {
-        return sizeof(convertVertexBufferLayoutElementType(type));
+
+    void OpenGLRenderApi::createUniformBuffer(unsigned int& id, unsigned int size) {
+        glCall(glGenBuffers(1, &id));
+        glCall(glBindBuffer(GL_UNIFORM_BUFFER, id));
+        glCall(glBufferData(GL_UNIFORM_BUFFER, size, nullptr, GL_DYNAMIC_DRAW));
     }
 
-    void OpenGLRenderApi::addVertexArrayAttribute(unsigned int index, int count, VertexBufferLayoutElementType type, bool normalized, int stride, int offset) {
-
-        glCall(glEnableVertexAttribArray(index));
-        glCall(glVertexAttribPointer(
-            index,
-            count,
-            convertVertexBufferLayoutElementType(type),
-                normalized ? GL_TRUE : GL_FALSE,
-            stride,
-            (const void*) offset
-        ));
+    void OpenGLRenderApi::createUniformBuffer(unsigned int& id, const void *data, unsigned int size) {
+        glCall(glGenBuffers(1, &id));
+        glCall(glBindBuffer(GL_UNIFORM_BUFFER, id));
+        glCall(glBufferData(GL_UNIFORM_BUFFER, size, data, GL_STATIC_DRAW));
     }
+
+    void OpenGLRenderApi::bindUniformBuffer(unsigned int& id) {
+        glCall(glBindBuffer(GL_UNIFORM_BUFFER, id));
+    }
+
+    void OpenGLRenderApi::submitUniformBufferData(const void *data, unsigned int size) {
+        glCall(glBufferSubData(GL_UNIFORM_BUFFER, 0, size, data));
+    }
+
+    void OpenGLRenderApi::unbindUniformBuffer() {
+        glCall(glBindBuffer(GL_UNIFORM_BUFFER, 0));
+    }
+
+
+    int OpenGLRenderApi::getUniformBufferBindingIndex(unsigned int id, const std::string &name) {
+        return (int) glGetUniformBlockIndex(id, name.c_str());
+    }
+
+
+    void OpenGLRenderApi::bindUniformBufferToBindingPoint(unsigned int bufferId, unsigned int bindingPoint, unsigned int size) {
+        glCall(glBindBufferRange(GL_UNIFORM_BUFFER, bindingPoint, bufferId, 0, size));
+    }
+
+    void OpenGLRenderApi::bindUniformBufferFromBindingPoint(unsigned int shaderId, int location, unsigned int bindingPoint) {
+        glCall(glUniformBlockBinding(shaderId, location, bindingPoint));
+    }
+
 
     void OpenGLRenderApi::loadTexture(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data) {
 
@@ -292,6 +332,7 @@ namespace engine {
         switch (type) {
             case VertexBufferLayoutElementType::Bool:       return GL_BOOL;
             case VertexBufferLayoutElementType::Int:        return GL_INT;
+            case VertexBufferLayoutElementType::UInt:        return GL_UNSIGNED_INT;
             case VertexBufferLayoutElementType::Float:      return GL_FLOAT;
         }
 

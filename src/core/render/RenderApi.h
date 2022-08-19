@@ -7,6 +7,7 @@ namespace engine {
     enum class VertexBufferLayoutElementType {
         Bool,
         Int,
+        UInt,
         Float
     };
 
@@ -65,7 +66,7 @@ namespace engine {
 
         virtual unsigned int createShaderProgram() = 0;
         virtual unsigned int compileShader(ShaderType type, const std::string& source) = 0;
-        virtual void attachShader(unsigned id, unsigned int shaderId) = 0;
+        virtual void attachShader(unsigned programId, unsigned int shaderId) = 0;
         virtual void deleteShader(unsigned int id) = 0;
         virtual void compileShaderProgram(unsigned int id) = 0;
         virtual void bindShader(unsigned int id) = 0;
@@ -76,6 +77,16 @@ namespace engine {
         virtual void setUniform4f(int location, const glm::vec4& value) = 0;
         virtual void setUniformMat3f(int location, const glm::mat3& value) = 0;
         virtual void setUniformMat4f(int location, const glm::mat4& value) = 0;
+
+        virtual void createUniformBuffer(unsigned int& id, unsigned int size) = 0;
+        virtual void createUniformBuffer(unsigned int& id, const void *data, unsigned int size) = 0;
+        virtual void bindUniformBuffer(unsigned int& id) = 0;
+        virtual void submitUniformBufferData(const void *data, unsigned int size) = 0;
+        virtual void unbindUniformBuffer() = 0;
+
+        virtual int getUniformBufferBindingIndex(unsigned int id, const std::string& name) = 0;
+        virtual void bindUniformBufferToBindingPoint(unsigned int bufferId, unsigned int bindingPoint, unsigned int size) = 0;
+        virtual void bindUniformBufferFromBindingPoint(unsigned int shaderId, int location, unsigned int bindingPoint) = 0;
 
         virtual unsigned int sizeOfVertexBufferLayoutElementType(VertexBufferLayoutElementType type) = 0;
         virtual void addVertexArrayAttribute(unsigned int index, int count, VertexBufferLayoutElementType type, bool normalized, int stride, int offset) = 0;

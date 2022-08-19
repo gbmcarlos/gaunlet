@@ -119,9 +119,14 @@ namespace engine {
 
 }
 
-#if 1
+#if 0
 #define GE_PROFILE_BEGIN_SESSION(name, outputFilePath) ::engine::Instrumentor::get().beginSession(name, outputFilePath);
 #define GE_PROFILE_END_SESSION() ::engine::Instrumentor::get().endSession();
 #define GE_PROFILE_SCOPE(name) ::engine::InstrumentationTimer timer##__LINE__(name);
 #define GE_PROFILE_FUNCTION GE_PROFILE_SCOPE(BOOST_CURRENT_FUNCTION);
+#else
+#define GE_PROFILE_BEGIN_SESSION(name, outputFilePath)
+#define GE_PROFILE_END_SESSION()
+#define GE_PROFILE_SCOPE(name)
+#define GE_PROFILE_FUNCTION
 #endif

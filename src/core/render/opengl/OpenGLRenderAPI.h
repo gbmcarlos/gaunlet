@@ -49,9 +49,12 @@ namespace engine {
         void unbindVertexArray();
         void deleteVertexArray(unsigned int& id);
 
+        unsigned int sizeOfVertexBufferLayoutElementType(VertexBufferLayoutElementType type);
+        void addVertexArrayAttribute(unsigned int index, int count, VertexBufferLayoutElementType type, bool normalized, int stride, int offset);
+
         unsigned int createShaderProgram();
         unsigned int compileShader(ShaderType type, const std::string& source);
-        void attachShader(unsigned id, unsigned int shaderId);
+        void attachShader(unsigned programId, unsigned int shaderId);
         void deleteShader(unsigned int id);
         void compileShaderProgram(unsigned int id);
         void bindShader(unsigned int id);
@@ -63,8 +66,15 @@ namespace engine {
         void setUniformMat3f(int location, const glm::mat3& value);
         void setUniformMat4f(int location, const glm::mat4& value);
 
-        unsigned int sizeOfVertexBufferLayoutElementType(VertexBufferLayoutElementType type);
-        void addVertexArrayAttribute(unsigned int index, int count, VertexBufferLayoutElementType type, bool normalized, int stride, int offset);
+        void createUniformBuffer(unsigned int& id, unsigned int size);
+        void createUniformBuffer(unsigned int& id, const void *data, unsigned int size);
+        void bindUniformBuffer(unsigned int& id);
+        void submitUniformBufferData(const void *data, unsigned int size);
+        void unbindUniformBuffer();
+
+        int getUniformBufferBindingIndex(unsigned int id, const std::string& name);
+        void bindUniformBufferToBindingPoint(unsigned int bufferId, unsigned int bindingPoint, unsigned int size);
+        void bindUniformBufferFromBindingPoint(unsigned int shaderId, int location, unsigned int bindingPoint);
 
         void loadTexture(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data);
         void bindTexture(unsigned int id, unsigned int slot);

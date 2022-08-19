@@ -80,6 +80,18 @@ namespace engine {
 
     }
 
+    void Shader::linkUniformBuffer(const std::shared_ptr<UniformBuffer>& uniformBuffer) {
+
+        bind();
+        int location = getUniformBlockLocation(uniformBuffer->getName());
+        RenderCommand::bindUniformBufferFromBindingPoint(
+            m_rendererId,
+            location,
+            uniformBuffer->getBindingPoint()
+        );
+
+    }
+
     int Shader::getUniformLocation(const std::string& name) {
 
         if (m_uniformLocations.find(name) != m_uniformLocations.end()) {
@@ -88,6 +100,18 @@ namespace engine {
 
         int location = RenderCommand::getUniformLocation(m_rendererId, name);
         m_uniformLocations[name] = location;
+        return location;
+
+    }
+
+    int Shader::getUniformBlockLocation(const std::string& name) {
+
+        if (m_uniformBlockLocations.find(name) != m_uniformBlockLocations.end()) {
+            return m_uniformBlockLocations[name];
+        }
+
+        int location = (int) RenderCommand::getUniformBufferBindingIndex(m_rendererId, name);
+        m_uniformBlockLocations[name] = location;
         return location;
 
     }

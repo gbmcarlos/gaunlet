@@ -11,30 +11,33 @@ namespace engine {
         loadDefaultWhiteTexture();
     }
 
-    void Renderer::beginScene(glm::mat4 viewProjectionMatrix) {
-        m_rendererStorage->m_viewProjectionMatrix = viewProjectionMatrix;
+    void Renderer::beginScene(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) {
+
+        std::vector<glm::mat4> sceneData;
+        sceneData.emplace_back(viewMatrix);
+        sceneData.emplace_back(projectionMatrix);
+
+        m_rendererStorage->m_sceneMatricesUniformBuffer->setData(
+            (const void*) sceneData.data(),
+            sizeof(glm::mat4) * 2
+        );
     }
 
     void Renderer::endScene() {
 
         // Flush the polygons, if any
-        if (m_rendererStorage->m_polygonVertices.size() > 0) {
+        if (!m_rendererStorage->m_polygonBatch.getVertices().empty()) {
             flushPolygons();
         }
 
         // Flush the circles, if any
-        if (m_rendererStorage->m_circleVertices.size() > 0) {
+        if (!m_rendererStorage->m_circleBatch.getVertices().empty()) {
             flushCircles();
         }
 
-        // Reset the view*projection matrix to the default
-        m_rendererStorage->m_viewProjectionMatrix = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
-
     }
 
-    void Renderer::submit(const PolygonModelComponent& polygonComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent) {
-
-        GE_PROFILE_FUNCTION;
+    void Renderer::submit(const unsigned int& entityId, const PolygonModelComponent& polygonComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent) {
 
         std::vector<PolygonVertex> vertices = {};
         std::vector<unsigned int> indices = {};
@@ -46,225 +49,127 @@ namespace engine {
         }
 
         // Check if we need to flush before rendering the current model
-        if (shouldFlushPolygon(vertices, indices, materialComponent.m_texture)) {
+        if (m_rendererStorage->m_polygonBatch.shouldFlush(vertices, indices, materialComponent.m_texture)) {
             flushPolygons();
         }
 
-        // If no texture is specified, we use texture number 1, which is the default white texture
-        int textureIndex = 0.0f;
-        if (materialComponent.m_texture) {
+        PolygonEntityProperties entityProperties(
+            entityId,
+            transformComponent.getTransformationMatrix(),
+            materialComponent.m_color
+        );
 
-            // Find the texture in the list of existing textures
-            auto iterator = std::find(m_rendererStorage->m_polygonTextures.begin(), m_rendererStorage->m_polygonTextures.end(), materialComponent.m_texture);
-
-            // If it isn't there, we need to add it
-            if (iterator == m_rendererStorage->m_polygonTextures.end()) {
-                textureIndex = m_rendererStorage->m_polygonTextures.size();
-                m_rendererStorage->m_polygonTextures.push_back(materialComponent.m_texture);
-            } else { // Otherwise, retrieve the index of the existing one
-                textureIndex = (int) std::distance(m_rendererStorage->m_polygonTextures.begin(), iterator);
-            }
-
-        }
-
-        // Transform the vertices, according to the model's transform and material components
-        for (auto& vertex : vertices) {
-            vertex.m_position = transformComponent.getTransformationMatrix() * vertex.m_position; // TODO BOTTLENECK move this to the vertex shader, using a uniform buffer
-            vertex.m_textureIndex = textureIndex;
-            vertex.m_color = materialComponent.m_color;
-        }
-
-        // Transform the indices, offset them by the current list of vertices in the batch
-        for (auto& index : indices) {
-            index += m_rendererStorage->m_polygonVertices.size();
-        }
-
-        // Store the vertices and indices in the batch
-        m_rendererStorage->m_polygonVertices.insert(m_rendererStorage->m_polygonVertices.end(), vertices.begin(), vertices.end());
-        m_rendererStorage->m_polygonIndices.insert(m_rendererStorage->m_polygonIndices.end(), indices.begin(), indices.end());
+        // Submit the vertices, indices, texture and entity properties to the batch, for storage till we flush
+        m_rendererStorage->m_polygonBatch.submit(
+            vertices,
+            indices,
+            materialComponent.m_texture,
+            entityProperties
+        );
 
     }
 
-    void Renderer::submit(const CircleModelComponent& circleComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent) {
-
-        GE_PROFILE_FUNCTION;
+    void Renderer::submit(const unsigned int& entityId, const CircleModelComponent& circleComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent) {
 
         // Get the vertices and indices to be added
         auto vertices = circleComponent.m_mesh.getVertices();
         auto indices = circleComponent.m_mesh.getIndices();
 
-        // Check if we need to flush before rendering the current circle
-        if (shouldFlushCircles(vertices, materialComponent.m_texture)) {
+        // Check if we need to flush before rendering the current model
+        if (m_rendererStorage->m_circleBatch.shouldFlush(vertices, indices, materialComponent.m_texture)) {
             flushCircles();
         }
 
-        // If no texture is specified, we use texture number 1, which is the default white texture
-        int textureIndex = 0.0f;
-        if (materialComponent.m_texture) {
+        CircleEntityProperties entityProperties(
+            entityId,
+            transformComponent.getTransformationMatrix(),
+            materialComponent.m_color,
+            circleComponent.m_thickness,
+            circleComponent.m_fade
+        );
 
-            // Find the texture in the list of existing textures
-            auto iterator = std::find(m_rendererStorage->m_circleTextures.begin(), m_rendererStorage->m_circleTextures.end(), materialComponent.m_texture);
-
-            // If it isn't there, we need to add it
-            if (iterator == m_rendererStorage->m_circleTextures.end()) {
-                textureIndex = m_rendererStorage->m_circleTextures.size();
-                m_rendererStorage->m_circleTextures.push_back(materialComponent.m_texture);
-            } else { // Otherwise, retrieve the index of the existing one
-                textureIndex = (int) std::distance(m_rendererStorage->m_circleTextures.begin(), iterator);
-            }
-
-        }
-
-        // Transform the vertices, according to the circle's transform, material, and circle components
-        for (auto& vertex : vertices) {
-            vertex.m_position = transformComponent.getTransformationMatrix() * vertex.m_position;
-            vertex.m_thickness = circleComponent.m_thickness;
-            vertex.m_fade = circleComponent.m_fade;
-            vertex.m_textureIndex = textureIndex;
-            vertex.m_color = materialComponent.m_color;
-        }
-
-        // Transform the indices, offset them by the current list of vertices in the batch
-        for (auto& index : indices) {
-            index += m_rendererStorage->m_circleVertices.size();
-        }
-
-        // Store the vertices and indices in the batch
-        m_rendererStorage->m_circleVertices.insert(m_rendererStorage->m_circleVertices.end(), vertices.begin(), vertices.end());
-        m_rendererStorage->m_circleIndices.insert(m_rendererStorage->m_circleIndices.end(), indices.begin(), indices.end());
+        // Submit the vertices, indices, texture and entity properties to the batch, for storage till we flush
+        m_rendererStorage->m_circleBatch.submit(
+            vertices,
+            indices,
+            materialComponent.m_texture,
+            entityProperties
+        );
 
     }
 
-    bool Renderer::shouldFlushPolygon(const std::vector<PolygonVertex>& vertices, const std::vector<unsigned int>& indices, const std::shared_ptr<Texture>& texture) {
-
-        // If rendering the current polygon would pass over the limit of vertices, flush
-        if (m_rendererStorage->m_polygonVertices.size() + vertices.size() > m_rendererStorage->m_maxPolygonVertices) {
-            return true;
-        }
-
-        // If rendering the current polygon would pass over the limit of indices, flush
-        if (m_rendererStorage->m_polygonIndices.size() + indices.size() > m_rendererStorage->m_maxPolygonIndices) {
-            return true;
-        }
-
-        // If we're adding a texture, and it would pass over the limit of textures, flush
-        if (texture && std::find(m_rendererStorage->m_polygonTextures.begin(), m_rendererStorage->m_polygonTextures.end(), texture) == m_rendererStorage->m_polygonTextures.end()) {
-
-            if (m_rendererStorage->m_polygonTextures.size() + 1 > m_rendererStorage->m_maxPolygonTextures) {
-                return true;
-            }
-
-        }
-
-        return false;
-
-    }
-
-    bool Renderer::shouldFlushCircles(const std::vector<CircleVertex>& vertices, const std::shared_ptr<Texture>& texture) {
-
-        // If rendering the current circle would pass over the limit of vertices, flush
-        if (m_rendererStorage->m_circleVertices.size() + vertices.size() > m_rendererStorage->m_maxCircleVertices) {
-            return true;
-        }
-
-        // No need to check for indices limit, because a circle always has 4 vertices
-
-        // If we're adding a texture, and it would pass over the limit of textures, flush
-        if (texture && std::find(m_rendererStorage->m_circleTextures.begin(), m_rendererStorage->m_circleTextures.end(), texture) == m_rendererStorage->m_circleTextures.end()) {
-
-            if (m_rendererStorage->m_circleTextures.size() + 1 > m_rendererStorage->m_maxCircleTextures) {
-                return true;
-            }
-
-        }
-
-        return false;
-
-    }
-
+    // Gather the polygon data back from the batch, submit it for drawing, and clear the batch
     void Renderer::flushPolygons() {
 
-        GE_PROFILE_FUNCTION;
+        auto& vertices = m_rendererStorage->m_polygonBatch.getVertices();
+        auto& indices = m_rendererStorage->m_polygonBatch.getIndices();
+        auto& textures = m_rendererStorage->m_polygonBatch.getTextures();
+        auto& entityProperties = m_rendererStorage->m_polygonBatch.getEntityProperties();
 
-        // Create a layout, based on the structure of PolygonVertex
-        static engine::BufferLayout layout = {
-                {"a_position", 4, engine::VertexBufferLayoutElementType::Float},
-                {"a_normal", 4, engine::VertexBufferLayoutElementType::Float},
-                {"a_textureCoordinates", 2, engine::VertexBufferLayoutElementType::Float},
-                {"a_textureIndex", 1, engine::VertexBufferLayoutElementType::Int},
-                {"a_color", 4, engine::VertexBufferLayoutElementType::Float},
-        };
+        submitPolygons(
+            vertices,
+            indices,
+            textures,
+            entityProperties,
+            m_rendererStorage->m_shaderLibrary.get("polygon-shader")
+        );
 
-        // Create the vertex and index buffers
-        std::shared_ptr<VertexBuffer> vertexBuffer = std::make_shared<VertexBuffer>(layout, (const void*) m_rendererStorage->m_polygonVertices.data(), sizeof(PolygonVertex) * m_rendererStorage->m_polygonVertices.size());
-        std::shared_ptr<IndexBuffer> indexBuffer = std::make_shared<IndexBuffer>((unsigned int*) m_rendererStorage->m_polygonIndices.data(), m_rendererStorage->m_polygonIndices.size());
-
-        // Bind them together into a vertex array
-        std::shared_ptr<VertexArray> vertexArray = std::make_shared<VertexArray>();
-        vertexArray->addBuffer(vertexBuffer, indexBuffer);
-
-        // Bind all the textures
-        for (unsigned int i = 0; i < m_rendererStorage->m_polygonTextures.size(); i++) {
-            m_rendererStorage->m_polygonTextures[i]->bind(i);
-        }
-
-        // Submit the vertex array, to be rendered by the polygon shader
-        submitTriangles(m_rendererStorage->m_shaderLibrary.get("polygon-shader"), vertexArray);
-
-        // Clear the batch vectors (vertices, indices, and textures), and add the white texture back
-        m_rendererStorage->m_polygonVertices.clear();
-        m_rendererStorage->m_polygonIndices.clear();
-        m_rendererStorage->m_polygonTextures.clear();
-        m_rendererStorage->m_polygonTextures.push_back(m_rendererStorage->m_whiteTexture);
+        m_rendererStorage->m_polygonBatch.clear();
+        m_rendererStorage->m_polygonBatch.addTexture(m_rendererStorage->m_whiteTexture);
 
     }
 
+    // Gather the circle data back from the batch, submit it for drawing, and clear the batch
     void Renderer::flushCircles() {
 
-        GE_PROFILE_FUNCTION;
+        auto& vertices = m_rendererStorage->m_circleBatch.getVertices();
+        auto& indices = m_rendererStorage->m_circleBatch.getIndices();
+        auto& textures = m_rendererStorage->m_circleBatch.getTextures();
+        auto& entityProperties = m_rendererStorage->m_circleBatch.getEntityProperties();
 
-        // Create a layout, based on the structure of CircleVertex
-        static engine::BufferLayout layout = {
+        submitCircles(
+            vertices,
+            indices,
+            textures,
+            entityProperties,
+            m_rendererStorage->m_shaderLibrary.get("circle-shader")
+        );
+
+        m_rendererStorage->m_circleBatch.clear();
+        m_rendererStorage->m_circleBatch.addTexture(m_rendererStorage->m_whiteTexture);
+
+    }
+
+    // Create the actual polygon drawing resources (buffers and such), prepare the shader, and make the draw call
+    void Renderer::submitPolygons(const std::vector<PolygonVertex>& polygonVertices, const std::vector<unsigned int>& indices, const std::vector<std::shared_ptr<Texture>>& textures, const std::vector<PolygonEntityProperties>& entityProperties, const std::shared_ptr<Shader>& shader) {
+
+        // Create a layout, based on the structure of PolygonVertex
+        static engine::BufferLayout polygonVerticesLayout = {
             {"a_position", 4, engine::VertexBufferLayoutElementType::Float},
-            {"a_localCoordinates", 2, engine::VertexBufferLayoutElementType::Float},
-            {"a_thickness", 1, engine::VertexBufferLayoutElementType::Float},
-            {"a_fade", 1, engine::VertexBufferLayoutElementType::Float},
+            {"a_normal", 4, engine::VertexBufferLayoutElementType::Float},
             {"a_textureCoordinates", 2, engine::VertexBufferLayoutElementType::Float},
-            {"a_textureIndex", 1, engine::VertexBufferLayoutElementType::Int},
-            {"a_color", 4, engine::VertexBufferLayoutElementType::Float},
+            {"a_entityIndex", 1, engine::VertexBufferLayoutElementType::UInt},
         };
 
         // Create the vertex and index buffers
-        std::shared_ptr<VertexBuffer> vertexBuffer = std::make_shared<VertexBuffer>(layout, (const void*) m_rendererStorage->m_circleVertices.data(), sizeof(CircleVertex) * m_rendererStorage->m_circleVertices.size());
-        std::shared_ptr<IndexBuffer> indexBuffer = std::make_shared<IndexBuffer>(m_rendererStorage->m_circleIndices.data(), m_rendererStorage->m_circleIndices.size());
+        std::shared_ptr<VertexBuffer> vertexBuffer = std::make_shared<VertexBuffer>(polygonVerticesLayout, (const void*) polygonVertices.data(), sizeof(PolygonVertex) * polygonVertices.size());
+        std::shared_ptr<IndexBuffer> indexBuffer = std::make_shared<IndexBuffer>((unsigned int*) indices.data(), indices.size());
 
         // Bind them together into a vertex array
         std::shared_ptr<VertexArray> vertexArray = std::make_shared<VertexArray>();
         vertexArray->addBuffer(vertexBuffer, indexBuffer);
 
         // Bind all the textures
-        for (unsigned int i = 0; i < m_rendererStorage->m_circleTextures.size(); i++) {
-            m_rendererStorage->m_circleTextures[i]->bind(i);
+        for (unsigned int i = 0; i < textures.size(); i++) {
+            textures[i]->bind(i);
         }
-
-        // Submit the vertex array, to be rendered by the circle shader
-        submitCircles(m_rendererStorage->m_shaderLibrary.get("circle-shader"), vertexArray);
-
-        // Clear the batch vectors (vertices, indices, and textures), and add the white texture back
-        m_rendererStorage->m_circleVertices.clear();
-        m_rendererStorage->m_circleIndices.clear();
-        m_rendererStorage->m_circleTextures.clear();
-        m_rendererStorage->m_circleTextures.push_back(m_rendererStorage->m_whiteTexture);
-
-    }
-
-    void Renderer::submitTriangles(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray) {
-
-        GE_PROFILE_FUNCTION;
 
         // Bind the shader and submit the view*projection matrix as a uniform
         shader->bind();
-        shader->setUniformMat4f("u_viewProjection", m_rendererStorage->m_viewProjectionMatrix);
+        m_rendererStorage->m_polygonEntityPropertiesUniformBuffer->setData(
+            (const void*) entityProperties.data(),
+            sizeof(PolygonEntityProperties) * entityProperties.size()
+        );
 
         // Bind the vertex array and the index buffer
         vertexArray->bind();
@@ -275,13 +180,36 @@ namespace engine {
 
     }
 
-    void Renderer::submitCircles(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray) {
+    // Create the actual circle drawing resources (buffers and such), prepare the shader, and make the draw call
+    void Renderer::submitCircles(const std::vector<CircleVertex>& circleVertices, const std::vector<unsigned int>& indices, const std::vector<std::shared_ptr<Texture>>& textures, const std::vector<CircleEntityProperties>& entityProperties, const std::shared_ptr<Shader>& shader) {
 
-        GE_PROFILE_FUNCTION;
+        // Create a layout, based on the structure of CircleVertex
+        static engine::BufferLayout circleVerticesLayout = {
+            {"a_position", 4, engine::VertexBufferLayoutElementType::Float},
+            {"a_localCoordinates", 2, engine::VertexBufferLayoutElementType::Float},
+            {"a_textureCoordinates", 2, engine::VertexBufferLayoutElementType::Float},
+            {"a_entityIndex", 1, engine::VertexBufferLayoutElementType::UInt},
+        };
+
+        // Create the vertex and index buffers
+        std::shared_ptr<VertexBuffer> vertexBuffer = std::make_shared<VertexBuffer>(circleVerticesLayout, (const void*) circleVertices.data(), sizeof(CircleVertex) * circleVertices.size());
+        std::shared_ptr<IndexBuffer> indexBuffer = std::make_shared<IndexBuffer>((unsigned int*) indices.data(), indices.size());
+
+        // Bind them together into a vertex array
+        std::shared_ptr<VertexArray> vertexArray = std::make_shared<VertexArray>();
+        vertexArray->addBuffer(vertexBuffer, indexBuffer);
+
+        // Bind all the textures
+        for (unsigned int i = 0; i < textures.size(); i++) {
+            textures[i]->bind(i);
+        }
 
         // Bind the shader and submit the view*projection matrix as a uniform
         shader->bind();
-        shader->setUniformMat4f("u_viewProjection", m_rendererStorage->m_viewProjectionMatrix);
+        m_rendererStorage->m_circleEntityPropertiesUniformBuffer->setData(
+            (const void*) entityProperties.data(),
+            sizeof(CircleEntityProperties) * entityProperties.size()
+        );
 
         // Bind the vertex array and the index buffer
         vertexArray->bind();
@@ -292,9 +220,16 @@ namespace engine {
 
     }
 
+    // Create the shaders and set the texture slots
     void Renderer::loadDefaultShaders() {
 
         GE_PROFILE_FUNCTION;
+
+        m_rendererStorage->m_sceneMatricesUniformBuffer = std::make_shared<UniformBuffer>(
+            "SceneMatricesBlock",
+            0,
+            sizeof (glm::mat4) * 2 // We are going to store the view and projection matrices
+        );
 
         // Create the polygon shader
         std::map<engine::ShaderType, std::string> polygonShaderSource {
@@ -304,10 +239,20 @@ namespace engine {
         auto polygonShader = m_rendererStorage->m_shaderLibrary.load("polygon-shader", polygonShaderSource);
 
         // Set all the texture slots as uniforms
-        for (int i = 0; i < m_rendererStorage->m_maxPolygonTextures; i++) {
+        for (int i = 0; i < m_rendererStorage->m_polygonBatch.getMaxTextures(); i++) {
             auto textureName = std::string("texture") + std::to_string(i);
             polygonShader->setUniform1i(textureName, i);
         }
+
+        m_rendererStorage->m_polygonEntityPropertiesUniformBuffer = std::make_shared<UniformBuffer>(
+            "EntityPropertiesBlock",
+            1,
+            sizeof (PolygonEntityProperties) * 100
+        );
+
+        // Link the SceneMatrices and the EntityProperties uniform buffers
+        polygonShader->linkUniformBuffer(m_rendererStorage->m_sceneMatricesUniformBuffer);
+        polygonShader->linkUniformBuffer(m_rendererStorage->m_polygonEntityPropertiesUniformBuffer);
 
         // Create the circle shader
         std::map<engine::ShaderType, std::string> circleShaderSource {
@@ -317,10 +262,20 @@ namespace engine {
         auto circleShader = m_rendererStorage->m_shaderLibrary.load("circle-shader", circleShaderSource);
 
         // Set all the texture slots as uniforms
-        for (int i = 0; i < m_rendererStorage->m_maxCircleTextures; i++) {
+        for (int i = 0; i < m_rendererStorage->m_circleBatch.getMaxTextures(); i++) {
             auto textureName = std::string("texture") + std::to_string(i);
             circleShader->setUniform1i(textureName, i);
         }
+
+        m_rendererStorage->m_circleEntityPropertiesUniformBuffer = std::make_shared<UniformBuffer>(
+            "EntityPropertiesBlock",
+            2,
+            sizeof (CircleEntityProperties) * 100
+        );
+
+        // Link the SceneMatrices and the EntityProperties uniform buffers
+        circleShader->linkUniformBuffer(m_rendererStorage->m_sceneMatricesUniformBuffer);
+        circleShader->linkUniformBuffer(m_rendererStorage->m_circleEntityPropertiesUniformBuffer);
 
     }
 
@@ -333,9 +288,9 @@ namespace engine {
         std::shared_ptr<engine::Texture> whiteTexture = std::make_shared<engine::TextureImage2D>(TextureDataFormat::RGBA, TextureDataFormat::RGBA, 1, 1, &whiteTextureData);
         m_rendererStorage->m_whiteTexture = whiteTexture;
 
-        // Add it to the polygon and circle texture vectors
-        m_rendererStorage->m_polygonTextures.push_back(whiteTexture);
-        m_rendererStorage->m_circleTextures.push_back(whiteTexture);
+        // Add it to the polygon and circle batches
+        m_rendererStorage->m_polygonBatch.addTexture(whiteTexture);
+        m_rendererStorage->m_circleBatch.addTexture(whiteTexture);
 
     }
 

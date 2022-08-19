@@ -41,9 +41,12 @@ namespace engine {
         static void unbindVertexArray();
         static void deleteVertexArray(unsigned int& id);
 
+        static unsigned int sizeOfLayoutElementType(VertexBufferLayoutElementType type);
+        static void addVertexArrayAttribute(unsigned int index, int count, VertexBufferLayoutElementType type, bool normalized, int stride, int offset);
+
         static unsigned int createShaderProgram();
         static unsigned int compileShader(ShaderType type, const std::string& source);
-        static void attachShader(unsigned id, unsigned int shaderId);
+        static void attachShader(unsigned programId, unsigned int shaderId);
         static void compileShaderProgram(unsigned int id);
         static void bindShader(unsigned int id);
         static void deleteShader(unsigned int id);
@@ -55,8 +58,15 @@ namespace engine {
         static void setUniformMat3f(int location, const glm::mat3& value);
         static void setUniformMat4f(int location, const glm::mat4& value);
 
-        static unsigned int sizeOfLayoutElementType(VertexBufferLayoutElementType type);
-        static void addVertexArrayAttribute(unsigned int index, int count, VertexBufferLayoutElementType type, bool normalized, int stride, int offset);
+        static void createUniformBuffer(unsigned int& id, unsigned int size);
+        static void createUniformBuffer(unsigned int& id, const void *data, unsigned int size);
+        static void bindUniformBuffer(unsigned int& id);
+        static void submitUniformBufferData(const void *data, unsigned int size);
+        static void unbindUniformBuffer();
+
+        static int getUniformBufferBindingIndex(unsigned int id, const std::string& name);
+        static void bindUniformBufferToBindingPoint(unsigned int bufferId, unsigned int bindingPoint, unsigned int size);
+        static void bindUniformBufferFromBindingPoint(unsigned int shaderId, int location, unsigned int bindingPoint);
 
         static void loadTexture(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data);
         static void bindTexture(unsigned int id, unsigned int slot);

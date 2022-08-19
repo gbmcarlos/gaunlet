@@ -74,6 +74,7 @@ namespace engine {
     }
 
     void Window::pollEvents() {
+        GE_PROFILE_FUNCTION
         glfwPollEvents();
     }
 

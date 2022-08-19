@@ -76,6 +76,15 @@ namespace engine {
     }
 
 
+    unsigned int RenderCommand::sizeOfLayoutElementType(VertexBufferLayoutElementType type) {
+        return getApi().sizeOfVertexBufferLayoutElementType(type);
+    }
+
+    void RenderCommand::addVertexArrayAttribute(unsigned int index, int count, VertexBufferLayoutElementType type, bool normalized, int stride, int offset) {
+        getApi().addVertexArrayAttribute(index, count, type, normalized, stride, offset);
+    }
+
+
     unsigned int RenderCommand::createShaderProgram() {
         return (unsigned int) getApi().createShaderProgram();
     }
@@ -84,8 +93,8 @@ namespace engine {
         return (unsigned int) getApi().compileShader(type, source);
     }
 
-    void RenderCommand::attachShader(unsigned int id, unsigned int shaderId) {
-        getApi().attachShader(id, shaderId);
+    void RenderCommand::attachShader(unsigned int programId, unsigned int shaderId) {
+        getApi().attachShader(programId, shaderId);
     }
 
     void RenderCommand::compileShaderProgram(unsigned int id) {
@@ -125,13 +134,41 @@ namespace engine {
         getApi().setUniformMat4f(location, value);
     }
 
-    unsigned int RenderCommand::sizeOfLayoutElementType(VertexBufferLayoutElementType type) {
-        return getApi().sizeOfVertexBufferLayoutElementType(type);
+
+    void RenderCommand::createUniformBuffer(unsigned int& id, unsigned int size) {
+        getApi().createUniformBuffer(id, size);
     }
 
-    void RenderCommand::addVertexArrayAttribute(unsigned int index, int count, VertexBufferLayoutElementType type, bool normalized, int stride, int offset) {
-        getApi().addVertexArrayAttribute(index, count, type, normalized, stride, offset);
+    void RenderCommand::createUniformBuffer(unsigned int& id, const void *data, unsigned int size) {
+        getApi().createUniformBuffer(id, data, size);
     }
+
+    void RenderCommand::bindUniformBuffer(unsigned int& id) {
+        getApi().bindUniformBuffer(id);
+    }
+
+    void RenderCommand::submitUniformBufferData(const void *data, unsigned int size) {
+        getApi().submitUniformBufferData(data, size);
+    }
+
+    void RenderCommand::unbindUniformBuffer() {
+        getApi().unbindUniformBuffer();
+    }
+
+
+    int RenderCommand::getUniformBufferBindingIndex(unsigned int id, const std::string& name) {
+        return getApi().getUniformBufferBindingIndex(id, name);
+    }
+
+
+    void RenderCommand::bindUniformBufferToBindingPoint(unsigned int bufferId, unsigned int bindingPoint, unsigned int size) {
+        getApi().bindUniformBufferToBindingPoint(bufferId, bindingPoint, size);
+    }
+
+    void RenderCommand::bindUniformBufferFromBindingPoint(unsigned int shaderId, int location, unsigned int bindingPoint) {
+        getApi().bindUniformBufferFromBindingPoint(shaderId, location, bindingPoint);
+    }
+
 
     void RenderCommand::loadTexture(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data) {
         getApi().loadTexture(id, internalFormat, dataFormat, width, height, data);

@@ -10,15 +10,13 @@ namespace engine {
             m_position(position),
             m_normal(normal),
             m_textureCoordinates(textureCoordinates),
-            m_textureIndex(0),
-            m_color(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f))
+            m_entityIndex(0)
         {}
 
         glm::vec4 m_position;
         glm::vec4 m_normal;
         glm::vec2 m_textureCoordinates;
-        int m_textureIndex;
-        glm::vec4 m_color;
+        unsigned int m_entityIndex;
 
     };
 
