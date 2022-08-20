@@ -42,10 +42,10 @@ public:
 
 };
 
-class Render3DApplication : public engine::Application {
+class Rendering3DApplication : public engine::Application {
 
 public:
-    explicit Render3DApplication(const std::string& name) : engine::Application(name) {}
+    explicit Rendering3DApplication(const std::string& name) : engine::Application(name) {}
 
     void onReady() override {
         m_sceneLayer = new SceneLayer(m_window->getViewportWidth(),m_window->getViewportHeight());
@@ -59,7 +59,7 @@ private:
 
 int main() {
 
-    Render3DApplication app("Render 3D");
+    Rendering3DApplication app("Rendering 3D");
     engine::RunLoop runLoop(app);
     runLoop.run();
 

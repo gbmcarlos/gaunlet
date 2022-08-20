@@ -121,10 +121,10 @@ public:
 };
 
 
-class ViewportLayoutApplication : public engine::Application {
+class Rendering2DApplication : public engine::Application {
 
 public:
-    explicit ViewportLayoutApplication(const std::string &name) : engine::Application(name) {}
+    explicit Rendering2DApplication(const std::string &name) : engine::Application(name) {}
 
     void onReady() override {
         m_sceneLayer = new SceneLayer(m_window->getViewportWidth(), m_window->getViewportHeight());
@@ -138,7 +138,7 @@ private:
 
 int main() {
 
-    ViewportLayoutApplication app("Basic Rendering");
+    Rendering2DApplication app("Rendering 2D");
     engine::RunLoop runLoop(app);
 
     runLoop.run();
