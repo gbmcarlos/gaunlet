@@ -15,8 +15,7 @@ namespace engine {
         VertexBuffer(BufferLayout& layout, unsigned int size);
         ~VertexBuffer();
         void setData(const void* data, unsigned int size);
-        void bind();
-        void unbind();
+        inline unsigned int getRendererId() const {return m_rendererId; }
         inline BufferLayout& getBufferLayout() {return m_layout;}
     };
 

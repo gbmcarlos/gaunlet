@@ -5,6 +5,7 @@
 #include "../../graphics/vertex-array/VertexArray.h"
 #include "../../graphics/uniform-buffer/UniformBuffer.h"
 #include "../../graphics/texture/Texture.h"
+#include "../../graphics/framebuffer/Framebuffer.h"
 
 #include "../../graphics/shader/Shader.h"
 #include "../../graphics/shader/ShaderLibrary.h"
@@ -32,8 +33,8 @@ namespace engine {
         static void endScene();
 
         // Batched draw calls
-        static void submit(const unsigned int& entityId, const PolygonModelComponent& polygonComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent);
-        static void submit(const unsigned int& entityId, const CircleModelComponent& circleComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent);
+        static void submit(int entityId, const PolygonModelComponent& polygonComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent);
+        static void submit(int entityId, const CircleModelComponent& circleComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent);
 
     private:
 
@@ -42,8 +43,8 @@ namespace engine {
         static void flushCircles();
 
         // Non-batched, direct draw calls
-        static void submitPolygons(const std::vector<PolygonVertex>& polygonVertices, const std::vector<unsigned int>& indices, const std::vector<std::shared_ptr<Texture>>& textures, const std::vector<PolygonEntityProperties>& entityProperties, const std::shared_ptr<Shader>& shader);
-        static void submitCircles(const std::vector<CircleVertex>& circleVertices, const std::vector<unsigned int>& indices, const std::vector<std::shared_ptr<Texture>>& textures, const std::vector<CircleEntityProperties>& entityProperties, const std::shared_ptr<Shader>& shader);
+        static void renderPolygons(const std::vector<PolygonVertex>& polygonVertices, const std::vector<unsigned int>& indices, const std::vector<std::shared_ptr<Texture>>& textures, const std::vector<PolygonEntityProperties>& entityProperties, const std::shared_ptr<Shader>& shader);
+        static void renderCircles(const std::vector<CircleVertex>& circleVertices, const std::vector<unsigned int>& indices, const std::vector<std::shared_ptr<Texture>>& textures, const std::vector<CircleEntityProperties>& entityProperties, const std::shared_ptr<Shader>& shader);
 
         // Init loaders
         static void loadDefaultShaders();

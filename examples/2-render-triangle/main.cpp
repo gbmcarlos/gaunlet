@@ -25,7 +25,7 @@ public:
         };
 
         engine::BufferLayout layout = {
-            {"a_position", 2, engine::VertexBufferLayoutElementType::Float}
+            {"a_position", 2, engine::PrimitiveDataType::Float}
         };
 
         // Create the vertex buffer, which contains the actual data
@@ -40,7 +40,7 @@ public:
 
         // Create a vertex array, and bind the vertex buffer and the index buffer into it
         m_vertexArray = std::make_shared<engine::VertexArray>();
-        m_vertexArray->addBuffer(m_vertexBuffer, m_indexBuffer);
+        m_vertexArray->addBuffer(m_vertexBuffer->getBufferLayout());
 
         std::map<engine::ShaderType, std::string> shaderSource {
             {engine::ShaderType::Vertex, "res/shaders/vertex-position.glsl"},
@@ -48,20 +48,24 @@ public:
         };
         auto shader = m_shaderLibrary.load("main", shaderSource);
         shader->setUniform4f("u_color", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-        shader->bind();
 
     }
 
     void onUpdate(engine::TimeStep timeStep) override {
 
-        m_vertexArray->bind();
-        m_indexBuffer->bind();
+        auto& shader = m_shaderLibrary.get("main");
 
-        m_shaderLibrary.get("main")->setUniform4f("u_color", glm::vec4(color[0], color[1], color[2], color[3]));
+        shader->setUniform4f("u_color", glm::vec4(color[0], color[1], color[2], color[3]));
 
         engine::RenderCommand::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
 
-        engine::RenderCommand::drawIndexedTriangles(m_vertexArray->getIndexBuffer()->getCount());
+        engine::RenderCommand::drawIndexedTriangles(
+            m_vertexBuffer->getRendererId(),
+            m_indexBuffer->getRendererId(),
+            m_vertexArray->getRendererId(),
+            shader->getRendererId(),
+            m_indexBuffer->getCount()
+        );
 
     }
 

@@ -10,9 +10,8 @@ namespace engine {
     public:
         IndexBuffer(unsigned int* data, unsigned int count);
         ~IndexBuffer();
-        void bind();
-        void unbind();
-        inline unsigned int getCount() {return m_count;}
+        inline unsigned int getRendererId() const {return m_rendererId; }
+        inline unsigned int getCount() const {return m_count;}
     };
 
 }

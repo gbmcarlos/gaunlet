@@ -33,56 +33,43 @@ namespace engine {
         RenderCommand::compileShaderProgram(m_rendererId);
     }
 
-    void Shader::bind() const {
-        if (!m_rendererId) {
-            throw std::runtime_error("Shader must be compiled before binding it");
-        }
-        RenderCommand::bindShader(m_rendererId);
-    }
-
     void Shader::setUniform1i(const std::string& name, int value) {
 
-        bind();
         int location = getUniformLocation(name);
-        RenderCommand::setUniform1i(location, value);
+        RenderCommand::setUniform1i(m_rendererId, location, value);
 
     }
 
     void Shader::setUniform3f(const std::string& name, const glm::vec3& value) {
 
-        bind();
         int location = getUniformLocation(name);
-        RenderCommand::setUniform3f(location, value);
+        RenderCommand::setUniform3f(m_rendererId, location, value);
 
     }
 
     void Shader::setUniform4f(const std::string& name, const glm::vec4& value) {
 
-        bind();
         int location = getUniformLocation(name);
-        RenderCommand::setUniform4f(location, value);
+        RenderCommand::setUniform4f(m_rendererId, location, value);
 
     }
 
     void Shader::setUniformMat3f(const std::string& name, const glm::mat3& value) {
 
-        bind();
         int location = getUniformLocation(name);
-        RenderCommand::setUniformMat3f(location, value);
+        RenderCommand::setUniformMat3f(m_rendererId, location, value);
 
     }
 
     void Shader::setUniformMat4f(const std::string& name, const glm::mat4& value) {
 
-        bind();
         int location = getUniformLocation(name);
-        RenderCommand::setUniformMat4f(location, value);
+        RenderCommand::setUniformMat4f(m_rendererId, location, value);
 
     }
 
     void Shader::linkUniformBuffer(const std::shared_ptr<UniformBuffer>& uniformBuffer) {
 
-        bind();
         int location = getUniformBlockLocation(uniformBuffer->getName());
         RenderCommand::bindUniformBufferFromBindingPoint(
             m_rendererId,

@@ -10,12 +10,12 @@ namespace engine {
 
         std::string m_name;
         unsigned int m_count;
-        VertexBufferLayoutElementType m_type;
+        PrimitiveDataType m_type;
         unsigned int m_size;
         unsigned int m_offset;
         bool m_normalized;
 
-        BufferLayoutElement(const std::string& name, unsigned int count, VertexBufferLayoutElementType type, bool normalized = false);
+        BufferLayoutElement(std::string  name, unsigned int count, PrimitiveDataType type, bool normalized = false);
 
     };
 
@@ -27,8 +27,8 @@ namespace engine {
     public:
         BufferLayout(const std::initializer_list<BufferLayoutElement>& elements);
         void calculateStrideAndOffsets();
-        inline std::vector<BufferLayoutElement>& getElements() {return m_elements;}
-        inline unsigned int getStride() {return m_stride;}
+        inline const std::vector<BufferLayoutElement>& getElements() const {return m_elements;}
+        inline unsigned int getStride() const {return m_stride;}
 
     };
 

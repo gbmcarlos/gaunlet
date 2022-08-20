@@ -16,8 +16,6 @@ namespace engine {
         UniformBuffer(std::string  name, unsigned int bindingPoint, unsigned int size);
         ~UniformBuffer();
         void setData(const void* data, unsigned int size);
-        void bind();
-        void unbind();
 
         inline const std::string& getName() {return m_name; }
         inline unsigned int getBindingPoint() {return m_bindingPoint; }

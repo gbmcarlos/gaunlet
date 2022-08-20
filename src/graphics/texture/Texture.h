@@ -13,7 +13,8 @@ namespace engine {
         friend TextureLibrary;
 
     public:
-        virtual void bind(unsigned int slot) = 0;
+        virtual void activate(unsigned int slot) = 0;
+
         inline unsigned int getRendererId() {return m_rendererId; }
         inline unsigned int getWidth() {return m_width; }
         inline unsigned int getHeight() {return m_height; }

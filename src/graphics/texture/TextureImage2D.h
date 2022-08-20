@@ -12,7 +12,7 @@ namespace engine {
         TextureImage2D(TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data);
         ~TextureImage2D();
 
-        void bind(unsigned int slot) override;
+        void activate(unsigned int slot) override;
 
     };
 

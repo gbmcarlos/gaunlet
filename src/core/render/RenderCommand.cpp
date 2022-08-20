@@ -28,16 +28,12 @@ namespace engine {
         getApi().createVertexBuffer(id, data, size);
     }
 
-    void RenderCommand::bindVertexBuffer(unsigned int& id) {
-        getApi().bindVertexBuffer(id);
+    void RenderCommand::submitVertexBufferData(unsigned int id, const void *data, unsigned int size) {
+        getApi().submitVertexBufferData(id, data, size);
     }
 
-    void RenderCommand::submitVertexBufferData(const void *data, unsigned int size) {
-        getApi().submitVertexBufferData(data, size);
-    }
-
-    void RenderCommand::unbindVertexBuffer() {
-        getApi().unbindVertexBuffer();
+    void RenderCommand::deleteVertexBuffer(unsigned int id) {
+        getApi().deleteVertexBuffer(id);
     }
 
 
@@ -45,17 +41,8 @@ namespace engine {
         getApi().createIndexBuffer(id, data, count);
     }
 
-    void RenderCommand::bindIndexBuffer(unsigned int& id) {
-        getApi().bindIndexBuffer(id);
-    }
-
-    void RenderCommand::unbindIndexBuffer() {
-        getApi().unbindIndexBuffer();
-    }
-
-
-    void RenderCommand::deleteBuffer(unsigned int& id) {
-        getApi().deleteBuffer(id);
+    void RenderCommand::deleteIndexBuffer(unsigned int id) {
+        getApi().deleteIndexBuffer(id);
     }
 
 
@@ -63,25 +50,17 @@ namespace engine {
         getApi().createVertexArray(id);
     }
 
-    void RenderCommand::bindVertexArray(unsigned int& id) {
-        getApi().bindVertexArray(id);
-    }
-
-    void RenderCommand::unbindVertexArray() {
-        getApi().unbindVertexArray();
-    }
-
     void RenderCommand::deleteVertexArray(unsigned int& id) {
         getApi().deleteVertexArray(id);
     }
 
 
-    unsigned int RenderCommand::sizeOfLayoutElementType(VertexBufferLayoutElementType type) {
-        return getApi().sizeOfVertexBufferLayoutElementType(type);
+    unsigned int RenderCommand::sizeOfLayoutElementType(PrimitiveDataType type) {
+        return getApi().sizeOfPrimitiveDataType(type);
     }
 
-    void RenderCommand::addVertexArrayAttribute(unsigned int index, int count, VertexBufferLayoutElementType type, bool normalized, int stride, int offset) {
-        getApi().addVertexArrayAttribute(index, count, type, normalized, stride, offset);
+    void RenderCommand::addVertexArrayAttribute(unsigned int id, unsigned int index, int count, PrimitiveDataType type, bool normalized, int stride, int offset) {
+        getApi().addVertexArrayAttribute(id, index, count, type, normalized, stride, offset);
     }
 
 
@@ -101,10 +80,6 @@ namespace engine {
         getApi().compileShaderProgram(id);
     }
 
-    void RenderCommand::bindShader(unsigned int id) {
-        getApi().bindShader(id);
-    }
-
     void RenderCommand::deleteShader(unsigned int id) {
         getApi().deleteShader(id);
     }
@@ -114,24 +89,24 @@ namespace engine {
         return (int) getApi().getUniformLocation(id, name);
     }
 
-    void RenderCommand::setUniform1i(int location, int value) {
-        getApi().setUniform1i(location, value);
+    void RenderCommand::setUniform1i(unsigned int id, int location, int value) {
+        getApi().setUniform1i(id, location, value);
     }
 
-    void RenderCommand::setUniform3f(int location, const glm::vec3& value) {
-        getApi().setUniform3f(location, value);
+    void RenderCommand::setUniform3f(unsigned int id, int location, const glm::vec3& value) {
+        getApi().setUniform3f(id, location, value);
     }
 
-    void RenderCommand::setUniform4f(int location, const glm::vec4& value) {
-        getApi().setUniform4f(location, value);
+    void RenderCommand::setUniform4f(unsigned int id, int location, const glm::vec4& value) {
+        getApi().setUniform4f(id, location, value);
     }
 
-    void RenderCommand::setUniformMat3f(int location, const glm::mat3& value) {
-        getApi().setUniformMat3f(location, value);
+    void RenderCommand::setUniformMat3f(unsigned int id, int location, const glm::mat3& value) {
+        getApi().setUniformMat3f(id, location, value);
     }
 
-    void RenderCommand::setUniformMat4f(int location, const glm::mat4& value) {
-        getApi().setUniformMat4f(location, value);
+    void RenderCommand::setUniformMat4f(unsigned int id, int location, const glm::mat4& value) {
+        getApi().setUniformMat4f(id, location, value);
     }
 
 
@@ -143,16 +118,12 @@ namespace engine {
         getApi().createUniformBuffer(id, data, size);
     }
 
-    void RenderCommand::bindUniformBuffer(unsigned int& id) {
-        getApi().bindUniformBuffer(id);
+    void RenderCommand::submitUniformBufferData(unsigned int id, const void *data, unsigned int size) {
+        getApi().submitUniformBufferData(id, data, size);
     }
 
-    void RenderCommand::submitUniformBufferData(const void *data, unsigned int size) {
-        getApi().submitUniformBufferData(data, size);
-    }
-
-    void RenderCommand::unbindUniformBuffer() {
-        getApi().unbindUniformBuffer();
+    void RenderCommand::deleteUniformBuffer(unsigned int id) {
+        getApi().deleteUniformBuffer(id);
     }
 
 
@@ -170,12 +141,12 @@ namespace engine {
     }
 
 
-    void RenderCommand::loadTexture(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data) {
-        getApi().loadTexture(id, internalFormat, dataFormat, width, height, data);
+    void RenderCommand::loadTexture(unsigned int& id, TextureType type, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data) {
+        getApi().loadTexture(id, type, internalFormat, dataFormat, width, height, data);
     }
 
-    void RenderCommand::bindTexture(unsigned int id, unsigned int slot) {
-        getApi().bindTexture(id, slot);
+    void RenderCommand::activateTexture(unsigned int id, TextureType type, unsigned int slot) {
+        getApi().activateTexture(id, type, slot);
     }
 
     void RenderCommand::deleteTexture(unsigned int &id) {
@@ -198,24 +169,24 @@ namespace engine {
         getApi().deleteFramebuffer(id);
     }
 
-    void RenderCommand::framebufferAttach(TextureType textureType, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, unsigned int textureId) {
-        getApi().framebufferAttach(textureType, attachmentType, attachmentIndex, textureId);
+    void RenderCommand::framebufferAttach(unsigned int id, TextureType textureType, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, unsigned int textureId) {
+        getApi().framebufferAttach(id, textureType, attachmentType, attachmentIndex, textureId);
     }
 
-    void RenderCommand::setDrawBuffers(const std::vector<FramebufferAttachmentType>& drawBuffers) {
-        getApi().setDrawBuffers(drawBuffers);
+    void RenderCommand::setDrawBuffers(unsigned int id, const std::vector<FramebufferAttachmentType>& drawBuffers) {
+        getApi().setDrawBuffers(id, drawBuffers);
     }
 
     void RenderCommand::checkFramebufferCompleteness(unsigned int id) {
         getApi().checkFramebufferCompleteness(id);
     }
 
-    void RenderCommand::drawIndexedTriangles(unsigned int indexCount) {
-        getApi().drawIndexedTriangles(indexCount);
+    void RenderCommand::drawIndexedTriangles(unsigned int vertexBufferId, unsigned int indexBufferId, unsigned int vertexArrayId, unsigned int shaderId, unsigned int indexCount) {
+        getApi().drawIndexedTriangles(vertexBufferId, indexBufferId, vertexArrayId, shaderId, indexCount);
     }
 
-    void RenderCommand::drawIndexedLines(unsigned int indexCount) {
-        getApi().drawIndexedLines(indexCount);
+    void RenderCommand::drawIndexedLines(unsigned int vertexBufferId, unsigned int indexBufferId, unsigned int vertexArrayId, unsigned int shaderId, unsigned int indexCount) {
+        getApi().drawIndexedLines(vertexBufferId, indexBufferId, vertexArrayId, shaderId, indexCount);
     }
 
 }

@@ -18,9 +18,11 @@ namespace engine {
     public:
         Shader();
         ~Shader();
+
+        inline unsigned int getRendererId() const {return m_rendererId; }
+
         void attach(ShaderType type, const std::string& shaderPath);
         void compile() const;
-        void bind() const;
 
         void setUniform1i(const std::string& name, int value);
         void setUniform3f(const std::string& name, const glm::vec3& value);

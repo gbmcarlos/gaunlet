@@ -36,7 +36,7 @@ namespace engine {
 
     }
 
-    std::shared_ptr<Shader> ShaderLibrary::get(const std::string &name) {
+    const std::shared_ptr<Shader>& ShaderLibrary::get(const std::string &name) {
 
         if (m_shaders.find(name) == m_shaders.end()) {
             throw std::runtime_error("Shader doesn't exist");

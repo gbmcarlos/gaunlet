@@ -13,7 +13,7 @@ namespace engine {
     }
 
     VertexBuffer::~VertexBuffer() {
-        RenderCommand::deleteBuffer(m_rendererId);
+        RenderCommand::deleteVertexBuffer(m_rendererId);
     }
 
     void VertexBuffer::setData(const void *data, unsigned int size) {
@@ -22,15 +22,7 @@ namespace engine {
             throw std::runtime_error("Can't set data for non-dynamic vertex buffer");
         }
 
-        bind();
-        RenderCommand::submitVertexBufferData(data, size);
-    }
-
-    void VertexBuffer::bind() {
-        RenderCommand::bindVertexBuffer(m_rendererId);
-    }
-    void VertexBuffer::unbind() {
-        RenderCommand::unbindVertexBuffer();
+        RenderCommand::submitVertexBufferData(m_rendererId, data, size);
     }
 
 }

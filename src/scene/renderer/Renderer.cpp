@@ -37,7 +37,7 @@ namespace engine {
 
     }
 
-    void Renderer::submit(const unsigned int& entityId, const PolygonModelComponent& polygonComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent) {
+    void Renderer::submit(int entityId, const PolygonModelComponent& polygonComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent) {
 
         std::vector<PolygonVertex> vertices = {};
         std::vector<unsigned int> indices = {};
@@ -69,7 +69,7 @@ namespace engine {
 
     }
 
-    void Renderer::submit(const unsigned int& entityId, const CircleModelComponent& circleComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent) {
+    void Renderer::submit(int entityId, const CircleModelComponent& circleComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent) {
 
         // Get the vertices and indices to be added
         auto vertices = circleComponent.m_mesh.getVertices();
@@ -106,7 +106,7 @@ namespace engine {
         auto& textures = m_rendererStorage->m_polygonBatch.getTextures();
         auto& entityProperties = m_rendererStorage->m_polygonBatch.getEntityProperties();
 
-        submitPolygons(
+        renderPolygons(
             vertices,
             indices,
             textures,
@@ -127,7 +127,7 @@ namespace engine {
         auto& textures = m_rendererStorage->m_circleBatch.getTextures();
         auto& entityProperties = m_rendererStorage->m_circleBatch.getEntityProperties();
 
-        submitCircles(
+        renderCircles(
             vertices,
             indices,
             textures,
@@ -141,82 +141,100 @@ namespace engine {
     }
 
     // Create the actual polygon drawing resources (buffers and such), prepare the shader, and make the draw call
-    void Renderer::submitPolygons(const std::vector<PolygonVertex>& polygonVertices, const std::vector<unsigned int>& indices, const std::vector<std::shared_ptr<Texture>>& textures, const std::vector<PolygonEntityProperties>& entityProperties, const std::shared_ptr<Shader>& shader) {
+    void Renderer::renderPolygons(const std::vector<PolygonVertex>& polygonVertices, const std::vector<unsigned int>& indices, const std::vector<std::shared_ptr<Texture>>& textures, const std::vector<PolygonEntityProperties>& entityProperties, const std::shared_ptr<Shader>& shader) {
 
         // Create a layout, based on the structure of PolygonVertex
         static engine::BufferLayout polygonVerticesLayout = {
-            {"a_position", 4, engine::VertexBufferLayoutElementType::Float},
-            {"a_normal", 4, engine::VertexBufferLayoutElementType::Float},
-            {"a_textureCoordinates", 2, engine::VertexBufferLayoutElementType::Float},
-            {"a_entityIndex", 1, engine::VertexBufferLayoutElementType::UInt},
+            {"a_position", 4, engine::PrimitiveDataType::Float},
+            {"a_normal", 4, engine::PrimitiveDataType::Float},
+            {"a_textureCoordinates", 2, engine::PrimitiveDataType::Float},
+            {"a_entityIndex", 1, engine::PrimitiveDataType::UInt},
         };
 
         // Create the vertex and index buffers
-        std::shared_ptr<VertexBuffer> vertexBuffer = std::make_shared<VertexBuffer>(polygonVerticesLayout, (const void*) polygonVertices.data(), sizeof(PolygonVertex) * polygonVertices.size());
-        std::shared_ptr<IndexBuffer> indexBuffer = std::make_shared<IndexBuffer>((unsigned int*) indices.data(), indices.size());
+        VertexBuffer vertexBuffer(polygonVerticesLayout, (const void*) polygonVertices.data(), sizeof(PolygonVertex) * polygonVertices.size());
+        IndexBuffer indexBuffer((unsigned int*) indices.data(), indices.size());
 
         // Bind them together into a vertex array
-        std::shared_ptr<VertexArray> vertexArray = std::make_shared<VertexArray>();
-        vertexArray->addBuffer(vertexBuffer, indexBuffer);
+        VertexArray vertexArray;
+        vertexArray.addBuffer(polygonVerticesLayout);
 
         // Bind all the textures
         for (unsigned int i = 0; i < textures.size(); i++) {
-            textures[i]->bind(i);
+            textures[i]->activate(i);
         }
 
         // Bind the shader and submit the view*projection matrix as a uniform
-        shader->bind();
         m_rendererStorage->m_polygonEntityPropertiesUniformBuffer->setData(
             (const void*) entityProperties.data(),
             sizeof(PolygonEntityProperties) * entityProperties.size()
         );
 
-        // Bind the vertex array and the index buffer
-        vertexArray->bind();
-        vertexArray->getIndexBuffer()->bind();
+        if (m_rendererStorage->m_framebuffer != nullptr) {
+            m_rendererStorage->m_framebuffer->bind();
+        }
 
         // Render the polygons as triangles
-        RenderCommand::drawIndexedTriangles(vertexArray->getIndexBuffer()->getCount());
+        RenderCommand::drawIndexedTriangles(
+            vertexBuffer.getRendererId(),
+            indexBuffer.getRendererId(),
+            vertexArray.getRendererId(),
+            shader->getRendererId(),
+            indexBuffer.getCount()
+        );
+
+        if (m_rendererStorage->m_framebuffer != nullptr) {
+            m_rendererStorage->m_framebuffer->unbind();
+        }
 
     }
 
     // Create the actual circle drawing resources (buffers and such), prepare the shader, and make the draw call
-    void Renderer::submitCircles(const std::vector<CircleVertex>& circleVertices, const std::vector<unsigned int>& indices, const std::vector<std::shared_ptr<Texture>>& textures, const std::vector<CircleEntityProperties>& entityProperties, const std::shared_ptr<Shader>& shader) {
+    void Renderer::renderCircles(const std::vector<CircleVertex>& circleVertices, const std::vector<unsigned int>& indices, const std::vector<std::shared_ptr<Texture>>& textures, const std::vector<CircleEntityProperties>& entityProperties, const std::shared_ptr<Shader>& shader) {
 
         // Create a layout, based on the structure of CircleVertex
         static engine::BufferLayout circleVerticesLayout = {
-            {"a_position", 4, engine::VertexBufferLayoutElementType::Float},
-            {"a_localCoordinates", 2, engine::VertexBufferLayoutElementType::Float},
-            {"a_textureCoordinates", 2, engine::VertexBufferLayoutElementType::Float},
-            {"a_entityIndex", 1, engine::VertexBufferLayoutElementType::UInt},
+            {"a_position", 4, engine::PrimitiveDataType::Float},
+            {"a_localCoordinates", 2, engine::PrimitiveDataType::Float},
+            {"a_textureCoordinates", 2, engine::PrimitiveDataType::Float},
+            {"a_entityIndex", 1, engine::PrimitiveDataType::UInt},
         };
 
         // Create the vertex and index buffers
-        std::shared_ptr<VertexBuffer> vertexBuffer = std::make_shared<VertexBuffer>(circleVerticesLayout, (const void*) circleVertices.data(), sizeof(CircleVertex) * circleVertices.size());
-        std::shared_ptr<IndexBuffer> indexBuffer = std::make_shared<IndexBuffer>((unsigned int*) indices.data(), indices.size());
+        VertexBuffer vertexBuffer(circleVerticesLayout, (const void*) circleVertices.data(), sizeof(CircleVertex) * circleVertices.size());
+        IndexBuffer indexBuffer((unsigned int*) indices.data(), indices.size());
 
         // Bind them together into a vertex array
-        std::shared_ptr<VertexArray> vertexArray = std::make_shared<VertexArray>();
-        vertexArray->addBuffer(vertexBuffer, indexBuffer);
+        VertexArray vertexArray;
+        vertexArray.addBuffer(circleVerticesLayout);
 
         // Bind all the textures
         for (unsigned int i = 0; i < textures.size(); i++) {
-            textures[i]->bind(i);
+            textures[i]->activate(i);
         }
 
         // Bind the shader and submit the view*projection matrix as a uniform
-        shader->bind();
         m_rendererStorage->m_circleEntityPropertiesUniformBuffer->setData(
             (const void*) entityProperties.data(),
             sizeof(CircleEntityProperties) * entityProperties.size()
         );
 
-        // Bind the vertex array and the index buffer
-        vertexArray->bind();
-        vertexArray->getIndexBuffer()->bind();
+        if (m_rendererStorage->m_framebuffer != nullptr) {
+            m_rendererStorage->m_framebuffer->bind();
+        }
 
         // Render the circles as triangles (the circle shader will do the rest)
-        RenderCommand::drawIndexedTriangles(vertexArray->getIndexBuffer()->getCount());
+        RenderCommand::drawIndexedTriangles(
+            vertexBuffer.getRendererId(),
+            indexBuffer.getRendererId(),
+            vertexArray.getRendererId(),
+            shader->getRendererId(),
+            indexBuffer.getCount()
+        );
+
+        if (m_rendererStorage->m_framebuffer != nullptr) {
+            m_rendererStorage->m_framebuffer->unbind();
+        }
 
     }
 

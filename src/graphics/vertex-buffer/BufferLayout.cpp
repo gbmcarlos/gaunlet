@@ -2,7 +2,7 @@
 
 namespace engine {
 
-    BufferLayoutElement::BufferLayoutElement(const std::string& name, unsigned int count, VertexBufferLayoutElementType type, bool normalized)
+    BufferLayoutElement::BufferLayoutElement(std::string  name, unsigned int count, PrimitiveDataType type, bool normalized)
         : m_name(std::move(name)),
           m_count(count),
           m_type(type),

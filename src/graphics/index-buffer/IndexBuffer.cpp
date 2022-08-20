@@ -10,14 +10,7 @@ namespace engine {
     }
 
     IndexBuffer::~IndexBuffer() {
-        RenderCommand::deleteBuffer(m_rendererId);
-    }
-
-    void IndexBuffer::bind() {
-        RenderCommand::bindIndexBuffer(m_rendererId);
-    }
-    void IndexBuffer::unbind() {
-        RenderCommand::unbindIndexBuffer();
+        RenderCommand::deleteIndexBuffer(m_rendererId);
     }
 
 }

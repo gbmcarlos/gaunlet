@@ -11,8 +11,8 @@ namespace engine {
         Entity() = default;
         Entity(entt::entity entityHandle, Scene* scene) : m_handle(entityHandle), m_scene(scene) {}
 
-        unsigned int getId() {
-            return (unsigned int) m_handle;
+        int getId() {
+            return (int) m_handle;
         }
 
         template<typename T>

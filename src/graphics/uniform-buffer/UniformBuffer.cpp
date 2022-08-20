@@ -10,18 +10,16 @@ namespace engine {
         : m_dynamic(false), m_name(std::move(name)), m_bindingPoint(bindingPoint) {
         RenderCommand::createUniformBuffer(m_rendererId, data, size);
         RenderCommand::bindUniformBufferToBindingPoint(m_rendererId, bindingPoint, size);
-        RenderCommand::unbindUniformBuffer();
     }
 
     UniformBuffer::UniformBuffer(std::string  name, unsigned int bindingPoint, unsigned int size)
         : m_dynamic(true), m_name(std::move(name)), m_bindingPoint(bindingPoint) {
         RenderCommand::createUniformBuffer(m_rendererId, size);
         RenderCommand::bindUniformBufferToBindingPoint(m_rendererId, bindingPoint, size);
-        RenderCommand::unbindUniformBuffer();
     }
 
     UniformBuffer::~UniformBuffer() {
-        RenderCommand::deleteBuffer(m_rendererId);
+        RenderCommand::deleteUniformBuffer(m_rendererId);
     }
 
     void UniformBuffer::setData(const void *data, unsigned int size) {
@@ -30,15 +28,7 @@ namespace engine {
             throw std::runtime_error("Can't set data for non-dynamic uniform buffer");
         }
 
-        bind();
-        RenderCommand::submitUniformBufferData(data, size);
-    }
-
-    void UniformBuffer::bind() {
-        RenderCommand::bindUniformBuffer(m_rendererId);
-    }
-    void UniformBuffer::unbind() {
-        RenderCommand::unbindUniformBuffer();
+        RenderCommand::submitUniformBufferData(m_rendererId, data, size);
     }
 
 }

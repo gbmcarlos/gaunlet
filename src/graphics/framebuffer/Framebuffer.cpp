@@ -123,6 +123,7 @@ namespace engine {
 
         // Attach the texture to the framebuffer
         RenderCommand::framebufferAttach(
+            m_rendererId,
             engine::TextureType::Image2D,
             colorAttachmentSpec.m_attachmentType,
             index,
@@ -143,6 +144,7 @@ namespace engine {
 
         // Attach the texture to the framebuffer
         RenderCommand::framebufferAttach(
+            m_rendererId,
             engine::TextureType::Image2D,
             m_depthAttachmentSpec.m_attachmentType,
             0,

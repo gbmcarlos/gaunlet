@@ -54,8 +54,14 @@ namespace engine {
             // If the aspect ratio has changed, the camera and the framebuffer need to be resized
             if (renderNode.m_camera->getAspectRatio() != renderNode.m_node->getNodeAspectRatio()) {
 
-                renderNode.m_camera->resize(renderNode.m_node->getNodeWidth(), renderNode.m_node->getNodeHeight());
-                renderNode.m_framebuffer->resize(renderNode.m_node->getNodeWidth() * m_window->getDPI(), renderNode.m_node->getNodeHeight() * m_window->getDPI());
+                renderNode.m_camera->resize(
+                    renderNode.m_node->getNodeWidth(),
+                    renderNode.m_node->getNodeHeight()
+                );
+                renderNode.m_framebuffer->resize(
+                    renderNode.m_node->getNodeWidth() * m_window->getDPI(),
+                    renderNode.m_node->getNodeHeight() * m_window->getDPI()
+                );
 
             }
 

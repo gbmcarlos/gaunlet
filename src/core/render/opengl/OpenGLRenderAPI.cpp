@@ -2,7 +2,6 @@
 #include "opengl_utils.h"
 
 #include <glm/gtc/type_ptr.hpp>
-#include "../pch.h"
 
 namespace engine {
 
@@ -30,6 +29,8 @@ namespace engine {
         std::cout << "vendor: " << glGetString(GL_VENDOR) << std::endl;
         std::cout << "renderer: " << glGetString(GL_RENDERER) << std::endl;
         std::cout << "shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+
+        m_activeTextureIds.fill(0);
 
     }
 
@@ -59,44 +60,58 @@ namespace engine {
 
     void OpenGLRenderApi::createVertexBuffer(unsigned int& id, unsigned int size) {
         glCall(glGenBuffers(1, &id));
-        glCall(glBindBuffer(GL_ARRAY_BUFFER, id));
+        bindVertexBuffer((id));
         glCall(glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW));
     }
 
     void OpenGLRenderApi::createVertexBuffer(unsigned int& id, const void *data, unsigned int size) {
         glCall(glGenBuffers(1, &id));
-        glCall(glBindBuffer(GL_ARRAY_BUFFER, id));
+        bindVertexBuffer((id));
         glCall(glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW));
     }
 
     void OpenGLRenderApi::bindVertexBuffer(unsigned int& id) {
-        glCall(glBindBuffer(GL_ARRAY_BUFFER, id));
+        if (m_boundVertexBufferId != id) {
+            glCall(glBindBuffer(GL_ARRAY_BUFFER, id));
+            m_boundVertexBufferId = id;
+        }
     }
 
-
-    void OpenGLRenderApi::submitVertexBufferData(const void *data, unsigned int size) {
+    void OpenGLRenderApi::submitVertexBufferData(unsigned int id, const void *data, unsigned int size) {
+        bindVertexBuffer(id);
         glCall(glBufferSubData(GL_ARRAY_BUFFER, 0, size, data));
     }
 
     void OpenGLRenderApi::unbindVertexBuffer() {
         glCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+        m_boundVertexBufferId = 0;
+    }
+
+    void OpenGLRenderApi::deleteVertexBuffer(unsigned int id) {
+        unbindVertexBuffer();
+        glCall(glDeleteBuffers(1, &id));
     }
 
     void OpenGLRenderApi::createIndexBuffer(unsigned int& id, unsigned int *data, unsigned int count) {
         glCall(glGenBuffers(1, &id));
-        glCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id));
+        bindIndexBuffer(id);
         glCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), data, GL_STATIC_DRAW));
     }
 
     void OpenGLRenderApi::bindIndexBuffer(unsigned int& id) {
-        glCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id));
+        if (m_boundIndexBufferId != id) {
+            glCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id));
+            m_boundIndexBufferId = id;
+        }
     }
 
     void OpenGLRenderApi::unbindIndexBuffer() {
         glCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+        m_boundIndexBufferId = 0;
     }
 
-    void OpenGLRenderApi::deleteBuffer(unsigned int& id) {
+    void OpenGLRenderApi::deleteIndexBuffer(unsigned int id) {
+        unbindIndexBuffer();
         glCall(glDeleteBuffers(1, &id));
     }
 
@@ -105,29 +120,36 @@ namespace engine {
     }
 
     void OpenGLRenderApi::bindVertexArray(unsigned int& id) {
-        glCall(glBindVertexArray(id));
+        if (m_boundVertexArrayId != id) {
+            glCall(glBindVertexArray(id));
+            m_boundVertexArrayId = id;
+        }
     }
 
     void OpenGLRenderApi::unbindVertexArray() {
         glCall(glBindVertexArray(0));
+        m_boundVertexArrayId = 0;
     }
 
     void OpenGLRenderApi::deleteVertexArray(unsigned int& id) {
+        unbindVertexArray();
         glCall(glDeleteVertexArrays(1, &id));
     }
 
 
-    unsigned int OpenGLRenderApi::sizeOfVertexBufferLayoutElementType(VertexBufferLayoutElementType type) {
-        return sizeof(convertVertexBufferLayoutElementType(type));
+    unsigned int OpenGLRenderApi::sizeOfPrimitiveDataType(PrimitiveDataType type) {
+        return sizeof(convertPrimitiveDataType(type));
     }
 
-    void OpenGLRenderApi::addVertexArrayAttribute(unsigned int index, int count, VertexBufferLayoutElementType type, bool normalized, int stride, int offset) {
+    void OpenGLRenderApi::addVertexArrayAttribute(unsigned int vertexArrayId, unsigned int index, int count, PrimitiveDataType type, bool normalized, int stride, int offset) {
+
+        bindVertexArray(vertexArrayId);
 
         glCall(glEnableVertexAttribArray(index));
         glCall(glVertexAttribPointer(
             index,
             count,
-            convertVertexBufferLayoutElementType(type),
+            convertPrimitiveDataType(type),
             normalized ? GL_TRUE : GL_FALSE,
             stride,
             (const void*) offset
@@ -175,56 +197,74 @@ namespace engine {
     }
 
     void OpenGLRenderApi::bindShader(unsigned int id) {
-        glCall(glUseProgram(id));
+        if (m_boundShaderId != id) {
+            glCall(glUseProgram(id));
+            m_boundShaderId = id;
+        }
     }
 
     unsigned int OpenGLRenderApi::getUniformLocation(unsigned int id, const std::string& name) {
         return (unsigned int) glGetUniformLocation(id, name.c_str());
     }
 
-    void OpenGLRenderApi::setUniform1i(int location, int value) {
+    void OpenGLRenderApi::setUniform1i(unsigned int id, int location, int value) {
+        bindShader(id);
         glCall(glUniform1i(location, value));
     }
 
-    void OpenGLRenderApi::setUniform3f(int location, const glm::vec3 &value) {
+    void OpenGLRenderApi::setUniform3f(unsigned int id, int location, const glm::vec3 &value) {
+        bindShader(id);
         glCall(glUniform3f(location, value.x, value.y, value.z));
     }
 
-    void OpenGLRenderApi::setUniform4f(int location, const glm::vec4 &value) {
+    void OpenGLRenderApi::setUniform4f(unsigned int id, int location, const glm::vec4 &value) {
+        bindShader(id);
         glCall(glUniform4f(location, value.x, value.y, value.z, value.w));
     }
 
-    void OpenGLRenderApi::setUniformMat3f(int location, const glm::mat3 &value) {
+    void OpenGLRenderApi::setUniformMat3f(unsigned int id, int location, const glm::mat3 &value) {
+        bindShader(id);
         glCall(glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(value)));
     }
 
-    void OpenGLRenderApi::setUniformMat4f(int location, const glm::mat4 &value) {
+    void OpenGLRenderApi::setUniformMat4f(unsigned int id, int location, const glm::mat4 &value) {
+        bindShader(id);
         glCall(glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value)));
     }
 
 
     void OpenGLRenderApi::createUniformBuffer(unsigned int& id, unsigned int size) {
         glCall(glGenBuffers(1, &id));
-        glCall(glBindBuffer(GL_UNIFORM_BUFFER, id));
+        bindUniformBuffer(id);
         glCall(glBufferData(GL_UNIFORM_BUFFER, size, nullptr, GL_DYNAMIC_DRAW));
     }
 
     void OpenGLRenderApi::createUniformBuffer(unsigned int& id, const void *data, unsigned int size) {
         glCall(glGenBuffers(1, &id));
-        glCall(glBindBuffer(GL_UNIFORM_BUFFER, id));
+        bindUniformBuffer(id);
         glCall(glBufferData(GL_UNIFORM_BUFFER, size, data, GL_STATIC_DRAW));
     }
 
     void OpenGLRenderApi::bindUniformBuffer(unsigned int& id) {
-        glCall(glBindBuffer(GL_UNIFORM_BUFFER, id));
+        if (m_boundUniformBufferId != id) {
+            glCall(glBindBuffer(GL_UNIFORM_BUFFER, id));
+            m_boundUniformBufferId = id;
+        }
     }
 
-    void OpenGLRenderApi::submitUniformBufferData(const void *data, unsigned int size) {
+    void OpenGLRenderApi::submitUniformBufferData(unsigned int id, const void *data, unsigned int size) {
+        bindUniformBuffer(id);
         glCall(glBufferSubData(GL_UNIFORM_BUFFER, 0, size, data));
     }
 
     void OpenGLRenderApi::unbindUniformBuffer() {
         glCall(glBindBuffer(GL_UNIFORM_BUFFER, 0));
+        m_boundUniformBufferId = 0;
+    }
+
+    void OpenGLRenderApi::deleteUniformBuffer(unsigned int id) {
+        unbindUniformBuffer();
+        glCall(glDeleteBuffers(1, &id));
     }
 
 
@@ -232,34 +272,40 @@ namespace engine {
         return (int) glGetUniformBlockIndex(id, name.c_str());
     }
 
-
     void OpenGLRenderApi::bindUniformBufferToBindingPoint(unsigned int bufferId, unsigned int bindingPoint, unsigned int size) {
         glCall(glBindBufferRange(GL_UNIFORM_BUFFER, bindingPoint, bufferId, 0, size));
     }
 
     void OpenGLRenderApi::bindUniformBufferFromBindingPoint(unsigned int shaderId, int location, unsigned int bindingPoint) {
+        bindShader(shaderId);
         glCall(glUniformBlockBinding(shaderId, location, bindingPoint));
     }
 
 
-    void OpenGLRenderApi::loadTexture(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data) {
+    void OpenGLRenderApi::loadTexture(unsigned int& id, TextureType type, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data) {
+
+        GLenum glTextureType = convertTextureType(type);
 
         glCall(glGenTextures(1, &id));
-        glCall(glBindTexture(GL_TEXTURE_2D, id));
+        glCall(glBindTexture(glTextureType, id));
 
         GLenum glInternalFormat = convertTextureDataFormat(internalFormat);
         GLenum glDataFormat = convertTextureDataFormat(dataFormat);
 
-        glCall(glTexImage2D(GL_TEXTURE_2D, 0, glInternalFormat, width, height, 0, glDataFormat, GL_UNSIGNED_BYTE, data));
+        glCall(glTexImage2D(glTextureType, 0, glInternalFormat, width, height, 0, glDataFormat, GL_UNSIGNED_BYTE, data));
 
-        glCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-        glCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+        glCall(glTexParameteri(glTextureType, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+        glCall(glTexParameteri(glTextureType, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
 
     }
 
-    void OpenGLRenderApi::bindTexture(unsigned int id, unsigned int slot) {
-        glActiveTexture(GL_TEXTURE0 + slot);
-        glCall(glBindTexture(GL_TEXTURE_2D, id));
+    void OpenGLRenderApi::activateTexture(unsigned int id, TextureType type, unsigned int slot) {
+
+        if (m_activeTextureIds[slot] != id) {
+            glCall(glActiveTexture(GL_TEXTURE0 + slot));
+            glCall(glBindTexture(convertTextureType(type), id));
+            m_activeTextureIds[slot] = id;
+        }
     }
 
     void OpenGLRenderApi::deleteTexture(unsigned int& id) {
@@ -271,18 +317,23 @@ namespace engine {
     }
 
     void OpenGLRenderApi::bindFramebuffer(unsigned int id) {
-        glCall(glBindFramebuffer(GL_FRAMEBUFFER, id));
+        if (m_boundFramebufferId != id) {
+            glCall(glBindFramebuffer(GL_FRAMEBUFFER, id));
+            m_boundFramebufferId = id;
+        }
     }
 
     void OpenGLRenderApi::unbindFramebuffer() {
         glCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+        m_boundFramebufferId = 0;
     }
 
     void OpenGLRenderApi::deleteFramebuffer(unsigned int& id) {
+        unbindFramebuffer();
         glCall(glDeleteFramebuffers(1, &id));
     }
 
-    void OpenGLRenderApi::framebufferAttach(TextureType textureType, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, unsigned int textureId) {
+    void OpenGLRenderApi::framebufferAttach(unsigned int id, TextureType textureType, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, unsigned int textureId) {
 
         GLenum glTextureType = convertTextureType(textureType);
         GLenum glAttachmentType = convertFramebufferAttachmentType(attachmentType);
@@ -291,21 +342,32 @@ namespace engine {
             glAttachmentType += attachmentIndex;
         }
 
+        bindFramebuffer(id);
+        glCall(glBindTexture(GL_TEXTURE_2D, id));
+
         glCall(glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, glAttachmentType, glTextureType, textureId, 0));
 
     }
 
-    void OpenGLRenderApi::setDrawBuffers(const std::vector<FramebufferAttachmentType>& drawBuffers) {
+    void OpenGLRenderApi::setDrawBuffers(unsigned int id, const std::vector<FramebufferAttachmentType>& drawBuffers) {
+
+        bindFramebuffer(id);
 
         std::vector<GLenum> glBufferAttachments = {};
 
         for (unsigned int i = 0; i < drawBuffers.size(); i++) {
+
+            // Convert the attachment type (aka buffer mode)
             FramebufferAttachmentType drawBuffer = drawBuffers[i];
             GLenum glDrawBuffer = convertFramebufferAttachmentType(drawBuffer);
+
+            // If it's a color, it's indexed
             if (drawBuffer == FramebufferAttachmentType::Color) {
                 glDrawBuffer += i;
             }
+
             glBufferAttachments.push_back(glDrawBuffer);
+
         }
 
         glCall(glDrawBuffers(drawBuffers.size(), (const unsigned int*) &glBufferAttachments[0]));
@@ -318,22 +380,39 @@ namespace engine {
         }
     }
 
-    void OpenGLRenderApi::drawIndexedTriangles(unsigned int indexCount) {
+    void OpenGLRenderApi::drawIndexedTriangles(unsigned int vertexBufferId, unsigned int indexBufferId, unsigned int vertexArrayId, unsigned int shaderId, unsigned int indexCount) {
+
+        m_boundIndexBufferId = 0; // Make sure the index buffer gets bound
+
+        bindVertexBuffer(vertexBufferId);
+        bindIndexBuffer(indexBufferId);
+        bindVertexArray(vertexArrayId);
+        bindShader(shaderId);
+
         glCall(glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr));
+
     }
 
-    void OpenGLRenderApi::drawIndexedLines(unsigned int indexCount) {
+    void OpenGLRenderApi::drawIndexedLines(unsigned int vertexBufferId, unsigned int indexBufferId, unsigned int vertexArrayId, unsigned int shaderId, unsigned int indexCount) {
+
+        bindVertexBuffer(vertexBufferId);
+        bindIndexBuffer(indexBufferId);
+        bindVertexArray(vertexArrayId);
+        bindShader(shaderId);
+
         glCall(glDrawElements(GL_LINES, indexCount, GL_UNSIGNED_INT, nullptr));
+
     }
 
 
-    GLenum OpenGLRenderApi::convertVertexBufferLayoutElementType(VertexBufferLayoutElementType type) {
+    GLenum OpenGLRenderApi::convertPrimitiveDataType(PrimitiveDataType type) {
 
         switch (type) {
-            case VertexBufferLayoutElementType::Bool:       return GL_BOOL;
-            case VertexBufferLayoutElementType::Int:        return GL_INT;
-            case VertexBufferLayoutElementType::UInt:        return GL_UNSIGNED_INT;
-            case VertexBufferLayoutElementType::Float:      return GL_FLOAT;
+            case PrimitiveDataType::Bool:       return GL_BOOL;
+            case PrimitiveDataType::Int:        return GL_INT;
+            case PrimitiveDataType::UInt:        return GL_UNSIGNED_INT;
+            case PrimitiveDataType::Float:      return GL_FLOAT;
+            case PrimitiveDataType::UByte:      return GL_UNSIGNED_BYTE;
         }
 
         throw std::runtime_error("Unknown layout element type");

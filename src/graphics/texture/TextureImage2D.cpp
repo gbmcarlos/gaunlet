@@ -30,7 +30,7 @@ namespace engine {
             throw std::runtime_error("Unknown texture data format");
         }
 
-        RenderCommand::loadTexture(m_rendererId, internalFormat, dataFormat,  (unsigned int) width, (unsigned int) height, data);
+        RenderCommand::loadTexture(m_rendererId, TextureType::Image2D, internalFormat, dataFormat,  (unsigned int) width, (unsigned int) height, data);
 
         stbi_image_free(data);
 
@@ -41,7 +41,7 @@ namespace engine {
 
     TextureImage2D::TextureImage2D(TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data) {
 
-        RenderCommand::loadTexture(m_rendererId, internalFormat, dataFormat, (unsigned int) width, (unsigned int) height, data);
+        RenderCommand::loadTexture(m_rendererId, TextureType::Image2D, internalFormat, dataFormat, (unsigned int) width, (unsigned int) height, data);
 
         m_width = width;
         m_height = height;
@@ -52,8 +52,8 @@ namespace engine {
         RenderCommand::deleteTexture(m_rendererId);
     }
 
-    void TextureImage2D::bind(unsigned int slot) {
-        RenderCommand::bindTexture(m_rendererId, slot);
+    void TextureImage2D::activate(unsigned int slot) {
+        RenderCommand::activateTexture(m_rendererId, TextureType::Image2D, slot);
     }
 
 }

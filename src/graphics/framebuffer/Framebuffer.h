@@ -30,6 +30,7 @@ namespace engine {
         void unbind();
         void resize(unsigned int width, unsigned int height);
 
+        inline unsigned int getRendererId() const {return m_rendererId; }
         inline unsigned int getWidth() {return m_width; }
         inline unsigned int getHeight() {return m_height; }
         inline std::shared_ptr<Texture>& getColorAttachment(unsigned int index) {return m_textures[index]; }

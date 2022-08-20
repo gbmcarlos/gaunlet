@@ -8,6 +8,7 @@
 #include <algorithm>
 
 // Containers
+#include <array>
 #include <vector>
 #include <map>
 #include <unordered_map>
@@ -20,5 +21,6 @@
 
 // Commonly-used
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include "core/Pointers.h"
 #include "core/debug/Instrumentation.h"
