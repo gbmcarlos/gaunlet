@@ -4,7 +4,7 @@ struct EntityProperties {
     mat4 transform;
     vec4 color;
     uint textureIndex;
-    uint entityId;
+    int entityId;
     float thickness;
     float fade;
 };

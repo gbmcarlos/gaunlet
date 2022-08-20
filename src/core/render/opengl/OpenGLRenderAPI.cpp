@@ -380,6 +380,52 @@ namespace engine {
         }
     }
 
+    void OpenGLRenderApi::clearColorAttachment(unsigned int id, unsigned int colorAttachmentIndex, PrimitiveDataType dataType, void* value) {
+
+        bindFramebuffer(id);
+
+        if (dataType == PrimitiveDataType::Float) {
+            glCall(glClearBufferfv(GL_COLOR, (int) colorAttachmentIndex, static_cast<float*>(value)));
+        } else if (dataType == PrimitiveDataType::Int) {
+            glCall(glClearBufferiv(GL_COLOR, (int) colorAttachmentIndex, static_cast<int*>(value)));
+        } else {
+            throw std::runtime_error("Unsupported data type for clear buffer color");
+        }
+
+        unbindFramebuffer();
+
+    }
+
+    void OpenGLRenderApi::clearDepthAttachment(unsigned int id) {
+
+        bindFramebuffer(id);
+        glClear(GL_DEPTH_BUFFER_BIT);
+        unbindFramebuffer();
+
+    }
+
+    void OpenGLRenderApi::readFramebuffer(unsigned int id, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, TextureDataFormat internalFormat, PrimitiveDataType dataType, unsigned int x, unsigned int y, unsigned int width, unsigned int height, void* data) {
+
+        bindFramebuffer(id);
+
+        GLenum glBufferMode = convertFramebufferAttachmentType(attachmentType);
+        if (attachmentType == FramebufferAttachmentType::Color) {
+            glBufferMode += attachmentIndex;
+        }
+
+        glCall(glReadBuffer(glBufferMode));
+        glCall(glReadPixels(
+            x, y,
+            width, height,
+            convertTextureDataFormat(internalFormat),
+            convertPrimitiveDataType(dataType),
+            data
+        ));
+
+        unbindFramebuffer();
+
+    }
+
     void OpenGLRenderApi::drawIndexedTriangles(unsigned int vertexBufferId, unsigned int indexBufferId, unsigned int vertexArrayId, unsigned int shaderId, unsigned int indexCount) {
 
         m_boundIndexBufferId = 0; // Make sure the index buffer gets bound

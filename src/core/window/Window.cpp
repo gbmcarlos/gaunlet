@@ -103,6 +103,22 @@ namespace engine {
 
     }
 
+    unsigned int Window::getMousePositionX() {
+
+        double x, y;
+        glfwGetCursorPos(m_windowContext, &x, &y);
+        return (unsigned int) x;
+
+    }
+
+    unsigned int Window::getMousePositionY() {
+
+        double x, y;
+        glfwGetCursorPos(m_windowContext, &x, &y);
+        return (unsigned int) y;
+
+    }
+
     void Window::windowCloseEventCallback(GLFWwindow *window) {
 
         WindowCloseEvent event;

@@ -23,18 +23,28 @@ public:
         m_camera->setTranslation({0.0f, 2.0f, 10.0f});
 
         m_framebuffer = std::make_shared<engine::Framebuffer>(std::initializer_list<engine::FramebufferAttachmentSpec>{
-            {engine::FramebufferAttachmentType::Color, engine::FramebufferDataFormat::RGBA},
+            {engine::FramebufferAttachmentType::Color, engine::FramebufferDataFormat::RGBA, glm::vec4(0.0f, 0.0f, 0.0f, 0.0f)},
+            {engine::FramebufferAttachmentType::Color, engine::FramebufferDataFormat::Integer, -1},
             {engine::FramebufferAttachmentType::Depth, engine::FramebufferDataFormat::Depth}
         }, framebufferWidth, framebufferHeight);
 
         auto triangle1 = m_mainScene.createEntity();
         triangle1.addComponent<engine::PolygonModelComponent>(engine::Triangle2DModel());
         triangle1.addComponent<engine::TransformComponent>(
-            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(-2.0f, 0.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f)
         );
-        triangle1.addComponent<engine::MaterialComponent>(glm::vec4(0.8f, 0.0f, 0.0f, 1.0f));
+        triangle1.addComponent<engine::MaterialComponent>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+
+        auto triangle2 = m_mainScene.createEntity();
+        triangle2.addComponent<engine::PolygonModelComponent>(engine::Triangle2DModel());
+        triangle2.addComponent<engine::TransformComponent>(
+            glm::vec3(2.0f, 0.0f, 0.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(1.0f, 1.0f, 1.0f)
+        );
+        triangle2.addComponent<engine::MaterialComponent>(glm::vec4(0.2f, 0.8f, 0.0f, 1.0f));
 
         m_mainScene.start();
 
@@ -42,20 +52,6 @@ public:
 
     void onUpdate(engine::TimeStep timeStep) override {
         m_mainScene.render(m_camera, m_framebuffer);
-    }
-
-};
-
-class SettingsNode : public engine::GuiDockedNode {
-
-    void onGuiRender() override {
-
-        ImGui::Text("Window size: %d %d", getNodeWidth(), getNodeHeight());
-
-        if (isHovered()) {
-            ImGui::Text("%d %d", getMousePositionX(), getMousePositionY());
-        }
-
     }
 
 };
@@ -76,9 +72,74 @@ class ToolsNode : public engine::GuiDockedNode {
 
 class SceneViewportNode : public engine::RenderDockedNode {
 
-    void onEvent() override {
+public:
+    int m_selectedEntityId = -1;
+
+public:
+
+    explicit SceneViewportNode(std::shared_ptr<engine::Framebuffer> framebuffer) : m_framebuffer(std::move(framebuffer)) {}
+
+    bool onEvent(engine::Event &event) override {
+
+        engine::EventDispatcher dispatcher(event);
+        dispatcher.dispatch<engine::MouseButtonPress>(GE_BIND_CALLBACK_FN(SceneViewportNode::onMouseButtonPressEvent));
+        return true;
 
     }
+
+    bool onMouseButtonPressEvent(engine::MouseButtonPress& event) {
+
+        unsigned int pixelPositionX = getMousePositionX() * engine::Window::getCurrentInstance()->getDPI();
+        unsigned int pixelPositionY = getMousePositionYInverted() * engine::Window::getCurrentInstance()->getDPI();
+
+        m_selectedEntityId = m_framebuffer->readPixel(1, pixelPositionX, pixelPositionY);
+
+        return false;
+
+    }
+
+private:
+
+    std::shared_ptr<engine::Framebuffer> m_framebuffer = nullptr;
+
+};
+
+class SettingsNode : public engine::GuiDockedNode {
+
+public:
+
+    SettingsNode(SceneViewportNode* sceneNode) : m_sceneNode(sceneNode) {}
+
+    void onGuiRender() override {
+
+        ImGui::Text("Window size: %d %d", getNodeWidth(), getNodeHeight());
+
+        if (isHovered()) {
+            ImGui::Text("%d %d", getMousePositionX(), getMousePositionY());
+        } else {
+            ImGui::NewLine();
+        }
+
+        ImGui::Text("Scene layer:");
+
+        if (m_sceneNode->isHovered()) {
+            ImGui::Text("%d %d", m_sceneNode->getMousePositionX(), m_sceneNode->getMousePositionYInverted());
+        } else {
+            ImGui::NewLine();
+        }
+
+        ImGui::Text("Selected Entity:");
+
+        if (m_sceneNode->m_selectedEntityId > -1) {
+            ImGui::Text("%d", m_sceneNode->m_selectedEntityId);
+        } else {
+            ImGui::NewLine();
+        }
+
+    }
+
+private:
+    SceneViewportNode* m_sceneNode = nullptr;
 
 };
 
@@ -101,9 +162,12 @@ public:
                     {engine::DockSpacePosition::Right, 0.3f,  {"Tools"}},
                }, m_window->getViewportWidth(), m_window->getViewportHeight()
         });
-        m_editorLayer->pushNode("Settings", new SettingsNode);
+
+        auto* sceneViewportNode = new SceneViewportNode(m_sceneLayer->m_framebuffer);
+
+        m_editorLayer->pushNode("Settings", new SettingsNode(sceneViewportNode));
         m_editorLayer->pushNode("Tools", new ToolsNode);
-        m_editorLayer->pushNode("Scene", new SceneViewportNode, m_sceneLayer->m_camera, m_sceneLayer->m_framebuffer, 0);
+        m_editorLayer->pushNode("Scene", sceneViewportNode, m_sceneLayer->m_camera, m_sceneLayer->m_framebuffer, 0);
 
         pushLayer(m_sceneLayer);
         pushLayer(m_editorLayer);

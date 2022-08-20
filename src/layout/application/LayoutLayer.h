@@ -23,6 +23,7 @@ namespace engine {
         void pushNode(const char* windowId, GuiDockedNode* node);
         void pushNode(const char* windowId, RenderDockedNode* node, std::shared_ptr<Camera> camera, std::shared_ptr<Framebuffer> framebuffer, unsigned int colorAttachmentIndex);
 
+        void onEvent(Event& event) override;
         void onGuiRender() override;
 
     private:
@@ -45,6 +46,9 @@ namespace engine {
 
         std::vector<GuiNode> m_guiNodes = {};
         std::vector<RenderNode> m_renderNodes = {};
+
+        void handleMouseEvent(Event& event);
+        void handleKeyboardEvent(Event& event);
 
         void updateNodeProperties(DockedNode* node);
 

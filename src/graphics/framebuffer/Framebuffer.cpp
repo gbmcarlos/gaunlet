@@ -4,6 +4,24 @@
 
 namespace engine {
 
+    FramebufferAttachmentSpec::FramebufferAttachmentSpec(FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, const glm::vec4& clearColorValue)
+        : m_attachmentType(attachmentType), m_dataFormat(framebufferDataFormat), m_clearColorVec4Value(clearColorValue) {
+
+        if (framebufferDataFormat != FramebufferDataFormat::RGBA) {
+            throw std::runtime_error("Clear color type doesn't match the data type");
+        }
+
+    }
+
+    FramebufferAttachmentSpec::FramebufferAttachmentSpec(FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, int clearColorValue)
+        : m_attachmentType(attachmentType), m_dataFormat(framebufferDataFormat), m_clearColorIntValue(clearColorValue) {
+
+        if (framebufferDataFormat != FramebufferDataFormat::Integer) {
+            throw std::runtime_error("Clear color type doesn't match the data type");
+        }
+
+    }
+
     FramebufferAttachmentSpec::FramebufferAttachmentSpec(FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat)
         : m_attachmentType(attachmentType), m_dataFormat(framebufferDataFormat) {
     }
@@ -44,11 +62,57 @@ namespace engine {
         RenderCommand::setViewport(m_lastViewportX0, m_lastViewportY0, m_lastViewportX1, m_lastViewportY1);
     }
 
+    void Framebuffer::clear() {
+
+        for (unsigned int i = 0; i < m_colorAttachmentSpecs.size(); i++) {
+
+            auto& colorAttachmentSpec = m_colorAttachmentSpecs[i];
+
+            switch (colorAttachmentSpec.m_dataFormat) {
+                case FramebufferDataFormat::RGBA:
+                    RenderCommand::clearColorAttachment(m_rendererId, i, PrimitiveDataType::Float, glm::value_ptr(colorAttachmentSpec.m_clearColorVec4Value));
+                    break;
+                case FramebufferDataFormat::Integer:
+                    RenderCommand::clearColorAttachment(m_rendererId, i, PrimitiveDataType::Int, &colorAttachmentSpec.m_clearColorIntValue);
+                    break;
+                default:
+                    throw std::runtime_error("Unsupported attachment data type for clear color");
+            }
+
+        }
+
+        if (m_depthAttachmentSpec.m_attachmentType != FramebufferAttachmentType::None) {
+            RenderCommand::clearDepthAttachment(m_rendererId);
+        }
+
+    }
+
     void Framebuffer::resize(unsigned int width, unsigned int height) {
         m_width = width;
         m_height = height;
         recreate();
         RenderCommand::setViewport(0, 0, m_width, m_height);
+    }
+
+    int Framebuffer::readPixel(unsigned int colorAttachmentIndex, unsigned int x, unsigned int y) {
+
+        auto& colorAttachmentSpec = m_colorAttachmentSpecs[colorAttachmentIndex];
+
+        if (colorAttachmentSpec.m_dataFormat != FramebufferDataFormat::Integer) {
+            throw std::runtime_error("Color attachment doesn't have INT data");
+        }
+
+        int data;
+        RenderCommand::readFramebuffer(
+            m_rendererId,
+            FramebufferAttachmentType::Color, colorAttachmentIndex,
+            TextureDataFormat::RedInteger, PrimitiveDataType::Int,
+            x, y, 1, 1,
+            &data
+        );
+
+        return data;
+
     }
 
     void Framebuffer::recreate() {

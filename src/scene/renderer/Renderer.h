@@ -29,7 +29,7 @@ namespace engine {
 
         static void init();
 
-        static void beginScene(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix);
+        static void beginScene(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const std::shared_ptr<Framebuffer>& framebuffer);
         static void endScene();
 
         // Batched draw calls
@@ -54,6 +54,8 @@ namespace engine {
 
             Batch<PolygonVertex, PolygonEntityProperties> m_polygonBatch;
             Batch<CircleVertex, CircleEntityProperties> m_circleBatch;
+
+            std::shared_ptr<Framebuffer> m_framebuffer;
 
             // Shared
             std::shared_ptr<Texture> m_whiteTexture = nullptr;

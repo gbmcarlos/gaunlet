@@ -4,7 +4,7 @@ struct EntityProperties {
     mat4 transform;
     vec4 color;
     uint textureIndex;
-    uint entityId;
+    int entityId;
 };
 
 // Uniforms
@@ -18,6 +18,7 @@ flat in uint v_entityIndex;
 
 // Outputs
 layout (location = 0) out vec4 o_color;
+layout (location = 1) out int o_entityId;
 
 // Textures
 uniform sampler2D texture0;
@@ -38,7 +39,7 @@ void main() {
 
     vec4 textureColor = sampleTexture(properties[v_entityIndex].textureIndex, v_textureCoordinates);
     o_color = textureColor * properties[v_entityIndex].color;
-    //o_color = vec4(v_textureCoordinates.x, v_entityIndex, 1.0f, 1.0f);
+    o_entityId = properties[v_entityIndex].entityId;
 }
 
 vec4 sampleTexture(uint textureIndex, vec2 textureCoordinates) {

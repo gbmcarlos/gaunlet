@@ -64,21 +64,12 @@ namespace engine {
 
     void Scene::render(const std::shared_ptr<Camera>& camera, const std::shared_ptr<Framebuffer>& framebuffer) {
 
-        if (framebuffer != nullptr) {
-            framebuffer->bind();
-        }
-
-        RenderCommand::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
-        Renderer::beginScene(camera->getViewMatrix(), camera->getProjectionMatrix());
+        Renderer::beginScene(camera->getViewMatrix(), camera->getProjectionMatrix(), framebuffer);
 
         renderPolygons();
         renderCircles();
 
         Renderer::endScene();
-
-        if (framebuffer != nullptr) {
-            framebuffer->unbind();
-        }
 
     }
 

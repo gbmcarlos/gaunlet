@@ -71,6 +71,10 @@ namespace engine {
         static void framebufferAttach(unsigned int id, TextureType textureType, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, unsigned int textureId);
         static void setDrawBuffers(unsigned int id, const std::vector<FramebufferAttachmentType>& drawBuffers);
         static void checkFramebufferCompleteness(unsigned int id);
+        static void clearColorAttachment(unsigned int id, unsigned int colorAttachmentIndex, PrimitiveDataType dataType, void* value);
+        static void clearDepthAttachment(unsigned int id);
+
+        static void readFramebuffer(unsigned int id, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, TextureDataFormat internalFormat, PrimitiveDataType type, unsigned int x, unsigned int y, unsigned int width, unsigned int height, void* data);
 
         static void drawIndexedTriangles(unsigned int vertexBufferId, unsigned int indexBufferId, unsigned int vertexArrayId, unsigned int shaderId, unsigned int indexCount);
         static void drawIndexedLines(unsigned int vertexBufferId, unsigned int indexBufferId, unsigned int vertexArrayId, unsigned int shaderId, unsigned int indexCount);

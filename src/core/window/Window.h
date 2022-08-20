@@ -39,6 +39,8 @@ namespace engine {
         void close();
 
         bool isKeyPressed(int keyCode);
+        unsigned int getMousePositionX();
+        unsigned int getMousePositionY();
 
         inline const std::string& getTitle() { return m_title;}
 

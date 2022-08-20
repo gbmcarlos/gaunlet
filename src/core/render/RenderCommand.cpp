@@ -181,6 +181,18 @@ namespace engine {
         getApi().checkFramebufferCompleteness(id);
     }
 
+    void RenderCommand::clearColorAttachment(unsigned int id, unsigned int colorAttachmentIndex, PrimitiveDataType dataType, void *value) {
+        getApi().clearColorAttachment(id, colorAttachmentIndex, dataType, value);
+    }
+
+    void RenderCommand::clearDepthAttachment(unsigned int id) {
+        getApi().clearDepthAttachment(id);
+    }
+
+    void RenderCommand::readFramebuffer(unsigned int id, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, TextureDataFormat internalFormat, PrimitiveDataType dataType, unsigned int x, unsigned int y, unsigned int width, unsigned int height, void *data) {
+        getApi().readFramebuffer(id, attachmentType, attachmentIndex, internalFormat, dataType, x, y, width, height, data);
+    }
+
     void RenderCommand::drawIndexedTriangles(unsigned int vertexBufferId, unsigned int indexBufferId, unsigned int vertexArrayId, unsigned int shaderId, unsigned int indexCount) {
         getApi().drawIndexedTriangles(vertexBufferId, indexBufferId, vertexArrayId, shaderId, indexCount);
     }

@@ -13,10 +13,14 @@ namespace engine {
 
     struct FramebufferAttachmentSpec {
 
+        FramebufferAttachmentSpec(FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, const glm::vec4& clearColorValue);
+        FramebufferAttachmentSpec(FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, int clearColorValue);
         FramebufferAttachmentSpec(FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat);
 
         FramebufferAttachmentType m_attachmentType;
         FramebufferDataFormat m_dataFormat;
+        int m_clearColorIntValue = 0;
+        glm::vec4 m_clearColorVec4Value = {};
 
     };
 
@@ -28,12 +32,15 @@ namespace engine {
 
         void bind();
         void unbind();
+        void clear();
         void resize(unsigned int width, unsigned int height);
 
         inline unsigned int getRendererId() const {return m_rendererId; }
         inline unsigned int getWidth() {return m_width; }
         inline unsigned int getHeight() {return m_height; }
         inline std::shared_ptr<Texture>& getColorAttachment(unsigned int index) {return m_textures[index]; }
+
+        int readPixel(unsigned int colorAttachmentIndex, unsigned int x, unsigned int y);
 
     private:
         unsigned int m_width, m_height;

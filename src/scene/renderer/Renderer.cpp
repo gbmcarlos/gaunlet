@@ -11,7 +11,7 @@ namespace engine {
         loadDefaultWhiteTexture();
     }
 
-    void Renderer::beginScene(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) {
+    void Renderer::beginScene(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const std::shared_ptr<Framebuffer>& framebuffer) {
 
         std::vector<glm::mat4> sceneData;
         sceneData.emplace_back(viewMatrix);
@@ -21,6 +21,14 @@ namespace engine {
             (const void*) sceneData.data(),
             sizeof(glm::mat4) * 2
         );
+
+        if (framebuffer != nullptr) {
+            framebuffer->clear();
+        } else {
+            RenderCommand::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
+        }
+
+        m_rendererStorage->m_framebuffer = framebuffer;
     }
 
     void Renderer::endScene() {

@@ -78,6 +78,38 @@ namespace engine {
 
     }
 
+    void LayoutLayer::onEvent(Event& event) {
+
+        if (event.getCategory() == EventCategory::Mouse || event.getCategory() == EventCategory::Cursor || event.getCategory() == EventCategory::Scroll) {
+            handleMouseEvent(event);
+        } else if (event.getCategory() == EventCategory::Keyboard) {
+            handleKeyboardEvent(event);
+        }
+
+    }
+
+    void LayoutLayer::handleMouseEvent(Event& event) {
+
+        for (auto& renderNode : m_renderNodes) {
+            if (renderNode.m_node->m_isHovered) {
+                renderNode.m_node->onEvent(event);
+                break;
+            }
+        }
+
+    }
+
+    void LayoutLayer::handleKeyboardEvent(Event& event) {
+
+        for (auto& renderNode : m_renderNodes) {
+            bool handled = renderNode.m_node->onEvent(event);
+            if (handled) {
+                break;
+            }
+        }
+
+    }
+
     void LayoutLayer::updateNodeProperties(DockedNode *node) {
 
         ImVec2 windowMin = ImGui::GetWindowContentRegionMin();
@@ -94,8 +126,9 @@ namespace engine {
         node->m_nodeWidth = windowMax.x - windowMin.x;
         node->m_nodeHeight = windowMax.y - windowMin.y;
         node->m_isHovered = ImGui::IsWindowHovered();
-        node->m_mousePositionX = mousePosition.x - windowPosition.x - windowMin.x;
-        node->m_mousePositionY = mousePosition.y - windowPosition.y - windowMin.y;
+        node->m_mousePositionX = std::max(mousePosition.x - windowMin.x, 0.0f);
+        node->m_mousePositionY = std::max(mousePosition.y - windowMin.y, 0.0f);
+        node->m_mousePositionYInverted = windowMax.y - node->m_mousePositionY;
 
     }
 
