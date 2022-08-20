@@ -20,8 +20,8 @@ namespace engine {
         return {entityHandle, this};
     }
 
-    const std::shared_ptr<PhysicsWorld>& Scene::enablePhysics(glm::vec2 gravity) {
-        m_physicsWorld = std::make_shared<PhysicsWorld>(gravity);
+    const Ref<PhysicsWorld>& Scene::enablePhysics(glm::vec2 gravity) {
+        m_physicsWorld = CreateRef<PhysicsWorld>(gravity);
         return m_physicsWorld;
     }
 
@@ -62,7 +62,7 @@ namespace engine {
 
     }
 
-    void Scene::render(const std::shared_ptr<Camera>& camera, const std::shared_ptr<Framebuffer>& framebuffer) {
+    void Scene::render(const Ref<Camera>& camera, const Ref<Framebuffer>& framebuffer) {
 
         Renderer::beginScene(camera->getViewMatrix(), camera->getProjectionMatrix(), framebuffer);
 

@@ -38,7 +38,7 @@ namespace engine {
         inline unsigned int getRendererId() const {return m_rendererId; }
         inline unsigned int getWidth() {return m_width; }
         inline unsigned int getHeight() {return m_height; }
-        inline std::shared_ptr<Texture>& getColorAttachment(unsigned int index) {return m_textures[index]; }
+        inline Ref<Texture>& getColorAttachment(unsigned int index) {return m_textures[index]; }
 
         int readPixel(unsigned int colorAttachmentIndex, unsigned int x, unsigned int y);
 
@@ -50,7 +50,7 @@ namespace engine {
         std::vector<FramebufferAttachmentSpec> m_colorAttachmentSpecs = {};
         FramebufferAttachmentSpec m_depthAttachmentSpec = {FramebufferAttachmentType::None, FramebufferDataFormat::Depth};
 
-        std::vector<std::shared_ptr<Texture> > m_textures;
+        std::vector<Ref<Texture> > m_textures;
 
         void recreate();
         void attachColor(FramebufferAttachmentSpec colorAttachmentSpec, unsigned int index);

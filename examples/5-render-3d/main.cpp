@@ -6,13 +6,13 @@ class SceneLayer : public engine::Layer {
 
 private:
     engine::Scene m_scene;
-    std::shared_ptr<engine::PerspectiveCamera> m_camera;
+    engine::Ref<engine::PerspectiveCamera> m_camera;
 
 public:
 
     SceneLayer(float viewportWidth, float viewportHeight) {
 
-        m_camera = std::make_shared<engine::PerspectiveCamera>(45.0f, (float) viewportWidth /(float) viewportHeight, 100, 1.0f, 100.0f);
+        m_camera = engine::CreateRef<engine::PerspectiveCamera>(45.0f, (float) viewportWidth /(float) viewportHeight, 100, 1.0f, 100.0f);
         m_camera->setTranslation({0.0f, 0.0f, 10.0f});
 
         auto cup = m_scene.createEntity();

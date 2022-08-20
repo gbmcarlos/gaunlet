@@ -68,7 +68,7 @@ namespace engine {
 
     }
 
-    void Shader::linkUniformBuffer(const std::shared_ptr<UniformBuffer>& uniformBuffer) {
+    void Shader::linkUniformBuffer(const Ref<UniformBuffer>& uniformBuffer) {
 
         int location = getUniformBlockLocation(uniformBuffer->getName());
         RenderCommand::bindUniformBufferFromBindingPoint(

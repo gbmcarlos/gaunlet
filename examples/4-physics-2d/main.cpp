@@ -76,13 +76,13 @@ class SceneLayer : public engine::Layer {
 private:
 
     engine::Scene m_scene;
-    std::shared_ptr<engine::OrthographicCamera> m_camera;
+    engine::Ref<engine::OrthographicCamera> m_camera;
 
 public:
 
     SceneLayer(float viewportWidth, float viewportHeight) {
 
-        m_camera = std::make_shared<engine::OrthographicCamera>(viewportWidth, viewportHeight, 100);
+        m_camera = engine::CreateRef<engine::OrthographicCamera>(viewportWidth, viewportHeight, 100);
 
         createRoom(m_camera->getProjectionSize());
         createBall();

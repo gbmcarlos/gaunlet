@@ -10,8 +10,8 @@ class SceneLayer : public engine::Layer {
 public:
 
     engine::Scene m_mainScene;
-    std::shared_ptr<engine::PerspectiveCamera> m_camera;
-    std::shared_ptr<engine::Framebuffer> m_framebuffer = nullptr;
+    engine::Ref<engine::PerspectiveCamera> m_camera;
+    engine::Ref<engine::Framebuffer> m_framebuffer = nullptr;
 
 public:
 
@@ -19,10 +19,10 @@ public:
 
         GE_PROFILE_FUNCTION
 
-        m_camera = std::make_shared<engine::PerspectiveCamera>(45.0f, (float) viewportWidth /(float) viewportHeight, 100, 1.0f, 100.0f);
+        m_camera = engine::CreateRef<engine::PerspectiveCamera>(45.0f, (float) viewportWidth /(float) viewportHeight, 100, 1.0f, 100.0f);
         m_camera->setTranslation({0.0f, 2.0f, 10.0f});
 
-        m_framebuffer = std::make_shared<engine::Framebuffer>(std::initializer_list<engine::FramebufferAttachmentSpec>{
+        m_framebuffer = engine::CreateRef<engine::Framebuffer>(std::initializer_list<engine::FramebufferAttachmentSpec>{
             {engine::FramebufferAttachmentType::Color, engine::FramebufferDataFormat::RGBA, glm::vec4(0.0f, 0.0f, 0.0f, 0.0f)},
             {engine::FramebufferAttachmentType::Color, engine::FramebufferDataFormat::Integer, -1},
             {engine::FramebufferAttachmentType::Depth, engine::FramebufferDataFormat::Depth}
@@ -77,7 +77,7 @@ public:
 
 public:
 
-    explicit SceneViewportNode(std::shared_ptr<engine::Framebuffer> framebuffer) : m_framebuffer(std::move(framebuffer)) {}
+    explicit SceneViewportNode(engine::Ref<engine::Framebuffer> framebuffer) : m_framebuffer(std::move(framebuffer)) {}
 
     bool onEvent(engine::Event &event) override {
 
@@ -100,7 +100,7 @@ public:
 
 private:
 
-    std::shared_ptr<engine::Framebuffer> m_framebuffer = nullptr;
+    engine::Ref<engine::Framebuffer> m_framebuffer = nullptr;
 
 };
 

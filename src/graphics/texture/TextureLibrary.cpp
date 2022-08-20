@@ -2,7 +2,7 @@
 
 namespace engine {
 
-    unsigned int TextureLibrary::add(const std::shared_ptr<Texture>& texture) {
+    unsigned int TextureLibrary::add(const Ref<Texture>& texture) {
 
         if (exists(texture)) {
             throw std::runtime_error("Texture already exists in the library");
@@ -16,7 +16,7 @@ namespace engine {
 
     }
 
-    unsigned int TextureLibrary::addOrGet(const std::shared_ptr<Texture> &texture) {
+    unsigned int TextureLibrary::addOrGet(const Ref<Texture> &texture) {
 
         auto iterator = std::find(m_textures.begin(), m_textures.end(), texture);
 
@@ -28,7 +28,7 @@ namespace engine {
 
     }
 
-    bool TextureLibrary::exists(const std::shared_ptr<Texture>& texture) {
+    bool TextureLibrary::exists(const Ref<Texture>& texture) {
 
         auto iterator = std::find(m_textures.begin(), m_textures.end(), texture);
 
@@ -36,7 +36,7 @@ namespace engine {
 
     }
 
-    std::shared_ptr<Texture> TextureLibrary::get(unsigned int index) {
+    Ref<Texture> TextureLibrary::get(unsigned int index) {
 
         if (index >= m_textures.size()) {
             throw std::runtime_error("Out of bounds texture");

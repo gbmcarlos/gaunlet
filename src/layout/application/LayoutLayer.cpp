@@ -2,7 +2,7 @@
 
 namespace engine {
 
-    LayoutLayer::LayoutLayer(std::shared_ptr<Window> window) : m_window(std::move(window)) {}
+    LayoutLayer::LayoutLayer(Ref<Window> window) : m_window(std::move(window)) {}
 
     void LayoutLayer::setLayoutSpec(const DockingLayoutSpec& layoutSpec) {
         m_layoutSpec = layoutSpec;
@@ -12,7 +12,7 @@ namespace engine {
         m_guiNodes.push_back({windowId, node});
     }
 
-    void LayoutLayer::pushNode(const char* windowId, RenderDockedNode* node, std::shared_ptr<Camera> camera, std::shared_ptr<Framebuffer> framebuffer, unsigned int colorAttachmentIndex) {
+    void LayoutLayer::pushNode(const char* windowId, RenderDockedNode* node, Ref<Camera> camera, Ref<Framebuffer> framebuffer, unsigned int colorAttachmentIndex) {
         m_renderNodes.push_back({windowId, node, std::move(camera), std::move(framebuffer), colorAttachmentIndex});
     }
 

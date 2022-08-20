@@ -70,11 +70,11 @@ namespace engine {
         MaterialComponent(const MaterialComponent&) = default;
         MaterialComponent() : m_color(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), m_texture(nullptr) {}
         explicit MaterialComponent(glm::vec4 color) : m_color(color), m_texture(nullptr) {}
-        explicit MaterialComponent(std::shared_ptr<Texture> texture) : m_color(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), m_texture(std::move(texture)) {}
-        MaterialComponent(glm::vec4 color, std::shared_ptr<Texture> texture) : m_color(color), m_texture(std::move(texture)) {}
+        explicit MaterialComponent(Ref<Texture> texture) : m_color(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), m_texture(std::move(texture)) {}
+        MaterialComponent(glm::vec4 color, Ref<Texture> texture) : m_color(color), m_texture(std::move(texture)) {}
 
         glm::vec4 m_color;
-        std::shared_ptr<Texture> m_texture;
+        Ref<Texture> m_texture;
 
     };
 

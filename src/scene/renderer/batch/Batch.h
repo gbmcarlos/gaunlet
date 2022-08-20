@@ -36,7 +36,7 @@ namespace engine {
 
     public:
 
-        void submit(std::vector<T>& vertices, std::vector<unsigned int>& indices, const std::shared_ptr<Texture>& texture, R& entityProperties) {
+        void submit(std::vector<T>& vertices, std::vector<unsigned int>& indices, const Ref<Texture>& texture, R& entityProperties) {
 
             if (texture != nullptr) {
                 // Once added the texture, we know the actual index for this entity
@@ -62,7 +62,7 @@ namespace engine {
 
         }
 
-        bool shouldFlush(const std::vector<T>& vertices, const std::vector<unsigned int>& indices, const std::shared_ptr<Texture>& texture) {
+        bool shouldFlush(const std::vector<T>& vertices, const std::vector<unsigned int>& indices, const Ref<Texture>& texture) {
 
             // If rendering the current polygon would pass over the limit of vertices, flush
             if (m_vertices.size() + vertices.size() > m_maxVertices) {
@@ -93,10 +93,10 @@ namespace engine {
 
         }
 
-        inline void addTexture(const std::shared_ptr<Texture>& texture) {m_textureLibrary.add(texture); }
+        inline void addTexture(const Ref<Texture>& texture) {m_textureLibrary.add(texture); }
         inline const std::vector<T>& getVertices() {return m_vertices; }
         inline const std::vector<unsigned int>& getIndices() {return m_indices; }
-        inline const std::vector<std::shared_ptr<Texture>>& getTextures() {return m_textureLibrary.getAll(); }
+        inline const std::vector<Ref<Texture>>& getTextures() {return m_textureLibrary.getAll(); }
         inline unsigned int getMaxTextures() {return m_maxTextures; }
         inline const std::vector<R>& getEntityProperties() {return m_entityProperties; }
 

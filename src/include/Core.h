@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../pch.h"
+
 #include "../core/utils.h" // Doesn't depend on anything
 
 #include "../core/input/Event.h" // Doesn't depend on anything

@@ -30,7 +30,7 @@ namespace engine {
         void setUniformMat3f(const std::string& name, const glm::mat3& value);
         void setUniformMat4f(const std::string& name, const glm::mat4& value);
 
-        void linkUniformBuffer(const std::shared_ptr<UniformBuffer>& uniformBuffer);
+        void linkUniformBuffer(const Ref<UniformBuffer>& uniformBuffer);
     };
 
 }

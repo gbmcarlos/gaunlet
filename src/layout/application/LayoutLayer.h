@@ -17,11 +17,11 @@ namespace engine {
     class LayoutLayer : public Layer {
 
     public:
-        explicit LayoutLayer(std::shared_ptr<Window> window);
+        explicit LayoutLayer(Ref<Window> window);
 
         void setLayoutSpec(const DockingLayoutSpec& layoutSpec);
         void pushNode(const char* windowId, GuiDockedNode* node);
-        void pushNode(const char* windowId, RenderDockedNode* node, std::shared_ptr<Camera> camera, std::shared_ptr<Framebuffer> framebuffer, unsigned int colorAttachmentIndex);
+        void pushNode(const char* windowId, RenderDockedNode* node, Ref<Camera> camera, Ref<Framebuffer> framebuffer, unsigned int colorAttachmentIndex);
 
         void onEvent(Event& event) override;
         void onGuiRender() override;
@@ -29,7 +29,7 @@ namespace engine {
     private:
 
         DockingLayoutSpec m_layoutSpec;
-        std::shared_ptr<Window> m_window = nullptr;
+        Ref<Window> m_window = nullptr;
 
         struct GuiNode {
             const char* m_windowId;
@@ -39,8 +39,8 @@ namespace engine {
         struct RenderNode {
             const char* m_windowId;
             RenderDockedNode* m_node;
-            std::shared_ptr<Camera> m_camera;
-            std::shared_ptr<Framebuffer> m_framebuffer;
+            Ref<Camera> m_camera;
+            Ref<Framebuffer> m_framebuffer;
             unsigned int m_colorAttachmentIndex;
         };
 

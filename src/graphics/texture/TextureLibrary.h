@@ -12,16 +12,16 @@ namespace engine {
 
         TextureLibrary() = default;
 
-        unsigned int add(const std::shared_ptr<Texture>& texture);
-        unsigned int addOrGet(const std::shared_ptr<Texture>& texture);
-        bool exists(const std::shared_ptr<Texture>& texture);
-        std::shared_ptr<Texture> get(unsigned int index);
-        inline const std::vector<std::shared_ptr<Texture>>& getAll() {return m_textures; }
+        unsigned int add(const Ref<Texture>& texture);
+        unsigned int addOrGet(const Ref<Texture>& texture);
+        bool exists(const Ref<Texture>& texture);
+        Ref<Texture> get(unsigned int index);
+        inline const std::vector<Ref<Texture>>& getAll() {return m_textures; }
         unsigned int count();
         void clear();
 
     private:
-        std::vector<std::shared_ptr<Texture>> m_textures;
+        std::vector<Ref<Texture>> m_textures;
 
     };
 

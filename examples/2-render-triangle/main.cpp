@@ -7,9 +7,9 @@ class RenderTriangleApplication : public engine::Application {
 public:
     explicit RenderTriangleApplication(const std::string& name) : engine::Application(name){}
 
-    std::shared_ptr<engine::VertexArray> m_vertexArray;
-    std::shared_ptr<engine::VertexBuffer> m_vertexBuffer;
-    std::shared_ptr<engine::IndexBuffer> m_indexBuffer;
+    engine::Ref<engine::VertexArray> m_vertexArray;
+    engine::Ref<engine::VertexBuffer> m_vertexBuffer;
+    engine::Ref<engine::IndexBuffer> m_indexBuffer;
     engine::ShaderLibrary m_shaderLibrary;
 
     float color[4] = {
@@ -29,17 +29,17 @@ public:
         };
 
         // Create the vertex buffer, which contains the actual data
-        m_vertexBuffer = std::make_shared<engine::VertexBuffer>(layout, &vertices, sizeof(vertices));
+        m_vertexBuffer = engine::CreateRef<engine::VertexBuffer>(layout, &vertices, sizeof(vertices));
 
         unsigned int indices[] = {
             0, 1, 2
         };
 
         // Create an index buffer, which specifies how to use the vertices to draw triangles
-        m_indexBuffer = std::make_shared<engine::IndexBuffer>(indices, 3);
+        m_indexBuffer = engine::CreateRef<engine::IndexBuffer>(indices, 3);
 
         // Create a vertex array, and bind the vertex buffer and the index buffer into it
-        m_vertexArray = std::make_shared<engine::VertexArray>();
+        m_vertexArray = engine::CreateRef<engine::VertexArray>();
         m_vertexArray->addBuffer(m_vertexBuffer->getBufferLayout());
 
         std::map<engine::ShaderType, std::string> shaderSource {

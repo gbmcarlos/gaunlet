@@ -178,7 +178,7 @@ namespace engine {
                 throw std::runtime_error("Invalid framebuffer data format");
         }
 
-        std::shared_ptr<Texture> texture = std::make_shared<TextureImage2D>(
+        Ref<Texture> texture = CreateRef<TextureImage2D>(
             internalFormat, format,
             m_width, m_height,
             nullptr
@@ -199,7 +199,7 @@ namespace engine {
     void Framebuffer::attachDepth(FramebufferAttachmentSpec depthAttachmentSpec) {
 
         // Create the buffer texture
-        std::shared_ptr<Texture> texture = std::make_shared<TextureImage2D>(
+        Ref<Texture> texture = CreateRef<TextureImage2D>(
             TextureDataFormat::Depth, TextureDataFormat::Depth,
             m_width, m_height,
             nullptr

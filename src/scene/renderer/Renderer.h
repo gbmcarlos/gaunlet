@@ -29,7 +29,7 @@ namespace engine {
 
         static void init();
 
-        static void beginScene(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const std::shared_ptr<Framebuffer>& framebuffer);
+        static void beginScene(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const Ref<Framebuffer>& framebuffer);
         static void endScene();
 
         // Batched draw calls
@@ -43,8 +43,8 @@ namespace engine {
         static void flushCircles();
 
         // Non-batched, direct draw calls
-        static void renderPolygons(const std::vector<PolygonVertex>& polygonVertices, const std::vector<unsigned int>& indices, const std::vector<std::shared_ptr<Texture>>& textures, const std::vector<PolygonEntityProperties>& entityProperties, const std::shared_ptr<Shader>& shader);
-        static void renderCircles(const std::vector<CircleVertex>& circleVertices, const std::vector<unsigned int>& indices, const std::vector<std::shared_ptr<Texture>>& textures, const std::vector<CircleEntityProperties>& entityProperties, const std::shared_ptr<Shader>& shader);
+        static void renderPolygons(const std::vector<PolygonVertex>& polygonVertices, const std::vector<unsigned int>& indices, const std::vector<Ref<Texture>>& textures, const std::vector<PolygonEntityProperties>& entityProperties, const Ref<Shader>& shader);
+        static void renderCircles(const std::vector<CircleVertex>& circleVertices, const std::vector<unsigned int>& indices, const std::vector<Ref<Texture>>& textures, const std::vector<CircleEntityProperties>& entityProperties, const Ref<Shader>& shader);
 
         // Init loaders
         static void loadDefaultShaders();
@@ -55,14 +55,14 @@ namespace engine {
             Batch<PolygonVertex, PolygonEntityProperties> m_polygonBatch;
             Batch<CircleVertex, CircleEntityProperties> m_circleBatch;
 
-            std::shared_ptr<Framebuffer> m_framebuffer;
+            Ref<Framebuffer> m_framebuffer;
 
             // Shared
-            std::shared_ptr<Texture> m_whiteTexture = nullptr;
+            Ref<Texture> m_whiteTexture = nullptr;
             ShaderLibrary m_shaderLibrary;
-            std::shared_ptr<UniformBuffer> m_sceneMatricesUniformBuffer = nullptr;
-            std::shared_ptr<UniformBuffer> m_polygonEntityPropertiesUniformBuffer = nullptr;
-            std::shared_ptr<UniformBuffer> m_circleEntityPropertiesUniformBuffer = nullptr;
+            Ref<UniformBuffer> m_sceneMatricesUniformBuffer = nullptr;
+            Ref<UniformBuffer> m_polygonEntityPropertiesUniformBuffer = nullptr;
+            Ref<UniformBuffer> m_circleEntityPropertiesUniformBuffer = nullptr;
 
         };
 

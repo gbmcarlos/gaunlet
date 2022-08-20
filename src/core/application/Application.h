@@ -24,10 +24,10 @@ namespace engine {
         void popOverlay(Layer* overlay);
 
         inline bool isRunning() const {return m_running; }
-        inline const std::shared_ptr<Window>& getWindow() {return m_window; }
+        inline const Ref<Window>& getWindow() {return m_window; }
 
     protected:
-        std::shared_ptr<Window> m_window;
+        Ref<Window> m_window;
         bool m_running;
 
     private:

@@ -9,15 +9,15 @@ class SceneLayer : public engine::Layer {
 private:
 
     engine::Scene m_mainScene;
-    std::shared_ptr<engine::OrthographicCamera> m_camera;
+    engine::Ref<engine::OrthographicCamera> m_camera;
 
 public:
 
     SceneLayer(int viewportWidth, int viewportHeight) {
 
-        m_camera = std::make_shared<engine::OrthographicCamera>((float) viewportWidth, (float) viewportHeight, 100);
-        std::shared_ptr<engine::TextureImage2D> texture1 = std::make_shared<engine::TextureImage2D>("assets/texture-1.jpeg");
-        std::shared_ptr<engine::TextureImage2D> texture2 = std::make_shared<engine::TextureImage2D>("assets/texture-2.jpeg");
+        m_camera = engine::CreateRef<engine::OrthographicCamera>((float) viewportWidth, (float) viewportHeight, 100);
+        engine::Ref<engine::TextureImage2D> texture1 = engine::CreateRef<engine::TextureImage2D>("assets/texture-1.jpeg");
+        engine::Ref<engine::TextureImage2D> texture2 = engine::CreateRef<engine::TextureImage2D>("assets/texture-2.jpeg");
 
         // TRIANGLE 1
         auto triangle1 = m_mainScene.createEntity();
@@ -109,7 +109,7 @@ public:
         );
         circle3.addComponent<engine::MaterialComponent>(glm::vec4(0.0f, 0.8f, 0.0f, 1.0f), texture2);
 
-        auto camera = std::make_shared<engine::OrthographicCamera>((float) viewportWidth, (float) viewportHeight, 100);
+        engine::Ref<engine::OrthographicCamera> camera = engine::CreateRef<engine::OrthographicCamera>((float) viewportWidth, (float) viewportHeight, 100);
         m_mainScene.start();
 
     }

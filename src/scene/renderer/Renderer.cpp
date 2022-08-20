@@ -11,7 +11,7 @@ namespace engine {
         loadDefaultWhiteTexture();
     }
 
-    void Renderer::beginScene(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const std::shared_ptr<Framebuffer>& framebuffer) {
+    void Renderer::beginScene(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const Ref<Framebuffer>& framebuffer) {
 
         std::vector<glm::mat4> sceneData;
         sceneData.emplace_back(viewMatrix);
@@ -149,7 +149,7 @@ namespace engine {
     }
 
     // Create the actual polygon drawing resources (buffers and such), prepare the shader, and make the draw call
-    void Renderer::renderPolygons(const std::vector<PolygonVertex>& polygonVertices, const std::vector<unsigned int>& indices, const std::vector<std::shared_ptr<Texture>>& textures, const std::vector<PolygonEntityProperties>& entityProperties, const std::shared_ptr<Shader>& shader) {
+    void Renderer::renderPolygons(const std::vector<PolygonVertex>& polygonVertices, const std::vector<unsigned int>& indices, const std::vector<Ref<Texture>>& textures, const std::vector<PolygonEntityProperties>& entityProperties, const Ref<Shader>& shader) {
 
         // Create a layout, based on the structure of PolygonVertex
         static engine::BufferLayout polygonVerticesLayout = {
@@ -198,7 +198,7 @@ namespace engine {
     }
 
     // Create the actual circle drawing resources (buffers and such), prepare the shader, and make the draw call
-    void Renderer::renderCircles(const std::vector<CircleVertex>& circleVertices, const std::vector<unsigned int>& indices, const std::vector<std::shared_ptr<Texture>>& textures, const std::vector<CircleEntityProperties>& entityProperties, const std::shared_ptr<Shader>& shader) {
+    void Renderer::renderCircles(const std::vector<CircleVertex>& circleVertices, const std::vector<unsigned int>& indices, const std::vector<Ref<Texture>>& textures, const std::vector<CircleEntityProperties>& entityProperties, const Ref<Shader>& shader) {
 
         // Create a layout, based on the structure of CircleVertex
         static engine::BufferLayout circleVerticesLayout = {
@@ -251,7 +251,7 @@ namespace engine {
 
         GE_PROFILE_FUNCTION;
 
-        m_rendererStorage->m_sceneMatricesUniformBuffer = std::make_shared<UniformBuffer>(
+        m_rendererStorage->m_sceneMatricesUniformBuffer = CreateRef<UniformBuffer>(
             "SceneMatricesBlock",
             0,
             sizeof (glm::mat4) * 2 // We are going to store the view and projection matrices
@@ -270,7 +270,7 @@ namespace engine {
             polygonShader->setUniform1i(textureName, i);
         }
 
-        m_rendererStorage->m_polygonEntityPropertiesUniformBuffer = std::make_shared<UniformBuffer>(
+        m_rendererStorage->m_polygonEntityPropertiesUniformBuffer = CreateRef<UniformBuffer>(
             "EntityPropertiesBlock",
             1,
             sizeof (PolygonEntityProperties) * 100
@@ -293,7 +293,7 @@ namespace engine {
             circleShader->setUniform1i(textureName, i);
         }
 
-        m_rendererStorage->m_circleEntityPropertiesUniformBuffer = std::make_shared<UniformBuffer>(
+        m_rendererStorage->m_circleEntityPropertiesUniformBuffer = CreateRef<UniformBuffer>(
             "EntityPropertiesBlock",
             2,
             sizeof (CircleEntityProperties) * 100
@@ -311,7 +311,7 @@ namespace engine {
 
         // Create a 1x1 white texture, to be used as default
         unsigned int whiteTextureData = 0xffffffff;
-        std::shared_ptr<engine::Texture> whiteTexture = std::make_shared<engine::TextureImage2D>(TextureDataFormat::RGBA, TextureDataFormat::RGBA, 1, 1, &whiteTextureData);
+        Ref<engine::Texture> whiteTexture = CreateRef<engine::TextureImage2D>(TextureDataFormat::RGBA, TextureDataFormat::RGBA, 1, 1, &whiteTextureData);
         m_rendererStorage->m_whiteTexture = whiteTexture;
 
         // Add it to the polygon and circle batches
