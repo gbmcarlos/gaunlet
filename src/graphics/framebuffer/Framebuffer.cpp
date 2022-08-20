@@ -151,7 +151,7 @@ namespace engine {
 
         // If there are more than one color attachment, tell opengl about them
         if (m_colorAttachmentSpecs.size() > 1) {
-            RenderCommand::setDrawBuffers(drawBuffers);
+            RenderCommand::setDrawBuffers(m_rendererId, drawBuffers);
         }
 
         // Check correctness and unbind
