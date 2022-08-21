@@ -28,12 +28,14 @@ layout (std140) uniform ScenePropertiesBlock {
 };
 
 // Inputs
-in vec2 v_localCoordinates;
 in vec2 v_textureCoordinates;
+in vec3 v_normal;
 flat in uint v_entityIndex;
+in vec2 v_localCoordinates;
 
 // Outputs
 layout (location = 0) out vec4 o_color;
+layout (location = 1) out int o_entityId;
 
 // Textures
 uniform sampler2D texture0;
@@ -50,18 +52,27 @@ uniform sampler2D texture10;
 
 vec4 sampleTexture(uint textureIndex, vec2 textureCoordinates);
 float getCirclePoint(vec2 localCoordinates, float thickness, float fade);
+vec4 getDirectionalLightColor(
+    vec3 color, vec3 position,
+    float ambientIntensity, float diffuseIntensity,
+    vec3 normal
+);
 
 void main() {
 
-   float circlePoint = getCirclePoint(v_localCoordinates, properties[v_entityIndex].thickness, properties[v_entityIndex].fade);
+    float circlePoint = getCirclePoint(v_localCoordinates, properties[v_entityIndex].thickness, properties[v_entityIndex].fade);
 
     if (circlePoint == 0.0f) {
         discard;
     }
 
     vec4 textureColor = sampleTexture(properties[v_entityIndex].textureIndex, v_textureCoordinates);
-    o_color = textureColor * properties[v_entityIndex].color;
+    vec4 directionalLightColor = getDirectionalLightColor(directionalLight.color, directionalLight.position, directionalLight.ambientIntensity, directionalLight.diffuseIntensity, v_normal);
+
+    o_color = textureColor * properties[v_entityIndex].color * directionalLightColor;
     o_color *= circlePoint;
+
+    o_entityId = properties[v_entityIndex].entityId;
 
 }
 
@@ -72,6 +83,19 @@ float getCirclePoint(vec2 localCoordinates, float thickness, float fade) {
     circle *= smoothstep(thickness + fade, thickness, distance);
 
     return circle;
+
+}
+
+vec4 getDirectionalLightColor(vec3 color, vec3 position, float ambientIntensity, float diffuseIntensity, vec3 normal) {
+
+    vec4 ambientColor = vec4(color * ambientIntensity, 1.0f);
+    float diffuseFactor = dot(normalize(normal), -position);
+
+    if (diffuseFactor > 0) {
+        return vec4(color * diffuseIntensity * diffuseFactor, 1.0f) + ambientColor;
+    } else {
+        return ambientColor;
+    }
 
 }
 

@@ -34,8 +34,8 @@ namespace engine {
         static void endScene();
 
         // Batched draw calls
-        static void submit(int entityId, const PolygonModelComponent& polygonComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent);
-        static void submit(int entityId, const CircleModelComponent& circleComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent);
+        static void submit(int entityId, const ModelComponent& polygonComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent);
+        static void submit(int entityId, const CircleComponent& circleComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent);
 
     private:
 
@@ -65,15 +65,15 @@ namespace engine {
 
         struct RendererStorage {
 
-            Batch<PolygonVertex, PolygonEntityProperties> m_polygonBatch;
-            Batch<CircleVertex, CircleEntityProperties> m_circleBatch;
+            Batch<PolygonEntityProperties> m_polygonBatch;
+            Batch<CircleEntityProperties> m_circleBatch;
 
             Ref<Framebuffer> m_framebuffer;
 
             // Shared
             Ref<Texture> m_whiteTexture = nullptr;
             ShaderLibrary m_shaderLibrary;
-            Ref<UniformBuffer> m_sceneMatricesUniformBuffer = nullptr;
+            Ref<UniformBuffer> m_scenePropertiesUniformBuffer = nullptr;
             Ref<UniformBuffer> m_polygonEntityPropertiesUniformBuffer = nullptr;
             Ref<UniformBuffer> m_circleEntityPropertiesUniformBuffer = nullptr;
 

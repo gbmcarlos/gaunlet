@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../model/Model.h"
-#include "../model/circle-mesh/CircleMesh.h"
+#include "../model/Sprites.h"
 #include "../../graphics/texture/Texture.h"
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -33,33 +33,37 @@ namespace engine {
 
     };
 
-    struct PolygonModelComponent {
+    struct ModelComponent {
 
-        PolygonModelComponent() = default;
-        PolygonModelComponent(const PolygonModelComponent&) = default;
-        PolygonModelComponent(Model model) : m_model(std::move(model)) {}
+        ModelComponent() = default;
+        ModelComponent(const ModelComponent&) = default;
+        ModelComponent(Model model) : m_model(std::move(model)) {}
 
         Model m_model;
 
     };
 
-    struct CircleModelComponent {
+    struct CircleComponent {
 
-        CircleModelComponent(const CircleModelComponent&) = default;
+        CircleComponent(const CircleComponent&) = default;
 
-        CircleModelComponent() :
+        // A circle is drawn as a square (a single mesh), with a different shader
+        CircleComponent() :
+            m_mesh(Square2DModel().getMeshes()[0]),
             m_thickness(0.5f),
             m_fade(0.01f) {}
 
-        CircleModelComponent(float thickness) :
+        CircleComponent(float thickness) :
+            m_mesh(Square2DModel().getMeshes()[0]),
             m_thickness(thickness),
             m_fade(0.01f){}
 
-        CircleModelComponent(float thickness, float fade) :
+        CircleComponent(float thickness, float fade) :
+            m_mesh(Square2DModel().getMeshes()[0]),
             m_thickness(thickness),
             m_fade(fade) {}
 
-        CircleMesh m_mesh;
+        Mesh m_mesh;
         float m_thickness;
         float m_fade;
 

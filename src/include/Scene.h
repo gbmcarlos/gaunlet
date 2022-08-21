@@ -13,8 +13,7 @@
 #include "../scene/camera/OrthographicCamera.h" // Doesn't depend on anything
 
 #include "../scene/model/Model.h"
-#include "../scene/model/polygon-mesh/PolygonMesh.h" // Doesn't depend on anything
-#include "../scene/model/circle-mesh/CircleMesh.h" // Doesn't depend on anything
+#include "../scene/model/Vertex.h"
 #include "../scene/model/Sprites.h"
 
 #include "../scene/entity/GraphicsComponents.h" // Depends on PolygonMesh and CircleMesh

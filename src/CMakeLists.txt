@@ -26,7 +26,6 @@ add_library(graphics-engine
 
 #        Scene
         scene/model/Model.cpp
-        scene/model/circle-mesh/CircleMesh.cpp
         scene/forward-renderer/ForwardRenderer.cpp
         scene/deferred-renderer/DeferredRenderer.cpp
         scene/camera/Camera.cpp

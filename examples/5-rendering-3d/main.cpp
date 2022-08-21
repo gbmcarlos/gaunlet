@@ -16,13 +16,14 @@ public:
         m_camera = engine::CreateRef<engine::PerspectiveCamera>(45.0f, (float) viewportWidth /(float) viewportHeight, 100, 1.0f, 100.0f);
         m_camera->setTranslation({0.0f, 0.0f, 10.0f});
 
-        m_directionalLight.m_color = glm::vec3(0.8f, 0.8f, 0.8f);
-        m_directionalLight.m_position = glm::vec3(1.5f, 1.5f, 10.0f);
-        m_directionalLight.m_ambientIntensity = 0.1f;
-        m_directionalLight.m_diffuseIntensity = 0.6;
+        m_directionalLight = engine::DirectionalLightComponent(
+            glm::vec3(0.8f, 0.8f, 0.8f),
+            glm::vec3(1.5f, 1.5f, 10.0f),
+            0.1f, 0.6f
+        );
 
         auto cup = m_scene.createEntity();
-        cup.addComponent<engine::PolygonModelComponent>(engine::Model("assets/cup/cup.obj"));
+        cup.addComponent<engine::ModelComponent>(engine::Model("assets/cup/cup.obj"));
         cup.addComponent<engine::TransformComponent>(
             glm::vec3(-2.5f, -2.5f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),

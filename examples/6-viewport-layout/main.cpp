@@ -28,23 +28,23 @@ public:
             {engine::FramebufferAttachmentType::Depth, engine::FramebufferDataFormat::Depth}
         }, framebufferWidth, framebufferHeight);
 
-        auto triangle1 = m_mainScene.createEntity();
-        triangle1.addComponent<engine::PolygonModelComponent>(engine::Triangle2DModel());
-        triangle1.addComponent<engine::TransformComponent>(
+        auto triangle = m_mainScene.createEntity();
+        triangle.addComponent<engine::ModelComponent>(engine::Triangle2DModel());
+        triangle.addComponent<engine::TransformComponent>(
             glm::vec3(-2.0f, 0.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f)
         );
-        triangle1.addComponent<engine::MaterialComponent>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+        triangle.addComponent<engine::MaterialComponent>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
-        auto triangle2 = m_mainScene.createEntity();
-        triangle2.addComponent<engine::PolygonModelComponent>(engine::Triangle2DModel());
-        triangle2.addComponent<engine::TransformComponent>(
+        auto circle = m_mainScene.createEntity();
+        circle.addComponent<engine::CircleComponent>(0.1f, 0.01f);
+        circle.addComponent<engine::TransformComponent>(
             glm::vec3(2.0f, 0.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec3(1.0f, 1.0f, 1.0f)
+            glm::vec3(0.8f, 0.8f, 1.0f)
         );
-        triangle2.addComponent<engine::MaterialComponent>(glm::vec4(0.2f, 0.8f, 0.0f, 1.0f));
+        circle.addComponent<engine::MaterialComponent>(glm::vec4(0.0f, 0.0f, 0.8f, 1.0f));
 
         m_mainScene.start();
 

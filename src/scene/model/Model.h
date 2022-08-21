@@ -1,6 +1,6 @@
 #pragma once
 
-#include "polygon-mesh/PolygonMesh.h"
+#include "Mesh.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -15,14 +15,14 @@ namespace engine {
         Model() = default;
         explicit Model(const char* filePath);
 
-        inline const std::vector<PolygonMesh>& getMeshes() const {return m_meshes; }
+        inline const std::vector<Mesh>& getMeshes() const {return m_meshes; }
 
     private:
-        std::vector<PolygonMesh> m_meshes;
+        std::vector<Mesh> m_meshes;
 
         void loadModel(const char* filePath);
         void processModelNode(aiNode* node, const aiScene* scene);
-        PolygonMesh processNodeMesh(aiMesh *mesh);
+        Mesh processNodeMesh(aiMesh *mesh);
 
     };
 

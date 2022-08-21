@@ -24,7 +24,7 @@ namespace engine {
         sceneData.emplace_back(viewMatrix);
         sceneData.emplace_back(projectionMatrix);
 
-        m_rendererStorage->m_sceneMatricesUniformBuffer->setData(
+        m_rendererStorage->m_scenePropertiesUniformBuffer->setData(
             (const void*) &sceneProperties,
             sizeof(SceneProperties)
         );
@@ -52,9 +52,9 @@ namespace engine {
 
     }
 
-    void DeferredRenderer::submit(int entityId, const PolygonModelComponent& polygonComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent) {
+    void DeferredRenderer::submit(int entityId, const ModelComponent& polygonComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent) {
 
-        std::vector<PolygonVertex> vertices = {};
+        std::vector<Vertex> vertices = {};
         std::vector<unsigned int> indices = {};
 
         // Get the vertices and indices of all the meshes of the model
@@ -84,7 +84,7 @@ namespace engine {
 
     }
 
-    void DeferredRenderer::submit(int entityId, const CircleModelComponent& circleComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent) {
+    void DeferredRenderer::submit(int entityId, const CircleComponent& circleComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent) {
 
         // Get the vertices and indices to be added
         auto vertices = circleComponent.m_mesh.getVertices();
@@ -128,8 +128,9 @@ namespace engine {
         );
 
         // Render
-        ForwardRenderer::renderPolygons(
-            vertices, indices, textures, m_rendererStorage->m_shaderLibrary.get("polygon-shader"), m_rendererStorage->m_framebuffer
+        ForwardRenderer::renderMesh(
+            vertices, indices, textures, m_rendererStorage->m_shaderLibrary.get("polygon-shader"),
+            m_rendererStorage->m_framebuffer
         );
 
         // Clear the batch (and add the white texture back)
@@ -153,7 +154,7 @@ namespace engine {
         );
 
         // Render
-        ForwardRenderer::renderCircles(
+        ForwardRenderer::renderMesh(
             vertices, indices, textures, m_rendererStorage->m_shaderLibrary.get("circle-shader"), m_rendererStorage->m_framebuffer
         );
 
@@ -168,7 +169,7 @@ namespace engine {
 
         GE_PROFILE_FUNCTION;
 
-        m_rendererStorage->m_sceneMatricesUniformBuffer = CreateRef<UniformBuffer>(
+        m_rendererStorage->m_scenePropertiesUniformBuffer = CreateRef<UniformBuffer>(
             "ScenePropertiesBlock",
             0,
             sizeof (SceneProperties)
@@ -194,7 +195,7 @@ namespace engine {
         );
 
         // Link the SceneMatrices and the EntityProperties uniform buffers
-        polygonShader->linkUniformBuffer(m_rendererStorage->m_sceneMatricesUniformBuffer);
+        polygonShader->linkUniformBuffer(m_rendererStorage->m_scenePropertiesUniformBuffer);
         polygonShader->linkUniformBuffer(m_rendererStorage->m_polygonEntityPropertiesUniformBuffer);
 
         // Create the circle shader
@@ -217,7 +218,7 @@ namespace engine {
         );
 
         // Link the SceneMatrices and the EntityProperties uniform buffers
-        circleShader->linkUniformBuffer(m_rendererStorage->m_sceneMatricesUniformBuffer);
+        circleShader->linkUniformBuffer(m_rendererStorage->m_scenePropertiesUniformBuffer);
         circleShader->linkUniformBuffer(m_rendererStorage->m_circleEntityPropertiesUniformBuffer);
 
     }

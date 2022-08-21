@@ -170,11 +170,11 @@ namespace engine {
 
     void Scene::renderPolygons() {
 
-        auto group = m_registry.group<PolygonModelComponent>(entt::get<TransformComponent>);
+        auto group = m_registry.group<ModelComponent>(entt::get<TransformComponent>);
         for (auto e : group) {
 
             Entity entity = {e, this};
-            auto [polygon, transform] = group.get<PolygonModelComponent, TransformComponent>(e);
+            auto [polygon, transform] = group.get<ModelComponent, TransformComponent>(e);
 
             // MaterialComponent is optional
             auto material = entity.hasComponent<MaterialComponent>() ? entity.getComponent<MaterialComponent>() : MaterialComponent();
@@ -187,11 +187,11 @@ namespace engine {
 
     void Scene::renderCircles() {
 
-        auto group = m_registry.group<CircleModelComponent>(entt::get<TransformComponent>);
+        auto group = m_registry.group<CircleComponent>(entt::get<TransformComponent>);
         for (auto e : group) {
 
             Entity entity = {e, this};
-            auto [circle, transform] = group.get<CircleModelComponent, TransformComponent>(e);
+            auto [circle, transform] = group.get<CircleComponent, TransformComponent>(e);
 
             // MaterialComponent is optional
             auto material = entity.hasComponent<MaterialComponent>() ? entity.getComponent<MaterialComponent>() : MaterialComponent();
