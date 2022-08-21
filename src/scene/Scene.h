@@ -5,6 +5,7 @@
 #include "camera/OrthographicCamera.h"
 #include "entity/GraphicsComponents.h"
 #include "entity/PhysicsComponents.h"
+#include "entity/LightingComponents.h"
 #include "physics/PhysicsWorld.h"
 
 #include <entt/entt.hpp>
@@ -31,6 +32,7 @@ namespace engine {
 
         void update(TimeStep timeStep);
         void render(const Ref<Camera>& camera, const Ref<Framebuffer>& framebuffer = nullptr);
+        void render(const Ref<Camera>& camera, const DirectionalLightComponent& directionalLight, const Ref<Framebuffer>& framebuffer = nullptr);
         void stop();
 
     private:

@@ -51,9 +51,9 @@ namespace engine {
             glm::vec4 position = {mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z, 1.0f};
 
             // The vertex's normal
-            glm::vec4 normal = {1.0f, 1.0f, 1.0f, 1.0f};
+            glm::vec3 normal = {1.0f, 1.0f, 1.0f};
             if (mesh->HasNormals()) {
-                normal = {mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z, 1.0f};
+                normal = {mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z};
             }
 
             // The vertex's texture coordinates

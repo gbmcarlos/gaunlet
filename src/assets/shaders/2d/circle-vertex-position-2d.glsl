@@ -5,8 +5,13 @@ struct EntityProperties {
     vec4 color;
     uint textureIndex;
     int entityId;
-    float thickness;
-    float fade;
+};
+
+struct DirectionalLight {
+    vec3 color;
+    float ambientIntensity;
+    vec3 position;
+    float diffuseIntensity;
 };
 
 // Uniforms
@@ -14,9 +19,10 @@ layout (std140) uniform EntityPropertiesBlock {
     EntityProperties properties[100];
 };
 
-layout (std140) uniform SceneMatricesBlock {
-    mat4 projection;
+layout (std140) uniform ScenePropertiesBlock {
     mat4 view;
+    mat4 projection;
+    DirectionalLight directionalLight;
 };
 
 // Vertex attributes

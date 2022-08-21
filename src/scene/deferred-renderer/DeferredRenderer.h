@@ -11,6 +11,7 @@
 #include "../../graphics/shader/ShaderLibrary.h"
 
 #include "../entity/GraphicsComponents.h"
+#include "../entity/LightingComponents.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -18,18 +19,18 @@
 
 namespace engine {
 
-    class Renderer {
+    class DeferredRenderer {
 
     public:
-        Renderer() = delete;
-        Renderer(Renderer const&) = delete;
-        void operator=(Renderer const&)  = delete;
+        DeferredRenderer() = delete;
+        DeferredRenderer(DeferredRenderer const&) = delete;
+        void operator=(DeferredRenderer const&)  = delete;
 
     public:
 
         static void init();
 
-        static void beginScene(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const Ref<Framebuffer>& framebuffer);
+        static void beginScene(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const Ref<Framebuffer>& framebuffer, const DirectionalLightComponent& directionalLight);
         static void endScene();
 
         // Batched draw calls
@@ -42,13 +43,25 @@ namespace engine {
         static void flushPolygons();
         static void flushCircles();
 
-        // Non-batched, direct draw calls
-        static void renderPolygons(const std::vector<PolygonVertex>& polygonVertices, const std::vector<unsigned int>& indices, const std::vector<Ref<Texture>>& textures, const std::vector<PolygonEntityProperties>& entityProperties, const Ref<Shader>& shader);
-        static void renderCircles(const std::vector<CircleVertex>& circleVertices, const std::vector<unsigned int>& indices, const std::vector<Ref<Texture>>& textures, const std::vector<CircleEntityProperties>& entityProperties, const Ref<Shader>& shader);
-
         // Init loaders
         static void loadDefaultShaders();
         static void loadDefaultWhiteTexture();
+
+        struct SceneProperties {
+
+            SceneProperties(glm::mat4 viewMatrix, glm::mat4 projectionMatrix, glm::vec3 directionalLightColor, glm::vec3 directionalLightPosition, float directionalLightAmbientStrength, float directionalLightDiffuseIntensity)
+                : m_viewMatrix(viewMatrix), m_projectionMatrix(projectionMatrix), m_directionalLightColor(directionalLightColor), m_directionalLightPosition(directionalLightPosition), m_directionalLightAmbientIntensity(directionalLightAmbientStrength), m_directionalLightDiffuseIntensity(directionalLightDiffuseIntensity) {}
+
+            glm::mat4 m_viewMatrix;
+            glm::mat4 m_projectionMatrix;
+
+            // The order of these properties is optimized to minimize required padding when using this data in a uniform buffer
+            glm::vec3 m_directionalLightColor;
+            float m_directionalLightAmbientIntensity;
+            glm::vec3 m_directionalLightPosition;
+            float m_directionalLightDiffuseIntensity;
+
+        };
 
         struct RendererStorage {
 

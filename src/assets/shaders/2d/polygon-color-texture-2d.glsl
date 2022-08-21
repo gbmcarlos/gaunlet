@@ -7,13 +7,27 @@ struct EntityProperties {
     int entityId;
 };
 
+struct DirectionalLight {
+    vec3 color;
+    float ambientIntensity;
+    vec3 position;
+    float diffuseIntensity;
+};
+
 // Uniforms
 layout (std140) uniform EntityPropertiesBlock {
     EntityProperties properties[100];
 };
 
+layout (std140) uniform ScenePropertiesBlock {
+    mat4 view;
+    mat4 projection;
+    DirectionalLight directionalLight;
+};
+
 // Inputs
 in vec2 v_textureCoordinates;
+in vec3 v_normal;
 flat in uint v_entityIndex;
 
 // Outputs
@@ -34,12 +48,34 @@ uniform sampler2D texture9;
 uniform sampler2D texture10;
 
 vec4 sampleTexture(uint textureIndex, vec2 textureCoordinates);
+vec4 getDirectionalLightColor(
+    vec3 color, vec3 position,
+    float ambientIntensity, float diffuseIntensity,
+    vec3 normal
+);
 
 void main() {
 
     vec4 textureColor = sampleTexture(properties[v_entityIndex].textureIndex, v_textureCoordinates);
-    o_color = textureColor * properties[v_entityIndex].color;
+    vec4 directionalLightColor = getDirectionalLightColor(directionalLight.color, directionalLight.position, directionalLight.ambientIntensity, directionalLight.diffuseIntensity, v_normal);
+
+    o_color = textureColor * properties[v_entityIndex].color * directionalLightColor;
+
     o_entityId = properties[v_entityIndex].entityId;
+
+}
+
+vec4 getDirectionalLightColor(vec3 color, vec3 position, float ambientIntensity, float diffuseIntensity, vec3 normal) {
+
+    vec4 ambientColor = vec4(color * ambientIntensity, 1.0f);
+    float diffuseFactor = dot(normalize(normal), -position);
+
+    if (diffuseFactor > 0) {
+        return vec4(color * diffuseIntensity * diffuseFactor, 1.0f) + ambientColor;
+    } else {
+        return ambientColor;
+    }
+
 }
 
 vec4 sampleTexture(uint textureIndex, vec2 textureCoordinates) {

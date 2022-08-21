@@ -2,13 +2,13 @@
 
 namespace engine {
 
-    VertexBuffer::VertexBuffer(BufferLayout& layout, const void *data, unsigned int size)
-        : m_dynamic(false), m_layout{layout} {
+    VertexBuffer::VertexBuffer(const void *data, unsigned int size)
+        : m_dynamic(false) {
         RenderCommand::createVertexBuffer(m_rendererId, data, size);
     }
 
-    VertexBuffer::VertexBuffer(BufferLayout& layout, unsigned int size)
-            : m_dynamic(true), m_layout{layout} {
+    VertexBuffer::VertexBuffer(unsigned int size)
+            : m_dynamic(true) {
         RenderCommand::createVertexBuffer(m_rendererId, size);
     }
 

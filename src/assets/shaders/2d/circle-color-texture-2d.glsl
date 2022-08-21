@@ -9,9 +9,22 @@ struct EntityProperties {
     float fade;
 };
 
+struct DirectionalLight {
+    vec3 color;
+    float ambientIntensity;
+    vec3 position;
+    float diffuseIntensity;
+};
+
 // Uniforms
 layout (std140) uniform EntityPropertiesBlock {
     EntityProperties properties[100];
+};
+
+layout (std140) uniform ScenePropertiesBlock {
+    mat4 view;
+    mat4 projection;
+    DirectionalLight directionalLight;
 };
 
 // Inputs

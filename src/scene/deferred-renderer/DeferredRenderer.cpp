@@ -1,25 +1,32 @@
-#include "Renderer.h"
+#include "DeferredRenderer.h"
 
 #include "../../graphics/texture/TextureImage2D.h"
+#include "../forward-renderer/ForwardRenderer.h"
 
 namespace engine {
 
-    Renderer::RendererStorage* Renderer::m_rendererStorage = new RendererStorage;
+    DeferredRenderer::RendererStorage* DeferredRenderer::m_rendererStorage = new RendererStorage;
 
-    void Renderer::init() {
+    void DeferredRenderer::init() {
         loadDefaultShaders();
         loadDefaultWhiteTexture();
     }
 
-    void Renderer::beginScene(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const Ref<Framebuffer>& framebuffer) {
+    void DeferredRenderer::beginScene(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const Ref<Framebuffer>& framebuffer, const DirectionalLightComponent& directionalLight) {
+
+        SceneProperties sceneProperties(
+            viewMatrix, projectionMatrix,
+            directionalLight.m_color, directionalLight.m_position,
+            directionalLight.m_ambientIntensity, directionalLight.m_diffuseIntensity
+        );
 
         std::vector<glm::mat4> sceneData;
         sceneData.emplace_back(viewMatrix);
         sceneData.emplace_back(projectionMatrix);
 
         m_rendererStorage->m_sceneMatricesUniformBuffer->setData(
-            (const void*) sceneData.data(),
-            sizeof(glm::mat4) * 2
+            (const void*) &sceneProperties,
+            sizeof(SceneProperties)
         );
 
         if (framebuffer != nullptr) {
@@ -31,7 +38,7 @@ namespace engine {
         m_rendererStorage->m_framebuffer = framebuffer;
     }
 
-    void Renderer::endScene() {
+    void DeferredRenderer::endScene() {
 
         // Flush the polygons, if any
         if (!m_rendererStorage->m_polygonBatch.getVertices().empty()) {
@@ -45,7 +52,7 @@ namespace engine {
 
     }
 
-    void Renderer::submit(int entityId, const PolygonModelComponent& polygonComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent) {
+    void DeferredRenderer::submit(int entityId, const PolygonModelComponent& polygonComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent) {
 
         std::vector<PolygonVertex> vertices = {};
         std::vector<unsigned int> indices = {};
@@ -77,7 +84,7 @@ namespace engine {
 
     }
 
-    void Renderer::submit(int entityId, const CircleModelComponent& circleComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent) {
+    void DeferredRenderer::submit(int entityId, const CircleModelComponent& circleComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent) {
 
         // Get the vertices and indices to be added
         auto vertices = circleComponent.m_mesh.getVertices();
@@ -107,154 +114,64 @@ namespace engine {
     }
 
     // Gather the polygon data back from the batch, submit it for drawing, and clear the batch
-    void Renderer::flushPolygons() {
+    void DeferredRenderer::flushPolygons() {
 
         auto& vertices = m_rendererStorage->m_polygonBatch.getVertices();
         auto& indices = m_rendererStorage->m_polygonBatch.getIndices();
         auto& textures = m_rendererStorage->m_polygonBatch.getTextures();
         auto& entityProperties = m_rendererStorage->m_polygonBatch.getEntityProperties();
 
-        renderPolygons(
-            vertices,
-            indices,
-            textures,
-            entityProperties,
-            m_rendererStorage->m_shaderLibrary.get("polygon-shader")
+        // Submit the entity properties to the uniform buffer
+        m_rendererStorage->m_polygonEntityPropertiesUniformBuffer->setData(
+            (const void*) entityProperties.data(),
+            sizeof(PolygonEntityProperties) * entityProperties.size()
         );
 
+        // Render
+        ForwardRenderer::renderPolygons(
+            vertices, indices, textures, m_rendererStorage->m_shaderLibrary.get("polygon-shader"), m_rendererStorage->m_framebuffer
+        );
+
+        // Clear the batch (and add the white texture back)
         m_rendererStorage->m_polygonBatch.clear();
         m_rendererStorage->m_polygonBatch.addTexture(m_rendererStorage->m_whiteTexture);
 
     }
 
     // Gather the circle data back from the batch, submit it for drawing, and clear the batch
-    void Renderer::flushCircles() {
+    void DeferredRenderer::flushCircles() {
 
         auto& vertices = m_rendererStorage->m_circleBatch.getVertices();
         auto& indices = m_rendererStorage->m_circleBatch.getIndices();
         auto& textures = m_rendererStorage->m_circleBatch.getTextures();
         auto& entityProperties = m_rendererStorage->m_circleBatch.getEntityProperties();
 
-        renderCircles(
-            vertices,
-            indices,
-            textures,
-            entityProperties,
-            m_rendererStorage->m_shaderLibrary.get("circle-shader")
-        );
-
-        m_rendererStorage->m_circleBatch.clear();
-        m_rendererStorage->m_circleBatch.addTexture(m_rendererStorage->m_whiteTexture);
-
-    }
-
-    // Create the actual polygon drawing resources (buffers and such), prepare the shader, and make the draw call
-    void Renderer::renderPolygons(const std::vector<PolygonVertex>& polygonVertices, const std::vector<unsigned int>& indices, const std::vector<Ref<Texture>>& textures, const std::vector<PolygonEntityProperties>& entityProperties, const Ref<Shader>& shader) {
-
-        // Create a layout, based on the structure of PolygonVertex
-        static engine::BufferLayout polygonVerticesLayout = {
-            {"a_position", 4, engine::PrimitiveDataType::Float},
-            {"a_normal", 4, engine::PrimitiveDataType::Float},
-            {"a_textureCoordinates", 2, engine::PrimitiveDataType::Float},
-            {"a_entityIndex", 1, engine::PrimitiveDataType::UInt},
-        };
-
-        // Create the vertex and index buffers
-        VertexBuffer vertexBuffer(polygonVerticesLayout, (const void*) polygonVertices.data(), sizeof(PolygonVertex) * polygonVertices.size());
-        IndexBuffer indexBuffer((unsigned int*) indices.data(), indices.size());
-
-        // Bind them together into a vertex array
-        VertexArray vertexArray;
-        vertexArray.addBuffer(polygonVerticesLayout);
-
-        // Bind all the textures
-        for (unsigned int i = 0; i < textures.size(); i++) {
-            textures[i]->activate(i);
-        }
-
-        // Bind the shader and submit the view*projection matrix as a uniform
-        m_rendererStorage->m_polygonEntityPropertiesUniformBuffer->setData(
-            (const void*) entityProperties.data(),
-            sizeof(PolygonEntityProperties) * entityProperties.size()
-        );
-
-        if (m_rendererStorage->m_framebuffer != nullptr) {
-            m_rendererStorage->m_framebuffer->bind();
-        }
-
-        // Render the polygons as triangles
-        RenderCommand::drawIndexedTriangles(
-            vertexBuffer.getRendererId(),
-            indexBuffer.getRendererId(),
-            vertexArray.getRendererId(),
-            shader->getRendererId(),
-            indexBuffer.getCount()
-        );
-
-        if (m_rendererStorage->m_framebuffer != nullptr) {
-            m_rendererStorage->m_framebuffer->unbind();
-        }
-
-    }
-
-    // Create the actual circle drawing resources (buffers and such), prepare the shader, and make the draw call
-    void Renderer::renderCircles(const std::vector<CircleVertex>& circleVertices, const std::vector<unsigned int>& indices, const std::vector<Ref<Texture>>& textures, const std::vector<CircleEntityProperties>& entityProperties, const Ref<Shader>& shader) {
-
-        // Create a layout, based on the structure of CircleVertex
-        static engine::BufferLayout circleVerticesLayout = {
-            {"a_position", 4, engine::PrimitiveDataType::Float},
-            {"a_localCoordinates", 2, engine::PrimitiveDataType::Float},
-            {"a_textureCoordinates", 2, engine::PrimitiveDataType::Float},
-            {"a_entityIndex", 1, engine::PrimitiveDataType::UInt},
-        };
-
-        // Create the vertex and index buffers
-        VertexBuffer vertexBuffer(circleVerticesLayout, (const void*) circleVertices.data(), sizeof(CircleVertex) * circleVertices.size());
-        IndexBuffer indexBuffer((unsigned int*) indices.data(), indices.size());
-
-        // Bind them together into a vertex array
-        VertexArray vertexArray;
-        vertexArray.addBuffer(circleVerticesLayout);
-
-        // Bind all the textures
-        for (unsigned int i = 0; i < textures.size(); i++) {
-            textures[i]->activate(i);
-        }
-
-        // Bind the shader and submit the view*projection matrix as a uniform
+        // Submit the entity properties to the uniform buffer
         m_rendererStorage->m_circleEntityPropertiesUniformBuffer->setData(
             (const void*) entityProperties.data(),
             sizeof(CircleEntityProperties) * entityProperties.size()
         );
 
-        if (m_rendererStorage->m_framebuffer != nullptr) {
-            m_rendererStorage->m_framebuffer->bind();
-        }
-
-        // Render the circles as triangles (the circle shader will do the rest)
-        RenderCommand::drawIndexedTriangles(
-            vertexBuffer.getRendererId(),
-            indexBuffer.getRendererId(),
-            vertexArray.getRendererId(),
-            shader->getRendererId(),
-            indexBuffer.getCount()
+        // Render
+        ForwardRenderer::renderCircles(
+            vertices, indices, textures, m_rendererStorage->m_shaderLibrary.get("circle-shader"), m_rendererStorage->m_framebuffer
         );
 
-        if (m_rendererStorage->m_framebuffer != nullptr) {
-            m_rendererStorage->m_framebuffer->unbind();
-        }
+        // Clear the batch (and add the white texture back)
+        m_rendererStorage->m_circleBatch.clear();
+        m_rendererStorage->m_circleBatch.addTexture(m_rendererStorage->m_whiteTexture);
 
     }
 
     // Create the shaders and set the texture slots
-    void Renderer::loadDefaultShaders() {
+    void DeferredRenderer::loadDefaultShaders() {
 
         GE_PROFILE_FUNCTION;
 
         m_rendererStorage->m_sceneMatricesUniformBuffer = CreateRef<UniformBuffer>(
-            "SceneMatricesBlock",
+            "ScenePropertiesBlock",
             0,
-            sizeof (glm::mat4) * 2 // We are going to store the view and projection matrices
+            sizeof (SceneProperties)
         );
 
         // Create the polygon shader
@@ -305,7 +222,7 @@ namespace engine {
 
     }
 
-    void Renderer::loadDefaultWhiteTexture() {
+    void DeferredRenderer::loadDefaultWhiteTexture() {
 
         GE_PROFILE_FUNCTION;
 

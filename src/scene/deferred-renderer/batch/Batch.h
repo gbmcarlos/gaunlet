@@ -15,6 +15,7 @@ namespace engine {
         glm::vec4 m_color;
         unsigned int m_textureIndex;
         int m_entityId; glm::vec2 pad2 = {};
+
     };
 
     struct CircleEntityProperties {
@@ -29,6 +30,7 @@ namespace engine {
         int m_entityId;
         float m_thickness;
         float m_fade;
+
     };
 
     template<typename T, typename R>

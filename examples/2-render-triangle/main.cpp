@@ -29,7 +29,7 @@ public:
         };
 
         // Create the vertex buffer, which contains the actual data
-        m_vertexBuffer = engine::CreateRef<engine::VertexBuffer>(layout, &vertices, sizeof(vertices));
+        m_vertexBuffer = engine::CreateRef<engine::VertexBuffer>(&vertices, sizeof(vertices));
 
         unsigned int indices[] = {
             0, 1, 2
@@ -40,7 +40,7 @@ public:
 
         // Create a vertex array, and bind the vertex buffer and the index buffer into it
         m_vertexArray = engine::CreateRef<engine::VertexArray>();
-        m_vertexArray->addBuffer(m_vertexBuffer->getBufferLayout());
+        m_vertexArray->addBuffer(layout);
 
         std::map<engine::ShaderType, std::string> shaderSource {
             {engine::ShaderType::Vertex, "res/shaders/vertex-position.glsl"},

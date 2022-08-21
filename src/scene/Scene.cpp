@@ -2,12 +2,12 @@
 
 #include "entity/Entity.h"
 #include "entity/ScriptComponents.h"
-#include "renderer/Renderer.h"
+#include "deferred-renderer/DeferredRenderer.h"
 
 namespace engine {
 
     Scene::Scene() {
-        Renderer::init();
+        DeferredRenderer::init();
     }
 
     Scene::~Scene() {
@@ -64,12 +64,33 @@ namespace engine {
 
     void Scene::render(const Ref<Camera>& camera, const Ref<Framebuffer>& framebuffer) {
 
-        Renderer::beginScene(camera->getViewMatrix(), camera->getProjectionMatrix(), framebuffer);
+        DeferredRenderer::beginScene(
+            camera->getViewMatrix(),
+            camera->getProjectionMatrix(),
+            framebuffer,
+            DirectionalLightComponent()
+        );
 
         renderPolygons();
         renderCircles();
 
-        Renderer::endScene();
+        DeferredRenderer::endScene();
+
+    }
+
+    void Scene::render(const Ref<Camera>& camera, const DirectionalLightComponent& directionalLight, const Ref<Framebuffer>& framebuffer) {
+
+        DeferredRenderer::beginScene(
+            camera->getViewMatrix(),
+            camera->getProjectionMatrix(),
+            framebuffer,
+            directionalLight
+        );
+
+        renderPolygons();
+        renderCircles();
+
+        DeferredRenderer::endScene();
 
     }
 
@@ -158,7 +179,7 @@ namespace engine {
             // MaterialComponent is optional
             auto material = entity.hasComponent<MaterialComponent>() ? entity.getComponent<MaterialComponent>() : MaterialComponent();
 
-            Renderer::submit(entity.getId(), polygon, transform, material);
+            DeferredRenderer::submit(entity.getId(), polygon, transform, material);
 
         }
 
@@ -175,7 +196,7 @@ namespace engine {
             // MaterialComponent is optional
             auto material = entity.hasComponent<MaterialComponent>() ? entity.getComponent<MaterialComponent>() : MaterialComponent();
 
-            Renderer::submit(entity.getId(), circle, transform, material);
+            DeferredRenderer::submit(entity.getId(), circle, transform, material);
 
         }
 
