@@ -1,6 +1,6 @@
-#include "DockingLayout.h"
+#include "layout/docking/DockingLayout.h"
 
-#include "imgui/imgui_internal.h"
+#include <imgui/imgui_internal.h>
 
 namespace engine::Layout {
 

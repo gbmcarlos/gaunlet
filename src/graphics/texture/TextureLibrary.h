@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Texture.h"
+#include "graphics/texture/Texture.h"
 
-#include "../pch.h"
+#include "pch.h"
 
 namespace engine::Graphics {
 

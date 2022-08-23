@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../entity/GraphicsComponents.h"
-#include "../../../graphics/texture/TextureLibrary.h"
+#include "graphics/texture/TextureLibrary.h"
+#include "scene/entity/GraphicsComponents.h"
 
 namespace engine::Scene {
 

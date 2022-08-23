@@ -1,6 +1,6 @@
-#include "IndexBuffer.h"
+#include "graphics/index-buffer/IndexBuffer.h"
 
-#include "../../core/render/RenderCommand.h"
+#include "core/render/RenderCommand.h"
 
 namespace engine::Graphics {
 

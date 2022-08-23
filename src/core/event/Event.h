@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../pch.h"
+#include "pch.h"
 
 #define EVENT_TYPE(type) static EventType getStaticType() {return EventType::type; }\
                          EventType getType() const override {return getStaticType(); }\

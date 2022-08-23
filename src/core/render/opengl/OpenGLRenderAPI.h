@@ -2,10 +2,9 @@
 
 #include <GL/glew.h>
 
-#include "../RenderCommand.h"
-#include "../RenderApi.h"
+#include "core/render/RenderApi.h"
 
-#include "../pch.h"
+#include "pch.h"
 
 namespace engine::Core {
 

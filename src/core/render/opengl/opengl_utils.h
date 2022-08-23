@@ -2,7 +2,7 @@
 
 #include <GL/glew.h>
 
-#include "../pch.h"
+#include "pch.h"
 
 #define glCall(x) glClearErrors(); \
         x;\

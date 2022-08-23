@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Shader.h"
+#include "graphics/shader/Shader.h"
 
-#include "../pch.h"
+#include "pch.h"
 
 namespace engine::Graphics {
 

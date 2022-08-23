@@ -1,4 +1,6 @@
-#include "VertexBuffer.h"
+#include "graphics/vertex-buffer/VertexBuffer.h"
+
+#include "core/render/RenderCommand.h"
 
 namespace engine::Graphics {
 

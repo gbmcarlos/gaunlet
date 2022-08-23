@@ -1,21 +1,19 @@
 #pragma once
 
-#include "batch/Batch.h"
+#include "scene/deferred-renderer/batch/Batch.h"
 
-#include "../../graphics/vertex-array/VertexArray.h"
-#include "../../graphics/uniform-buffer/UniformBuffer.h"
-#include "../../graphics/texture/Texture.h"
-#include "../../graphics/framebuffer/Framebuffer.h"
+#include "graphics/vertex-array/VertexArray.h"
+#include "graphics/uniform-buffer/UniformBuffer.h"
+#include "graphics/texture/Texture.h"
+#include "graphics/framebuffer/Framebuffer.h"
 
-#include "../../graphics/shader/Shader.h"
-#include "../../graphics/shader/ShaderLibrary.h"
+#include "graphics/shader/Shader.h"
+#include "graphics/shader/ShaderLibrary.h"
 
-#include "../entity/GraphicsComponents.h"
-#include "../entity/LightingComponents.h"
+#include "scene/entity/GraphicsComponents.h"
+#include "scene/entity/LightingComponents.h"
 
-#include <glm/gtc/matrix_transform.hpp>
-
-#include "../pch.h"
+#include "pch.h"
 
 namespace engine::Scene {
 

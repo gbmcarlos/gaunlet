@@ -1,7 +1,4 @@
-#include <Scene.h>
-
-#include <glm/glm.hpp>
-#include <iostream>
+#include "graphics-engine/Scene.h"
 
 class QuadController : public engine::Scene::NativeScript {
 

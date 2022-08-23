@@ -1,4 +1,6 @@
-#include "BufferLayout.h"
+#include "graphics/vertex-buffer/BufferLayout.h"
+
+#include "core/render/RenderCommand.h"
 
 namespace engine::Graphics {
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "TimeStep.h"
-#include "../input/Event.h"
+#include "core/application/TimeStep.h"
+#include "core/event/Event.h"
 
 namespace engine::Core {
 

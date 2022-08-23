@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../model/Model.h"
-#include "../model/Sprites.h"
-#include "../../graphics/texture/Texture.h"
+#include "scene/model/Model.h"
+#include "scene/model/Sprites.h"
+#include "graphics/texture/Texture.h"
 
-#include <glm/gtc/matrix_transform.hpp>
+#include "pch.h"
 
 namespace engine::Scene {
 

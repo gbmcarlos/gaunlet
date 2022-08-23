@@ -1,7 +1,7 @@
-#include "Application.h"
+#include "core/application/Application.h"
 
-#include "../input/EventBus.h"
-#include "../utils.h"
+#include "core/event/EventBus.h"
+#include "core/utils.h"
 
 namespace engine::Core {
 

@@ -1,16 +1,15 @@
 #pragma once
 
-#include "DockedNode.h"
+#include "core/application/Layer.h"
+#include "core/window/Window.h"
 
-#include "../../core/application/Layer.h"
-#include "../../core/window/Window.h"
+#include "graphics/framebuffer/Framebuffer.h"
+#include "scene/camera/Camera.h"
 
-#include "../graphics/framebuffer/Framebuffer.h"
-#include "../scene/camera/Camera.h"
+#include "layout/docking/DockingLayout.h"
+#include "layout/application/DockedNode.h"
 
-#include "../docking/DockingLayout.h"
-
-#include "../pch.h"
+#include "pch.h"
 
 namespace engine::Layout {
 

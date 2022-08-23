@@ -1,11 +1,11 @@
 #pragma once
 
-#include "LayerStack.h"
-#include "TimeStep.h"
-#include "../window/Window.h"
-#include "../input/Event.h"
+#include "core/application/LayerStack.h"
+#include "core/application/TimeStep.h"
+#include "core/window/Window.h"
+#include "core/event/Event.h"
 
-#include "../pch.h"
+#include "pch.h"
 
 namespace engine::Core {
 

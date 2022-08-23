@@ -1,5 +1,5 @@
-#include "RenderCommand.h"
-#include "opengl/OpenGLRenderAPI.h"
+#include "core/render/RenderCommand.h"
+#include "core/render/opengl/OpenGLRenderAPI.h"
 
 namespace engine::Core {
 

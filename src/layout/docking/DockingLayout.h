@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../graphics/framebuffer/Framebuffer.h"
+#include "graphics/framebuffer/Framebuffer.h"
 
-#include "../pch.h"
+#include "pch.h"
 
 #include <imgui.h>
 

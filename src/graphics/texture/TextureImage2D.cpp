@@ -1,9 +1,9 @@
-#include "TextureImage2D.h"
+#include "graphics/texture/TextureImage2D.h"
 
-#include "../../core/render/RenderCommand.h"
+#include "core/render/RenderCommand.h"
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include <stb_image.h>
 
 namespace engine::Graphics {
 

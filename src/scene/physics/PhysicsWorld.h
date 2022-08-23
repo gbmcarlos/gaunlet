@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../core/application/TimeStep.h"
-#include "../entity/GraphicsComponents.h"
-#include "../entity/PhysicsComponents.h"
+#include "core/application/TimeStep.h"
+#include "scene/entity/GraphicsComponents.h"
+#include "scene/entity/PhysicsComponents.h"
 
 #include <box2d/box2d.h>
 

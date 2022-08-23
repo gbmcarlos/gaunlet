@@ -1,6 +1,6 @@
-#include "EventBus.h"
+#include "core/event/EventBus.h"
 
-#include "Event.h"
+#include "core/event/Event.h"
 
 namespace engine::Core {
 

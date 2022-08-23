@@ -1,4 +1,4 @@
-#include "PhysicsWorld.h"
+#include "scene/physics/PhysicsWorld.h"
 
 namespace engine::Scene {
 

@@ -1,9 +1,4 @@
-#include <Layout.h>
-
-#include "glm/glm.hpp"
-
-#include <array>
-#include <utility>
+#include "graphics-engine/Layout.h"
 
 class SceneLayer : public engine::Core::Layer {
 

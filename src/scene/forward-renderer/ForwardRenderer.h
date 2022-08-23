@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../pch.h"
+#include "graphics/texture/Texture.h"
+#include "graphics/shader/Shader.h"
+#include "graphics/framebuffer/Framebuffer.h"
+#include "scene/model/Vertex.h"
 
-#include "../model/Vertex.h"
-#include "../../graphics/texture/Texture.h"
-#include "../../graphics/shader/Shader.h"
-#include "../../graphics/framebuffer/Framebuffer.h"
+#include "pch.h"
 
 namespace engine::Scene {
 

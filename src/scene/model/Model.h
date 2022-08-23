@@ -1,11 +1,10 @@
 #pragma once
 
-#include "Mesh.h"
+#include "scene/model/Mesh.h"
 
-#include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 
-#include "../pch.h"
+#include "pch.h"
 
 namespace engine::Scene {
 

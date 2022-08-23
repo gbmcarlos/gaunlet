@@ -1,4 +1,4 @@
-#include "TextureLibrary.h"
+#include "graphics/texture/TextureLibrary.h"
 
 namespace engine::Graphics {
 

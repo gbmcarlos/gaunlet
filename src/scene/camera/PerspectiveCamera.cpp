@@ -1,4 +1,4 @@
-#include "PerspectiveCamera.h"
+#include "scene/camera/PerspectiveCamera.h"
 
 namespace engine::Scene {
 

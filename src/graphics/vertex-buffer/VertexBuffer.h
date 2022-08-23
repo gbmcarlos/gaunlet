@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BufferLayout.h"
+#include "graphics/vertex-buffer/BufferLayout.h"
 
 namespace engine::Graphics {
 

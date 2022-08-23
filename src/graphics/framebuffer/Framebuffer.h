@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../core/render/RenderCommand.h"
-#include "../texture/Texture.h"
+#include "core/render/RenderApi.h"
+#include "graphics/texture/Texture.h"
 
-#include "../pch.h"
+#include "pch.h"
 
 namespace engine::Graphics {
 

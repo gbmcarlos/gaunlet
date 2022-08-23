@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../entity/GraphicsComponents.h"
+#include "scene/entity/GraphicsComponents.h"
 
-#include "glm/glm.hpp"
+#include "pch.h"
 
 namespace engine::Scene {
 

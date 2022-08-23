@@ -1,6 +1,4 @@
-#include <Graphics.h>
-
-#include <memory>
+#include "graphics-engine/Graphics.h"
 
 class RenderTriangleApplication : public engine::Core::Application {
 

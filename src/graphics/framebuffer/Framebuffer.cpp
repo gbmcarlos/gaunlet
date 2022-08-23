@@ -1,6 +1,7 @@
-#include "Framebuffer.h"
+#include "graphics/framebuffer/Framebuffer.h"
 
-#include "../texture/TextureImage2D.h"
+#include "core/render/RenderCommand.h"
+#include "graphics/texture/TextureImage2D.h"
 
 namespace engine::Graphics {
 

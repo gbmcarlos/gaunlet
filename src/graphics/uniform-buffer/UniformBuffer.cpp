@@ -1,8 +1,6 @@
-#include "UniformBuffer.h"
+#include "graphics/uniform-buffer/UniformBuffer.h"
 
-#include <utility>
-
-#include "../../core/render/RenderCommand.h"
+#include "core/render/RenderCommand.h"
 
 namespace engine::Graphics {
 

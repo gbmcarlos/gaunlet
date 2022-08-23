@@ -1,7 +1,7 @@
-#include "RunLoop.h"
+#include "core/run-loop/RunLoop.h"
 
-#include "../render/RenderCommand.h"
-#include "../imgui/ImGuiRenderApi.h"
+#include "core/render/RenderCommand.h"
+#include "core/imgui/ImGuiRenderApi.h"
 
 namespace engine::Core {
 

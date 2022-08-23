@@ -1,10 +1,8 @@
 #pragma once
 
-#include <utility>
+#include "scene/model/Vertex.h"
 
-#include "../pch.h"
-
-#include "Vertex.h"
+#include "pch.h"
 
 namespace engine::Scene {
 

@@ -1,4 +1,6 @@
-#include "VertexArray.h"
+#include "graphics/vertex-array/VertexArray.h"
+
+#include "core/render/RenderCommand.h"
 
 namespace engine::Graphics {
 

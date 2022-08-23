@@ -1,9 +1,7 @@
-#include "Shader.h"
+#include "graphics/shader/Shader.h"
 
-#include "shader_utils.h"
-#include "../../core/render/RenderCommand.h"
-
-#include "../pch.h"
+#include "graphics/shader/shader_utils.h"
+#include "core/render/RenderCommand.h"
 
 namespace engine::Graphics {
 

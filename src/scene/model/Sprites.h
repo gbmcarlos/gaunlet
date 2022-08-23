@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Model.h"
+#include "scene/model/Model.h"
 
 namespace engine::Scene {
 

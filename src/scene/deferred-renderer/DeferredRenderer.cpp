@@ -1,7 +1,8 @@
-#include "DeferredRenderer.h"
+#include "scene/deferred-renderer/DeferredRenderer.h"
 
-#include "../../graphics/texture/TextureImage2D.h"
-#include "../forward-renderer/ForwardRenderer.h"
+#include "core/render/RenderCommand.h"
+#include "graphics/texture/TextureImage2D.h"
+#include "scene/forward-renderer/ForwardRenderer.h"
 
 namespace engine::Scene {
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../core/input/Event.h"
+#include "core/event/Event.h"
 
 namespace engine::Layout {
 

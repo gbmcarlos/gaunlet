@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../application/Application.h"
+#include "core/application/Application.h"
 
-#include "../pch.h"
+#include "pch.h"
 
 namespace engine::Core {
 

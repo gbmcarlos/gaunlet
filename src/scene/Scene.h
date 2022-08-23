@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../core/application/TimeStep.h"
-#include "../graphics/framebuffer/Framebuffer.h"
-#include "camera/OrthographicCamera.h"
-#include "entity/GraphicsComponents.h"
-#include "entity/PhysicsComponents.h"
-#include "entity/LightingComponents.h"
-#include "physics/PhysicsWorld.h"
+#include "core/application/TimeStep.h"
+#include "graphics/framebuffer/Framebuffer.h"
+#include "scene/camera/OrthographicCamera.h"
+#include "scene/entity/GraphicsComponents.h"
+#include "scene/entity/PhysicsComponents.h"
+#include "scene/entity/LightingComponents.h"
+#include "scene/physics/PhysicsWorld.h"
 
 #include <entt/entt.hpp>
 

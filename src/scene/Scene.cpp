@@ -1,8 +1,8 @@
-#include "Scene.h"
+#include "scene/Scene.h"
 
-#include "entity/Entity.h"
-#include "entity/ScriptComponents.h"
-#include "deferred-renderer/DeferredRenderer.h"
+#include "scene/entity/Entity.h"
+#include "scene/entity/ScriptComponents.h"
+#include "scene/deferred-renderer/DeferredRenderer.h"
 
 namespace engine::Scene {
 

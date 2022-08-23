@@ -1,5 +1,6 @@
-#include "Model.h"
+#include "scene/model/Model.h"
 
+#include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 
 namespace engine::Scene {

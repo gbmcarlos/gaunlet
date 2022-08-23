@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../vertex-buffer/VertexBuffer.h"
-#include "../index-buffer/IndexBuffer.h"
+#include "graphics/vertex-buffer/VertexBuffer.h"
+#include "graphics/index-buffer/IndexBuffer.h"
 
 namespace engine::Graphics {
 

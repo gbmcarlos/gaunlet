@@ -1,7 +1,5 @@
-#include "OpenGLRenderAPI.h"
-#include "opengl_utils.h"
-
-#include <glm/gtc/type_ptr.hpp>
+#include "core/render/opengl/OpenGLRenderAPI.h"
+#include "core/render/opengl/opengl_utils.h"
 
 namespace engine::Core {
 

@@ -1,8 +1,9 @@
 #include "ForwardRenderer.h"
 
-#include "../../graphics/vertex-buffer/VertexBuffer.h"
-#include "../../graphics/index-buffer/IndexBuffer.h"
-#include "../../graphics/vertex-array/VertexArray.h"
+#include "graphics/vertex-buffer/VertexBuffer.h"
+#include "graphics/index-buffer/IndexBuffer.h"
+#include "graphics/vertex-array/VertexArray.h"
+#include "core/render/RenderCommand.h"
 
 namespace engine::Scene {
 

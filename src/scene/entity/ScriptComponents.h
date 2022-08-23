@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Entity.h"
+#include "scene/entity/Entity.h"
 
 namespace engine::Scene {
 

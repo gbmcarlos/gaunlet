@@ -1,11 +1,11 @@
-#include "Window.h"
+#include "core/window/Window.h"
 
-#include "../input/EventBus.h"
-#include "../input/events/WindowEvent.h"
-#include "../input/events/KeyEvent.h"
-#include "../input/events/MouseEvent.h"
-#include "../input/events/CursorEvent.h"
-#include "../input/events/ScrollEvent.h"
+#include "core/event/EventBus.h"
+#include "core/event/events/WindowEvent.h"
+#include "core/event/events/KeyEvent.h"
+#include "core/event/events/MouseEvent.h"
+#include "core/event/events/CursorEvent.h"
+#include "core/event/events/ScrollEvent.h"
 
 namespace engine::Core {
 

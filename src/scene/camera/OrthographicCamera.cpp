@@ -1,6 +1,4 @@
-#include "OrthographicCamera.h"
-
-#include <glm/gtc/matrix_transform.hpp>
+#include "scene/camera/OrthographicCamera.h"
 
 namespace engine::Scene {
 

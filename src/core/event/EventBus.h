@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Event.h"
+#include "core/event/Event.h"
 
-#include "../pch.h"
+#include "pch.h"
 
 namespace engine::Core {
 

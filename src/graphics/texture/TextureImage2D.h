@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Texture.h"
+#include "core/render/RenderApi.h"
+#include "graphics/texture/Texture.h"
 
 namespace engine::Graphics {
 

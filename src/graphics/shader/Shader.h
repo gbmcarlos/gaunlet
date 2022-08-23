@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../../core/render/RenderApi.h"
-#include "../uniform-buffer/UniformBuffer.h"
+#include "core/render/RenderApi.h"
+#include "graphics//uniform-buffer/UniformBuffer.h"
 
-#include "../pch.h"
+#include "pch.h"
 
 namespace engine::Graphics {
 

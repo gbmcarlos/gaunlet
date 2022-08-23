@@ -1,9 +1,5 @@
 #pragma once
 
-#include "../../core/render/RenderCommand.h"
-
-#include "../pch.h"
-
 namespace engine::Graphics {
 
     class TextureLibrary;
