@@ -2,7 +2,7 @@
 
 #include "../../core/input/Event.h"
 
-namespace engine {
+namespace engine::Layout {
 
     class LayoutLayer;
 
@@ -37,7 +37,7 @@ namespace engine {
     class RenderDockedNode : public DockedNode  {
 
     public:
-        virtual bool onEvent(Event& event) = 0;
+        virtual bool onEvent(Core::Event& event) = 0;
 
     };
 

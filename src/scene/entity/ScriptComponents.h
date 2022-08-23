@@ -2,7 +2,7 @@
 
 #include "Entity.h"
 
-namespace engine {
+namespace engine::Scene {
 
     class NativeScript {
 
@@ -25,7 +25,7 @@ namespace engine {
         // These are the methods to be overridden by the user's native script class
         virtual void onCreate() {}
         virtual void onDelete() {}
-        virtual void onUpdate(TimeStep timeStep) {}
+        virtual void onUpdate(Core::TimeStep timeStep) {}
 
     private:
         Entity m_entity;

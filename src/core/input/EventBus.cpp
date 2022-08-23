@@ -2,7 +2,7 @@
 
 #include "Event.h"
 
-namespace engine {
+namespace engine::Core {
 
     void EventBus::publishEvent(Event& event) {
         if (eventCallback) {

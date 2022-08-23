@@ -10,7 +10,7 @@
 
 #include <entt/entt.hpp>
 
-namespace engine {
+namespace engine::Scene {
 
     class Entity;
 
@@ -24,29 +24,29 @@ namespace engine {
 
         Entity createEntity();
 
-        const Ref<PhysicsWorld>& enablePhysics(glm::vec2 gravity);
+        const Core::Ref<PhysicsWorld>& enablePhysics(glm::vec2 gravity);
         void start();
         void play();
         void pause();
         void togglePlay();
 
-        void update(TimeStep timeStep);
-        void render(const Ref<Camera>& camera, const Ref<Framebuffer>& framebuffer = nullptr);
-        void render(const Ref<Camera>& camera, const DirectionalLightComponent& directionalLight, const Ref<Framebuffer>& framebuffer = nullptr);
+        void update(Core::TimeStep timeStep);
+        void render(const Core::Ref<Camera>& camera, const Core::Ref<Graphics::Framebuffer>& framebuffer = nullptr);
+        void render(const Core::Ref<Camera>& camera, const DirectionalLightComponent& directionalLight, const Core::Ref<Graphics::Framebuffer>& framebuffer = nullptr);
         void stop();
 
     private:
 
         bool m_playing = false;
         entt::registry m_registry;
-        Ref<Camera> m_camera = nullptr;
-        Ref<PhysicsWorld> m_physicsWorld = nullptr;
+        Core::Ref<Camera> m_camera = nullptr;
+        Core::Ref<PhysicsWorld> m_physicsWorld = nullptr;
 
         void initPhysics();
-        void simulatePhysics(TimeStep timeStep);
+        void simulatePhysics(Core::TimeStep timeStep);
 
         void initScripts();
-        void runScripts(TimeStep timeStep);
+        void runScripts(Core::TimeStep timeStep);
         void destroyScripts();
 
         void renderPolygons();

@@ -1,12 +1,12 @@
 #include "VertexArray.h"
 
-namespace engine {
+namespace engine::Graphics {
 
     VertexArray::VertexArray() {
-        RenderCommand::createVertexArray(m_rendererId);
+        Core::RenderCommand::createVertexArray(m_rendererId);
     }
     VertexArray::~VertexArray() {
-        RenderCommand::deleteVertexArray(m_rendererId);
+        Core::RenderCommand::deleteVertexArray(m_rendererId);
     }
 
     void VertexArray::addBuffer(const BufferLayout& bufferLayout) {
@@ -14,7 +14,7 @@ namespace engine {
         auto& elements = bufferLayout.getElements();
         for (unsigned int i = 0; i < elements.size(); i++) {
             auto& element = elements[i];
-            RenderCommand::addVertexArrayAttribute(
+            Core::RenderCommand::addVertexArrayAttribute(
                 m_rendererId,
                 i,
                 element.m_count,

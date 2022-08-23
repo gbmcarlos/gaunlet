@@ -3,7 +3,7 @@
 #include "../../entity/GraphicsComponents.h"
 #include "../../../graphics/texture/TextureLibrary.h"
 
-namespace engine {
+namespace engine::Scene {
 
     struct PolygonEntityProperties {
 
@@ -38,7 +38,7 @@ namespace engine {
 
     public:
 
-        void submit(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, const Ref<Texture>& texture, T& entityProperties) {
+        void submit(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, const Core::Ref<Graphics::Texture>& texture, T& entityProperties) {
 
             if (texture != nullptr) {
                 // Once added the texture, we know the actual index for this entity
@@ -64,7 +64,7 @@ namespace engine {
 
         }
 
-        bool shouldFlush(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const Ref<Texture>& texture) {
+        bool shouldFlush(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const Core::Ref<Graphics::Texture>& texture) {
 
             // If rendering the current polygon would pass over the limit of vertices, flush
             if (m_vertices.size() + vertices.size() > m_maxVertices) {
@@ -95,10 +95,10 @@ namespace engine {
 
         }
 
-        inline void addTexture(const Ref<Texture>& texture) {m_textureLibrary.add(texture); }
+        inline void addTexture(const Core::Ref<Graphics::Texture>& texture) {m_textureLibrary.add(texture); }
         inline const std::vector<Vertex>& getVertices() {return m_vertices; }
         inline const std::vector<unsigned int>& getIndices() {return m_indices; }
-        inline const std::vector<Ref<Texture>>& getTextures() {return m_textureLibrary.getAll(); }
+        inline const std::vector<Core::Ref<Graphics::Texture>>& getTextures() {return m_textureLibrary.getAll(); }
         inline unsigned int getMaxTextures() {return m_maxTextures; }
         inline const std::vector<T>& getEntityProperties() {return m_entityProperties; }
 
@@ -117,7 +117,7 @@ namespace engine {
         std::vector<unsigned int> m_indices = {};
 
         static const unsigned int m_maxTextures = 10;
-        TextureLibrary m_textureLibrary;
+        Graphics::TextureLibrary m_textureLibrary;
 
         static const unsigned int m_maxEntityProperties = 100;
         std::vector<T> m_entityProperties = {};

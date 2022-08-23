@@ -5,7 +5,7 @@
 
 #include "../pch.h"
 
-namespace engine {
+namespace engine::Graphics {
 
     class Shader {
 
@@ -21,7 +21,7 @@ namespace engine {
 
         inline unsigned int getRendererId() const {return m_rendererId; }
 
-        void attach(ShaderType type, const std::string& shaderPath);
+        void attach(Core::ShaderType type, const std::string& shaderPath);
         void compile() const;
 
         void setUniform1i(const std::string& name, int value);
@@ -30,7 +30,7 @@ namespace engine {
         void setUniformMat3f(const std::string& name, const glm::mat3& value);
         void setUniformMat4f(const std::string& name, const glm::mat4& value);
 
-        void linkUniformBuffer(const Ref<UniformBuffer>& uniformBuffer);
+        void linkUniformBuffer(const Core::Ref<UniformBuffer>& uniformBuffer);
     };
 
 }

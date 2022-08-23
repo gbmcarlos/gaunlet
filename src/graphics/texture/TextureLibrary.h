@@ -4,7 +4,7 @@
 
 #include "../pch.h"
 
-namespace engine {
+namespace engine::Graphics {
 
     class TextureLibrary {
 
@@ -12,16 +12,16 @@ namespace engine {
 
         TextureLibrary() = default;
 
-        unsigned int add(const Ref<Texture>& texture);
-        unsigned int addOrGet(const Ref<Texture>& texture);
-        bool exists(const Ref<Texture>& texture);
-        Ref<Texture> get(unsigned int index);
-        inline const std::vector<Ref<Texture>>& getAll() {return m_textures; }
+        unsigned int add(const Core::Ref<Texture>& texture);
+        unsigned int addOrGet(const Core::Ref<Texture>& texture);
+        bool exists(const Core::Ref<Texture>& texture);
+        Core::Ref<Texture> get(unsigned int index);
+        inline const std::vector<Core::Ref<Texture>>& getAll() {return m_textures; }
         unsigned int count();
         void clear();
 
     private:
-        std::vector<Ref<Texture>> m_textures;
+        std::vector<Core::Ref<Texture>> m_textures;
 
     };
 

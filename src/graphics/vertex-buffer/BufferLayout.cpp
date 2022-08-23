@@ -1,12 +1,12 @@
 #include "BufferLayout.h"
 
-namespace engine {
+namespace engine::Graphics {
 
-    BufferLayoutElement::BufferLayoutElement(std::string  name, unsigned int count, PrimitiveDataType type, bool normalized)
+    BufferLayoutElement::BufferLayoutElement(std::string  name, unsigned int count, Core::PrimitiveDataType type, bool normalized)
         : m_name(std::move(name)),
           m_count(count),
           m_type(type),
-          m_size(count * RenderCommand::sizeOfLayoutElementType(type)),
+          m_size(count * Core::RenderCommand::sizeOfLayoutElementType(type)),
           m_offset(0),
           m_normalized(normalized) {}
 

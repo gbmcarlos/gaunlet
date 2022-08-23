@@ -12,24 +12,24 @@
 
 #include "../pch.h"
 
-namespace engine {
+namespace engine::Layout {
 
-    class LayoutLayer : public Layer {
+class LayoutLayer : public Core::Layer {
 
     public:
-        explicit LayoutLayer(Ref<Window> window);
+        explicit LayoutLayer(Core::Ref<Core::Window> window);
 
         void setLayoutSpec(const DockingLayoutSpec& layoutSpec);
         void pushNode(const char* windowId, GuiDockedNode* node);
-        void pushNode(const char* windowId, RenderDockedNode* node, Ref<Camera> camera, Ref<Framebuffer> framebuffer, unsigned int colorAttachmentIndex);
+        void pushNode(const char* windowId, RenderDockedNode* node, Core::Ref<Scene::Camera> camera, Core::Ref<Graphics::Framebuffer> framebuffer, unsigned int colorAttachmentIndex);
 
-        void onEvent(Event& event) override;
+        void onEvent(Core::Event& event) override;
         void onGuiRender() override;
 
     private:
 
         DockingLayoutSpec m_layoutSpec;
-        Ref<Window> m_window = nullptr;
+        Core::Ref<Core::Window> m_window = nullptr;
 
         struct GuiNode {
             const char* m_windowId;
@@ -39,16 +39,16 @@ namespace engine {
         struct RenderNode {
             const char* m_windowId;
             RenderDockedNode* m_node;
-            Ref<Camera> m_camera;
-            Ref<Framebuffer> m_framebuffer;
+            Core::Ref<Scene::Camera> m_camera;
+            Core::Ref<Graphics::Framebuffer> m_framebuffer;
             unsigned int m_colorAttachmentIndex;
         };
 
         std::vector<GuiNode> m_guiNodes = {};
         std::vector<RenderNode> m_renderNodes = {};
 
-        void handleMouseEvent(Event& event);
-        void handleKeyboardEvent(Event& event);
+        void handleMouseEvent(Core::Event& event);
+        void handleKeyboardEvent(Core::Event& event);
 
         void updateNodeProperties(DockedNode* node);
 

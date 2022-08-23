@@ -5,7 +5,7 @@
 
 #include "../pch.h"
 
-namespace engine {
+namespace engine::Graphics {
 
     enum class FramebufferDataFormat {
         RGBA, Integer, Depth
@@ -13,11 +13,11 @@ namespace engine {
 
     struct FramebufferAttachmentSpec {
 
-        FramebufferAttachmentSpec(FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, const glm::vec4& clearColorValue);
-        FramebufferAttachmentSpec(FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, int clearColorValue);
-        FramebufferAttachmentSpec(FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat);
+        FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, const glm::vec4& clearColorValue);
+        FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, int clearColorValue);
+        FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat);
 
-        FramebufferAttachmentType m_attachmentType;
+        Core::FramebufferAttachmentType m_attachmentType;
         FramebufferDataFormat m_dataFormat;
         int m_clearColorIntValue = 0;
         glm::vec4 m_clearColorVec4Value = {};
@@ -38,7 +38,7 @@ namespace engine {
         inline unsigned int getRendererId() const {return m_rendererId; }
         inline unsigned int getWidth() {return m_width; }
         inline unsigned int getHeight() {return m_height; }
-        inline Ref<Texture>& getColorAttachment(unsigned int index) {return m_textures[index]; }
+        inline Core::Ref<Texture>& getColorAttachment(unsigned int index) {return m_textures[index]; }
 
         int readPixel(unsigned int colorAttachmentIndex, unsigned int x, unsigned int y);
 
@@ -48,9 +48,9 @@ namespace engine {
         unsigned int m_rendererId = 0;
 
         std::vector<FramebufferAttachmentSpec> m_colorAttachmentSpecs = {};
-        FramebufferAttachmentSpec m_depthAttachmentSpec = {FramebufferAttachmentType::None, FramebufferDataFormat::Depth};
+        FramebufferAttachmentSpec m_depthAttachmentSpec = {Core::FramebufferAttachmentType::None, FramebufferDataFormat::Depth};
 
-        std::vector<Ref<Texture> > m_textures;
+        std::vector<Core::Ref<Texture> > m_textures;
 
         void recreate();
         void attachColor(FramebufferAttachmentSpec colorAttachmentSpec, unsigned int index);

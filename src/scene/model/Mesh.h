@@ -6,7 +6,7 @@
 
 #include "Vertex.h"
 
-namespace engine {
+namespace engine::Scene {
 
     class Mesh {
 

@@ -1,6 +1,6 @@
 #include "Layer.h"
 
-namespace engine {
+namespace engine::Core {
 
     void Layer::onUpdate(TimeStep timeStep) {}
     void Layer::onGuiRender() {}

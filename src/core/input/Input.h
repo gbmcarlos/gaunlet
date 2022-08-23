@@ -2,7 +2,7 @@
 
 #include "../window/Window.h"
 
-namespace engine {
+namespace engine::Core {
 
     class Input {
 

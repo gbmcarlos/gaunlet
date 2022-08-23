@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 #include <box2d/box2d.h>
 
-namespace engine {
+namespace engine::Scene {
 
     struct RigidBodyComponent {
 

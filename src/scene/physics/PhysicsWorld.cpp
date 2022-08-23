@@ -1,6 +1,6 @@
 #include "PhysicsWorld.h"
 
-namespace engine {
+namespace engine::Scene {
 
     PhysicsWorld::PhysicsWorld(glm::vec2 gravity) {
 
@@ -76,7 +76,7 @@ namespace engine {
 
     }
 
-    void PhysicsWorld::simulatePhysics(TimeStep timeStep) {
+    void PhysicsWorld::simulatePhysics(Core::TimeStep timeStep) {
 
         // This is how much time is unprocessed
         m_fixedTimeStepAccumulator += timeStep.getSeconds();

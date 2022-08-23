@@ -1,8 +1,8 @@
 #include "LayoutLayer.h"
 
-namespace engine {
+namespace engine::Layout {
 
-    LayoutLayer::LayoutLayer(Ref<Window> window) : m_window(std::move(window)) {}
+    LayoutLayer::LayoutLayer(Core::Ref<Core::Window> window) : m_window(std::move(window)) {}
 
     void LayoutLayer::setLayoutSpec(const DockingLayoutSpec& layoutSpec) {
         m_layoutSpec = layoutSpec;
@@ -12,7 +12,7 @@ namespace engine {
         m_guiNodes.push_back({windowId, node});
     }
 
-    void LayoutLayer::pushNode(const char* windowId, RenderDockedNode* node, Ref<Camera> camera, Ref<Framebuffer> framebuffer, unsigned int colorAttachmentIndex) {
+    void LayoutLayer::pushNode(const char* windowId, RenderDockedNode* node, Core::Ref<Scene::Camera> camera, Core::Ref<Graphics::Framebuffer> framebuffer, unsigned int colorAttachmentIndex) {
         m_renderNodes.push_back({windowId, node, std::move(camera), std::move(framebuffer), colorAttachmentIndex});
     }
 
@@ -78,17 +78,17 @@ namespace engine {
 
     }
 
-    void LayoutLayer::onEvent(Event& event) {
+    void LayoutLayer::onEvent(Core::Event& event) {
 
-        if (event.getCategory() == EventCategory::Mouse || event.getCategory() == EventCategory::Cursor || event.getCategory() == EventCategory::Scroll) {
+        if (event.getCategory() == Core::EventCategory::Mouse || event.getCategory() == Core::EventCategory::Cursor || event.getCategory() == Core::EventCategory::Scroll) {
             handleMouseEvent(event);
-        } else if (event.getCategory() == EventCategory::Keyboard) {
+        } else if (event.getCategory() == Core::EventCategory::Keyboard) {
             handleKeyboardEvent(event);
         }
 
     }
 
-    void LayoutLayer::handleMouseEvent(Event& event) {
+    void LayoutLayer::handleMouseEvent(Core::Event& event) {
 
         for (auto& renderNode : m_renderNodes) {
             if (renderNode.m_node->m_isHovered) {
@@ -99,7 +99,7 @@ namespace engine {
 
     }
 
-    void LayoutLayer::handleKeyboardEvent(Event& event) {
+    void LayoutLayer::handleKeyboardEvent(Core::Event& event) {
 
         for (auto& renderNode : m_renderNodes) {
             bool handled = renderNode.m_node->onEvent(event);

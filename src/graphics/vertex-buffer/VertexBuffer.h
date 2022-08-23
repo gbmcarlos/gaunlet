@@ -2,7 +2,7 @@
 
 #include "BufferLayout.h"
 
-namespace engine {
+namespace engine::Graphics {
 
     class VertexBuffer {
 

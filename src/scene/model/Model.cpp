@@ -2,7 +2,7 @@
 
 #include <assimp/postprocess.h>
 
-namespace engine {
+namespace engine::Scene {
 
     Model::Model(const char *filePath) {
         loadModel(filePath);

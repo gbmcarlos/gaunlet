@@ -2,7 +2,7 @@
 
 #include "Model.h"
 
-namespace engine {
+namespace engine::Scene {
 
     class Triangle2DModel : public Model {
     public:

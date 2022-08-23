@@ -3,7 +3,7 @@
 #include "../render/RenderCommand.h"
 #include "../imgui/ImGuiRenderApi.h"
 
-namespace engine {
+namespace engine::Core {
 
     RunLoop::RunLoop(Application& application)
         : m_application(application) {

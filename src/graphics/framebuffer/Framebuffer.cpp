@@ -2,9 +2,9 @@
 
 #include "../texture/TextureImage2D.h"
 
-namespace engine {
+namespace engine::Graphics {
 
-    FramebufferAttachmentSpec::FramebufferAttachmentSpec(FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, const glm::vec4& clearColorValue)
+    FramebufferAttachmentSpec::FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, const glm::vec4& clearColorValue)
         : m_attachmentType(attachmentType), m_dataFormat(framebufferDataFormat), m_clearColorVec4Value(clearColorValue) {
 
         if (framebufferDataFormat != FramebufferDataFormat::RGBA) {
@@ -13,7 +13,7 @@ namespace engine {
 
     }
 
-    FramebufferAttachmentSpec::FramebufferAttachmentSpec(FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, int clearColorValue)
+    FramebufferAttachmentSpec::FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, int clearColorValue)
         : m_attachmentType(attachmentType), m_dataFormat(framebufferDataFormat), m_clearColorIntValue(clearColorValue) {
 
         if (framebufferDataFormat != FramebufferDataFormat::Integer) {
@@ -22,16 +22,16 @@ namespace engine {
 
     }
 
-    FramebufferAttachmentSpec::FramebufferAttachmentSpec(FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat)
+    FramebufferAttachmentSpec::FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat)
         : m_attachmentType(attachmentType), m_dataFormat(framebufferDataFormat) {
     }
 
     Framebuffer::Framebuffer(const std::initializer_list<FramebufferAttachmentSpec>& attachmentSpecs, unsigned int width, unsigned int height) : m_width(width), m_height(height) {
 
         for (auto& attachmentSpec : attachmentSpecs) {
-            if (attachmentSpec.m_attachmentType == FramebufferAttachmentType::Color) {
+            if (attachmentSpec.m_attachmentType == Core::FramebufferAttachmentType::Color) {
                 m_colorAttachmentSpecs.emplace_back(attachmentSpec);
-            } else if (attachmentSpec.m_attachmentType == FramebufferAttachmentType::Depth) {
+            } else if (attachmentSpec.m_attachmentType == Core::FramebufferAttachmentType::Depth) {
                 m_depthAttachmentSpec = attachmentSpec;
             }
         }
@@ -41,10 +41,10 @@ namespace engine {
 
     Framebuffer::~Framebuffer() {
         if (m_rendererId) {
-            RenderCommand::deleteFramebuffer(m_rendererId);
+            Core::RenderCommand::deleteFramebuffer(m_rendererId);
             for (auto& texture : m_textures) {
                 unsigned int textureRendererId = texture->getRendererId();
-                RenderCommand::deleteTexture(textureRendererId);
+                Core::RenderCommand::deleteTexture(textureRendererId);
             }
             m_textures.clear();
         }
@@ -52,14 +52,14 @@ namespace engine {
 
     void Framebuffer::bind() {
 
-        RenderCommand::getViewport(m_lastViewportX0, m_lastViewportY0, m_lastViewportX1, m_lastViewportY1);
-        RenderCommand::bindFramebuffer(m_rendererId);
-        RenderCommand::setViewport(0, 0, m_width, m_height);
+        Core::RenderCommand::getViewport(m_lastViewportX0, m_lastViewportY0, m_lastViewportX1, m_lastViewportY1);
+        Core::RenderCommand::bindFramebuffer(m_rendererId);
+        Core::RenderCommand::setViewport(0, 0, m_width, m_height);
     }
 
     void Framebuffer::unbind() {
-        RenderCommand::unbindFramebuffer();
-        RenderCommand::setViewport(m_lastViewportX0, m_lastViewportY0, m_lastViewportX1, m_lastViewportY1);
+        Core::RenderCommand::unbindFramebuffer();
+        Core::RenderCommand::setViewport(m_lastViewportX0, m_lastViewportY0, m_lastViewportX1, m_lastViewportY1);
     }
 
     void Framebuffer::clear() {
@@ -70,10 +70,10 @@ namespace engine {
 
             switch (colorAttachmentSpec.m_dataFormat) {
                 case FramebufferDataFormat::RGBA:
-                    RenderCommand::clearColorAttachment(m_rendererId, i, PrimitiveDataType::Float, glm::value_ptr(colorAttachmentSpec.m_clearColorVec4Value));
+                    Core::RenderCommand::clearColorAttachment(m_rendererId, i, Core::PrimitiveDataType::Float, glm::value_ptr(colorAttachmentSpec.m_clearColorVec4Value));
                     break;
                 case FramebufferDataFormat::Integer:
-                    RenderCommand::clearColorAttachment(m_rendererId, i, PrimitiveDataType::Int, &colorAttachmentSpec.m_clearColorIntValue);
+                    Core::RenderCommand::clearColorAttachment(m_rendererId, i, Core::PrimitiveDataType::Int, &colorAttachmentSpec.m_clearColorIntValue);
                     break;
                 default:
                     throw std::runtime_error("Unsupported attachment data type for clear color");
@@ -81,8 +81,8 @@ namespace engine {
 
         }
 
-        if (m_depthAttachmentSpec.m_attachmentType != FramebufferAttachmentType::None) {
-            RenderCommand::clearDepthAttachment(m_rendererId);
+        if (m_depthAttachmentSpec.m_attachmentType != Core::FramebufferAttachmentType::None) {
+            Core::RenderCommand::clearDepthAttachment(m_rendererId);
         }
 
     }
@@ -91,7 +91,7 @@ namespace engine {
         m_width = width;
         m_height = height;
         recreate();
-        RenderCommand::setViewport(0, 0, m_width, m_height);
+        Core::RenderCommand::setViewport(0, 0, m_width, m_height);
     }
 
     int Framebuffer::readPixel(unsigned int colorAttachmentIndex, unsigned int x, unsigned int y) {
@@ -103,10 +103,10 @@ namespace engine {
         }
 
         int data;
-        RenderCommand::readFramebuffer(
+        Core::RenderCommand::readFramebuffer(
             m_rendererId,
-            FramebufferAttachmentType::Color, colorAttachmentIndex,
-            TextureDataFormat::RedInteger, PrimitiveDataType::Int,
+            Core::FramebufferAttachmentType::Color, colorAttachmentIndex,
+            Core::TextureDataFormat::RedInteger, Core::PrimitiveDataType::Int,
             x, y, 1, 1,
             &data
         );
@@ -118,67 +118,67 @@ namespace engine {
     void Framebuffer::recreate() {
 
         if (m_rendererId) {
-            RenderCommand::deleteFramebuffer(m_rendererId);
+            Core::RenderCommand::deleteFramebuffer(m_rendererId);
             for (auto& texture : m_textures) {
                 unsigned int textureRendererId = texture->getRendererId();
-                RenderCommand::deleteTexture(textureRendererId);
+                Core::RenderCommand::deleteTexture(textureRendererId);
             }
             m_textures.clear();
         }
 
         // Create the framebuffer and bind it
-        RenderCommand::createFramebuffer(m_rendererId);
-        RenderCommand::bindFramebuffer(m_rendererId);
+        Core::RenderCommand::createFramebuffer(m_rendererId);
+        Core::RenderCommand::bindFramebuffer(m_rendererId);
 
-        std::vector<FramebufferAttachmentType> drawBuffers = {};
+        std::vector<Core::FramebufferAttachmentType> drawBuffers = {};
 
         // Create and attach the color textures
         for (unsigned int i = 0; i < m_colorAttachmentSpecs.size(); i++) {
 
             auto& colorAttachmentSpec = m_colorAttachmentSpecs[i];
             attachColor(colorAttachmentSpec, i);
-            drawBuffers.emplace_back(FramebufferAttachmentType::Color);
+            drawBuffers.emplace_back(Core::FramebufferAttachmentType::Color);
 
         }
 
         // Create and attach the depth texture, if any
-        if (m_depthAttachmentSpec.m_attachmentType != FramebufferAttachmentType::None) {
+        if (m_depthAttachmentSpec.m_attachmentType != Core::FramebufferAttachmentType::None) {
 
             attachDepth(m_depthAttachmentSpec);
-            drawBuffers.emplace_back(FramebufferAttachmentType::None);
+            drawBuffers.emplace_back(Core::FramebufferAttachmentType::None);
 
         }
 
         // If there are more than one color attachment, tell opengl about them
         if (m_colorAttachmentSpecs.size() > 1) {
-            RenderCommand::setDrawBuffers(m_rendererId, drawBuffers);
+            Core::RenderCommand::setDrawBuffers(m_rendererId, drawBuffers);
         }
 
         // Check correctness and unbind
-        RenderCommand::checkFramebufferCompleteness(m_rendererId);
-        RenderCommand::unbindFramebuffer();
+        Core::RenderCommand::checkFramebufferCompleteness(m_rendererId);
+        Core::RenderCommand::unbindFramebuffer();
 
     }
 
     void Framebuffer::attachColor(FramebufferAttachmentSpec colorAttachmentSpec, unsigned int index) {
 
-        TextureDataFormat internalFormat;
-        TextureDataFormat format;
+        Core::TextureDataFormat internalFormat;
+        Core::TextureDataFormat format;
 
         switch (colorAttachmentSpec.m_dataFormat) {
             case FramebufferDataFormat::RGBA:
-                internalFormat = TextureDataFormat::RGBA;
-                format = TextureDataFormat::RGBA;
+                internalFormat = Core::TextureDataFormat::RGBA;
+                format = Core::TextureDataFormat::RGBA;
                 break;
             case FramebufferDataFormat::Integer:
-                internalFormat = TextureDataFormat::RedInteger32;
-                format = TextureDataFormat::RedInteger;
+                internalFormat = Core::TextureDataFormat::RedInteger32;
+                format = Core::TextureDataFormat::RedInteger;
                 break;
             case FramebufferDataFormat::Depth:
                 throw std::runtime_error("Invalid framebuffer data format");
         }
 
-        Ref<Texture> texture = CreateRef<TextureImage2D>(
+        Core::Ref<Texture> texture = Core::CreateRef<TextureImage2D>(
             internalFormat, format,
             m_width, m_height,
             nullptr
@@ -186,9 +186,9 @@ namespace engine {
         m_textures.push_back(texture);
 
         // Attach the texture to the framebuffer
-        RenderCommand::framebufferAttach(
+        Core::RenderCommand::framebufferAttach(
             m_rendererId,
-            engine::TextureType::Image2D,
+            Core::TextureType::Image2D,
             colorAttachmentSpec.m_attachmentType,
             index,
             texture->getRendererId()
@@ -199,17 +199,17 @@ namespace engine {
     void Framebuffer::attachDepth(FramebufferAttachmentSpec depthAttachmentSpec) {
 
         // Create the buffer texture
-        Ref<Texture> texture = CreateRef<TextureImage2D>(
-            TextureDataFormat::Depth, TextureDataFormat::Depth,
+        Core::Ref<Texture> texture = Core::CreateRef<TextureImage2D>(
+            Core::TextureDataFormat::Depth, Core::TextureDataFormat::Depth,
             m_width, m_height,
             nullptr
         );
         m_textures.push_back(texture);
 
         // Attach the texture to the framebuffer
-        RenderCommand::framebufferAttach(
+        Core::RenderCommand::framebufferAttach(
             m_rendererId,
-            engine::TextureType::Image2D,
+            Core::TextureType::Image2D,
             m_depthAttachmentSpec.m_attachmentType,
             0,
             texture->getRendererId()

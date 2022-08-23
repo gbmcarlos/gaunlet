@@ -5,7 +5,7 @@
 #include <chrono>
 #include <boost/current_function.hpp>
 
-namespace engine {
+namespace engine::Core {
 
     struct ProfileResult {
         std::string m_name;

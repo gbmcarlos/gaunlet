@@ -4,7 +4,7 @@
 #include "entity/ScriptComponents.h"
 #include "deferred-renderer/DeferredRenderer.h"
 
-namespace engine {
+namespace engine::Scene {
 
     Scene::Scene() {
         DeferredRenderer::init();
@@ -20,8 +20,8 @@ namespace engine {
         return {entityHandle, this};
     }
 
-    const Ref<PhysicsWorld>& Scene::enablePhysics(glm::vec2 gravity) {
-        m_physicsWorld = CreateRef<PhysicsWorld>(gravity);
+    const Core::Ref<PhysicsWorld>& Scene::enablePhysics(glm::vec2 gravity) {
+        m_physicsWorld = Core::CreateRef<PhysicsWorld>(gravity);
         return m_physicsWorld;
     }
 
@@ -49,7 +49,7 @@ namespace engine {
         m_playing = !m_playing;
     }
 
-    void Scene::update(TimeStep timeStep) {
+    void Scene::update(Core::TimeStep timeStep) {
 
         if (m_playing) {
 
@@ -62,7 +62,7 @@ namespace engine {
 
     }
 
-    void Scene::render(const Ref<Camera>& camera, const Ref<Framebuffer>& framebuffer) {
+    void Scene::render(const Core::Ref<Camera>& camera, const Core::Ref<Graphics::Framebuffer>& framebuffer) {
 
         DeferredRenderer::beginScene(
             camera->getViewMatrix(),
@@ -78,7 +78,7 @@ namespace engine {
 
     }
 
-    void Scene::render(const Ref<Camera>& camera, const DirectionalLightComponent& directionalLight, const Ref<Framebuffer>& framebuffer) {
+    void Scene::render(const Core::Ref<Camera>& camera, const DirectionalLightComponent& directionalLight, const Core::Ref<Graphics::Framebuffer>& framebuffer) {
 
         DeferredRenderer::beginScene(
             camera->getViewMatrix(),
@@ -120,7 +120,7 @@ namespace engine {
 
     }
 
-    void Scene::simulatePhysics(TimeStep timeStep) {
+    void Scene::simulatePhysics(Core::TimeStep timeStep) {
 
         m_physicsWorld->simulatePhysics(timeStep);
 
@@ -151,7 +151,7 @@ namespace engine {
 
     }
 
-    void Scene::runScripts(TimeStep timeStep) {
+    void Scene::runScripts(Core::TimeStep timeStep) {
 
         m_registry.view<NativeScriptComponent>().each([=](entt::entity entity, NativeScriptComponent& nativeScriptComponent) {
             nativeScriptComponent.m_nativeScriptInstance->onUpdate(timeStep);

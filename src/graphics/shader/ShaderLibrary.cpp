@@ -2,15 +2,15 @@
 
 #include "exception"
 
-namespace engine {
+namespace engine::Graphics {
 
-    Ref<Shader> ShaderLibrary::load(const std::string& name, const std::map<ShaderType, std::string>& shaderSources) {
+    Core::Ref<Shader> ShaderLibrary::load(const std::string& name, const std::map<Core::ShaderType, std::string>& shaderSources) {
 
         if (m_shaders.find(name) != m_shaders.end()) {
             return m_shaders[name];
         }
 
-        Ref<Shader> shader = CreateRef<engine::Shader>();
+        Core::Ref<Shader> shader = Core::CreateRef<Shader>();
 
         for (const auto& shaderSource : shaderSources) {
             shader->attach(shaderSource.first, shaderSource.second);
@@ -24,7 +24,7 @@ namespace engine {
 
     }
 
-    Ref<Shader> ShaderLibrary::add(const std::string& name, const Ref<Shader>& shader) {
+    Core::Ref<Shader> ShaderLibrary::add(const std::string& name, const Core::Ref<Shader>& shader) {
 
         if (m_shaders.find(name) != m_shaders.end()) {
             throw std::runtime_error("Duplicate shader name");
@@ -36,7 +36,7 @@ namespace engine {
 
     }
 
-    const Ref<Shader>& ShaderLibrary::get(const std::string &name) {
+    const Core::Ref<Shader>& ShaderLibrary::get(const std::string &name) {
 
         if (m_shaders.find(name) == m_shaders.end()) {
             throw std::runtime_error("Shader doesn't exist");

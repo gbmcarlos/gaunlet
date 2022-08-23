@@ -7,7 +7,7 @@
 
 #include "../pch.h"
 
-namespace engine {
+namespace engine::Core {
 
     class OpenGLRenderApi : public RenderApi {
 

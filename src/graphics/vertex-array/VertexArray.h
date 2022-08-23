@@ -3,7 +3,7 @@
 #include "../vertex-buffer/VertexBuffer.h"
 #include "../index-buffer/IndexBuffer.h"
 
-namespace engine {
+namespace engine::Graphics {
 
     class VertexArray {
     private:

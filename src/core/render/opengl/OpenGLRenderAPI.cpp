@@ -3,7 +3,7 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-namespace engine {
+namespace engine::Core {
 
     void OpenGLRenderApi::init() {
 

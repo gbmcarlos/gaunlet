@@ -2,15 +2,15 @@
 
 #include "../../core/render/RenderCommand.h"
 
-namespace engine {
+namespace engine::Graphics {
 
     IndexBuffer::IndexBuffer(unsigned int* data, unsigned int count)
         : m_count(count), m_rendererId(0) {
-        RenderCommand::createIndexBuffer(m_rendererId, data, count);
+        Core::RenderCommand::createIndexBuffer(m_rendererId, data, count);
     }
 
     IndexBuffer::~IndexBuffer() {
-        RenderCommand::deleteIndexBuffer(m_rendererId);
+        Core::RenderCommand::deleteIndexBuffer(m_rendererId);
     }
 
 }

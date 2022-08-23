@@ -7,7 +7,7 @@
 #include "../input/events/CursorEvent.h"
 #include "../input/events/ScrollEvent.h"
 
-namespace engine {
+namespace engine::Core {
 
     Window::Window(unsigned int width, unsigned int height, const std::string& title)
         : m_width(width), m_height(height), m_viewportWidth(0), m_viewportHeight(0), m_title(title) {

@@ -6,7 +6,7 @@
 
 #include <box2d/box2d.h>
 
-namespace engine {
+namespace engine::Scene {
 
     class PhysicsWorld {
 
@@ -23,7 +23,7 @@ namespace engine {
         void createBoxFixture(b2Body* body, BoxColliderComponent& boxCollider, TransformComponent transform);
         void createCircleFixture(b2Body* body, CircleColliderComponent& circleCollider, TransformComponent transform);
 
-        void simulatePhysics(TimeStep timeStep);
+        void simulatePhysics(Core::TimeStep timeStep);
         void updateBody(RigidBodyComponent& rigidBody, TransformComponent& transform);
 
         void destroyPhysics();

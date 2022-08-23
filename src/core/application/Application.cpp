@@ -3,7 +3,7 @@
 #include "../input/EventBus.h"
 #include "../utils.h"
 
-namespace engine {
+namespace engine::Core {
 
     Application::Application(const std::string& name)
         : m_window(std::make_unique<Window>(name)), m_running(true) {
@@ -12,7 +12,7 @@ namespace engine {
 
     void Application::onReady() {}
 
-    void Application::onEvent(engine::Event &event) {
+    void Application::onEvent(Event &event) {
 
         if (event.getType() == EventType::WindowClose) {
             m_running = false;

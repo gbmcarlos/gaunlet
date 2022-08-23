@@ -1,6 +1,6 @@
 #include "ImGuiRenderApi.h"
 
-namespace engine {
+namespace engine::Core {
 
     void ImGuiRenderApi::init(GLFWwindow* windowContext) {
 

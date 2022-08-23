@@ -3,7 +3,7 @@
 #include "../../graphics/texture/TextureImage2D.h"
 #include "../forward-renderer/ForwardRenderer.h"
 
-namespace engine {
+namespace engine::Scene {
 
     DeferredRenderer::RendererStorage* DeferredRenderer::m_rendererStorage = new RendererStorage;
 
@@ -12,7 +12,7 @@ namespace engine {
         loadDefaultWhiteTexture();
     }
 
-    void DeferredRenderer::beginScene(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const Ref<Framebuffer>& framebuffer, const DirectionalLightComponent& directionalLight) {
+    void DeferredRenderer::beginScene(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const Core::Ref<Graphics::Framebuffer>& framebuffer, const DirectionalLightComponent& directionalLight) {
 
         SceneProperties sceneProperties(
             viewMatrix, projectionMatrix,
@@ -32,7 +32,7 @@ namespace engine {
         if (framebuffer != nullptr) {
             framebuffer->clear();
         } else {
-            RenderCommand::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
+            Core::RenderCommand::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
         }
 
         m_rendererStorage->m_framebuffer = framebuffer;
@@ -169,16 +169,16 @@ namespace engine {
 
         GE_PROFILE_FUNCTION;
 
-        m_rendererStorage->m_scenePropertiesUniformBuffer = CreateRef<UniformBuffer>(
+        m_rendererStorage->m_scenePropertiesUniformBuffer = Core::CreateRef<Graphics::UniformBuffer>(
             "ScenePropertiesBlock",
             0,
             sizeof (SceneProperties)
         );
 
         // Create the polygon shader
-        std::map<engine::ShaderType, std::string> polygonShaderSource {
-            {engine::ShaderType::Vertex, ASSETS_PATH"/shaders/2d/polygon-vertex-position-2d.glsl"},
-            {engine::ShaderType::Fragment, ASSETS_PATH"/shaders/2d/polygon-color-texture-2d.glsl"}
+        std::map<Core::ShaderType, std::string> polygonShaderSource {
+            {Core::ShaderType::Vertex, ASSETS_PATH"/shaders/2d/polygon-vertex-position-2d.glsl"},
+            {Core::ShaderType::Fragment, ASSETS_PATH"/shaders/2d/polygon-color-texture-2d.glsl"}
         };
         auto polygonShader = m_rendererStorage->m_shaderLibrary.load("polygon-shader", polygonShaderSource);
 
@@ -188,7 +188,7 @@ namespace engine {
             polygonShader->setUniform1i(textureName, i);
         }
 
-        m_rendererStorage->m_polygonEntityPropertiesUniformBuffer = CreateRef<UniformBuffer>(
+        m_rendererStorage->m_polygonEntityPropertiesUniformBuffer = Core::CreateRef<Graphics::UniformBuffer>(
             "EntityPropertiesBlock",
             1,
             sizeof (PolygonEntityProperties) * 100
@@ -199,9 +199,9 @@ namespace engine {
         polygonShader->linkUniformBuffer(m_rendererStorage->m_polygonEntityPropertiesUniformBuffer);
 
         // Create the circle shader
-        std::map<engine::ShaderType, std::string> circleShaderSource {
-            {engine::ShaderType::Vertex, ASSETS_PATH"/shaders/2d/circle-vertex-position-2d.glsl"},
-            {engine::ShaderType::Fragment, ASSETS_PATH"/shaders/2d/circle-color-texture-2d.glsl"}
+        std::map<Core::ShaderType, std::string> circleShaderSource {
+            {Core::ShaderType::Vertex, ASSETS_PATH"/shaders/2d/circle-vertex-position-2d.glsl"},
+            {Core::ShaderType::Fragment, ASSETS_PATH"/shaders/2d/circle-color-texture-2d.glsl"}
         };
         auto circleShader = m_rendererStorage->m_shaderLibrary.load("circle-shader", circleShaderSource);
 
@@ -211,7 +211,7 @@ namespace engine {
             circleShader->setUniform1i(textureName, i);
         }
 
-        m_rendererStorage->m_circleEntityPropertiesUniformBuffer = CreateRef<UniformBuffer>(
+        m_rendererStorage->m_circleEntityPropertiesUniformBuffer = Core::CreateRef<Graphics::UniformBuffer>(
             "EntityPropertiesBlock",
             2,
             sizeof (CircleEntityProperties) * 100
@@ -229,7 +229,7 @@ namespace engine {
 
         // Create a 1x1 white texture, to be used as default
         unsigned int whiteTextureData = 0xffffffff;
-        Ref<engine::Texture> whiteTexture = CreateRef<engine::TextureImage2D>(TextureDataFormat::RGBA, TextureDataFormat::RGBA, 1, 1, &whiteTextureData);
+        Core::Ref<Graphics::Texture> whiteTexture = Core::CreateRef<Graphics::TextureImage2D>(Core::TextureDataFormat::RGBA, Core::TextureDataFormat::RGBA, 1, 1, &whiteTextureData);
         m_rendererStorage->m_whiteTexture = whiteTexture;
 
         // Add it to the polygon and circle batches

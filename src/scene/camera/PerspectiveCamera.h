@@ -2,7 +2,7 @@
 
 #include "Camera.h"
 
-namespace engine {
+namespace engine::Scene {
 
     class PerspectiveCamera : public Camera {
 

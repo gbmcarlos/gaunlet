@@ -6,7 +6,7 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-namespace engine {
+namespace engine::Scene {
 
     struct TransformComponent {
 
@@ -74,11 +74,11 @@ namespace engine {
         MaterialComponent(const MaterialComponent&) = default;
         MaterialComponent() : m_color(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), m_texture(nullptr) {}
         explicit MaterialComponent(glm::vec4 color) : m_color(color), m_texture(nullptr) {}
-        explicit MaterialComponent(Ref<Texture> texture) : m_color(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), m_texture(std::move(texture)) {}
-        MaterialComponent(glm::vec4 color, Ref<Texture> texture) : m_color(color), m_texture(std::move(texture)) {}
+        explicit MaterialComponent(Core::Ref<Graphics::Texture> texture) : m_color(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), m_texture(std::move(texture)) {}
+        MaterialComponent(glm::vec4 color, Core::Ref<Graphics::Texture> texture) : m_color(color), m_texture(std::move(texture)) {}
 
         glm::vec4 m_color;
-        Ref<Texture> m_texture;
+        Core::Ref<Graphics::Texture> m_texture;
 
     };
 

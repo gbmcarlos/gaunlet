@@ -2,7 +2,7 @@
 
 #include "../pch.h"
 
-namespace engine {
+namespace engine::Graphics {
 
     std::string readFromFile(const std::string& filePath) {
 

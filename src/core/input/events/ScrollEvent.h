@@ -2,7 +2,7 @@
 
 #include "../Event.h"
 
-namespace engine {
+namespace engine::Core {
 
     class ScrollEvent : public Event {
 

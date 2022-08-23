@@ -2,7 +2,7 @@
 
 #include "../pch.h"
 
-namespace engine {
+namespace engine::Core {
 
     enum class PrimitiveDataType {
         Bool,

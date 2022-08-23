@@ -4,18 +4,18 @@
 
 #include "../../pch.h"
 
-namespace engine {
+namespace engine::Graphics {
 
     struct BufferLayoutElement {
 
         std::string m_name;
         unsigned int m_count;
-        PrimitiveDataType m_type;
+        Core::PrimitiveDataType m_type;
         unsigned int m_size;
         unsigned int m_offset;
         bool m_normalized;
 
-        BufferLayoutElement(std::string  name, unsigned int count, PrimitiveDataType type, bool normalized = false);
+        BufferLayoutElement(std::string  name, unsigned int count, Core::PrimitiveDataType type, bool normalized = false);
 
     };
 

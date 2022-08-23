@@ -2,7 +2,7 @@
 
 #include "../pch.h"
 
-namespace engine {
+namespace engine::Scene {
 
     struct DirectionalLightComponent {
 

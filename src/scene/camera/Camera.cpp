@@ -1,8 +1,6 @@
 #include "Camera.h"
 
-#include "../pch.h"
-
-namespace engine {
+namespace engine::Scene {
 
     glm::mat4 Camera::getProjectionMatrix() {
         return m_projectionMatrix;

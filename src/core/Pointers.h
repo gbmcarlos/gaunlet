@@ -2,7 +2,7 @@
 
 #include <memory>
 
-namespace engine {
+namespace engine::Core {
 
     template<typename T>
     using Ref = std::shared_ptr<T>;

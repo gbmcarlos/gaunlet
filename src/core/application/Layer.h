@@ -3,7 +3,7 @@
 #include "TimeStep.h"
 #include "../input/Event.h"
 
-namespace engine {
+namespace engine::Core {
 
     class Layer {
 

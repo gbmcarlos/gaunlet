@@ -17,7 +17,7 @@
 
 #include "../pch.h"
 
-namespace engine {
+namespace engine::Scene {
 
     class DeferredRenderer {
 
@@ -30,7 +30,7 @@ namespace engine {
 
         static void init();
 
-        static void beginScene(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const Ref<Framebuffer>& framebuffer, const DirectionalLightComponent& directionalLight);
+        static void beginScene(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const Core::Ref<Graphics::Framebuffer>& framebuffer, const DirectionalLightComponent& directionalLight);
         static void endScene();
 
         // Batched draw calls
@@ -68,14 +68,14 @@ namespace engine {
             Batch<PolygonEntityProperties> m_polygonBatch;
             Batch<CircleEntityProperties> m_circleBatch;
 
-            Ref<Framebuffer> m_framebuffer;
+            Core::Ref<Graphics::Framebuffer> m_framebuffer;
 
             // Shared
-            Ref<Texture> m_whiteTexture = nullptr;
-            ShaderLibrary m_shaderLibrary;
-            Ref<UniformBuffer> m_scenePropertiesUniformBuffer = nullptr;
-            Ref<UniformBuffer> m_polygonEntityPropertiesUniformBuffer = nullptr;
-            Ref<UniformBuffer> m_circleEntityPropertiesUniformBuffer = nullptr;
+            Core::Ref<Graphics::Texture> m_whiteTexture = nullptr;
+            Graphics::ShaderLibrary m_shaderLibrary;
+            Core::Ref<Graphics::UniformBuffer> m_scenePropertiesUniformBuffer = nullptr;
+            Core::Ref<Graphics::UniformBuffer> m_polygonEntityPropertiesUniformBuffer = nullptr;
+            Core::Ref<Graphics::UniformBuffer> m_circleEntityPropertiesUniformBuffer = nullptr;
 
         };
 

@@ -5,7 +5,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-namespace engine {
+namespace engine::Graphics {
 
     TextureImage2D::TextureImage2D(const std::string &path) {
 
@@ -17,20 +17,20 @@ namespace engine {
             throw std::runtime_error("Failed to load texture file");
         }
 
-        TextureDataFormat internalFormat;
-        TextureDataFormat dataFormat;
+        Core::TextureDataFormat internalFormat;
+        Core::TextureDataFormat dataFormat;
 
         if (channels == 3) {
-            internalFormat = TextureDataFormat::RGB;
-            dataFormat = TextureDataFormat::RGB;
+            internalFormat = Core::TextureDataFormat::RGB;
+            dataFormat = Core::TextureDataFormat::RGB;
         } else if (channels == 4) {
-            internalFormat = TextureDataFormat::RGBA;
-            dataFormat = TextureDataFormat::RGBA;
+            internalFormat = Core::TextureDataFormat::RGBA;
+            dataFormat = Core::TextureDataFormat::RGBA;
         } else {
             throw std::runtime_error("Unknown texture data format");
         }
 
-        RenderCommand::loadTexture(m_rendererId, TextureType::Image2D, internalFormat, dataFormat,  (unsigned int) width, (unsigned int) height, data);
+        Core::RenderCommand::loadTexture(m_rendererId, Core::TextureType::Image2D, internalFormat, dataFormat,  (unsigned int) width, (unsigned int) height, data);
 
         stbi_image_free(data);
 
@@ -39,9 +39,9 @@ namespace engine {
 
     }
 
-    TextureImage2D::TextureImage2D(TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data) {
+    TextureImage2D::TextureImage2D(Core::TextureDataFormat internalFormat, Core::TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data) {
 
-        RenderCommand::loadTexture(m_rendererId, TextureType::Image2D, internalFormat, dataFormat, (unsigned int) width, (unsigned int) height, data);
+        Core::RenderCommand::loadTexture(m_rendererId, Core::TextureType::Image2D, internalFormat, dataFormat, (unsigned int) width, (unsigned int) height, data);
 
         m_width = width;
         m_height = height;
@@ -49,11 +49,11 @@ namespace engine {
     }
 
     TextureImage2D::~TextureImage2D() {
-        RenderCommand::deleteTexture(m_rendererId);
+        Core::RenderCommand::deleteTexture(m_rendererId);
     }
 
     void TextureImage2D::activate(unsigned int slot) {
-        RenderCommand::activateTexture(m_rendererId, TextureType::Image2D, slot);
+        Core::RenderCommand::activateTexture(m_rendererId, Core::TextureType::Image2D, slot);
     }
 
 }

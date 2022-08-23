@@ -4,22 +4,22 @@
 
 #include "../../core/render/RenderCommand.h"
 
-namespace engine {
+namespace engine::Graphics {
 
     UniformBuffer::UniformBuffer(std::string name, unsigned int bindingPoint, const void *data, unsigned int size)
         : m_dynamic(false), m_name(std::move(name)), m_bindingPoint(bindingPoint) {
-        RenderCommand::createUniformBuffer(m_rendererId, data, size);
-        RenderCommand::bindUniformBufferToBindingPoint(m_rendererId, bindingPoint, size);
+        Core::RenderCommand::createUniformBuffer(m_rendererId, data, size);
+        Core::RenderCommand::bindUniformBufferToBindingPoint(m_rendererId, bindingPoint, size);
     }
 
     UniformBuffer::UniformBuffer(std::string  name, unsigned int bindingPoint, unsigned int size)
         : m_dynamic(true), m_name(std::move(name)), m_bindingPoint(bindingPoint) {
-        RenderCommand::createUniformBuffer(m_rendererId, size);
-        RenderCommand::bindUniformBufferToBindingPoint(m_rendererId, bindingPoint, size);
+        Core::RenderCommand::createUniformBuffer(m_rendererId, size);
+        Core::RenderCommand::bindUniformBufferToBindingPoint(m_rendererId, bindingPoint, size);
     }
 
     UniformBuffer::~UniformBuffer() {
-        RenderCommand::deleteUniformBuffer(m_rendererId);
+        Core::RenderCommand::deleteUniformBuffer(m_rendererId);
     }
 
     void UniformBuffer::setData(const void *data, unsigned int size) {
@@ -28,7 +28,7 @@ namespace engine {
             throw std::runtime_error("Can't set data for non-dynamic uniform buffer");
         }
 
-        RenderCommand::submitUniformBufferData(m_rendererId, data, size);
+        Core::RenderCommand::submitUniformBufferData(m_rendererId, data, size);
     }
 
 }

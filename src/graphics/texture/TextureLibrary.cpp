@@ -1,8 +1,8 @@
 #include "TextureLibrary.h"
 
-namespace engine {
+namespace engine::Graphics {
 
-    unsigned int TextureLibrary::add(const Ref<Texture>& texture) {
+    unsigned int TextureLibrary::add(const Core::Ref<Texture>& texture) {
 
         if (exists(texture)) {
             throw std::runtime_error("Texture already exists in the library");
@@ -16,7 +16,7 @@ namespace engine {
 
     }
 
-    unsigned int TextureLibrary::addOrGet(const Ref<Texture> &texture) {
+    unsigned int TextureLibrary::addOrGet(const Core::Ref<Texture> &texture) {
 
         auto iterator = std::find(m_textures.begin(), m_textures.end(), texture);
 
@@ -28,7 +28,7 @@ namespace engine {
 
     }
 
-    bool TextureLibrary::exists(const Ref<Texture>& texture) {
+    bool TextureLibrary::exists(const Core::Ref<Texture>& texture) {
 
         auto iterator = std::find(m_textures.begin(), m_textures.end(), texture);
 
@@ -36,7 +36,7 @@ namespace engine {
 
     }
 
-    Ref<Texture> TextureLibrary::get(unsigned int index) {
+    Core::Ref<Texture> TextureLibrary::get(unsigned int index) {
 
         if (index >= m_textures.size()) {
             throw std::runtime_error("Out of bounds texture");

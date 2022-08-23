@@ -1,6 +1,6 @@
 #include "RenderCommand.h"
 
-namespace engine {
+namespace engine::Core {
 
     void RenderCommand::init() {
         getApi().init();

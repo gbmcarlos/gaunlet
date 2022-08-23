@@ -2,7 +2,7 @@
 
 #include "imgui/imgui_internal.h"
 
-namespace engine {
+namespace engine::Layout {
 
     void DockingLayout::begin(const char* name) {
 

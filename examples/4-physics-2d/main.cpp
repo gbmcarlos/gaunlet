@@ -3,33 +3,33 @@
 #include <glm/glm.hpp>
 #include <iostream>
 
-class QuadController : public engine::NativeScript {
+class QuadController : public engine::Scene::NativeScript {
 
 public:
 
-    void onUpdate(engine::TimeStep timeStep) override {
+    void onUpdate(engine::Core::TimeStep timeStep) override {
 
         float targetVelocity = 3.0f;
 
-        auto& collider = getComponent<engine::BoxColliderComponent>();
-        auto& transform = getComponent<engine::TransformComponent>();
+        auto& collider = getComponent<engine::Scene::BoxColliderComponent>();
+        auto& transform = getComponent<engine::Scene::TransformComponent>();
         auto body = collider.getBody();
 
         auto currentVelocity = body->GetLinearVelocity();
 
         float velocityX = 0.0f;
 
-        if (engine::Input::isKeyPressed(GE_KEY_A) && !engine::Input::isKeyPressed(GE_KEY_D)) {
+        if (engine::Core::Input::isKeyPressed(GE_KEY_A) && !engine::Core::Input::isKeyPressed(GE_KEY_D)) {
             velocityX = -targetVelocity;
-        } else if (!engine::Input::isKeyPressed(GE_KEY_A) && engine::Input::isKeyPressed(GE_KEY_D)) {
+        } else if (!engine::Core::Input::isKeyPressed(GE_KEY_A) && engine::Core::Input::isKeyPressed(GE_KEY_D)) {
             velocityX = targetVelocity;
         }
 
         float velocityY = 0.0f;
 
-        if (engine::Input::isKeyPressed(GE_KEY_S) && !engine::Input::isKeyPressed(GE_KEY_W)) {
+        if (engine::Core::Input::isKeyPressed(GE_KEY_S) && !engine::Core::Input::isKeyPressed(GE_KEY_W)) {
             velocityY = -targetVelocity;
-        } else if (!engine::Input::isKeyPressed(GE_KEY_S) && engine::Input::isKeyPressed(GE_KEY_W)) {
+        } else if (!engine::Core::Input::isKeyPressed(GE_KEY_S) && engine::Core::Input::isKeyPressed(GE_KEY_W)) {
             velocityY = targetVelocity;
         }
 
@@ -39,31 +39,31 @@ public:
 
 };
 
-class BallController : public engine::NativeScript {
+class BallController : public engine::Scene::NativeScript {
 
 public:
 
-    void onUpdate(engine::TimeStep timeStep) override {
+    void onUpdate(engine::Core::TimeStep timeStep) override {
 
         float targetImpulse = 8.0f;
 
-        auto& collider = getComponent<engine::CircleColliderComponent>();
-        auto& transform = getComponent<engine::TransformComponent>();
+        auto& collider = getComponent<engine::Scene::CircleColliderComponent>();
+        auto& transform = getComponent<engine::Scene::TransformComponent>();
         auto body = collider.getBody();
 
-        if (engine::Input::isKeyPressed(GE_KEY_DOWN)) {
+        if (engine::Core::Input::isKeyPressed(GE_KEY_DOWN)) {
             body->ApplyForceToCenter({0.0f, -targetImpulse}, true);
         }
 
-        if (engine::Input::isKeyPressed(GE_KEY_UP)) {
+        if (engine::Core::Input::isKeyPressed(GE_KEY_UP)) {
             body->ApplyForceToCenter({0.0f, targetImpulse}, true);
         }
 
-        if (engine::Input::isKeyPressed(GE_KEY_LEFT)) {
+        if (engine::Core::Input::isKeyPressed(GE_KEY_LEFT)) {
             body->ApplyForceToCenter({-targetImpulse, 0.0f}, true);
         }
 
-        if (engine::Input::isKeyPressed(GE_KEY_RIGHT)) {
+        if (engine::Core::Input::isKeyPressed(GE_KEY_RIGHT)) {
             body->ApplyForceToCenter({targetImpulse, 0.0f}, true);
         }
 
@@ -71,18 +71,18 @@ public:
 
 };
 
-class SceneLayer : public engine::Layer {
+class SceneLayer : public engine::Core::Layer {
 
 private:
 
-    engine::Scene m_scene;
-    engine::Ref<engine::OrthographicCamera> m_camera;
+    engine::Scene::Scene m_scene;
+    engine::Core::Ref<engine::Scene::OrthographicCamera> m_camera;
 
 public:
 
     SceneLayer(float viewportWidth, float viewportHeight) {
 
-        m_camera = engine::CreateRef<engine::OrthographicCamera>(viewportWidth, viewportHeight, 100);
+        m_camera = engine::Core::CreateRef<engine::Scene::OrthographicCamera>(viewportWidth, viewportHeight, 100);
 
         createRoom(m_camera->getProjectionSize());
         createBall();
@@ -93,14 +93,14 @@ public:
 
     }
 
-    void onEvent(engine::Event &event) override {
+    void onEvent(engine::Core::Event &event) override {
 
-        engine::EventDispatcher dispatcher(event);
-        dispatcher.dispatch<engine::KeyPressEvent>(GE_BIND_CALLBACK_FN(SceneLayer::onKeyPressEvent));
+        engine::Core::EventDispatcher dispatcher(event);
+        dispatcher.dispatch<engine::Core::KeyPressEvent>(GE_BIND_CALLBACK_FN(SceneLayer::onKeyPressEvent));
 
     }
 
-    bool onKeyPressEvent(engine::KeyPressEvent& event) {
+    bool onKeyPressEvent(engine::Core::KeyPressEvent& event) {
 
         if (event.getKey() == GE_KEY_SPACE) {
             m_scene.togglePlay();
@@ -121,36 +121,36 @@ public:
         float width = projectionSize.x;
 
         auto leftWall = m_scene.createEntity();
-        leftWall.addComponent<engine::RigidBodyComponent>(engine::RigidBodyComponent::Type::Static);
-        leftWall.addComponent<engine::BoxColliderComponent>();
-        leftWall.addComponent<engine::TransformComponent>(
+        leftWall.addComponent<engine::Scene::RigidBodyComponent>(engine::Scene::RigidBodyComponent::Type::Static);
+        leftWall.addComponent<engine::Scene::BoxColliderComponent>();
+        leftWall.addComponent<engine::Scene::TransformComponent>(
             glm::vec3(leftWallX - 0.5f, 0.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(1.0f, height, 1.0f)
         );
 
         auto rightWall = m_scene.createEntity();
-        rightWall.addComponent<engine::RigidBodyComponent>(engine::RigidBodyComponent::Type::Static);
-        rightWall.addComponent<engine::BoxColliderComponent>();
-        rightWall.addComponent<engine::TransformComponent>(
+        rightWall.addComponent<engine::Scene::RigidBodyComponent>(engine::Scene::RigidBodyComponent::Type::Static);
+        rightWall.addComponent<engine::Scene::BoxColliderComponent>();
+        rightWall.addComponent<engine::Scene::TransformComponent>(
             glm::vec3(rightWallX + 0.5f, 0.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(1.0f, height, 1.0f)
         );
 
         auto ground = m_scene.createEntity();
-        ground.addComponent<engine::RigidBodyComponent>(engine::RigidBodyComponent::Type::Static);
-        ground.addComponent<engine::BoxColliderComponent>(glm::vec2(0.0f, 0.0f), 1.0f, 0.05f, 0.0f, 1.0f);
-        ground.addComponent<engine::TransformComponent>(
+        ground.addComponent<engine::Scene::RigidBodyComponent>(engine::Scene::RigidBodyComponent::Type::Static);
+        ground.addComponent<engine::Scene::BoxColliderComponent>(glm::vec2(0.0f, 0.0f), 1.0f, 0.05f, 0.0f, 1.0f);
+        ground.addComponent<engine::Scene::TransformComponent>(
             glm::vec3(0.0f, groundY - 0.5f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(width, 1.0f, 1.0f)
         );
 
         auto ceiling = m_scene.createEntity();
-        ceiling.addComponent<engine::RigidBodyComponent>(engine::RigidBodyComponent::Type::Static);
-        ceiling.addComponent<engine::BoxColliderComponent>();
-        ceiling.addComponent<engine::TransformComponent>(
+        ceiling.addComponent<engine::Scene::RigidBodyComponent>(engine::Scene::RigidBodyComponent::Type::Static);
+        ceiling.addComponent<engine::Scene::BoxColliderComponent>();
+        ceiling.addComponent<engine::Scene::TransformComponent>(
             glm::vec3(0.0f, ceilingY + 0.5f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(width, 1.0f, 1.0f)
@@ -160,31 +160,31 @@ public:
 
     void createQuad() {
 
-        engine::Entity quad = m_scene.createEntity();
-        quad.addComponent<engine::TransformComponent>(
+        engine::Scene::Entity quad = m_scene.createEntity();
+        quad.addComponent<engine::Scene::TransformComponent>(
             glm::vec3(-2.0f, 0.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(0.5f, 0.5f, 1.0f)
         );
-        quad.addComponent<engine::ModelComponent>(engine::Square2DModel());
-        quad.addComponent<engine::RigidBodyComponent>(engine::RigidBodyComponent::Type::Kinematic, true);
-        quad.addComponent<engine::BoxColliderComponent>(glm::vec2(0.0f, 0.0f), 1.0f, 0.0f, 0.0f, 1.0f);
-        quad.addComponent<engine::NativeScriptComponent>().bind<QuadController>();
+        quad.addComponent<engine::Scene::ModelComponent>(engine::Scene::Square2DModel());
+        quad.addComponent<engine::Scene::RigidBodyComponent>(engine::Scene::RigidBodyComponent::Type::Kinematic, true);
+        quad.addComponent<engine::Scene::BoxColliderComponent>(glm::vec2(0.0f, 0.0f), 1.0f, 0.0f, 0.0f, 1.0f);
+        quad.addComponent<engine::Scene::NativeScriptComponent>().bind<QuadController>();
 
     }
 
     void createBall() {
 
-        engine::Entity ball = m_scene.createEntity();
-        ball.addComponent<engine::TransformComponent>(
+        engine::Scene::Entity ball = m_scene.createEntity();
+        ball.addComponent<engine::Scene::TransformComponent>(
             glm::vec3(2.0f, 0.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f)
         );
-        ball.addComponent<engine::CircleComponent>(1.0f, 0.01);
-        ball.addComponent<engine::RigidBodyComponent>(engine::RigidBodyComponent::Type::Dynamic, true);
-        ball.addComponent<engine::CircleColliderComponent>(0.0f, 1.0f, 0.05f, 0.8f, 1.0f);
-        ball.addComponent<engine::NativeScriptComponent>().bind<BallController>();
+        ball.addComponent<engine::Scene::CircleComponent>(1.0f, 0.01);
+        ball.addComponent<engine::Scene::RigidBodyComponent>(engine::Scene::RigidBodyComponent::Type::Dynamic, true);
+        ball.addComponent<engine::Scene::CircleColliderComponent>(0.0f, 1.0f, 0.05f, 0.8f, 1.0f);
+        ball.addComponent<engine::Scene::NativeScriptComponent>().bind<BallController>();
 
     }
 
@@ -192,17 +192,17 @@ public:
         m_scene.stop();
     }
 
-    void onUpdate(engine::TimeStep timeStep) override {
+    void onUpdate(engine::Core::TimeStep timeStep) override {
         m_scene.update(timeStep);
         m_scene.render(m_camera);
     }
 
 };
 
-class Physics2DApplication : public engine::Application {
+class Physics2DApplication : public engine::Core::Application {
 
 public:
-    explicit Physics2DApplication(const std::string& name) : engine::Application(name) {}
+    explicit Physics2DApplication(const std::string& name) : engine::Core::Application(name) {}
 
     void onReady() override {
         m_sceneLayer = new SceneLayer(m_window->getViewportWidth(),m_window->getViewportHeight());
@@ -217,7 +217,7 @@ private:
 int main() {
 
     Physics2DApplication app("Physics 2D");
-    engine::RunLoop runLoop(app);
+    engine::Core::RunLoop runLoop(app);
     runLoop.run();
 
     return 0;

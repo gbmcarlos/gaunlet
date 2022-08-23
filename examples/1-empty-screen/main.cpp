@@ -1,9 +1,10 @@
 #include "Core.h"
 
+
 int main() {
 
-    engine::Application app("Empty Screen");
-    engine::RunLoop runLoop(app);
+    engine::Core::Application app("Empty Screen");
+    engine::Core::RunLoop runLoop(app);
 
     runLoop.run();
 
