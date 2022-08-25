@@ -1,4 +1,4 @@
-#include "graphics-engine/Scene.h"
+#include "../include/Scene.h"
 
 class QuadController : public engine::Scene::NativeScript {
 

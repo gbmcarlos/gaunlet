@@ -1,4 +1,4 @@
-#include "graphics-engine/Graphics.h"
+#include "../include/Graphics.h"
 
 class RenderTriangleApplication : public engine::Core::Application {
 

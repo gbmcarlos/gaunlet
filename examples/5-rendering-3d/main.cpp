@@ -1,4 +1,4 @@
-#include "graphics-engine/Scene.h"
+#include "../include/Scene.h"
 
 class SceneLayer : public engine::Core::Layer {
 
