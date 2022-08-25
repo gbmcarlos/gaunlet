@@ -9,10 +9,14 @@
  box2d/2.4.1
  assimp/5.2.2
 
+[options]
+boost:header_only=True
+
 [generators]
  cmake
  CMakeDeps
  CMakeToolchain
+ cmake_find_package
 
  [imports]
  ./res/bindings, imgui_impl_glfw.h -> ../vendor/imgui
