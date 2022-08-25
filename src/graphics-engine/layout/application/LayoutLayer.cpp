@@ -8,12 +8,12 @@ namespace engine::Layout {
         m_layoutSpec = layoutSpec;
     }
 
-    void LayoutLayer::pushNode(const char* windowId, GuiDockedNode* node) {
-        m_guiNodes.push_back({windowId, node});
+    void LayoutLayer::pushPanel(const char* windowId, GuiPanel* panel) {
+        m_guiPanelWindows.push_back({windowId, panel});
     }
 
-    void LayoutLayer::pushNode(const char* windowId, RenderDockedNode* node, Core::Ref<Scene::Camera> camera, Core::Ref<Graphics::Framebuffer> framebuffer, unsigned int colorAttachmentIndex) {
-        m_renderNodes.push_back({windowId, node, std::move(camera), std::move(framebuffer), colorAttachmentIndex});
+    void LayoutLayer::pushPanel(const char* windowId, RenderPanel* panel, Core::Ref<Scene::Camera> camera, Core::Ref<Graphics::Framebuffer> framebuffer, unsigned int colorAttachmentIndex) {
+        m_renderPanelWindows.push_back({windowId, panel, std::move(camera), std::move(framebuffer), colorAttachmentIndex});
     }
 
     void LayoutLayer::onGuiRender() {
@@ -28,43 +28,43 @@ namespace engine::Layout {
         dockingLayout.begin("Main Window");
         dockingLayout.end();
 
-        // Update and run the GUI nodes
-        for (auto& guiNode : m_guiNodes) {
+        // Update and run the GUI panel windows
+        for (auto& guiPanelWindow : m_guiPanelWindows) {
 
-            ImGui::Begin(guiNode.m_windowId);
+            ImGui::Begin(guiPanelWindow.m_windowId);
 
-            updateNodeProperties(guiNode.m_node);
+            updateNodeProperties(guiPanelWindow.m_panel);
 
-            guiNode.m_node->onGuiRender();
+            guiPanelWindow.m_panel->onGuiRender();
 
             ImGui::End();
 
         }
 
-        // Update and run the Render nodes
-        for (auto& renderNode : m_renderNodes) {
+        // Update and run the Render panel windows
+        for (auto& renderPanelWindow : m_renderPanelWindows) {
 
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-            ImGui::Begin(renderNode.m_windowId);
+            ImGui::Begin(renderPanelWindow.m_windowId);
 
-            updateNodeProperties(renderNode.m_node);
-
-            auto& colorAttachmentTexture = renderNode.m_framebuffer->getColorAttachment(renderNode.m_colorAttachmentIndex);
+            updateNodeProperties(renderPanelWindow.m_node);
 
             // If the aspect ratio has changed, the camera and the framebuffer need to be resized
-            if (renderNode.m_camera->getAspectRatio() != renderNode.m_node->getNodeAspectRatio()) {
+            if (renderPanelWindow.m_camera->getAspectRatio() != renderPanelWindow.m_node->getNodeAspectRatio()) {
 
-                renderNode.m_camera->resize(
-                    renderNode.m_node->getNodeWidth(),
-                    renderNode.m_node->getNodeHeight()
+                renderPanelWindow.m_camera->resize(
+                    renderPanelWindow.m_node->getNodeWidth(),
+                    renderPanelWindow.m_node->getNodeHeight()
                 );
-                renderNode.m_framebuffer->resize(
-                    renderNode.m_node->getNodeWidth() * m_window->getDPI(),
-                    renderNode.m_node->getNodeHeight() * m_window->getDPI()
+                renderPanelWindow.m_framebuffer->resize(
+                    renderPanelWindow.m_node->getNodeWidth() * m_window->getDPI(),
+                    renderPanelWindow.m_node->getNodeHeight() * m_window->getDPI()
                 );
 
             }
 
+            // Render the framebuffer's color attachment texture as an ImGui image
+            auto& colorAttachmentTexture = renderPanelWindow.m_framebuffer->getColorAttachment(renderPanelWindow.m_colorAttachmentIndex);
             ImGui::Image(
                 (void *)(intptr_t)colorAttachmentTexture->getRendererId(),
                 ImGui::GetContentRegionAvail(),
@@ -90,7 +90,7 @@ namespace engine::Layout {
 
     void LayoutLayer::handleMouseEvent(Core::Event& event) {
 
-        for (auto& renderNode : m_renderNodes) {
+        for (auto& renderNode : m_renderPanelWindows) {
             if (renderNode.m_node->m_isHovered) {
                 renderNode.m_node->onEvent(event);
                 break;
@@ -101,7 +101,7 @@ namespace engine::Layout {
 
     void LayoutLayer::handleKeyboardEvent(Core::Event& event) {
 
-        for (auto& renderNode : m_renderNodes) {
+        for (auto& renderNode : m_renderPanelWindows) {
             bool handled = renderNode.m_node->onEvent(event);
             if (handled) {
                 break;
@@ -110,7 +110,7 @@ namespace engine::Layout {
 
     }
 
-    void LayoutLayer::updateNodeProperties(DockedNode *node) {
+    void LayoutLayer::updateNodeProperties(Panel *node) {
 
         ImVec2 windowMin = ImGui::GetWindowContentRegionMin();
         ImVec2 windowMax = ImGui::GetWindowContentRegionMax();

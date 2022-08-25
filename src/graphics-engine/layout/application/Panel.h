@@ -6,7 +6,7 @@ namespace engine::Layout {
 
     class LayoutLayer;
 
-    class DockedNode {
+    class Panel {
 
         friend LayoutLayer;
 
@@ -27,14 +27,14 @@ namespace engine::Layout {
 
     };
 
-    class GuiDockedNode : public DockedNode {
+    class GuiPanel : public Panel {
 
     public:
         virtual void onGuiRender() = 0;
 
     };
 
-    class RenderDockedNode : public DockedNode  {
+    class RenderPanel : public Panel  {
 
     public:
         virtual bool onEvent(Core::Event& event) = 0;

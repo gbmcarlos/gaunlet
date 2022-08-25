@@ -51,7 +51,7 @@ public:
 
 };
 
-class ToolsNode : public engine::Layout::GuiDockedNode {
+class ToolsNode : public engine::Layout::GuiPanel {
 
     void onGuiRender() override {
 
@@ -65,7 +65,7 @@ class ToolsNode : public engine::Layout::GuiDockedNode {
 
 };
 
-class SceneViewportNode : public engine::Layout::RenderDockedNode {
+class SceneViewportNode : public engine::Layout::RenderPanel {
 
 public:
     int m_selectedEntityId = -1;
@@ -99,7 +99,7 @@ private:
 
 };
 
-class SettingsNode : public engine::Layout::GuiDockedNode {
+class SettingsNode : public engine::Layout::GuiPanel {
 
 public:
 
@@ -160,9 +160,9 @@ public:
 
         auto* sceneViewportNode = new SceneViewportNode(m_sceneLayer->m_framebuffer);
 
-        m_editorLayer->pushNode("Settings", new SettingsNode(sceneViewportNode));
-        m_editorLayer->pushNode("Tools", new ToolsNode);
-        m_editorLayer->pushNode("Scene", sceneViewportNode, m_sceneLayer->m_camera, m_sceneLayer->m_framebuffer, 0);
+        m_editorLayer->pushPanel("Settings", new SettingsNode(sceneViewportNode));
+        m_editorLayer->pushPanel("Tools", new ToolsNode);
+        m_editorLayer->pushPanel("Scene", sceneViewportNode, m_sceneLayer->m_camera, m_sceneLayer->m_framebuffer, 0);
 
         pushLayer(m_sceneLayer);
         pushLayer(m_editorLayer);

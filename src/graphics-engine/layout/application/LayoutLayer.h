@@ -7,7 +7,7 @@
 #include "graphics-engine/scene/camera/Camera.h"
 
 #include "graphics-engine/layout/docking/DockingLayout.h"
-#include "graphics-engine/layout/application/DockedNode.h"
+#include "graphics-engine/layout/application/Panel.h"
 
 #include "graphics-engine/pch.h"
 
@@ -19,8 +19,8 @@ class LayoutLayer : public Core::Layer {
         explicit LayoutLayer(Core::Ref<Core::Window> window);
 
         void setLayoutSpec(const DockingLayoutSpec& layoutSpec);
-        void pushNode(const char* windowId, GuiDockedNode* node);
-        void pushNode(const char* windowId, RenderDockedNode* node, Core::Ref<Scene::Camera> camera, Core::Ref<Graphics::Framebuffer> framebuffer, unsigned int colorAttachmentIndex);
+        void pushPanel(const char* windowId, GuiPanel* panel);
+        void pushPanel(const char* windowId, RenderPanel* panel, Core::Ref<Scene::Camera> camera, Core::Ref<Graphics::Framebuffer> framebuffer, unsigned int colorAttachmentIndex);
 
         void onEvent(Core::Event& event) override;
         void onGuiRender() override;
@@ -30,26 +30,26 @@ class LayoutLayer : public Core::Layer {
         DockingLayoutSpec m_layoutSpec;
         Core::Ref<Core::Window> m_window = nullptr;
 
-        struct GuiNode {
+        struct GuiPanelWindow {
             const char* m_windowId;
-            GuiDockedNode* m_node;
+            GuiPanel* m_panel;
         };
 
-        struct RenderNode {
+        struct RenderPanelWindow {
             const char* m_windowId;
-            RenderDockedNode* m_node;
+            RenderPanel* m_node;
             Core::Ref<Scene::Camera> m_camera;
             Core::Ref<Graphics::Framebuffer> m_framebuffer;
             unsigned int m_colorAttachmentIndex;
         };
 
-        std::vector<GuiNode> m_guiNodes = {};
-        std::vector<RenderNode> m_renderNodes = {};
+        std::vector<GuiPanelWindow> m_guiPanelWindows = {};
+        std::vector<RenderPanelWindow> m_renderPanelWindows = {};
 
         void handleMouseEvent(Core::Event& event);
         void handleKeyboardEvent(Core::Event& event);
 
-        void updateNodeProperties(DockedNode* node);
+        void updateNodeProperties(Panel* node);
 
     };
 
