@@ -2,7 +2,7 @@
 
 #include "gaunlet/graphics/vertex-buffer/BufferLayout.h"
 
-namespace engine::Graphics {
+namespace gaunlet::Graphics {
 
     class VertexBuffer {
 

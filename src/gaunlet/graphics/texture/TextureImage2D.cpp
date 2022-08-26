@@ -5,7 +5,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-namespace engine::Graphics {
+namespace gaunlet::Graphics {
 
     TextureImage2D::TextureImage2D(const std::string &path) {
 

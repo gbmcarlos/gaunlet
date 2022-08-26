@@ -5,7 +5,7 @@
 #include "gaunlet/graphics/vertex-array/VertexArray.h"
 #include "gaunlet/core/render/RenderCommand.h"
 
-namespace engine::Graphics {
+namespace gaunlet::Graphics {
 
     void ForwardRenderer::renderMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::vector<Core::Ref<Graphics::Texture>>& textures, const Core::Ref<Graphics::Shader>& shader, const Core::Ref<Graphics::Framebuffer>& framebuffer) {
 

@@ -3,7 +3,7 @@
 #include "gaunlet/pch.h"
 #include <box2d/box2d.h>
 
-namespace engine::Scene {
+namespace gaunlet::Scene {
 
     struct RigidBodyComponent {
 

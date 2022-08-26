@@ -5,7 +5,7 @@
 #include <imgui/imgui_impl_opengl3.h>
 #include <imgui/imgui_impl_glfw.h>
 
-namespace engine::Core {
+namespace gaunlet::Core {
 
     class ImGuiRenderApi {
 

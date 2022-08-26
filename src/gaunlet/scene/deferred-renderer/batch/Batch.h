@@ -3,7 +3,7 @@
 #include "gaunlet/graphics/texture/TextureLibrary.h"
 #include "gaunlet/scene/entity/GraphicsComponents.h"
 
-namespace engine::Scene {
+namespace gaunlet::Scene {
 
     struct PolygonEntityProperties {
 

@@ -3,7 +3,7 @@
 #include "gaunlet/core/application/TimeStep.h"
 #include "gaunlet/core/event/Event.h"
 
-namespace engine::Core {
+namespace gaunlet::Core {
 
     class Layer {
 

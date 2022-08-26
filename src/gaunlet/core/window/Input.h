@@ -2,7 +2,7 @@
 
 #include "gaunlet/core/window/Window.h"
 
-namespace engine::Core {
+namespace gaunlet::Core {
 
     class Input {
 

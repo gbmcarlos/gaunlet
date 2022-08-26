@@ -1,6 +1,6 @@
 #include "gaunlet/core/application/Layer.h"
 
-namespace engine::Core {
+namespace gaunlet::Core {
 
     void Layer::onUpdate(TimeStep timeStep) {}
     void Layer::onGuiRender() {}

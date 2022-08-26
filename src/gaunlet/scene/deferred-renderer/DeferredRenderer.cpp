@@ -4,7 +4,7 @@
 #include "gaunlet/graphics/texture/TextureImage2D.h"
 #include "gaunlet/graphics//forward-renderer/ForwardRenderer.h"
 
-namespace engine::Scene {
+namespace gaunlet::Scene {
 
     DeferredRenderer::RendererStorage* DeferredRenderer::m_rendererStorage = new RendererStorage;
 

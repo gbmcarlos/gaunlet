@@ -6,7 +6,7 @@
 
 #include <imgui.h>
 
-namespace engine::Layout {
+namespace gaunlet::Layout {
 
     enum class DockSpacePosition {
         Left, Right,

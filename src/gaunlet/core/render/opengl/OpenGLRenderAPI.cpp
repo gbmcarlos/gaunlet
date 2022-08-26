@@ -1,7 +1,7 @@
 #include "gaunlet/core/render/opengl/OpenGLRenderAPI.h"
 #include "gaunlet/core/render/opengl/opengl_utils.h"
 
-namespace engine::Core {
+namespace gaunlet::Core {
 
     void OpenGLRenderApi::init() {
 

@@ -2,7 +2,7 @@
 
 #include "gaunlet/scene/entity/Entity.h"
 
-namespace engine::Scene {
+namespace gaunlet::Scene {
 
     class NativeScript {
 

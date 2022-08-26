@@ -3,7 +3,7 @@
 #include "gaunlet/core/render/RenderCommand.h"
 #include "gaunlet/graphics/texture/TextureImage2D.h"
 
-namespace engine::Graphics {
+namespace gaunlet::Graphics {
 
     FramebufferAttachmentSpec::FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, const glm::vec4& clearColorValue)
         : m_attachmentType(attachmentType), m_dataFormat(framebufferDataFormat), m_clearColorVec4Value(clearColorValue) {

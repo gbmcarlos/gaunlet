@@ -1,6 +1,6 @@
 #include "gaunlet/core/render/RenderCommand.h"
 
-namespace engine::Core {
+namespace gaunlet::Core {
 
     void RenderCommand::init() {
         getApi().init();

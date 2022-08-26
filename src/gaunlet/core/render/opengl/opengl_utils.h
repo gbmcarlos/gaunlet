@@ -8,7 +8,7 @@
         x;\
         glCheckError(#x, __FILE__, __LINE__)
 
-namespace engine::Core {
+namespace gaunlet::Core {
 
     void glClearErrors() {
         while (glGetError() != GL_NO_ERROR) {}

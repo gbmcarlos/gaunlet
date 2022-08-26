@@ -2,7 +2,7 @@
 
 #include "gaunlet/core/render/RenderCommand.h"
 
-namespace engine::Graphics {
+namespace gaunlet::Graphics {
 
     UniformBuffer::UniformBuffer(std::string name, unsigned int bindingPoint, const void *data, unsigned int size)
         : m_dynamic(false), m_name(std::move(name)), m_bindingPoint(bindingPoint) {

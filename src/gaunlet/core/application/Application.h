@@ -7,7 +7,7 @@
 
 #include "gaunlet/pch.h"
 
-namespace engine::Core {
+namespace gaunlet::Core {
 
     class Application {
     public:

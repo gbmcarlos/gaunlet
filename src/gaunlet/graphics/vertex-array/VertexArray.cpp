@@ -2,7 +2,7 @@
 
 #include "gaunlet/core/render/RenderCommand.h"
 
-namespace engine::Graphics {
+namespace gaunlet::Graphics {
 
     VertexArray::VertexArray() {
         Core::RenderCommand::createVertexArray(m_rendererId);

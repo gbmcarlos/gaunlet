@@ -2,7 +2,7 @@
 
 #include "gaunlet/core/event/Event.h"
 
-namespace engine::Core {
+namespace gaunlet::Core {
 
     void EventBus::publishEvent(Event& event) {
         if (eventCallback) {

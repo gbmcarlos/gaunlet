@@ -2,7 +2,7 @@
 
 #include <memory>
 
-namespace engine::Core {
+namespace gaunlet::Core {
 
     template<typename T>
     using Ref = std::shared_ptr<T>;

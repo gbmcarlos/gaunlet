@@ -11,7 +11,7 @@
 
 #include "gaunlet/pch.h"
 
-namespace engine::Layout {
+namespace gaunlet::Layout {
 
 class LayoutLayer : public Core::Layer {
 

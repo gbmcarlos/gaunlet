@@ -1,6 +1,6 @@
 #include "gaunlet/graphics/shader/ShaderLibrary.h"
 
-namespace engine::Graphics {
+namespace gaunlet::Graphics {
 
     Core::Ref<Shader> ShaderLibrary::load(const std::string& name, const std::map<Core::ShaderType, std::string>& shaderSources) {
 

@@ -2,7 +2,7 @@
 
 #include "gaunlet/core/event/Event.h"
 
-namespace engine::Layout {
+namespace gaunlet::Layout {
 
     class LayoutLayer;
 

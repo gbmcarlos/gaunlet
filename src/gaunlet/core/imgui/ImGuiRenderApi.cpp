@@ -1,6 +1,6 @@
 #include "gaunlet/core/imgui/ImGuiRenderApi.h"
 
-namespace engine::Core {
+namespace gaunlet::Core {
 
     void ImGuiRenderApi::init(GLFWwindow* windowContext) {
 

@@ -2,7 +2,7 @@
 
 #include "gaunlet/pch.h"
 
-namespace engine::Core {
+namespace gaunlet::Core {
 
     enum class PrimitiveDataType {
         Bool,

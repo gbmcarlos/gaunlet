@@ -2,7 +2,7 @@
 
 #include "gaunlet/scene/Scene.h"
 
-namespace engine::Scene {
+namespace gaunlet::Scene {
 
     class Entity {
 

@@ -3,7 +3,7 @@
 #include "gaunlet/graphics/shader/shader_utils.h"
 #include "gaunlet/core/render/RenderCommand.h"
 
-namespace engine::Graphics {
+namespace gaunlet::Graphics {
 
     Shader::Shader()
         : m_rendererId(0) {}

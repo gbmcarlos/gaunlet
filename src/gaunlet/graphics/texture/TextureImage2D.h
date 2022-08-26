@@ -3,7 +3,7 @@
 #include "gaunlet/graphics/texture/Texture.h"
 #include "gaunlet/core/render/RenderApi.h"
 
-namespace engine::Graphics {
+namespace gaunlet::Graphics {
 
     class TextureImage2D : public Texture {
 

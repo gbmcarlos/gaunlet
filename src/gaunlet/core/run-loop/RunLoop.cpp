@@ -3,7 +3,7 @@
 #include "gaunlet/core/render/RenderCommand.h"
 #include "gaunlet/core/imgui/ImGuiRenderApi.h"
 
-namespace engine::Core {
+namespace gaunlet::Core {
 
     RunLoop::RunLoop(Application& application)
         : m_application(application) {

@@ -1,33 +1,33 @@
 #include "../include/Scene.h"
 
-class SceneLayer : public engine::Core::Layer {
+class SceneLayer : public gaunlet::Core::Layer {
 
 private:
-    engine::Scene::Scene m_scene;
-    engine::Core::Ref<engine::Scene::PerspectiveCamera> m_camera;
-    engine::Scene::DirectionalLightComponent m_directionalLight;
+    gaunlet::Scene::Scene m_scene;
+    gaunlet::Core::Ref<gaunlet::Scene::PerspectiveCamera> m_camera;
+    gaunlet::Scene::DirectionalLightComponent m_directionalLight;
 
 public:
 
     SceneLayer(float viewportWidth, float viewportHeight) {
 
-        m_camera = engine::Core::CreateRef<engine::Scene::PerspectiveCamera>(45.0f, (float) viewportWidth /(float) viewportHeight, 100, 1.0f, 100.0f);
+        m_camera = gaunlet::Core::CreateRef<gaunlet::Scene::PerspectiveCamera>(45.0f, (float) viewportWidth /(float) viewportHeight, 100, 1.0f, 100.0f);
         m_camera->setTranslation({0.0f, 0.0f, 10.0f});
 
-        m_directionalLight = engine::Scene::DirectionalLightComponent(
+        m_directionalLight = gaunlet::Scene::DirectionalLightComponent(
             glm::vec3(0.8f, 0.8f, 0.8f),
             glm::vec3(1.5f, 1.5f, 10.0f),
             0.1f, 0.6f
         );
 
         auto cup = m_scene.createEntity();
-        cup.addComponent<engine::Scene::ModelComponent>(engine::Scene::Model("assets/cup/cup.obj"));
-        cup.addComponent<engine::Scene::TransformComponent>(
+        cup.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Model("assets/cup/cup.obj"));
+        cup.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(-2.5f, -2.5f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(0.5f, 0.5f, 0.5f)
         );
-        cup.addComponent<engine::Scene::MaterialComponent>(glm::vec4(0.8f, 0.2f, 0.2f, 1.0f));
+        cup.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(0.8f, 0.2f, 0.2f, 1.0f));
 
         m_scene.start();
 
@@ -37,8 +37,8 @@ public:
         m_scene.stop();
     }
 
-    void onUpdate(engine::Core::TimeStep timeStep) override {
-        m_scene.render(m_camera, m_directionalLight);
+    void onUpdate(gaunlet::Core::TimeStep timeStep) override {
+        m_scene.render(gaunlet::Scene::RenderMode::Faces, m_camera, m_directionalLight);
     }
 
     void onGuiRender() override {
@@ -47,10 +47,10 @@ public:
 
 };
 
-class Rendering3DApplication : public engine::Core::Application {
+class Rendering3DApplication : public gaunlet::Core::Application {
 
 public:
-    explicit Rendering3DApplication(const std::string& name) : engine::Core::Application(name) {}
+    explicit Rendering3DApplication(const std::string& name) : gaunlet::Core::Application(name) {}
 
     void onReady() override {
         m_sceneLayer = new SceneLayer(m_window->getViewportWidth(),m_window->getViewportHeight());
@@ -65,7 +65,7 @@ private:
 int main() {
 
     Rendering3DApplication app("Rendering 3D");
-    engine::Core::RunLoop runLoop(app);
+    gaunlet::Core::RunLoop runLoop(app);
     runLoop.run();
 
     return 0;

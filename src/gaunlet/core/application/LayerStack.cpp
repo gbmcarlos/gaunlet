@@ -1,6 +1,6 @@
 #include "gaunlet/core/application/LayerStack.h"
 
-namespace engine::Core {
+namespace gaunlet::Core {
 
     LayerStack::LayerStack() {
         m_layerInsert = m_layers.begin();

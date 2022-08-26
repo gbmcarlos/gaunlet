@@ -1,6 +1,6 @@
 #include "gaunlet/graphics/texture/TextureLibrary.h"
 
-namespace engine::Graphics {
+namespace gaunlet::Graphics {
 
     unsigned int TextureLibrary::add(const Core::Ref<Texture>& texture) {
 

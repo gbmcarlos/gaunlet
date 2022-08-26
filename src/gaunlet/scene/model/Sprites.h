@@ -2,7 +2,7 @@
 
 #include "gaunlet/scene/model/Model.h"
 
-namespace engine::Scene {
+namespace gaunlet::Scene {
 
     class Triangle2DModel : public Model {
     public:

@@ -1,6 +1,6 @@
 #include "gaunlet/scene/camera/OrthographicCamera.h"
 
-namespace engine::Scene {
+namespace gaunlet::Scene {
 
     OrthographicCamera::OrthographicCamera(unsigned int viewportWidth, unsigned int viewportHeight, float viewportResolution)
         : m_viewportWidth(viewportWidth), m_viewportHeight(viewportHeight), m_viewportResolution(viewportResolution) {

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace engine::Core {
+namespace gaunlet::Core {
 
     class TimeStep {
 

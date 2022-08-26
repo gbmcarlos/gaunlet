@@ -5,7 +5,7 @@
 #include <chrono>
 #include <boost/current_function.hpp>
 
-namespace engine::Core {
+namespace gaunlet::Core {
 
     struct ProfileResult {
         std::string m_name;
@@ -120,9 +120,9 @@ namespace engine::Core {
 }
 
 #if 0
-#define GE_PROFILE_BEGIN_SESSION(name, outputFilePath) ::engine::Instrumentor::get().beginSession(name, outputFilePath);
-#define GE_PROFILE_END_SESSION() ::engine::Instrumentor::get().endSession();
-#define GE_PROFILE_SCOPE(name) ::engine::InstrumentationTimer timer##__LINE__(name);
+#define GE_PROFILE_BEGIN_SESSION(name, outputFilePath) ::gaunlet::Instrumentor::get().beginSession(name, outputFilePath);
+#define GE_PROFILE_END_SESSION() ::gaunlet::Instrumentor::get().endSession();
+#define GE_PROFILE_SCOPE(name) ::gaunlet::InstrumentationTimer timer##__LINE__(name);
 #define GE_PROFILE_FUNCTION GE_PROFILE_SCOPE(BOOST_CURRENT_FUNCTION);
 #else
 #define GE_PROFILE_BEGIN_SESSION(name, outputFilePath)

@@ -3,7 +3,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 
-namespace engine::Scene {
+namespace gaunlet::Scene {
 
     Model::Model(const char *filePath) {
         loadModel(filePath);

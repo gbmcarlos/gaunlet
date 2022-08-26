@@ -2,8 +2,8 @@
 
 int main() {
 
-    engine::Core::Application app("Empty Screen");
-    engine::Core::RunLoop runLoop(app);
+    gaunlet::Core::Application app("Empty Screen");
+    gaunlet::Core::RunLoop runLoop(app);
 
     runLoop.run();
 

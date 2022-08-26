@@ -1,6 +1,6 @@
 #include "gaunlet/scene/physics/PhysicsWorld.h"
 
-namespace engine::Scene {
+namespace gaunlet::Scene {
 
     PhysicsWorld::PhysicsWorld(glm::vec2 gravity) {
 

@@ -5,7 +5,7 @@
 
 #include "gaunlet/pch.h"
 
-namespace engine::Graphics {
+namespace gaunlet::Graphics {
 
     enum class FramebufferDataFormat {
         RGBA, Integer, Depth

@@ -3,7 +3,7 @@
 #include "gaunlet/graphics/vertex-buffer/VertexBuffer.h"
 #include "gaunlet/graphics/index-buffer/IndexBuffer.h"
 
-namespace engine::Graphics {
+namespace gaunlet::Graphics {
 
     class VertexArray {
     private:

@@ -4,7 +4,7 @@
 #include "gaunlet/scene/entity/ScriptComponents.h"
 #include "gaunlet/scene/deferred-renderer/DeferredRenderer.h"
 
-namespace engine::Scene {
+namespace gaunlet::Scene {
 
     Scene::Scene() {
         DeferredRenderer::init();

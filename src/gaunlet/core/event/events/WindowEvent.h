@@ -2,7 +2,7 @@
 
 #include "gaunlet/core/event/Event.h"
 
-namespace engine::Core {
+namespace gaunlet::Core {
 
     class WindowCloseEvent : public Event {
 

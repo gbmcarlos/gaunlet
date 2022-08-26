@@ -2,7 +2,7 @@
 
 #include "gaunlet/scene/camera/Camera.h"
 
-namespace engine::Scene {
+namespace gaunlet::Scene {
 
     class PerspectiveCamera : public Camera {
 

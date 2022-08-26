@@ -3,7 +3,7 @@
 #include "gaunlet/core/event/EventBus.h"
 #include "gaunlet/core/utils.h"
 
-namespace engine::Core {
+namespace gaunlet::Core {
 
     Application::Application(const std::string& name)
         : m_window(std::make_unique<Window>(name)), m_running(true) {

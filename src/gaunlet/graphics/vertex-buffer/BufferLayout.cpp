@@ -2,7 +2,7 @@
 
 #include "gaunlet/core/render/RenderCommand.h"
 
-namespace engine::Graphics {
+namespace gaunlet::Graphics {
 
     BufferLayoutElement::BufferLayoutElement(std::string  name, unsigned int count, Core::PrimitiveDataType type, bool normalized)
         : m_name(std::move(name)),

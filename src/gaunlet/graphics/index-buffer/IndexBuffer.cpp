@@ -2,7 +2,7 @@
 
 #include "gaunlet/core/render/RenderCommand.h"
 
-namespace engine::Graphics {
+namespace gaunlet::Graphics {
 
     IndexBuffer::IndexBuffer(unsigned int* data, unsigned int count)
         : m_count(count), m_rendererId(0) {

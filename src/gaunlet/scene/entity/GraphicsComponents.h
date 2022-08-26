@@ -6,7 +6,7 @@
 
 #include "gaunlet/pch.h"
 
-namespace engine::Scene {
+namespace gaunlet::Scene {
 
     struct TransformComponent {
 

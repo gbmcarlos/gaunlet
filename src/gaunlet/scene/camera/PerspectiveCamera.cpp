@@ -1,6 +1,6 @@
 #include "gaunlet/scene/camera/PerspectiveCamera.h"
 
-namespace engine::Scene {
+namespace gaunlet::Scene {
 
     PerspectiveCamera::PerspectiveCamera(float fieldOfView, float aspectRatio, float viewportResolution, float near, float far)
         : m_fieldOfView(fieldOfView), m_aspectRatio(aspectRatio), m_near(near), m_far(far) {

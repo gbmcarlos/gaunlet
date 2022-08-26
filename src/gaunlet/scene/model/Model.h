@@ -6,7 +6,7 @@
 
 #include <assimp/scene.h>
 
-namespace engine::Scene {
+namespace gaunlet::Scene {
 
     class Model {
 

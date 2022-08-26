@@ -1,6 +1,6 @@
 #include "gaunlet/layout/application/LayoutLayer.h"
 
-namespace engine::Layout {
+namespace gaunlet::Layout {
 
     LayoutLayer::LayoutLayer(Core::Ref<Core::Window> window) : m_window(std::move(window)) {}
 

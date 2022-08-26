@@ -2,7 +2,7 @@
 
 #include "gaunlet/pch.h"
 
-namespace engine::Graphics {
+namespace gaunlet::Graphics {
 
     class UniformBuffer {
 

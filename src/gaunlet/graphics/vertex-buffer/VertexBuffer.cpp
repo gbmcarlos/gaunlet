@@ -2,7 +2,7 @@
 
 #include "gaunlet/core/render/RenderCommand.h"
 
-namespace engine::Graphics {
+namespace gaunlet::Graphics {
 
     VertexBuffer::VertexBuffer(const void *data, unsigned int size)
         : m_dynamic(false) {

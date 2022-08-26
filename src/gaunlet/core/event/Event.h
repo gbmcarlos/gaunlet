@@ -6,7 +6,7 @@
                          EventType getType() const override {return getStaticType(); }\
                          std::string getName() override {return #type; }
 
-namespace engine::Core {
+namespace gaunlet::Core {
 
     enum class EventCategory {
         Window, Keyboard, Mouse, Cursor, Scroll

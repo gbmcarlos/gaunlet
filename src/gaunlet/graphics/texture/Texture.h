@@ -1,6 +1,6 @@
 #pragma once
 
-namespace engine::Graphics {
+namespace gaunlet::Graphics {
 
     class TextureLibrary;
 

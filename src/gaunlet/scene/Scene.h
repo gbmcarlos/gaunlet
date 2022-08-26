@@ -10,7 +10,7 @@
 
 #include <entt/entt.hpp>
 
-namespace engine::Scene {
+namespace gaunlet::Scene {
 
     class Entity;
 

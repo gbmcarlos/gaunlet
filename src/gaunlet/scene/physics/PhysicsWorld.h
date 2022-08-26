@@ -6,7 +6,7 @@
 
 #include <box2d/box2d.h>
 
-namespace engine::Scene {
+namespace gaunlet::Scene {
 
     class PhysicsWorld {
 
