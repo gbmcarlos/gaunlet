@@ -2,7 +2,7 @@
 
 #include "graphics-engine/pch.h"
 
-namespace engine::Scene {
+namespace engine::Graphics {
 
     struct Vertex {
 

@@ -5,12 +5,12 @@
 #include "graphics-engine/graphics/vertex-array/VertexArray.h"
 #include "graphics-engine/core/render/RenderCommand.h"
 
-namespace engine::Scene {
+namespace engine::Graphics {
 
     void ForwardRenderer::renderMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::vector<Core::Ref<Graphics::Texture>>& textures, const Core::Ref<Graphics::Shader>& shader, const Core::Ref<Graphics::Framebuffer>& framebuffer) {
 
         // Create a layout, based on the structure of PolygonVertex
-        static Graphics::BufferLayout vertexLayout = {
+        static BufferLayout vertexLayout = {
             {"a_position", 4, Core::PrimitiveDataType::Float},
             {"a_normal", 3, Core::PrimitiveDataType::Float},
             {"a_textureCoordinates", 2, Core::PrimitiveDataType::Float},
@@ -18,11 +18,11 @@ namespace engine::Scene {
         };
 
         // Create the vertex and index buffers
-        Graphics::VertexBuffer vertexBuffer((const void*) vertices.data(), sizeof(Vertex) * vertices.size());
-        Graphics::IndexBuffer indexBuffer((unsigned int*) indices.data(), indices.size());
+        VertexBuffer vertexBuffer((const void*) vertices.data(), sizeof(Vertex) * vertices.size());
+        IndexBuffer indexBuffer((unsigned int*) indices.data(), indices.size());
 
         // Bind them together into a vertex array
-        Graphics::VertexArray vertexArray;
+        VertexArray vertexArray;
         vertexArray.addBuffer(vertexLayout);
 
         // Bind all the textures

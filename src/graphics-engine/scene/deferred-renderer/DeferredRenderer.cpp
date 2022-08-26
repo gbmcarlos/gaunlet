@@ -55,7 +55,7 @@ namespace engine::Scene {
 
     void DeferredRenderer::submit(int entityId, const ModelComponent& polygonComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent) {
 
-        std::vector<Vertex> vertices = {};
+        std::vector<Graphics::Vertex> vertices = {};
         std::vector<unsigned int> indices = {};
 
         // Get the vertices and indices of all the meshes of the model
@@ -129,7 +129,7 @@ namespace engine::Scene {
         );
 
         // Render
-        ForwardRenderer::renderMesh(
+        Graphics::ForwardRenderer::renderMesh(
             vertices, indices, textures, m_rendererStorage->m_shaderLibrary.get("polygon-shader"),
             m_rendererStorage->m_framebuffer
         );
@@ -155,7 +155,7 @@ namespace engine::Scene {
         );
 
         // Render
-        ForwardRenderer::renderMesh(
+        Graphics::ForwardRenderer::renderMesh(
             vertices, indices, textures, m_rendererStorage->m_shaderLibrary.get("circle-shader"), m_rendererStorage->m_framebuffer
         );
 

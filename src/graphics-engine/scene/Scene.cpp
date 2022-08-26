@@ -71,7 +71,7 @@ namespace engine::Scene {
             DirectionalLightComponent()
         );
 
-        renderPolygons();
+        renderModels();
         renderCircles();
 
         DeferredRenderer::endScene();
@@ -87,7 +87,7 @@ namespace engine::Scene {
             directionalLight
         );
 
-        renderPolygons();
+        renderModels();
         renderCircles();
 
         DeferredRenderer::endScene();
@@ -168,18 +168,18 @@ namespace engine::Scene {
 
     }
 
-    void Scene::renderPolygons() {
+    void Scene::renderModels() {
 
         auto group = m_registry.group<ModelComponent>(entt::get<TransformComponent>);
         for (auto e : group) {
 
             Entity entity = {e, this};
-            auto [polygon, transform] = group.get<ModelComponent, TransformComponent>(e);
+            auto [model, transform] = group.get<ModelComponent, TransformComponent>(e);
 
             // MaterialComponent is optional
             auto material = entity.hasComponent<MaterialComponent>() ? entity.getComponent<MaterialComponent>() : MaterialComponent();
 
-            DeferredRenderer::submit(entity.getId(), polygon, transform, material);
+            DeferredRenderer::submit(entity.getId(), model, transform, material);
 
         }
 

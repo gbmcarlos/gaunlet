@@ -43,7 +43,7 @@ namespace engine::Scene {
 
         GE_PROFILE_FUNCTION;
 
-        std::vector<Vertex> vertices;
+        std::vector<Graphics::Vertex> vertices;
         std::vector<unsigned int> indices;
 
         for (unsigned int i = 0; i < mesh->mNumVertices; i++) {

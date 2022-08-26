@@ -49,7 +49,7 @@ namespace engine::Scene {
         void runScripts(Core::TimeStep timeStep);
         void destroyScripts();
 
-        void renderPolygons();
+        void renderModels();
         void renderCircles();
 
     };
