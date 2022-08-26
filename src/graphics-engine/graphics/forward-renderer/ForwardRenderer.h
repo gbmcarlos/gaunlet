@@ -3,7 +3,7 @@
 #include "graphics-engine/graphics/texture/Texture.h"
 #include "graphics-engine/graphics/shader/Shader.h"
 #include "graphics-engine/graphics/framebuffer/Framebuffer.h"
-#include "graphics-engine/scene/model/Vertex.h"
+#include "graphics-engine/graphics/Vertex.h"
 
 #include "graphics-engine/pch.h"
 

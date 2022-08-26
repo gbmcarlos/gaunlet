@@ -11,3 +11,5 @@
 #include "graphics-engine/graphics/texture/Texture.h" // Depends on STB and Core/RenderCommand
 #include "graphics-engine/graphics/texture/TextureImage2D.h" // Depends on Texture
 #include "graphics-engine/graphics/framebuffer/Framebuffer.h"
+#include "graphics-engine/graphics/forward-renderer/ForwardRenderer.h"
+#include "graphics-engine/graphics/Vertex.h"

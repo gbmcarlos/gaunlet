@@ -1,4 +1,4 @@
-#include "graphics-engine/scene/forward-renderer/ForwardRenderer.h"
+#include "graphics-engine/graphics/forward-renderer/ForwardRenderer.h"
 
 #include "graphics-engine/graphics/vertex-buffer/VertexBuffer.h"
 #include "graphics-engine/graphics/index-buffer/IndexBuffer.h"

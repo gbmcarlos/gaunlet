@@ -23,10 +23,10 @@ add_library(graphics-engine STATIC
         graphics-engine/graphics/texture/TextureImage2D.cpp
         graphics-engine/graphics/texture/TextureLibrary.cpp
         graphics-engine/graphics/framebuffer/Framebuffer.cpp
+        graphics-engine/graphics/forward-renderer/ForwardRenderer.cpp
 
 #        Scene
         graphics-engine/scene/model/Model.cpp
-        graphics-engine/scene/forward-renderer/ForwardRenderer.cpp
         graphics-engine/scene/deferred-renderer/DeferredRenderer.cpp
         graphics-engine/scene/camera/Camera.cpp
         graphics-engine/scene/camera/OrthographicCamera.cpp

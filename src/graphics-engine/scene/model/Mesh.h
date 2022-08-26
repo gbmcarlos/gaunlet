@@ -1,6 +1,6 @@
 #pragma once
 
-#include "graphics-engine/scene/model/Vertex.h"
+#include "graphics-engine/graphics/Vertex.h"
 
 #include "graphics-engine/pch.h"
 

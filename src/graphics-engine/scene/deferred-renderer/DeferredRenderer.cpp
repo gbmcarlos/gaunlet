@@ -2,7 +2,7 @@
 
 #include "graphics-engine/core/render/RenderCommand.h"
 #include "graphics-engine/graphics/texture/TextureImage2D.h"
-#include "graphics-engine/scene/forward-renderer/ForwardRenderer.h"
+#include "graphics-engine/graphics//forward-renderer/ForwardRenderer.h"
 
 namespace engine::Scene {
 

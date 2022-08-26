@@ -13,7 +13,6 @@
 #include "graphics-engine/scene/camera/OrthographicCamera.h" // Doesn't depend on anything
 
 #include "graphics-engine/scene/model/Model.h"
-#include "graphics-engine/scene/model/Vertex.h"
 #include "graphics-engine/scene/model/Sprites.h"
 
 #include "graphics-engine/scene/entity/GraphicsComponents.h" // Depends on PolygonMesh and CircleMesh
