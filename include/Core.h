@@ -1,28 +1,28 @@
 #pragma once
 
-#include "graphics-engine/pch.h"
-#include "graphics-engine/core/utils.h" // Doesn't depend on anything
+#include "gaunlet/pch.h"
+#include "gaunlet/core/utils.h" // Doesn't depend on anything
 
 // Application
-#include "graphics-engine/core/application/Application.h"
-#include "graphics-engine/core/application/Layer.h"
+#include "gaunlet/core/application/Application.h"
+#include "gaunlet/core/application/Layer.h"
 
 // Events
-#include "graphics-engine/core/event/Event.h" // Doesn't depend on anything
-#include "graphics-engine/core/event/events/WindowEvent.h" // Depends on Event
-#include "graphics-engine/core/event/events/KeyEvent.h" // Depends on Event
-#include "graphics-engine/core/event/events/MouseEvent.h" // Depends on Event
-#include "graphics-engine/core/event/events/CursorEvent.h" // Depends on Event
-#include "graphics-engine/core/event/events/ScrollEvent.h" // Depends on Event
+#include "gaunlet/core/event/Event.h" // Doesn't depend on anything
+#include "gaunlet/core/event/events/WindowEvent.h" // Depends on Event
+#include "gaunlet/core/event/events/KeyEvent.h" // Depends on Event
+#include "gaunlet/core/event/events/MouseEvent.h" // Depends on Event
+#include "gaunlet/core/event/events/CursorEvent.h" // Depends on Event
+#include "gaunlet/core/event/events/ScrollEvent.h" // Depends on Event
 
 // Window
-#include "graphics-engine/core/window/KeyCodes.h" // Defines
-#include "graphics-engine/core/window/MouseButtonCodes.h" // Defines
-#include "graphics-engine/core/window/Window.h" // Depends on GLFW and Events
-#include "graphics-engine/core/window/Input.h" // Depends on Window
+#include "gaunlet/core/window/KeyCodes.h" // Defines
+#include "gaunlet/core/window/MouseButtonCodes.h" // Defines
+#include "gaunlet/core/window/Window.h" // Depends on GLFW and Events
+#include "gaunlet/core/window/Input.h" // Depends on Window
 
-#include "graphics-engine/core/render/RenderCommand.h" // Depends on RenderApi
-#include "graphics-engine/core/run-loop/RunLoop.h" // Depends on Window, Application, ImGuiRenderApi, and RenderCommand
+#include "gaunlet/core/render/RenderCommand.h" // Depends on RenderApi
+#include "gaunlet/core/run-loop/RunLoop.h" // Depends on Window, Application, ImGuiRenderApi, and RenderCommand
 
 #include <imgui.h>
 #include <imgui_internal.h>

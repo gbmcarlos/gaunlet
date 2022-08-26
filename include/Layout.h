@@ -2,5 +2,5 @@
 
 #include "Scene.h"
 
-#include "graphics-engine/layout/docking/DockingLayout.h"
-#include "graphics-engine/layout/application/LayoutLayer.h"
+#include "gaunlet/layout/docking/DockingLayout.h"
+#include "gaunlet/layout/application/LayoutLayer.h"
