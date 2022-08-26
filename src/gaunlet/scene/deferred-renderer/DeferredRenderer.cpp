@@ -9,11 +9,13 @@ namespace gaunlet::Scene {
     DeferredRenderer::RendererStorage* DeferredRenderer::m_rendererStorage = new RendererStorage;
 
     void DeferredRenderer::init() {
-        loadDefaultShaders();
+        loadShaders();
         loadDefaultWhiteTexture();
     }
 
-    void DeferredRenderer::beginScene(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const Core::Ref<Graphics::Framebuffer>& framebuffer, const DirectionalLightComponent& directionalLight) {
+    void DeferredRenderer::beginScene(RenderMode renderMode, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const Core::Ref<Graphics::Framebuffer>& framebuffer, const DirectionalLightComponent& directionalLight) {
+
+        m_rendererStorage->m_renderMode = renderMode;
 
         SceneProperties sceneProperties(
             viewMatrix, projectionMatrix,
@@ -30,6 +32,7 @@ namespace gaunlet::Scene {
             sizeof(SceneProperties)
         );
 
+        // Clear the screen or the framebuffer
         if (framebuffer != nullptr) {
             framebuffer->clear();
         } else {
@@ -50,6 +53,9 @@ namespace gaunlet::Scene {
         if (!m_rendererStorage->m_circleBatch.getVertices().empty()) {
             flushCircles();
         }
+
+        // Forget about the framebuffer
+        m_rendererStorage->m_framebuffer = nullptr;
 
     }
 
@@ -128,9 +134,17 @@ namespace gaunlet::Scene {
             sizeof(PolygonEntityProperties) * entityProperties.size()
         );
 
+        Core::Ref<Graphics::Shader> shader;
+
+        if (m_rendererStorage->m_renderMode == RenderMode::Faces) {
+            shader = m_rendererStorage->m_shaderLibrary.get("polygon-faces-shader");
+        } else {
+            shader = m_rendererStorage->m_shaderLibrary.get("polygon-wireframe-shader");
+        }
+
         // Render
         Graphics::ForwardRenderer::renderMesh(
-            vertices, indices, textures, m_rendererStorage->m_shaderLibrary.get("polygon-shader"),
+            vertices, indices, textures, shader,
             m_rendererStorage->m_framebuffer
         );
 
@@ -166,43 +180,72 @@ namespace gaunlet::Scene {
     }
 
     // Create the shaders and set the texture slots
-    void DeferredRenderer::loadDefaultShaders() {
+    void DeferredRenderer::loadShaders() {
 
         GE_PROFILE_FUNCTION;
 
+        // Create the Uniform Buffer for the Scene Properties, which will be linked to every shader
         m_rendererStorage->m_scenePropertiesUniformBuffer = Core::CreateRef<Graphics::UniformBuffer>(
             "ScenePropertiesBlock",
             0,
             sizeof (SceneProperties)
         );
 
-        // Create the polygon shader
-        std::map<Core::ShaderType, std::string> polygonShaderSource {
-            {Core::ShaderType::Vertex, ASSETS_PATH"/shaders/2d/polygon-vertex-position-2d.glsl"},
-            {Core::ShaderType::Fragment, ASSETS_PATH"/shaders/2d/polygon-color-texture-2d.glsl"}
-        };
-        auto polygonShader = m_rendererStorage->m_shaderLibrary.load("polygon-shader", polygonShaderSource);
+        loadPolygonShaders();
+        loadCircleShaders();
 
-        // Set all the texture slots as uniforms
-        for (int i = 0; i < m_rendererStorage->m_polygonBatch.getMaxTextures(); i++) {
-            auto textureName = std::string("texture") + std::to_string(i);
-            polygonShader->setUniform1i(textureName, i);
-        }
+    }
 
+    void DeferredRenderer::loadPolygonShaders() {
+
+        // Create a uniform buffer that will contain the properties of every polygon model, and will be linked to every polygon shader
         m_rendererStorage->m_polygonEntityPropertiesUniformBuffer = Core::CreateRef<Graphics::UniformBuffer>(
             "EntityPropertiesBlock",
             1,
             sizeof (PolygonEntityProperties) * 100
         );
 
-        // Link the SceneMatrices and the EntityProperties uniform buffers
-        polygonShader->linkUniformBuffer(m_rendererStorage->m_scenePropertiesUniformBuffer);
-        polygonShader->linkUniformBuffer(m_rendererStorage->m_polygonEntityPropertiesUniformBuffer);
+        // Polygon Faces Shader
+        std::map<Core::ShaderType, std::string> polygonFacesShaderSources {
+            {Core::ShaderType::Vertex, ASSETS_PATH"/shaders/polygon-faces/vertex.glsl"},
+            {Core::ShaderType::Fragment, ASSETS_PATH"/shaders/polygon-faces/fragment.glsl"}
+        };
+        auto polygonFacesShader = m_rendererStorage->m_shaderLibrary.load("polygon-faces-shader", polygonFacesShaderSources);
 
-        // Create the circle shader
+        // Set all the texture slots as uniforms
+        for (int i = 0; i < m_rendererStorage->m_polygonBatch.getMaxTextures(); i++) {
+            auto textureName = std::string("texture") + std::to_string(i);
+            polygonFacesShader->setUniform1i(textureName, i);
+        }
+
+        // Polygon Wireframe Shader
+        std::map<Core::ShaderType, std::string> polygonWireframeShaderSources {
+            {Core::ShaderType::Vertex, ASSETS_PATH"/shaders/polygon-wireframe/vertex.glsl"},
+            {Core::ShaderType::Geometry, ASSETS_PATH"/shaders/polygon-wireframe/geometry.glsl"},
+            {Core::ShaderType::Fragment, ASSETS_PATH"/shaders/polygon-wireframe/fragment.glsl"}
+        };
+        auto polygonWireframeShader = m_rendererStorage->m_shaderLibrary.load("polygon-wireframe-shader", polygonWireframeShaderSources);
+
+        // Link the SceneProperties and EntityProperties uniform buffers to both shader
+        polygonFacesShader->linkUniformBuffer(m_rendererStorage->m_polygonEntityPropertiesUniformBuffer);
+        polygonFacesShader->linkUniformBuffer(m_rendererStorage->m_scenePropertiesUniformBuffer);
+        polygonWireframeShader->linkUniformBuffer(m_rendererStorage->m_polygonEntityPropertiesUniformBuffer);
+        polygonWireframeShader->linkUniformBuffer(m_rendererStorage->m_scenePropertiesUniformBuffer);
+
+    }
+
+    void DeferredRenderer::loadCircleShaders() {
+
+        // Create a uniform buffer that will contain the properties of every circle model, and will be linked to every circle shader
+        m_rendererStorage->m_circleEntityPropertiesUniformBuffer = Core::CreateRef<Graphics::UniformBuffer>(
+            "EntityPropertiesBlock",
+            2,
+            sizeof (CircleEntityProperties) * 100
+        );
+
         std::map<Core::ShaderType, std::string> circleShaderSource {
-            {Core::ShaderType::Vertex, ASSETS_PATH"/shaders/2d/circle-vertex-position-2d.glsl"},
-            {Core::ShaderType::Fragment, ASSETS_PATH"/shaders/2d/circle-color-texture-2d.glsl"}
+            {Core::ShaderType::Vertex, ASSETS_PATH"/shaders/circle-faces/vertex.glsl"},
+            {Core::ShaderType::Fragment, ASSETS_PATH"/shaders/circle-faces/fragment.glsl"}
         };
         auto circleShader = m_rendererStorage->m_shaderLibrary.load("circle-shader", circleShaderSource);
 
@@ -212,15 +255,9 @@ namespace gaunlet::Scene {
             circleShader->setUniform1i(textureName, i);
         }
 
-        m_rendererStorage->m_circleEntityPropertiesUniformBuffer = Core::CreateRef<Graphics::UniformBuffer>(
-            "EntityPropertiesBlock",
-            2,
-            sizeof (CircleEntityProperties) * 100
-        );
-
-        // Link the SceneMatrices and the EntityProperties uniform buffers
-        circleShader->linkUniformBuffer(m_rendererStorage->m_scenePropertiesUniformBuffer);
+        // Link the EntityProperties uniform buffers
         circleShader->linkUniformBuffer(m_rendererStorage->m_circleEntityPropertiesUniformBuffer);
+        circleShader->linkUniformBuffer(m_rendererStorage->m_scenePropertiesUniformBuffer);
 
     }
 

@@ -31,8 +31,8 @@ namespace gaunlet::Scene {
         void togglePlay();
 
         void update(Core::TimeStep timeStep);
-        void render(const Core::Ref<Camera>& camera, const Core::Ref<Graphics::Framebuffer>& framebuffer = nullptr);
-        void render(const Core::Ref<Camera>& camera, const DirectionalLightComponent& directionalLight, const Core::Ref<Graphics::Framebuffer>& framebuffer = nullptr);
+        void render(RenderMode renderMode, const Core::Ref<Camera>& camera, const Core::Ref<Graphics::Framebuffer>& framebuffer = nullptr);
+        void render(RenderMode renderMode, const Core::Ref<Camera>& camera, const DirectionalLightComponent& directionalLight, const Core::Ref<Graphics::Framebuffer>& framebuffer = nullptr);
         void stop();
 
     private:

@@ -439,6 +439,8 @@ namespace gaunlet::Core {
 
     void OpenGLRenderApi::drawIndexedLines(unsigned int vertexBufferId, unsigned int indexBufferId, unsigned int vertexArrayId, unsigned int shaderId, unsigned int indexCount) {
 
+        m_boundIndexBufferId = 0; // Make sure the index buffer gets bound
+
         bindVertexBuffer(vertexBufferId);
         bindIndexBuffer(indexBufferId);
         bindVertexArray(vertexArrayId);

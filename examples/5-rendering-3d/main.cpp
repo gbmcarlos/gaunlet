@@ -6,6 +6,7 @@ private:
     gaunlet::Scene::Scene m_scene;
     gaunlet::Core::Ref<gaunlet::Scene::PerspectiveCamera> m_camera;
     gaunlet::Scene::DirectionalLightComponent m_directionalLight;
+    int m_renderMode = 0;
 
 public:
 
@@ -38,11 +39,24 @@ public:
     }
 
     void onUpdate(gaunlet::Core::TimeStep timeStep) override {
-        m_scene.render(gaunlet::Scene::RenderMode::Faces, m_camera, m_directionalLight);
+
+        if (m_renderMode == 0) {
+            m_scene.render(gaunlet::Scene::RenderMode::Faces, m_camera, m_directionalLight);
+        } else {
+            m_scene.render(gaunlet::Scene::RenderMode::Wireframe, m_camera, m_directionalLight);
+        }
     }
 
     void onGuiRender() override {
         ImGui::ShowMetricsWindow();
+
+        ImGui::Begin("Settings");
+
+        ImGui::RadioButton("Faces", &m_renderMode, 0);
+        ImGui::RadioButton("Wireframe", &m_renderMode, 1);
+
+        ImGui::End();
+
     }
 
 };

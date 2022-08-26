@@ -62,9 +62,10 @@ namespace gaunlet::Scene {
 
     }
 
-    void Scene::render(const Core::Ref<Camera>& camera, const Core::Ref<Graphics::Framebuffer>& framebuffer) {
+    void Scene::render(RenderMode renderMode, const Core::Ref<Camera>& camera, const Core::Ref<Graphics::Framebuffer>& framebuffer) {
 
         DeferredRenderer::beginScene(
+            renderMode,
             camera->getViewMatrix(),
             camera->getProjectionMatrix(),
             framebuffer,
@@ -78,9 +79,10 @@ namespace gaunlet::Scene {
 
     }
 
-    void Scene::render(const Core::Ref<Camera>& camera, const DirectionalLightComponent& directionalLight, const Core::Ref<Graphics::Framebuffer>& framebuffer) {
+    void Scene::render(RenderMode renderMode, const Core::Ref<Camera>& camera, const DirectionalLightComponent& directionalLight, const Core::Ref<Graphics::Framebuffer>& framebuffer) {
 
         DeferredRenderer::beginScene(
+            renderMode,
             camera->getViewMatrix(),
             camera->getProjectionMatrix(),
             framebuffer,

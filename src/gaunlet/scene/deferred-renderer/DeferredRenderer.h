@@ -17,6 +17,10 @@
 
 namespace gaunlet::Scene {
 
+    enum class RenderMode {
+        Faces, Wireframe
+    };
+
     class DeferredRenderer {
 
     public:
@@ -28,7 +32,7 @@ namespace gaunlet::Scene {
 
         static void init();
 
-        static void beginScene(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const Core::Ref<Graphics::Framebuffer>& framebuffer, const DirectionalLightComponent& directionalLight);
+        static void beginScene(RenderMode renderMode, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const Core::Ref<Graphics::Framebuffer>& framebuffer, const DirectionalLightComponent& directionalLight);
         static void endScene();
 
         // Batched draw calls
@@ -42,7 +46,9 @@ namespace gaunlet::Scene {
         static void flushCircles();
 
         // Init loaders
-        static void loadDefaultShaders();
+        static void loadShaders();
+        static void loadPolygonShaders();
+        static void loadCircleShaders();
         static void loadDefaultWhiteTexture();
 
         struct SceneProperties {
@@ -62,6 +68,8 @@ namespace gaunlet::Scene {
         };
 
         struct RendererStorage {
+
+            RenderMode m_renderMode;
 
             Batch<PolygonEntityProperties> m_polygonBatch;
             Batch<CircleEntityProperties> m_circleBatch;
