@@ -36,7 +36,8 @@ add_library(gaunlet STATIC
 
 #        Layout
         gaunlet/layout/docking/DockingLayout.cpp
-        gaunlet/layout/application/LayoutLayer.cpp
+        gaunlet/layout/layout-layer/LayoutLayer.cpp
+        gaunlet/layout/panel/RenderPanel.cpp
 
 #        Dear ImGui
         ${PROJECT_SOURCE_DIR}/vendor/imgui/imgui_impl_glfw.cpp ${PROJECT_SOURCE_DIR}/vendor/imgui/imgui_impl_opengl3.cpp

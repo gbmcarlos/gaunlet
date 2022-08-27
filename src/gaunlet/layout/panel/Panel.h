@@ -34,11 +34,4 @@ namespace gaunlet::Layout {
 
     };
 
-    class RenderPanel : public Panel  {
-
-    public:
-        virtual bool onEvent(Core::Event& event) = 0;
-
-    };
-
 }

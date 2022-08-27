@@ -7,6 +7,7 @@
 #include "gaunlet/scene/entity/PhysicsComponents.h"
 #include "gaunlet/scene/entity/LightingComponents.h"
 #include "gaunlet/scene/physics/PhysicsWorld.h"
+#include "gaunlet/scene/deferred-renderer/DeferredRenderer.h"
 
 #include <entt/entt.hpp>
 

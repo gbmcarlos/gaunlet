@@ -2,7 +2,6 @@
 
 #include "gaunlet/scene/entity/Entity.h"
 #include "gaunlet/scene/entity/ScriptComponents.h"
-#include "gaunlet/scene/deferred-renderer/DeferredRenderer.h"
 
 namespace gaunlet::Scene {
 

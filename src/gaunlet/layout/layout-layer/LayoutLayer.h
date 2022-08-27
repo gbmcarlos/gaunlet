@@ -1,5 +1,6 @@
 #pragma once
 
+#include "gaunlet/core/application/TimeStep.h"
 #include "gaunlet/core/application/Layer.h"
 #include "gaunlet/core/window/Window.h"
 
@@ -7,7 +8,8 @@
 #include "gaunlet/scene/camera/Camera.h"
 
 #include "gaunlet/layout/docking/DockingLayout.h"
-#include "gaunlet/layout/application/Panel.h"
+#include "gaunlet/layout/panel/Panel.h"
+#include "gaunlet/layout/panel/RenderPanel.h"
 
 #include "gaunlet/pch.h"
 
@@ -20,10 +22,11 @@ class LayoutLayer : public Core::Layer {
 
         void setLayoutSpec(const DockingLayoutSpec& layoutSpec);
         void pushPanel(const char* windowId, GuiPanel* panel);
-        void pushPanel(const char* windowId, RenderPanel* panel, Core::Ref<Scene::Camera> camera, Core::Ref<Graphics::Framebuffer> framebuffer, unsigned int colorAttachmentIndex);
+        void pushPanel(const char* windowId, RenderPanel* panel);
 
-        void onEvent(Core::Event& event) override;
         void onGuiRender() override;
+        void onUpdate(gaunlet::Core::TimeStep) override;
+        void onEvent(Core::Event& event) override;
 
     private:
 
@@ -38,9 +41,6 @@ class LayoutLayer : public Core::Layer {
         struct RenderPanelWindow {
             const char* m_windowId;
             RenderPanel* m_node;
-            Core::Ref<Scene::Camera> m_camera;
-            Core::Ref<Graphics::Framebuffer> m_framebuffer;
-            unsigned int m_colorAttachmentIndex;
         };
 
         std::vector<GuiPanelWindow> m_guiPanelWindows = {};
@@ -49,6 +49,7 @@ class LayoutLayer : public Core::Layer {
         void handleMouseEvent(Core::Event& event);
         void handleKeyboardEvent(Core::Event& event);
 
+        void prepareRenderNode(RenderPanel& renderPanel);
         void updateNodeProperties(Panel* node);
 
     };

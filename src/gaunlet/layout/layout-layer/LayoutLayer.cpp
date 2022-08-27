@@ -1,4 +1,4 @@
-#include "gaunlet/layout/application/LayoutLayer.h"
+#include "gaunlet/layout/layout-layer/LayoutLayer.h"
 
 namespace gaunlet::Layout {
 
@@ -12,8 +12,17 @@ namespace gaunlet::Layout {
         m_guiPanelWindows.push_back({windowId, panel});
     }
 
-    void LayoutLayer::pushPanel(const char* windowId, RenderPanel* panel, Core::Ref<Scene::Camera> camera, Core::Ref<Graphics::Framebuffer> framebuffer, unsigned int colorAttachmentIndex) {
-        m_renderPanelWindows.push_back({windowId, panel, std::move(camera), std::move(framebuffer), colorAttachmentIndex});
+    void LayoutLayer::pushPanel(const char* windowId, RenderPanel* panel) {
+        prepareRenderNode(*panel);
+        m_renderPanelWindows.push_back({windowId, panel});
+    }
+
+    void LayoutLayer::onUpdate(gaunlet::Core::TimeStep timeStep) {
+
+        for (auto& renderPanelWindow : m_renderPanelWindows) {
+            renderPanelWindow.m_node->onUpdate(timeStep);
+        }
+
     }
 
     void LayoutLayer::onGuiRender() {
@@ -50,13 +59,13 @@ namespace gaunlet::Layout {
             updateNodeProperties(renderPanelWindow.m_node);
 
             // If the aspect ratio has changed, the camera and the framebuffer need to be resized
-            if (renderPanelWindow.m_camera->getAspectRatio() != renderPanelWindow.m_node->getNodeAspectRatio()) {
+            if (renderPanelWindow.m_node->m_camera->getAspectRatio() != renderPanelWindow.m_node->getNodeAspectRatio()) {
 
-                renderPanelWindow.m_camera->resize(
+                renderPanelWindow.m_node->m_camera->resize(
                     renderPanelWindow.m_node->getNodeWidth(),
                     renderPanelWindow.m_node->getNodeHeight()
                 );
-                renderPanelWindow.m_framebuffer->resize(
+                renderPanelWindow.m_node->m_framebuffer->resize(
                     renderPanelWindow.m_node->getNodeWidth() * m_window->getDPI(),
                     renderPanelWindow.m_node->getNodeHeight() * m_window->getDPI()
                 );
@@ -64,7 +73,7 @@ namespace gaunlet::Layout {
             }
 
             // Render the framebuffer's color attachment texture as an ImGui image
-            auto& colorAttachmentTexture = renderPanelWindow.m_framebuffer->getColorAttachment(renderPanelWindow.m_colorAttachmentIndex);
+            auto& colorAttachmentTexture = renderPanelWindow.m_node->m_framebuffer->getColorAttachment(RenderPanel::SceneFramebufferAttachmentIndex);
             ImGui::Image(
                 (void *)(intptr_t)colorAttachmentTexture->getRendererId(),
                 ImGui::GetContentRegionAvail(),
@@ -107,6 +116,25 @@ namespace gaunlet::Layout {
                 break;
             }
         }
+
+    }
+
+    void LayoutLayer::prepareRenderNode(RenderPanel &renderPanel) {
+
+        renderPanel.m_camera = gaunlet::Core::CreateRef<gaunlet::Scene::PerspectiveCamera>(
+            45.0f,
+            (float) m_window->getViewportWidth() /(float) m_window->getViewportHeight(),
+            100,
+            1.0f, 100.0f
+        );
+
+        renderPanel.m_camera->setTranslation({0.0f, 2.0f, 10.0f});
+
+        renderPanel.m_framebuffer = gaunlet::Core::CreateRef<gaunlet::Graphics::Framebuffer>(std::initializer_list<gaunlet::Graphics::FramebufferAttachmentSpec>{
+            {gaunlet::Core::FramebufferAttachmentType::Color, gaunlet::Graphics::FramebufferDataFormat::RGBA, glm::vec4(0.0f, 0.0f, 0.0f, 0.0f)},
+            {gaunlet::Core::FramebufferAttachmentType::Color, gaunlet::Graphics::FramebufferDataFormat::Integer, -1},
+            {gaunlet::Core::FramebufferAttachmentType::Depth, gaunlet::Graphics::FramebufferDataFormat::Depth}
+        }, m_window->getViewportWidth() * m_window->getDPI(), m_window->getViewportHeight() * m_window->getDPI());
 
     }
 
