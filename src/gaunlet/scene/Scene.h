@@ -44,6 +44,8 @@ namespace gaunlet::Scene {
 
         void update(Core::TimeStep timeStep);
 
+        template<typename T>
+        void renderTagged(RenderMode renderMode, const Core::Ref<Camera>& camera, const DirectionalLightComponent& directionalLight);
         void render(RenderMode renderMode, const Core::Ref<Camera>& camera, const DirectionalLightComponent& directionalLight);
 
         void stop();
@@ -62,7 +64,12 @@ namespace gaunlet::Scene {
         void runScripts(Core::TimeStep timeStep);
         void destroyScripts();
 
+        template<typename T>
+        void renderTaggedModels();
         void renderModels();
+
+        template<typename T>
+        void renderTaggedCircles();
         void renderCircles();
 
     };
@@ -106,5 +113,58 @@ namespace gaunlet::Scene {
         Scene* m_scene = nullptr;
 
     };
+
+    template<typename T>
+    void Scene::renderTagged(RenderMode renderMode, const Core::Ref<Camera> &camera, const DirectionalLightComponent &directionalLight) {
+
+        DeferredRenderer::beginScene(
+            renderMode,
+            camera->getViewMatrix(),
+            camera->getProjectionMatrix(),
+            directionalLight
+        );
+
+        renderTaggedModels<T>();
+        renderTaggedCircles<T>();
+
+        DeferredRenderer::endScene();
+
+    }
+
+    template<typename T>
+    void Scene::renderTaggedModels() {
+
+        auto group = m_registry.view<ModelComponent, TransformComponent, T>();
+        for (auto e : group) {
+
+            Entity entity = {e, this};
+            auto [model, transform] = group.template get<ModelComponent, TransformComponent>(e);
+
+            // MaterialComponent is optional
+            auto material = entity.hasComponent<MaterialComponent>() ? entity.getComponent<MaterialComponent>() : MaterialComponent();
+
+            DeferredRenderer::submit(entity.getId(), model, transform, material);
+
+        }
+
+    }
+
+    template<typename T>
+    void Scene::renderTaggedCircles() {
+
+        auto group = m_registry.view<CircleComponent, TransformComponent, T>();
+        for (auto e : group) {
+
+            Entity entity = {e, this};
+            auto [circle, transform] = group.template get<CircleComponent, TransformComponent>(e);
+
+            // MaterialComponent is optional
+            auto material = entity.hasComponent<MaterialComponent>() ? entity.getComponent<MaterialComponent>() : MaterialComponent();
+
+            DeferredRenderer::submit(entity.getId(), circle, transform, material);
+
+        }
+
+    }
 
 }
