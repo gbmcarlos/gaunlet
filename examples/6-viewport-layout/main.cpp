@@ -34,11 +34,21 @@ public:
         unsigned int pixelPositionX = getMousePositionX() * gaunlet::Core::Window::getCurrentInstance()->getDPI();
         unsigned int pixelPositionY = getMousePositionYInverted() * gaunlet::Core::Window::getCurrentInstance()->getDPI();
 
-        m_selectedEntityId = getFramebuffer()->readPixel(
-            gaunlet::Layout::RenderPanel::EntityIdFramebufferAttachmentIndex,
+        int selectedEntityId = getFramebuffer()->readPixel(
+            gaunlet::Layout::RenderPanel::UIEntityIdFramebufferAttachmentIndex,
             pixelPositionX,
             pixelPositionY
         );
+
+        if (selectedEntityId < 0) {
+            selectedEntityId = getFramebuffer()->readPixel(
+                gaunlet::Layout::RenderPanel::SceneEntityIdFramebufferAttachmentIndex,
+                pixelPositionX,
+                pixelPositionY
+            );
+        }
+
+        m_selectedEntityId = selectedEntityId;
 
         return false;
 
@@ -108,17 +118,17 @@ public:
         m_editorLayer->pushPanel("Tools", new ToolsPanel);
         m_editorLayer->pushPanel("Scene", scenePanel);
 
-        auto triangle = scenePanel->getScene().createEntity();
+        auto triangle = scenePanel->createSceneEntity();
         triangle.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Triangle2DModel());
         triangle.addComponent<gaunlet::Scene::TransformComponent>(
-            glm::vec3(-2.0f, 0.0f, 0.0f),
+            glm::vec3(-1.5f, 1.0f, 2.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f)
         );
         triangle.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
-        auto circle = scenePanel->getScene().createEntity();
-        circle.addComponent<gaunlet::Scene::CircleComponent>(0.1f, 0.01f);
+        auto circle = scenePanel->createSceneEntity();
+        circle.addComponent<gaunlet::Scene::CircleComponent>(0.3f, 0.01f);
         circle.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(2.0f, 0.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
@@ -126,7 +136,16 @@ public:
         );
         circle.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(0.0f, 0.0f, 0.8f, 1.0f));
 
-        scenePanel->getScene().start();
+        auto square = scenePanel->createUIEntity();
+        square.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Square2DModel());
+        square.addComponent<gaunlet::Scene::TransformComponent>(
+            glm::vec3(-1.5f, 1.0f, 2.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(0.5f, 0.5f, 1.0f)
+        );
+        square.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+
+        scenePanel->startScene();
 
         pushLayer(m_editorLayer);
     }

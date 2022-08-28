@@ -9,6 +9,14 @@
 
 namespace gaunlet::Layout {
 
+    struct SceneEntityTag {
+        SceneEntityTag() = default;
+    };
+
+    struct UIEntityTag {
+        UIEntityTag() = default;
+    };
+
     class RenderPanel : public Panel  {
 
         friend LayoutLayer;
@@ -16,20 +24,25 @@ namespace gaunlet::Layout {
     public:
 
         static const unsigned int SceneFramebufferAttachmentIndex = 0;
-        static const unsigned int EntityIdFramebufferAttachmentIndex = 1;
+        static const unsigned int SceneEntityIdFramebufferAttachmentIndex = 1;
+        static const unsigned int UIEntityIdFramebufferAttachmentIndex = 2;
 
-        inline gaunlet::Scene::Scene& getScene() {return m_scene; }
-        inline gaunlet::Core::Ref<gaunlet::Scene::PerspectiveCamera>& getCamera() {return m_camera; }
         inline gaunlet::Core::Ref<gaunlet::Graphics::Framebuffer>& getFramebuffer() {return m_framebuffer; }
         inline gaunlet::Scene::RenderMode getRenderMode() {return m_renderMode; }
 
         void setRenderMode(gaunlet::Scene::RenderMode renderMode) {m_renderMode = renderMode; }
+        void startScene() {m_scene.start(); }
 
         virtual bool onEvent(Core::Event& event) = 0;
 
-    private:
+        virtual gaunlet::Scene::Entity createSceneEntity();
+        virtual gaunlet::Scene::Entity createUIEntity();
 
-        void onUpdate(gaunlet::Core::TimeStep);
+    protected:
+
+        virtual void onUpdate(gaunlet::Core::TimeStep);
+
+    private:
 
         gaunlet::Scene::Scene m_scene;
         gaunlet::Core::Ref<gaunlet::Scene::PerspectiveCamera> m_camera;

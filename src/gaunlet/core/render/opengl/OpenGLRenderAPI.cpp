@@ -389,15 +389,12 @@ namespace gaunlet::Core {
             throw std::runtime_error("Unsupported data type for clear buffer color");
         }
 
-        unbindFramebuffer();
-
     }
 
     void OpenGLRenderApi::clearDepthAttachment(unsigned int id) {
 
         bindFramebuffer(id);
         glClear(GL_DEPTH_BUFFER_BIT);
-        unbindFramebuffer();
 
     }
 
@@ -418,8 +415,6 @@ namespace gaunlet::Core {
             convertPrimitiveDataType(dataType),
             data
         ));
-
-        unbindFramebuffer();
 
     }
 
