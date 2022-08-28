@@ -19,7 +19,9 @@ namespace gaunlet::Core {
 
     public:
         static void init();
-        static void clear(const glm::vec4& color);
+
+        static void clearColorBuffer(const glm::vec4& color);
+        static void clearDepthBuffer();
 
         static void getViewport(unsigned int& x0, unsigned int& y0, unsigned int& x1, unsigned int& y1);
         static void setViewport(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1);

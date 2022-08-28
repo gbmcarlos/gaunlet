@@ -1,5 +1,6 @@
 #pragma once
 
+#include "gaunlet/graphics/vertex-buffer/BufferLayout.h"
 #include "gaunlet/pch.h"
 
 namespace gaunlet::Graphics {
@@ -17,6 +18,15 @@ namespace gaunlet::Graphics {
         glm::vec3 m_normal;
         glm::vec2 m_textureCoordinates;
         unsigned int m_entityIndex;
+
+        static BufferLayout getBufferLayout() {
+            return {
+                {"a_position", 4, Core::PrimitiveDataType::Float},
+                {"a_normal", 3, Core::PrimitiveDataType::Float},
+                {"a_textureCoordinates", 2, Core::PrimitiveDataType::Float},
+                {"a_entityIndex", 1, Core::PrimitiveDataType::UInt},
+            };
+        }
 
     };
 

@@ -1,10 +1,12 @@
 #pragma once
 
-#include "gaunlet/scene/entity/Entity.h"
+#include "gaunlet/scene/Scene.h"
 
 namespace gaunlet::Scene {
 
     class NativeScript {
+
+        friend class Scene;
 
     public:
         virtual ~NativeScript() {}
@@ -29,8 +31,6 @@ namespace gaunlet::Scene {
 
     private:
         Entity m_entity;
-
-    friend class Scene;
 
     };
 

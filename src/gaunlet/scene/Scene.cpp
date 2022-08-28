@@ -1,7 +1,7 @@
 #include "gaunlet/scene/Scene.h"
 
-#include "gaunlet/scene/entity/Entity.h"
 #include "gaunlet/scene/entity/ScriptComponents.h"
+#include "gaunlet/core/render/RenderCommand.h"
 
 namespace gaunlet::Scene {
 
@@ -61,30 +61,12 @@ namespace gaunlet::Scene {
 
     }
 
-    void Scene::render(RenderMode renderMode, const Core::Ref<Camera>& camera, const Core::Ref<Graphics::Framebuffer>& framebuffer) {
+    void Scene::render(RenderMode renderMode, const Core::Ref<Camera>& camera, const DirectionalLightComponent& directionalLight) {
 
         DeferredRenderer::beginScene(
             renderMode,
             camera->getViewMatrix(),
             camera->getProjectionMatrix(),
-            framebuffer,
-            DirectionalLightComponent()
-        );
-
-        renderModels();
-        renderCircles();
-
-        DeferredRenderer::endScene();
-
-    }
-
-    void Scene::render(RenderMode renderMode, const Core::Ref<Camera>& camera, const DirectionalLightComponent& directionalLight, const Core::Ref<Graphics::Framebuffer>& framebuffer) {
-
-        DeferredRenderer::beginScene(
-            renderMode,
-            camera->getViewMatrix(),
-            camera->getProjectionMatrix(),
-            framebuffer,
             directionalLight
         );
 

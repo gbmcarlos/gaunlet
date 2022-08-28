@@ -66,26 +66,34 @@ namespace gaunlet::Graphics {
     void Framebuffer::clear() {
 
         for (unsigned int i = 0; i < m_colorAttachmentSpecs.size(); i++) {
-
-            auto& colorAttachmentSpec = m_colorAttachmentSpecs[i];
-
-            switch (colorAttachmentSpec.m_dataFormat) {
-                case FramebufferDataFormat::RGBA:
-                    Core::RenderCommand::clearColorAttachment(m_rendererId, i, Core::PrimitiveDataType::Float, glm::value_ptr(colorAttachmentSpec.m_clearColorVec4Value));
-                    break;
-                case FramebufferDataFormat::Integer:
-                    Core::RenderCommand::clearColorAttachment(m_rendererId, i, Core::PrimitiveDataType::Int, &colorAttachmentSpec.m_clearColorIntValue);
-                    break;
-                default:
-                    throw std::runtime_error("Unsupported attachment data type for clear color");
-            }
-
+            clearColorAttachment(i);
         }
 
+        clearDepthAttachment();
+
+    }
+
+    void Framebuffer::clearColorAttachment(unsigned int index) {
+
+        auto& colorAttachmentSpec = m_colorAttachmentSpecs[index];
+
+        switch (colorAttachmentSpec.m_dataFormat) {
+            case FramebufferDataFormat::RGBA:
+                Core::RenderCommand::clearColorAttachment(m_rendererId, index, Core::PrimitiveDataType::Float, glm::value_ptr(colorAttachmentSpec.m_clearColorVec4Value));
+                break;
+            case FramebufferDataFormat::Integer:
+                Core::RenderCommand::clearColorAttachment(m_rendererId, index, Core::PrimitiveDataType::Int, &colorAttachmentSpec.m_clearColorIntValue);
+                break;
+            default:
+                throw std::runtime_error("Unsupported attachment data type for clear color");
+        }
+
+    }
+
+    void Framebuffer::clearDepthAttachment() {
         if (m_depthAttachmentSpec.m_attachmentType != Core::FramebufferAttachmentType::None) {
             Core::RenderCommand::clearDepthAttachment(m_rendererId);
         }
-
     }
 
     void Framebuffer::resize(unsigned int width, unsigned int height) {

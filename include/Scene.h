@@ -6,7 +6,6 @@
 
 #include "gaunlet/scene/deferred-renderer/DeferredRenderer.h" // Depends on Graphics and GraphicsComponents
 #include "gaunlet/scene/Scene.h" // Depends on ENTT
-#include "gaunlet/scene/entity/Entity.h" // Depends on Scene
 
 #include "gaunlet/scene/camera/Camera.h" // Doesn't depend on anything
 #include "gaunlet/scene/camera/PerspectiveCamera.h" // Doesn't depend on anything

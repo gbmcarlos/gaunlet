@@ -33,6 +33,8 @@ namespace gaunlet::Graphics {
         void bind();
         void unbind();
         void clear();
+        void clearColorAttachment(unsigned int index);
+        void clearDepthAttachment();
         void resize(unsigned int width, unsigned int height);
 
         inline unsigned int getRendererId() const {return m_rendererId; }

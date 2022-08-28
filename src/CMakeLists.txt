@@ -23,7 +23,6 @@ add_library(gaunlet STATIC
         gaunlet/graphics/texture/TextureImage2D.cpp
         gaunlet/graphics/texture/TextureLibrary.cpp
         gaunlet/graphics/framebuffer/Framebuffer.cpp
-        gaunlet/graphics/forward-renderer/ForwardRenderer.cpp
 
 #        Scene
         gaunlet/scene/model/Model.cpp

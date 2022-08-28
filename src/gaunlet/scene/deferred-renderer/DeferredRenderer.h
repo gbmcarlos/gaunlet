@@ -5,7 +5,7 @@
 #include "gaunlet/graphics/vertex-array/VertexArray.h"
 #include "gaunlet/graphics/uniform-buffer/UniformBuffer.h"
 #include "gaunlet/graphics/texture/Texture.h"
-#include "gaunlet/graphics/framebuffer/Framebuffer.h"
+#include "gaunlet/graphics/Vertex.h"
 
 #include "gaunlet/graphics/shader/Shader.h"
 #include "gaunlet/graphics/shader/ShaderLibrary.h"
@@ -32,7 +32,7 @@ namespace gaunlet::Scene {
 
         static void init();
 
-        static void beginScene(RenderMode renderMode, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const Core::Ref<Graphics::Framebuffer>& framebuffer, const DirectionalLightComponent& directionalLight);
+        static void beginScene(RenderMode renderMode, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const DirectionalLightComponent& directionalLight);
         static void endScene();
 
         // Batched draw calls
@@ -44,6 +44,8 @@ namespace gaunlet::Scene {
         // Flush batches
         static void flushPolygons();
         static void flushCircles();
+
+        static void render(const std::vector<gaunlet::Graphics::Vertex>& vertices, const std::vector<unsigned int>& indices, const std::vector<Core::Ref<Graphics::Texture>>& textures, const Core::Ref<Graphics::Shader>& shader);
 
         // Init loaders
         static void loadShaders();
@@ -73,8 +75,6 @@ namespace gaunlet::Scene {
 
             Batch<PolygonEntityProperties> m_polygonBatch;
             Batch<CircleEntityProperties> m_circleBatch;
-
-            Core::Ref<Graphics::Framebuffer> m_framebuffer;
 
             // Shared
             Core::Ref<Graphics::Texture> m_whiteTexture = nullptr;

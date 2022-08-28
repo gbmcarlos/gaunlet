@@ -55,7 +55,8 @@ public:
 
         shader->setUniform4f("u_color", glm::vec4(color[0], color[1], color[2], color[3]));
 
-        gaunlet::Core::RenderCommand::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
+        gaunlet::Core::RenderCommand::clearColorBuffer(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
+        gaunlet::Core::RenderCommand::clearDepthBuffer();
 
         gaunlet::Core::RenderCommand::drawIndexedTriangles(
             m_vertexBuffer->getRendererId(),

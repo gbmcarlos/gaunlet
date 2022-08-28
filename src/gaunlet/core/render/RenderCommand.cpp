@@ -6,9 +6,12 @@ namespace gaunlet::Core {
         getApi().init();
     }
 
-    void RenderCommand::clear(const glm::vec4& color) {
-        getApi().setClearColor(color.r, color.g, color.b, color.a);
-        getApi().clear();
+    void RenderCommand::clearColorBuffer(const glm::vec4 &color) {
+        getApi().clearColorBuffer(color.r, color.g, color.b, color.a);
+    }
+
+    void RenderCommand::clearDepthBuffer() {
+        getApi().clearDepthBuffer();
     }
 
     void RenderCommand::getViewport(unsigned int& x0, unsigned int& y0, unsigned int& x1, unsigned int& y1) {

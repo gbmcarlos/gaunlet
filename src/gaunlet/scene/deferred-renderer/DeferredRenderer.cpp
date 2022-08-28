@@ -2,7 +2,6 @@
 
 #include "gaunlet/core/render/RenderCommand.h"
 #include "gaunlet/graphics/texture/TextureImage2D.h"
-#include "gaunlet/graphics//forward-renderer/ForwardRenderer.h"
 
 namespace gaunlet::Scene {
 
@@ -13,7 +12,7 @@ namespace gaunlet::Scene {
         loadDefaultWhiteTexture();
     }
 
-    void DeferredRenderer::beginScene(RenderMode renderMode, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const Core::Ref<Graphics::Framebuffer>& framebuffer, const DirectionalLightComponent& directionalLight) {
+    void DeferredRenderer::beginScene(RenderMode renderMode, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const DirectionalLightComponent& directionalLight) {
 
         m_rendererStorage->m_renderMode = renderMode;
 
@@ -32,14 +31,6 @@ namespace gaunlet::Scene {
             sizeof(SceneProperties)
         );
 
-        // Clear the screen or the framebuffer
-        if (framebuffer != nullptr) {
-            framebuffer->clear();
-        } else {
-            Core::RenderCommand::clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
-        }
-
-        m_rendererStorage->m_framebuffer = framebuffer;
     }
 
     void DeferredRenderer::endScene() {
@@ -53,9 +44,6 @@ namespace gaunlet::Scene {
         if (!m_rendererStorage->m_circleBatch.getVertices().empty()) {
             flushCircles();
         }
-
-        // Forget about the framebuffer
-        m_rendererStorage->m_framebuffer = nullptr;
 
     }
 
@@ -143,9 +131,8 @@ namespace gaunlet::Scene {
         }
 
         // Render
-        Graphics::ForwardRenderer::renderMesh(
-            vertices, indices, textures, shader,
-            m_rendererStorage->m_framebuffer
+        render(
+            vertices, indices, textures, shader
         );
 
         // Clear the batch (and add the white texture back)
@@ -169,13 +156,42 @@ namespace gaunlet::Scene {
         );
 
         // Render
-        Graphics::ForwardRenderer::renderMesh(
-            vertices, indices, textures, m_rendererStorage->m_shaderLibrary.get("circle-shader"), m_rendererStorage->m_framebuffer
+        render(
+            vertices, indices, textures, m_rendererStorage->m_shaderLibrary.get("circle-shader")
         );
 
         // Clear the batch (and add the white texture back)
         m_rendererStorage->m_circleBatch.clear();
         m_rendererStorage->m_circleBatch.addTexture(m_rendererStorage->m_whiteTexture);
+
+    }
+
+    void DeferredRenderer::render(const std::vector<gaunlet::Graphics::Vertex>& vertices, const std::vector<unsigned int>& indices, const std::vector<Core::Ref<Graphics::Texture>>& textures, const Core::Ref<Graphics::Shader>& shader) {
+
+        // Create a layout, based on the structure of PolygonVertex
+        static gaunlet::Graphics::BufferLayout vertexLayout = gaunlet::Graphics::Vertex::getBufferLayout();
+
+        // Create the vertex and index buffers
+        gaunlet::Graphics::VertexBuffer vertexBuffer((const void*) vertices.data(), sizeof(gaunlet::Graphics::Vertex) * vertices.size());
+        gaunlet::Graphics::IndexBuffer indexBuffer((unsigned int*) indices.data(), indices.size());
+
+        // Bind them together into a vertex array
+        gaunlet::Graphics::VertexArray vertexArray;
+        vertexArray.addBuffer(vertexLayout);
+
+        // Bind all the textures
+        for (unsigned int i = 0; i < textures.size(); i++) {
+            textures[i]->activate(i);
+        }
+
+        // Render the polygons as triangles
+        Core::RenderCommand::drawIndexedTriangles(
+            vertexBuffer.getRendererId(),
+            indexBuffer.getRendererId(),
+            vertexArray.getRendererId(),
+            shader->getRendererId(),
+            indexBuffer.getCount()
+        );
 
     }
 

@@ -32,12 +32,13 @@ namespace gaunlet::Core {
 
     }
 
-    void OpenGLRenderApi::setClearColor(float red, float green, float blue, float alpha) {
+    void OpenGLRenderApi::clearColorBuffer(float red, float green, float blue, float alpha) {
         glCall(glClearColor(red, green, blue, alpha));
+        glCall(glClear(GL_COLOR_BUFFER_BIT));
     }
 
-    void OpenGLRenderApi::clear() {
-        glCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+    void OpenGLRenderApi::clearDepthBuffer() {
+        glCall(glClear(GL_DEPTH_BUFFER_BIT));
     }
 
     void OpenGLRenderApi::getViewport(unsigned int& x0, unsigned int& y0, unsigned int& x1, unsigned int& y1) {

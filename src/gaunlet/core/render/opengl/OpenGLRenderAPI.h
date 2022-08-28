@@ -25,8 +25,8 @@ namespace gaunlet::Core {
 
         void init();
 
-        void setClearColor(float red, float green, float blue, float alpha);
-        void clear();
+        void clearColorBuffer(float red, float green, float blue, float alpha);
+        void clearDepthBuffer();
 
         void getViewport(unsigned int& x0, unsigned int& y0, unsigned int& x1, unsigned int& y1);
         void setViewport(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1);
