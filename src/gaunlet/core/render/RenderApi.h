@@ -93,7 +93,7 @@ namespace gaunlet::Core {
         virtual void unbindFramebuffer() = 0;
         virtual void deleteFramebuffer(unsigned int& id) = 0;
         virtual void framebufferAttach(unsigned int id, TextureType textureType, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, unsigned int textureId) = 0;
-        virtual void setDrawBuffers(unsigned int id, const std::vector<FramebufferAttachmentType>& drawBuffers) = 0;
+        virtual void setDrawBuffers(unsigned int id, const std::vector<int>& drawBuffers) = 0;
         virtual void checkFramebufferCompleteness(unsigned int id) = 0;
         virtual void clearColorAttachment(unsigned int id, unsigned int colorAttachmentIndex, PrimitiveDataType dataType, void* value) = 0;
         virtual void clearDepthAttachment(unsigned int id) = 0;

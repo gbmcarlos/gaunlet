@@ -348,7 +348,7 @@ namespace gaunlet::Core {
 
     }
 
-    void OpenGLRenderApi::setDrawBuffers(unsigned int id, const std::vector<FramebufferAttachmentType>& drawBuffers) {
+    void OpenGLRenderApi::setDrawBuffers(unsigned int id, const std::vector<int>& drawBuffers) {
 
         bindFramebuffer(id);
 
@@ -357,15 +357,13 @@ namespace gaunlet::Core {
         for (unsigned int i = 0; i < drawBuffers.size(); i++) {
 
             // Convert the attachment type (aka buffer mode)
-            FramebufferAttachmentType drawBuffer = drawBuffers[i];
-            GLenum glDrawBuffer = convertFramebufferAttachmentType(drawBuffer);
+            int drawBuffer = drawBuffers[i];
 
-            // If it's a color, it's indexed
-            if (drawBuffer == FramebufferAttachmentType::Color) {
-                glDrawBuffer += i;
+            if (drawBuffer >= 0) {
+                glBufferAttachments.push_back(GL_COLOR_ATTACHMENT0 + drawBuffer);
+            } else {
+                glBufferAttachments.push_back(GL_NONE);
             }
-
-            glBufferAttachments.push_back(glDrawBuffer);
 
         }
 

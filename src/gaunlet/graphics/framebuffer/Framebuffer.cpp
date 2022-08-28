@@ -103,6 +103,12 @@ namespace gaunlet::Graphics {
         Core::RenderCommand::setViewport(0, 0, m_width, m_height);
     }
 
+    void Framebuffer::setDrawBuffers(const std::vector<int>& drawBuffers) {
+
+        Core::RenderCommand::setDrawBuffers(m_rendererId, drawBuffers);
+
+    }
+
     int Framebuffer::readPixel(unsigned int colorAttachmentIndex, unsigned int x, unsigned int y) {
 
         auto& colorAttachmentSpec = m_colorAttachmentSpecs[colorAttachmentIndex];
@@ -139,14 +145,14 @@ namespace gaunlet::Graphics {
         Core::RenderCommand::createFramebuffer(m_rendererId);
         Core::RenderCommand::bindFramebuffer(m_rendererId);
 
-        std::vector<Core::FramebufferAttachmentType> drawBuffers = {};
+        std::vector<int> drawBuffers = {};
 
         // Create and attach the color textures
         for (unsigned int i = 0; i < m_colorAttachmentSpecs.size(); i++) {
 
             auto& colorAttachmentSpec = m_colorAttachmentSpecs[i];
             attachColor(colorAttachmentSpec, i);
-            drawBuffers.emplace_back(Core::FramebufferAttachmentType::Color);
+            drawBuffers.emplace_back(i);
 
         }
 
@@ -154,14 +160,11 @@ namespace gaunlet::Graphics {
         if (m_depthAttachmentSpec.m_attachmentType != Core::FramebufferAttachmentType::None) {
 
             attachDepth(m_depthAttachmentSpec);
-            drawBuffers.emplace_back(Core::FramebufferAttachmentType::None);
+            drawBuffers.emplace_back(-1);
 
         }
 
-        // If there are more than one color attachment, tell opengl about them
-        if (m_colorAttachmentSpecs.size() > 1) {
-            Core::RenderCommand::setDrawBuffers(m_rendererId, drawBuffers);
-        }
+        setDrawBuffers(drawBuffers);
 
         // Check correctness and unbind
         Core::RenderCommand::checkFramebufferCompleteness(m_rendererId);

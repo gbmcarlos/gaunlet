@@ -36,6 +36,7 @@ namespace gaunlet::Graphics {
         void clearColorAttachment(unsigned int index);
         void clearDepthAttachment();
         void resize(unsigned int width, unsigned int height);
+        void setDrawBuffers(const std::vector<int>& drawBuffers);
 
         inline unsigned int getRendererId() const {return m_rendererId; }
         inline unsigned int getWidth() {return m_width; }

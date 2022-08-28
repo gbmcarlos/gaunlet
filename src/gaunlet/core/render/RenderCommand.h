@@ -71,7 +71,7 @@ namespace gaunlet::Core {
         static void unbindFramebuffer();
         static void deleteFramebuffer(unsigned int& id);
         static void framebufferAttach(unsigned int id, TextureType textureType, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, unsigned int textureId);
-        static void setDrawBuffers(unsigned int id, const std::vector<FramebufferAttachmentType>& drawBuffers);
+        static void setDrawBuffers(unsigned int id, const std::vector<int>& drawBuffers);
         static void checkFramebufferCompleteness(unsigned int id);
         static void clearColorAttachment(unsigned int id, unsigned int colorAttachmentIndex, PrimitiveDataType dataType, void* value);
         static void clearDepthAttachment(unsigned int id);

@@ -176,7 +176,7 @@ namespace gaunlet::Core {
         getApi().framebufferAttach(id, textureType, attachmentType, attachmentIndex, textureId);
     }
 
-    void RenderCommand::setDrawBuffers(unsigned int id, const std::vector<FramebufferAttachmentType>& drawBuffers) {
+    void RenderCommand::setDrawBuffers(unsigned int id, const std::vector<int>& drawBuffers) {
         getApi().setDrawBuffers(id, drawBuffers);
     }
 
