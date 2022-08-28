@@ -1,12 +1,10 @@
 #pragma once
 
-#include "gaunlet/graphics/framebuffer/Framebuffer.h"
-
 #include "gaunlet/pch.h"
 
 #include <imgui.h>
 
-namespace gaunlet::Layout {
+namespace gaunlet::Editor {
 
     enum class DockSpacePosition {
         Left, Right,

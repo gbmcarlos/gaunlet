@@ -1,13 +1,13 @@
 #pragma once
 
-#include "gaunlet/layout/panel/Panel.h"
+#include "gaunlet/editor/panel/Panel.h"
 #include "gaunlet/scene/Scene.h"
 #include "gaunlet/scene/camera/PerspectiveCamera.h"
 #include "gaunlet/graphics/framebuffer/Framebuffer.h"
 
 #include "gaunlet/pch.h"
 
-namespace gaunlet::Layout {
+namespace gaunlet::Editor {
 
     struct SceneEntityTag {
         SceneEntityTag() = default;
@@ -33,7 +33,7 @@ namespace gaunlet::Layout {
         void setRenderMode(gaunlet::Scene::RenderMode renderMode) {m_renderMode = renderMode; }
         void startScene() {m_scene.start(); }
 
-        virtual bool onEvent(Core::Event& event) = 0;
+        virtual bool onEvent(Core::Event& event) {return true; }
 
         virtual gaunlet::Scene::Entity createSceneEntity();
         virtual gaunlet::Scene::Entity createUIEntity();

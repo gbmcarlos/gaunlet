@@ -1,6 +1,6 @@
-#include "gaunlet/layout/panel/RenderPanel.h"
+#include "gaunlet/editor/panel/RenderPanel.h"
 
-namespace gaunlet::Layout {
+namespace gaunlet::Editor {
 
     void RenderPanel::onUpdate(gaunlet::Core::TimeStep) {
 

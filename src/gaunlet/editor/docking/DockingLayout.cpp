@@ -1,8 +1,8 @@
-#include "gaunlet/layout/docking/DockingLayout.h"
+#include "gaunlet/editor/docking/DockingLayout.h"
 
 #include "imgui/imgui_internal.h"
 
-namespace gaunlet::Layout {
+namespace gaunlet::Editor {
 
     void DockingLayout::begin(const char* name) {
 

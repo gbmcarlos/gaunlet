@@ -7,13 +7,13 @@
 #include "gaunlet/graphics/framebuffer/Framebuffer.h"
 #include "gaunlet/scene/camera/Camera.h"
 
-#include "gaunlet/layout/docking/DockingLayout.h"
-#include "gaunlet/layout/panel/Panel.h"
-#include "gaunlet/layout/panel/RenderPanel.h"
+#include "gaunlet/editor/docking/DockingLayout.h"
+#include "gaunlet/editor/panel/Panel.h"
+#include "gaunlet/editor/panel/RenderPanel.h"
 
 #include "gaunlet/pch.h"
 
-namespace gaunlet::Layout {
+namespace gaunlet::Editor {
 
 class LayoutLayer : public Core::Layer {
 
