@@ -60,21 +60,14 @@ namespace gaunlet::Editor {
 
     }
 
-    bool RenderPanel::onEvent(Core::Event &event) {
+    void RenderPanel::mousePickEntity(unsigned int mousePositionX, unsigned int mousePositionY) {
 
-        Core::EventDispatcher dispatcher(event);
-        dispatcher.dispatch<Core::MouseButtonPress>(GE_BIND_CALLBACK_FN(RenderPanel::onMouseButtonPressEvent));
-        return true;
-
-    }
-
-    bool RenderPanel::onMouseButtonPressEvent(Core::MouseButtonPress& event) {
-
+        // Reset both to the default (empty, null) entity
         m_selectedSceneEntity = Scene::Entity();
         m_selectedUIEntity = Scene::Entity();
 
-        unsigned int pixelPositionX = getMousePositionX() * Core::Window::getCurrentInstance()->getDPI();
-        unsigned int pixelPositionY = getMousePositionYInverted() * Core::Window::getCurrentInstance()->getDPI();
+        unsigned int pixelPositionX = mousePositionX * Core::Window::getCurrentInstance()->getDPI();
+        unsigned int pixelPositionY = mousePositionY * Core::Window::getCurrentInstance()->getDPI();
 
         int selectedUIEntityId = getFramebuffer()->readPixel(
             gaunlet::Editor::RenderPanel::UIEntityIdFramebufferAttachmentIndex,
@@ -103,8 +96,6 @@ namespace gaunlet::Editor {
             m_selectedSceneEntity = Scene::Entity(selectedSceneEntityId, &m_scene.getRegistry());
 
         }
-
-        return true;
 
     }
 

@@ -34,8 +34,9 @@ namespace gaunlet::Editor {
         void setRenderMode(gaunlet::Scene::RenderMode renderMode) {m_renderMode = renderMode; }
         void startScene() {m_scene.start(); }
 
-        virtual bool onEvent(Core::Event& event);
-        bool onMouseButtonPressEvent(gaunlet::Core::MouseButtonPress& event);
+        virtual bool onEvent(Core::Event& event) {return true;}
+
+        void mousePickEntity(unsigned int mousePositionX, unsigned int mousePositionY);
 
         virtual Scene::Entity createSceneEntity();
         virtual Scene::Entity createUIEntity();

@@ -14,11 +14,38 @@ class ToolsPanel : public gaunlet::Editor::GuiPanel {
 
 };
 
+class ScenePanel : public gaunlet::Editor::RenderPanel {
+
+public:
+
+    bool onEvent(gaunlet::Core::Event &event) override {
+
+        gaunlet::Core::EventDispatcher dispatcher(event);
+        dispatcher.dispatch<gaunlet::Core::MouseButtonPress>(GE_BIND_CALLBACK_FN(ScenePanel::onMouseButtonPressEvent));
+        return true;
+
+    }
+
+private:
+
+    bool onMouseButtonPressEvent(gaunlet::Core::MouseButtonPress& event) {
+
+        mousePickEntity(
+            getMousePositionX(),
+            getMousePositionYInverted()
+        );
+
+        return true;
+
+    }
+
+};
+
 class SettingsPanel : public gaunlet::Editor::GuiPanel {
 
 public:
 
-    SettingsPanel(gaunlet::Editor::RenderPanel* renderPanel) : m_renderPanel(renderPanel) {}
+    explicit SettingsPanel(ScenePanel* scenePanel) : m_scenePanel(scenePanel) {}
 
     void onGuiRender() override {
 
@@ -32,24 +59,24 @@ public:
 
         ImGui::Text("Scene layer:");
 
-        if (m_renderPanel->isHovered()) {
-            ImGui::Text("%d %d", m_renderPanel->getMousePositionX(), m_renderPanel->getMousePositionYInverted());
+        if (m_scenePanel->isHovered()) {
+            ImGui::Text("%d %d", m_scenePanel->getMousePositionX(), m_scenePanel->getMousePositionYInverted());
         } else {
             ImGui::NewLine();
         }
 
         ImGui::Text("Selected Scene Entity:");
 
-        if (m_renderPanel->m_selectedSceneEntity) {
-            ImGui::Text("%d", m_renderPanel->m_selectedSceneEntity.getId());
+        if (m_scenePanel->m_selectedSceneEntity) {
+            ImGui::Text("%d", m_scenePanel->m_selectedSceneEntity.getId());
         } else {
             ImGui::NewLine();
         }
 
         ImGui::Text("Selected UI Entity:");
 
-        if (m_renderPanel->m_selectedUIEntity) {
-            ImGui::Text("%d", m_renderPanel->m_selectedUIEntity.getId());
+        if (m_scenePanel->m_selectedUIEntity) {
+            ImGui::Text("%d", m_scenePanel->m_selectedUIEntity.getId());
         } else {
             ImGui::NewLine();
         }
@@ -57,7 +84,7 @@ public:
     }
 
 private:
-    gaunlet::Editor::RenderPanel* m_renderPanel = nullptr;
+    ScenePanel* m_scenePanel = nullptr;
 
 };
 
@@ -78,7 +105,7 @@ public:
                }, m_window->getViewportWidth(), m_window->getViewportHeight()
         });
 
-        auto* scenePanel = new gaunlet::Editor::RenderPanel();
+        auto* scenePanel = new ScenePanel();
 
         m_editorLayer->pushPanel("Settings", new SettingsPanel(scenePanel));
         m_editorLayer->pushPanel("Tools", new ToolsPanel);
