@@ -8,15 +8,21 @@ namespace gaunlet::Scene {
 
     class Registry; // Forward-declare the Registry, for the Entity
 
+    struct RelationshipComponent {
+        entt::entity m_parent = entt::null;
+        std::vector<entt::entity> m_children = {};
+    };
+
     class Entity {
 
     public:
 
-        Entity() = default;
-        Entity(entt::entity entityHandle, Registry* registry) : m_handle(entityHandle), m_registry(registry) {}
+        Entity();
+        Entity(entt::entity entityHandle, Registry* registry);
+        Entity(int entityHandle, Registry* registry);
 
         int getId();
-        Entity createChild(Entity& parent);
+        Entity createChild();
         Entity getParent();
 
         template<typename T>
@@ -35,8 +41,6 @@ namespace gaunlet::Scene {
 
     private:
         entt::entity m_handle = entt::null;
-        entt::entity m_parent = entt::null;
-        std::vector<entt::entity> m_children = {};
         Registry* m_registry = nullptr;
 
     };

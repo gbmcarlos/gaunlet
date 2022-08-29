@@ -14,53 +14,11 @@ class ToolsPanel : public gaunlet::Editor::GuiPanel {
 
 };
 
-class ScenePanel : public gaunlet::Editor::RenderPanel {
-
-public:
-    int m_selectedEntityId = -1;
-
-public:
-
-    bool onEvent(gaunlet::Core::Event &event) override {
-
-        gaunlet::Core::EventDispatcher dispatcher(event);
-        dispatcher.dispatch<gaunlet::Core::MouseButtonPress>(GE_BIND_CALLBACK_FN(ScenePanel::onMouseButtonPressEvent));
-        return true;
-
-    }
-
-    bool onMouseButtonPressEvent(gaunlet::Core::MouseButtonPress& event) {
-
-        unsigned int pixelPositionX = getMousePositionX() * gaunlet::Core::Window::getCurrentInstance()->getDPI();
-        unsigned int pixelPositionY = getMousePositionYInverted() * gaunlet::Core::Window::getCurrentInstance()->getDPI();
-
-        int selectedEntityId = getFramebuffer()->readPixel(
-            gaunlet::Editor::RenderPanel::UIEntityIdFramebufferAttachmentIndex,
-            pixelPositionX,
-            pixelPositionY
-        );
-
-        if (selectedEntityId < 0) {
-            selectedEntityId = getFramebuffer()->readPixel(
-                gaunlet::Editor::RenderPanel::SceneEntityIdFramebufferAttachmentIndex,
-                pixelPositionX,
-                pixelPositionY
-            );
-        }
-
-        m_selectedEntityId = selectedEntityId;
-
-        return false;
-
-    }
-
-};
-
 class SettingsPanel : public gaunlet::Editor::GuiPanel {
 
 public:
 
-    SettingsPanel(ScenePanel* sceneNode) : m_sceneNode(sceneNode) {}
+    SettingsPanel(gaunlet::Editor::RenderPanel* renderPanel) : m_renderPanel(renderPanel) {}
 
     void onGuiRender() override {
 
@@ -74,16 +32,24 @@ public:
 
         ImGui::Text("Scene layer:");
 
-        if (m_sceneNode->isHovered()) {
-            ImGui::Text("%d %d", m_sceneNode->getMousePositionX(), m_sceneNode->getMousePositionYInverted());
+        if (m_renderPanel->isHovered()) {
+            ImGui::Text("%d %d", m_renderPanel->getMousePositionX(), m_renderPanel->getMousePositionYInverted());
         } else {
             ImGui::NewLine();
         }
 
-        ImGui::Text("Selected Entity:");
+        ImGui::Text("Selected Scene Entity:");
 
-        if (m_sceneNode->m_selectedEntityId > -1) {
-            ImGui::Text("%d", m_sceneNode->m_selectedEntityId);
+        if (m_renderPanel->m_selectedSceneEntity) {
+            ImGui::Text("%d", m_renderPanel->m_selectedSceneEntity.getId());
+        } else {
+            ImGui::NewLine();
+        }
+
+        ImGui::Text("Selected UI Entity:");
+
+        if (m_renderPanel->m_selectedUIEntity) {
+            ImGui::Text("%d", m_renderPanel->m_selectedUIEntity.getId());
         } else {
             ImGui::NewLine();
         }
@@ -91,7 +57,7 @@ public:
     }
 
 private:
-    ScenePanel* m_sceneNode = nullptr;
+    gaunlet::Editor::RenderPanel* m_renderPanel = nullptr;
 
 };
 
@@ -112,7 +78,7 @@ public:
                }, m_window->getViewportWidth(), m_window->getViewportHeight()
         });
 
-        auto* scenePanel = new ScenePanel();
+        auto* scenePanel = new gaunlet::Editor::RenderPanel();
 
         m_editorLayer->pushPanel("Settings", new SettingsPanel(scenePanel));
         m_editorLayer->pushPanel("Tools", new ToolsPanel);
@@ -136,7 +102,7 @@ public:
         );
         circle.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(0.0f, 0.0f, 0.8f, 1.0f));
 
-        auto square = scenePanel->createUIEntity();
+        auto square = scenePanel->createUIEntity(triangle);
         square.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Square2DModel());
         square.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(-1.5f, 1.0f, 2.0f),

@@ -4,6 +4,7 @@
 #include "gaunlet/scene/Scene.h"
 #include "gaunlet/scene/camera/PerspectiveCamera.h"
 #include "gaunlet/graphics/framebuffer/Framebuffer.h"
+#include "gaunlet/core/event/events/MouseEvent.h"
 
 #include "gaunlet/pch.h"
 
@@ -27,16 +28,21 @@ namespace gaunlet::Editor {
         static const unsigned int SceneEntityIdFramebufferAttachmentIndex = 1;
         static const unsigned int UIEntityIdFramebufferAttachmentIndex = 2;
 
-        inline gaunlet::Core::Ref<gaunlet::Graphics::Framebuffer>& getFramebuffer() {return m_framebuffer; }
-        inline gaunlet::Scene::RenderMode getRenderMode() {return m_renderMode; }
+        inline Core::Ref<gaunlet::Graphics::Framebuffer>& getFramebuffer() {return m_framebuffer; }
+        inline Scene::RenderMode getRenderMode() {return m_renderMode; }
 
         void setRenderMode(gaunlet::Scene::RenderMode renderMode) {m_renderMode = renderMode; }
         void startScene() {m_scene.start(); }
 
-        virtual bool onEvent(Core::Event& event) {return true; }
+        virtual bool onEvent(Core::Event& event);
+        bool onMouseButtonPressEvent(gaunlet::Core::MouseButtonPress& event);
 
-        virtual gaunlet::Scene::Entity createSceneEntity();
-        virtual gaunlet::Scene::Entity createUIEntity();
+        virtual Scene::Entity createSceneEntity();
+        virtual Scene::Entity createUIEntity();
+        virtual Scene::Entity createUIEntity(Scene::Entity sceneEntity);
+
+        Scene::Entity m_selectedSceneEntity = {};
+        Scene::Entity m_selectedUIEntity = {};
 
     protected:
 

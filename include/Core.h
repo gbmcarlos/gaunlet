@@ -1,7 +1,6 @@
 #pragma once
 
 #include "gaunlet/pch.h"
-#include "gaunlet/core/utils.h" // Doesn't depend on anything
 
 // Application
 #include "gaunlet/core/application/Application.h"
