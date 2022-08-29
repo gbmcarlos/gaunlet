@@ -14,7 +14,7 @@
 #include "gaunlet/scene/model/Model.h"
 #include "gaunlet/scene/model/Sprites.h"
 
-#include "gaunlet/scene/entity/GraphicsComponents.h" // Depends on PolygonMesh and CircleMesh
-#include "gaunlet/scene/entity/PhysicsComponents.h" // Depends on box2d
-#include "gaunlet/scene/entity/ScriptComponents.h" // Depends on Entity
-#include "gaunlet/scene/entity/LightingComponents.h"
+#include "gaunlet/scene/components/GraphicsComponents.h" // Depends on PolygonMesh and CircleMesh
+#include "gaunlet/scene/components/PhysicsComponents.h" // Depends on box2d
+#include "gaunlet/scene/components/ScriptComponents.h" // Depends on Entity
+#include "gaunlet/scene/components/LightingComponents.h"

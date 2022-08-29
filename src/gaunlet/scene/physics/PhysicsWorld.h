@@ -1,8 +1,8 @@
 #pragma once
 
 #include "gaunlet/core/application/TimeStep.h"
-#include "gaunlet/scene/entity/GraphicsComponents.h"
-#include "gaunlet/scene/entity/PhysicsComponents.h"
+#include "gaunlet/scene/components/GraphicsComponents.h"
+#include "gaunlet/scene/components/PhysicsComponents.h"
 
 #include <box2d/box2d.h>
 

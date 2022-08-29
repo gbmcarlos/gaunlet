@@ -1,6 +1,6 @@
 #include "gaunlet/scene/Scene.h"
 
-#include "gaunlet/scene/entity/ScriptComponents.h"
+#include "gaunlet/scene/components/ScriptComponents.h"
 #include "gaunlet/core/render/RenderCommand.h"
 
 namespace gaunlet::Scene {
@@ -12,11 +12,6 @@ namespace gaunlet::Scene {
     Scene::~Scene() {
         destroyScripts();
         m_physicsWorld->destroyPhysics();
-    }
-
-    Entity Scene::createEntity() {
-        entt::entity entityHandle = m_registry.create();
-        return {entityHandle, this};
     }
 
     const Core::Ref<PhysicsWorld>& Scene::enablePhysics(glm::vec2 gravity) {
@@ -81,10 +76,10 @@ namespace gaunlet::Scene {
 
     void Scene::initPhysics() {
 
-        auto group = m_registry.group<RigidBodyComponent>(entt::get<TransformComponent>);
+        auto group = m_registry.m_registry.group<RigidBodyComponent>(entt::get<TransformComponent>);
         for (auto e : group) {
 
-            Entity entity = {e, this};
+            Entity entity = {e, &m_registry};
 
             auto [rigidBody, transform] = group.get<RigidBodyComponent, TransformComponent>(e);
             m_physicsWorld->createRigidBody(rigidBody, transform);
@@ -107,10 +102,10 @@ namespace gaunlet::Scene {
 
         m_physicsWorld->simulatePhysics(timeStep);
 
-        auto group = m_registry.group<RigidBodyComponent>(entt::get<TransformComponent>);
+        auto group = m_registry.m_registry.group<RigidBodyComponent>(entt::get<TransformComponent>);
         for (auto e : group) {
 
-            Entity entity = {e, this};
+            Entity entity = {e, &m_registry};
             auto [rigidBody, transform] = group.get<RigidBodyComponent, TransformComponent>(e);
 
             m_physicsWorld->updateBody(rigidBody, transform);
@@ -121,11 +116,11 @@ namespace gaunlet::Scene {
 
     void Scene::initScripts() {
 
-        m_registry.view<NativeScriptComponent>().each([=](entt::entity entity, NativeScriptComponent& nativeScriptComponent) {
+        m_registry.m_registry.view<NativeScriptComponent>().each([=](entt::entity e, NativeScriptComponent& nativeScriptComponent) {
 
             // Create the instance of the native script
             nativeScriptComponent.m_nativeScriptInstance = nativeScriptComponent.m_instantiateScriptFunction();
-            nativeScriptComponent.m_nativeScriptInstance->m_entity = {entity, this};
+            nativeScriptComponent.m_nativeScriptInstance->m_entity = {e, &m_registry};
 
             // Call the native script's onCreate
             nativeScriptComponent.m_nativeScriptInstance->onCreate();
@@ -136,7 +131,7 @@ namespace gaunlet::Scene {
 
     void Scene::runScripts(Core::TimeStep timeStep) {
 
-        m_registry.view<NativeScriptComponent>().each([=](entt::entity entity, NativeScriptComponent& nativeScriptComponent) {
+        m_registry.m_registry.view<NativeScriptComponent>().each([=](entt::entity e, NativeScriptComponent& nativeScriptComponent) {
             nativeScriptComponent.m_nativeScriptInstance->onUpdate(timeStep);
         });
 
@@ -144,7 +139,7 @@ namespace gaunlet::Scene {
 
     void Scene::destroyScripts() {
 
-        m_registry.view<NativeScriptComponent>().each([=](entt::entity entity, NativeScriptComponent& nativeScriptComponent) {
+        m_registry.m_registry.view<NativeScriptComponent>().each([=](entt::entity e, NativeScriptComponent& nativeScriptComponent) {
             // Destroy the instance of the native script
             nativeScriptComponent.m_destroyScriptFunction(&nativeScriptComponent);
         });
@@ -153,10 +148,10 @@ namespace gaunlet::Scene {
 
     void Scene::renderModels() {
 
-        auto group = m_registry.group<ModelComponent>(entt::get<TransformComponent>);
+        auto group = m_registry.m_registry.group<ModelComponent>(entt::get<TransformComponent>);
         for (auto e : group) {
 
-            Entity entity = {e, this};
+            Entity entity = {e, &m_registry};
             auto [model, transform] = group.get<ModelComponent, TransformComponent>(e);
 
             // MaterialComponent is optional
@@ -170,10 +165,10 @@ namespace gaunlet::Scene {
 
     void Scene::renderCircles() {
 
-        auto group = m_registry.group<CircleComponent>(entt::get<TransformComponent>);
+        auto group = m_registry.m_registry.group<CircleComponent>(entt::get<TransformComponent>);
         for (auto e : group) {
 
-            Entity entity = {e, this};
+            Entity entity = {e, &m_registry};
             auto [circle, transform] = group.get<CircleComponent, TransformComponent>(e);
 
             // MaterialComponent is optional

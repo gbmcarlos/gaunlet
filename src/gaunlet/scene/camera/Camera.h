@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gaunlet/scene/entity/GraphicsComponents.h"
+#include "gaunlet/scene/components/GraphicsComponents.h"
 
 #include "gaunlet/pch.h"
 

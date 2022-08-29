@@ -117,7 +117,7 @@ public:
         float height = projectionSize.y;
         float width = projectionSize.x;
 
-        auto leftWall = m_scene.createEntity();
+        auto leftWall = m_scene.getRegistry().createEntity();
         leftWall.addComponent<gaunlet::Scene::RigidBodyComponent>(gaunlet::Scene::RigidBodyComponent::Type::Static);
         leftWall.addComponent<gaunlet::Scene::BoxColliderComponent>();
         leftWall.addComponent<gaunlet::Scene::TransformComponent>(
@@ -126,7 +126,7 @@ public:
             glm::vec3(1.0f, height, 1.0f)
         );
 
-        auto rightWall = m_scene.createEntity();
+        auto rightWall = m_scene.getRegistry().createEntity();
         rightWall.addComponent<gaunlet::Scene::RigidBodyComponent>(gaunlet::Scene::RigidBodyComponent::Type::Static);
         rightWall.addComponent<gaunlet::Scene::BoxColliderComponent>();
         rightWall.addComponent<gaunlet::Scene::TransformComponent>(
@@ -135,7 +135,7 @@ public:
             glm::vec3(1.0f, height, 1.0f)
         );
 
-        auto ground = m_scene.createEntity();
+        auto ground = m_scene.getRegistry().createEntity();
         ground.addComponent<gaunlet::Scene::RigidBodyComponent>(gaunlet::Scene::RigidBodyComponent::Type::Static);
         ground.addComponent<gaunlet::Scene::BoxColliderComponent>(glm::vec2(0.0f, 0.0f), 1.0f, 0.05f, 0.0f, 1.0f);
         ground.addComponent<gaunlet::Scene::TransformComponent>(
@@ -144,7 +144,7 @@ public:
             glm::vec3(width, 1.0f, 1.0f)
         );
 
-        auto ceiling = m_scene.createEntity();
+        auto ceiling = m_scene.getRegistry().createEntity();
         ceiling.addComponent<gaunlet::Scene::RigidBodyComponent>(gaunlet::Scene::RigidBodyComponent::Type::Static);
         ceiling.addComponent<gaunlet::Scene::BoxColliderComponent>();
         ceiling.addComponent<gaunlet::Scene::TransformComponent>(
@@ -157,7 +157,7 @@ public:
 
     void createQuad() {
 
-        gaunlet::Scene::Entity quad = m_scene.createEntity();
+        auto quad = m_scene.getRegistry().createEntity();
         quad.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(-2.0f, 0.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
@@ -172,7 +172,7 @@ public:
 
     void createBall() {
 
-        gaunlet::Scene::Entity ball = m_scene.createEntity();
+        auto ball = m_scene.getRegistry().createEntity();
         ball.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(2.0f, 0.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),

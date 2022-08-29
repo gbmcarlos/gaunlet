@@ -21,11 +21,11 @@ public:
             0.1f, 0.6f
         );
 
-        auto cup = m_scene.createEntity();
+        auto cup = m_scene.getRegistry().createEntity();
         cup.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Model("assets/cup/cup.obj"));
         cup.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(-2.5f, -2.5f, 0.0f),
-            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(0.0f, 30.0f, 0.0f),
             glm::vec3(0.5f, 0.5f, 0.5f)
         );
         cup.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(0.8f, 0.2f, 0.2f, 1.0f));

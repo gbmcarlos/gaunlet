@@ -34,7 +34,7 @@ namespace gaunlet::Editor {
 
     gaunlet::Scene::Entity RenderPanel::createSceneEntity() {
 
-        auto entity = m_scene.createEntity();
+        auto entity = m_scene.getRegistry().createEntity();
         entity.addEmptyComponent<SceneEntityTag>();
 
         return entity;
@@ -43,7 +43,7 @@ namespace gaunlet::Editor {
 
     gaunlet::Scene::Entity RenderPanel::createUIEntity() {
 
-        auto entity = m_scene.createEntity();
+        auto entity = m_scene.getRegistry().createEntity();
         entity.addEmptyComponent<UIEntityTag>();
 
         return entity;

@@ -10,8 +10,8 @@
 #include "gaunlet/graphics/shader/Shader.h"
 #include "gaunlet/graphics/shader/ShaderLibrary.h"
 
-#include "gaunlet/scene/entity/GraphicsComponents.h"
-#include "gaunlet/scene/entity/LightingComponents.h"
+#include "gaunlet/scene/components/GraphicsComponents.h"
+#include "gaunlet/scene/components/LightingComponents.h"
 
 #include "gaunlet/pch.h"
 

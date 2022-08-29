@@ -16,7 +16,7 @@ public:
         gaunlet::Core::Ref<gaunlet::Graphics::TextureImage2D> texture2 = gaunlet::Core::CreateRef<gaunlet::Graphics::TextureImage2D>("assets/texture-2.jpeg");
 
         // TRIANGLE 1
-        auto triangle1 = m_mainScene.createEntity();
+        auto triangle1 = m_mainScene.getRegistry().createEntity();
         triangle1.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Triangle2DModel());
         triangle1.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(-5.0f, 3.0f, 0.0f),
@@ -26,7 +26,7 @@ public:
         triangle1.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(0.8f, 0.0f, 0.0f, 1.0f));
 
         // TRIANGLE 2
-        auto triangle2 = m_mainScene.createEntity();
+        auto triangle2 = m_mainScene.getRegistry().createEntity();
         triangle2.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Triangle2DModel());
         triangle2.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(-5.0f, 0.5f, 0.0f),
@@ -36,7 +36,7 @@ public:
         triangle2.addComponent<gaunlet::Scene::MaterialComponent>(texture1);
 
         // TRIANGLE 3
-        auto triangle3 = m_mainScene.createEntity();
+        auto triangle3 = m_mainScene.getRegistry().createEntity();
         triangle3.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Triangle2DModel());
         triangle3.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(-5.0f, -2.0f, 0.0f),
@@ -46,7 +46,7 @@ public:
         triangle3.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(0.0f, 0.0f, 0.8f, 1.0f), texture2);
 
         // SQUARE 1
-        auto square1 = m_mainScene.createEntity();
+        auto square1 = m_mainScene.getRegistry().createEntity();
         square1.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Square2DModel());
         square1.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(0.0f, 3.0f, 0.0f),
@@ -56,7 +56,7 @@ public:
         square1.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(0.0f, 0.8f, 0.0f, 1.0f));
 
         // SQUARE 2
-        auto square2 = m_mainScene.createEntity();
+        auto square2 = m_mainScene.getRegistry().createEntity();
         square2.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Square2DModel());
         square2.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(0.0f, 0.5f, 0.0f),
@@ -66,7 +66,7 @@ public:
         square2.addComponent<gaunlet::Scene::MaterialComponent>(texture1);
 
         // SQUARE 3
-        auto square3 = m_mainScene.createEntity();
+        auto square3 = m_mainScene.getRegistry().createEntity();
         square3.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Square2DModel());
         square3.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(0.0f, -2.0f, 0.0f),
@@ -76,7 +76,7 @@ public:
         square3.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(0.8f, 0.0f, 0.0f, 1.0f), texture2);
 
         // CIRCLE 1
-        auto circle1 = m_mainScene.createEntity();
+        auto circle1 = m_mainScene.getRegistry().createEntity();
         circle1.addComponent<gaunlet::Scene::CircleComponent>(0.1f, 0.01f);
         circle1.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(5.0f, 3.0f, 0.0f),
@@ -86,7 +86,7 @@ public:
         circle1.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(0.0f, 0.0f, 0.8f, 1.0f));
 
         // CIRCLE 2
-        auto circle2 = m_mainScene.createEntity();
+        auto circle2 = m_mainScene.getRegistry().createEntity();
         circle2.addComponent<gaunlet::Scene::CircleComponent>(0.5, 0.1f);
         circle2.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(5.0f, 0.5f, 0.0f),
@@ -96,7 +96,7 @@ public:
         circle2.addComponent<gaunlet::Scene::MaterialComponent>(texture1);
 
         // CIRCLE 3
-        auto circle3 = m_mainScene.createEntity();
+        auto circle3 = m_mainScene.getRegistry().createEntity();
         circle3.addComponent<gaunlet::Scene::CircleComponent>(1.0f, 0.3f);
         circle3.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(5.0f, -2.0f, 0.0f),

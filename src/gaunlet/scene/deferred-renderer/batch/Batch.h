@@ -1,7 +1,7 @@
 #pragma once
 
 #include "gaunlet/graphics/texture/TextureLibrary.h"
-#include "gaunlet/scene/entity/GraphicsComponents.h"
+#include "gaunlet/scene/components/GraphicsComponents.h"
 
 namespace gaunlet::Scene {
 

@@ -32,6 +32,7 @@ add_library(gaunlet STATIC
         gaunlet/scene/camera/PerspectiveCamera.cpp
         gaunlet/scene/physics/PhysicsWorld.cpp
         gaunlet/scene/Scene.cpp
+        gaunlet/scene/entity/Entity.cpp
 
 #        Layout
         gaunlet/editor/docking/DockingLayout.cpp
