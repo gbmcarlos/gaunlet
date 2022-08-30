@@ -47,7 +47,7 @@ namespace gaunlet::Scene {
 
     }
 
-    void DeferredRenderer::submit(int entityId, const ModelComponent& polygonComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent) {
+    void DeferredRenderer::submit(int entityId, const ModelComponent& polygonComponent, const glm::mat4& transformationMatrix, const MaterialComponent& materialComponent) {
 
         std::vector<Graphics::Vertex> vertices = {};
         std::vector<unsigned int> indices = {};
@@ -65,7 +65,7 @@ namespace gaunlet::Scene {
 
         PolygonEntityProperties entityProperties(
             entityId,
-            transformComponent.getTransformationMatrix(),
+            transformationMatrix,
             materialComponent.m_color
         );
 
@@ -79,7 +79,7 @@ namespace gaunlet::Scene {
 
     }
 
-    void DeferredRenderer::submit(int entityId, const CircleComponent& circleComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent) {
+    void DeferredRenderer::submit(int entityId, const CircleComponent& circleComponent, const glm::mat4& transformationMatrix, const MaterialComponent& materialComponent) {
 
         // Get the vertices and indices to be added
         auto vertices = circleComponent.m_mesh.getVertices();
@@ -92,7 +92,7 @@ namespace gaunlet::Scene {
 
         CircleEntityProperties entityProperties(
             entityId,
-            transformComponent.getTransformationMatrix(),
+            transformationMatrix,
             materialComponent.m_color,
             circleComponent.m_thickness,
             circleComponent.m_fade

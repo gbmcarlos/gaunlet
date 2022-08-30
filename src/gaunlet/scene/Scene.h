@@ -56,6 +56,11 @@ namespace gaunlet::Scene {
         void renderTaggedCircles();
         void renderCircles();
 
+        void submitModel(Entity entity);
+        void submitCircle(Entity entity);
+
+        static glm::mat4 getHierarchicalTransform(Entity entity);
+
     };
 
     template<typename T>
@@ -82,12 +87,7 @@ namespace gaunlet::Scene {
         for (auto e : group) {
 
             Entity entity = {e, &m_registry};
-            auto [model, transform] = group.template get<ModelComponent, TransformComponent>(e);
-
-            // MaterialComponent is optional
-            auto material = entity.hasComponent<MaterialComponent>() ? entity.getComponent<MaterialComponent>() : MaterialComponent();
-
-            DeferredRenderer::submit(entity.getId(), model, transform, material);
+            submitModel(entity);
 
         }
 
@@ -100,12 +100,7 @@ namespace gaunlet::Scene {
         for (auto e : group) {
 
             Entity entity = {e, &m_registry};
-            auto [circle, transform] = group.template get<CircleComponent, TransformComponent>(e);
-
-            // MaterialComponent is optional
-            auto material = entity.hasComponent<MaterialComponent>() ? entity.getComponent<MaterialComponent>() : MaterialComponent();
-
-            DeferredRenderer::submit(entity.getId(), circle, transform, material);
+            submitCircle(entity);
 
         }
 

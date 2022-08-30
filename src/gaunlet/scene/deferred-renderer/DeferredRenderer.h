@@ -36,8 +36,8 @@ namespace gaunlet::Scene {
         static void endScene();
 
         // Batched draw calls
-        static void submit(int entityId, const ModelComponent& polygonComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent);
-        static void submit(int entityId, const CircleComponent& circleComponent, const TransformComponent& transformComponent, const MaterialComponent& materialComponent);
+        static void submit(int entityId, const ModelComponent& polygonComponent, const glm::mat4& transformationMatrix, const MaterialComponent& materialComponent);
+        static void submit(int entityId, const CircleComponent& circleComponent, const glm::mat4& transformationMatrix, const MaterialComponent& materialComponent);
 
     private:
 

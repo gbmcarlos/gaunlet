@@ -48,14 +48,10 @@ namespace gaunlet::Scene {
 
         // A circle is drawn as a square (a single mesh), with a different shader
         CircleComponent() :
-            m_mesh(Square2DModel().getMeshes()[0]),
-            m_thickness(0.5f),
-            m_fade(0.01f) {}
+            CircleComponent(0.5, 0.01f) {}
 
         CircleComponent(float thickness) :
-            m_mesh(Square2DModel().getMeshes()[0]),
-            m_thickness(thickness),
-            m_fade(0.01f){}
+            CircleComponent(thickness, 0.01f) {}
 
         CircleComponent(float thickness, float fade) :
             m_mesh(Square2DModel().getMeshes()[0]),

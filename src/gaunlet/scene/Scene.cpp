@@ -152,12 +152,7 @@ namespace gaunlet::Scene {
         for (auto e : group) {
 
             Entity entity = {e, &m_registry};
-            auto [model, transform] = group.get<ModelComponent, TransformComponent>(e);
-
-            // MaterialComponent is optional
-            auto material = entity.hasComponent<MaterialComponent>() ? entity.getComponent<MaterialComponent>() : MaterialComponent();
-
-            DeferredRenderer::submit(entity.getId(), model, transform, material);
+            submitModel(entity);
 
         }
 
@@ -169,14 +164,61 @@ namespace gaunlet::Scene {
         for (auto e : group) {
 
             Entity entity = {e, &m_registry};
-            auto [circle, transform] = group.get<CircleComponent, TransformComponent>(e);
+            submitCircle(entity);
+        }
 
-            // MaterialComponent is optional
-            auto material = entity.hasComponent<MaterialComponent>() ? entity.getComponent<MaterialComponent>() : MaterialComponent();
+    }
 
-            DeferredRenderer::submit(entity.getId(), circle, transform, material);
+    void Scene::submitModel(Entity entity) {
+
+        auto model = entity.getComponent<ModelComponent>();
+
+        // Get the entity's transform, relative to its parent's (all the way up the chain)
+        auto hierarchicalTransform = getHierarchicalTransform(entity);
+
+        // MaterialComponent is optional
+        auto material = entity.hasComponent<MaterialComponent>() ? entity.getComponent<MaterialComponent>() : MaterialComponent();
+
+        DeferredRenderer::submit(entity.getId(), model, hierarchicalTransform, material);
+
+
+    }
+
+    void Scene::submitCircle(Entity entity) {
+
+        auto circle = entity.getComponent<CircleComponent>();
+
+        // Get the entity's transform, relative to its parent's (all the way up the chain)
+        auto hierarchicalTransform = getHierarchicalTransform(entity);
+
+        // MaterialComponent is optional
+        auto material = entity.hasComponent<MaterialComponent>() ? entity.getComponent<MaterialComponent>() : MaterialComponent();
+
+        DeferredRenderer::submit(entity.getId(), circle, hierarchicalTransform, material);
+
+
+    }
+
+    glm::mat4 Scene::getHierarchicalTransform(Entity entity) {
+
+        glm::mat4 result = entity.getComponent<TransformComponent>().getTransformationMatrix();
+        Entity current = entity;
+
+        while (true) {
+
+            auto parent = current.getParent();
+
+            if (!parent || !parent.hasComponent<TransformComponent>()) {
+                break;
+            }
+
+            // Multiply with the parent's transform and move to the next generation
+            result *= parent.getComponent<TransformComponent>().getTransformationMatrix();
+            current = parent;
 
         }
+
+        return result;
 
     }
 
