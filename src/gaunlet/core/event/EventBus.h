@@ -15,7 +15,7 @@ namespace gaunlet::Core {
         void operator=(EventBus const&)  = delete;
 
     private:
-        std::function<void(Event&)> eventCallback;
+        std::function<void(Event&)> m_eventCallback;
 
     public:
         static EventBus& getInstance(){

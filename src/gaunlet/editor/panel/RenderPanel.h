@@ -29,22 +29,25 @@ namespace gaunlet::Editor {
         static const unsigned int UIEntityIdFramebufferAttachmentIndex = 2;
 
         inline gaunlet::Scene::Scene& getScene() {return m_scene; }
-        inline Core::Ref<gaunlet::Graphics::Framebuffer>& getFramebuffer() {return m_framebuffer; }
         inline Scene::RenderMode getRenderMode() {return m_renderMode; }
 
         void setRenderMode(gaunlet::Scene::RenderMode renderMode) {m_renderMode = renderMode; }
         void startScene() {m_scene.start(); }
 
-        virtual bool onEvent(Core::Event& event) {return true;}
+        void selectSceneEntity(Scene::Entity entity);
+        void selectUIEntity(Scene::Entity entity);
 
-        void mousePickEntity(unsigned int mousePositionX, unsigned int mousePositionY);
-
-        Scene::Entity m_selectedSceneEntity = {};
-        Scene::Entity m_selectedUIEntity = {};
+        void setSceneSelectionCallback(const std::function<void(Scene::Entity&)>& callback);
+        void setUISelectionCallback(const std::function<void(Scene::Entity&)>& callback);
 
     protected:
 
+        // To be called by the LayoutLayer (friend), or overriden
+        virtual bool onEvent(Core::Event& event) {return true;}
         virtual void onUpdate(gaunlet::Core::TimeStep);
+
+        inline Core::Ref<gaunlet::Graphics::Framebuffer>& getFramebuffer() {return m_framebuffer; }
+        void mousePickEntity(unsigned int mousePositionX, unsigned int mousePositionY);
 
     private:
 
@@ -52,6 +55,11 @@ namespace gaunlet::Editor {
         gaunlet::Core::Ref<gaunlet::Scene::PerspectiveCamera> m_camera;
         gaunlet::Core::Ref<gaunlet::Graphics::Framebuffer> m_framebuffer = nullptr;
         gaunlet::Scene::RenderMode m_renderMode = gaunlet::Scene::RenderMode::Faces;
+
+        Scene::Entity m_selectedSceneEntity = {};
+        Scene::Entity m_selectedUIEntity = {};
+        std::function<void(Scene::Entity&)> m_sceneSelectionCallback;
+        std::function<void(Scene::Entity&)> m_uiSelectionCallback;
 
     };
 

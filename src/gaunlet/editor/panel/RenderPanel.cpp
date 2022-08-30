@@ -3,6 +3,46 @@
 
 namespace gaunlet::Editor {
 
+    void RenderPanel::selectSceneEntity(Scene::Entity entity) {
+
+        bool changed = false;
+
+        if (m_selectedSceneEntity != entity) {
+            changed = true;
+        }
+
+        m_selectedSceneEntity = entity;
+
+        if (changed && m_sceneSelectionCallback) {
+            m_sceneSelectionCallback(entity);
+        }
+
+    }
+
+    void RenderPanel::selectUIEntity(Scene::Entity entity) {
+
+        bool changed = false;
+
+        if (m_selectedUIEntity != entity) {
+            changed = true;
+        }
+
+        m_selectedUIEntity = entity;
+
+        if (changed && m_uiSelectionCallback) {
+            m_uiSelectionCallback(entity);
+        }
+
+    }
+
+    void RenderPanel::setSceneSelectionCallback(const std::function<void(Scene::Entity &)> &callback) {
+        m_sceneSelectionCallback = callback;
+    }
+
+    void RenderPanel::setUISelectionCallback(const std::function<void(Scene::Entity &)> &callback) {
+        m_uiSelectionCallback = callback;
+    }
+
     void RenderPanel::onUpdate(gaunlet::Core::TimeStep) {
 
         m_framebuffer->bind();
@@ -35,12 +75,11 @@ namespace gaunlet::Editor {
 
     void RenderPanel::mousePickEntity(unsigned int mousePositionX, unsigned int mousePositionY) {
 
-        // Reset both to the default (empty, null) entity
-        m_selectedSceneEntity = Scene::Entity();
-        m_selectedUIEntity = Scene::Entity();
-
         unsigned int pixelPositionX = mousePositionX * Core::Window::getCurrentInstance()->getDPI();
         unsigned int pixelPositionY = mousePositionY * Core::Window::getCurrentInstance()->getDPI();
+
+        Scene::Entity selectedUIEntity = {};
+        Scene::Entity selectedSceneEntity = {};
 
         int selectedUIEntityId = getFramebuffer()->readPixel(
             gaunlet::Editor::RenderPanel::UIEntityIdFramebufferAttachmentIndex,
@@ -48,15 +87,12 @@ namespace gaunlet::Editor {
             pixelPositionY
         );
 
-        m_selectedUIEntity = Scene::Entity(selectedUIEntityId, &m_scene.getRegistry());
+        selectedUIEntity = Scene::Entity(selectedUIEntityId, &m_scene.getRegistry());
 
         // If there's a selected UI entity, look for the scene entity (the UI's parent)
-        if (m_selectedUIEntity) {
+        if (selectedUIEntity) {
 
-            auto sceneEntity = m_selectedUIEntity.findTaggedAncestor<SceneEntityTag>();
-            if (sceneEntity) {
-                m_selectedSceneEntity = sceneEntity;
-            }
+            selectedSceneEntity = selectedUIEntity.findTaggedAncestor<SceneEntityTag>();
 
         } else {
 
@@ -66,9 +102,12 @@ namespace gaunlet::Editor {
                 pixelPositionY
             );
 
-            m_selectedSceneEntity = Scene::Entity(selectedSceneEntityId, &m_scene.getRegistry());
+            selectedSceneEntity = Scene::Entity(selectedSceneEntityId, &m_scene.getRegistry());
 
         }
+
+        selectSceneEntity(selectedSceneEntity);
+        selectUIEntity(selectedUIEntity);
 
     }
 

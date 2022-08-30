@@ -21,7 +21,11 @@ namespace gaunlet::Scene {
         Entity(entt::entity entityHandle, Registry* registry);
         Entity(int entityHandle, Registry* registry);
 
-        int getId();
+        int getId() const;
+        explicit operator bool() const;
+        bool operator==(const Entity& other) const;
+        bool operator!=(const Entity& other) const;
+
         Entity getParent();
         Entity createChild();
 
@@ -43,7 +47,8 @@ namespace gaunlet::Scene {
         template<typename T, typename... Args>
         void addEmptyComponent(Args&&... args);
 
-        operator bool() const {return m_handle != entt::null; }
+        template<typename T>
+        void removeComponent();
 
     private:
         entt::entity m_handle = entt::null;
@@ -74,29 +79,6 @@ namespace gaunlet::Scene {
     };
 
     // ENTITY IMPLEMENTATION
-
-    template<typename T>
-    bool Entity::hasComponent() {
-        return m_registry->m_registry.all_of<T>(m_handle);
-    }
-
-    template<typename T>
-    T& Entity::getComponent() {
-        if (!hasComponent<T>()) {
-            throw std::runtime_error("Component not found");
-        }
-        return m_registry->m_registry.get<T>(m_handle);
-    }
-
-    template<typename T, typename... Args>
-    T& Entity::addComponent(Args&&... args) {
-        return m_registry->m_registry.emplace<T>(m_handle, std::forward<Args>(args)...);
-    }
-
-    template<typename T, typename... Args>
-    void Entity::addEmptyComponent(Args&&... args) {
-        m_registry->m_registry.emplace<T>(m_handle, std::forward<Args>(args)...);
-    }
 
     template<typename T>
     Entity Entity::createTaggedChild() {
@@ -140,6 +122,34 @@ namespace gaunlet::Scene {
             return {};
         }
 
+    }
+
+    template<typename T>
+    bool Entity::hasComponent() {
+        return m_registry->m_registry.all_of<T>(m_handle);
+    }
+
+    template<typename T>
+    T& Entity::getComponent() {
+        if (!hasComponent<T>()) {
+            throw std::runtime_error("Component not found");
+        }
+        return m_registry->m_registry.get<T>(m_handle);
+    }
+
+    template<typename T, typename... Args>
+    T& Entity::addComponent(Args&&... args) {
+        return m_registry->m_registry.emplace<T>(m_handle, std::forward<Args>(args)...);
+    }
+
+    template<typename T, typename... Args>
+    void Entity::addEmptyComponent(Args&&... args) {
+        m_registry->m_registry.emplace<T>(m_handle, std::forward<Args>(args)...);
+    }
+
+    template<typename T>
+    void Entity::removeComponent() {
+        m_registry->m_registry.remove<T>(m_handle);
     }
 
     // REGISTRY IMPLEMENTATION

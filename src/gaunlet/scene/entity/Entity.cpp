@@ -16,8 +16,31 @@ namespace gaunlet::Scene {
         }
     }
 
-    int Entity::getId() {
+    int Entity::getId() const {
+        if (m_handle == entt::null) {
+            return -1;
+        }
         return (int) m_handle;
+    }
+
+    Entity::operator bool() const {
+        return m_handle != entt::null && m_registry != nullptr;
+    }
+
+    bool Entity::operator==(const Entity &other) const {
+        return other.m_handle == m_handle && other.m_registry == m_registry;
+    }
+
+    bool Entity::operator!=(const Entity &other) const {
+
+        // If both of them are invalid (empty, null), then they're the same
+        // If e.g. one was null handle, and the other has null registry, they would be considered different, but they're both invalid
+        if (!other && !*this) {
+            return false; // Not different, the same
+        }
+
+        return !operator==(other);
+
     }
 
     Entity Entity::getParent() {
