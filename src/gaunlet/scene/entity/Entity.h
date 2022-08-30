@@ -22,8 +22,14 @@ namespace gaunlet::Scene {
         Entity(int entityHandle, Registry* registry);
 
         int getId();
-        Entity createChild();
         Entity getParent();
+        Entity createChild();
+
+        template<typename T>
+        Entity createTaggedChild();
+
+        template<typename T>
+        Entity findTaggedAncestor();
 
         template<typename T>
         bool hasComponent();
@@ -43,6 +49,8 @@ namespace gaunlet::Scene {
         entt::entity m_handle = entt::null;
         Registry* m_registry = nullptr;
 
+        void adopt(Entity& parent, Entity& child);
+
     };
 
     // REGISTRY DECLARATION
@@ -56,6 +64,9 @@ namespace gaunlet::Scene {
 
     public:
         Entity createEntity();
+
+        template<typename T>
+        Entity createTaggedEntity();
 
     private:
         entt::registry m_registry;
@@ -85,6 +96,62 @@ namespace gaunlet::Scene {
     template<typename T, typename... Args>
     void Entity::addEmptyComponent(Args&&... args) {
         m_registry->m_registry.emplace<T>(m_handle, std::forward<Args>(args)...);
+    }
+
+    template<typename T>
+    Entity Entity::createTaggedChild() {
+
+        // Create the child entity, delegating on the registry (so it will attach the Relationship component)
+        auto child = m_registry->createTaggedEntity<T>();
+        adopt(*this, child);
+
+        return child;
+
+    }
+
+    template<typename T>
+    Entity Entity::findTaggedAncestor() {
+
+        bool found = false;
+
+        Entity current = *this;
+        Entity ancestor = current.getParent();
+
+        while (true) {
+
+            // If we're run out of ancestor in the line, stop
+            if (!ancestor) {
+                break;
+            }
+
+            if (ancestor.hasComponent<T>()) {
+                found = true;
+                break;
+            }
+
+            current = current.getParent();
+            ancestor = ancestor.getParent();
+
+        }
+
+        if (found) {
+            return ancestor;
+        } else {
+            return {};
+        }
+
+    }
+
+    // REGISTRY IMPLEMENTATION
+
+    template<typename T>
+    Entity Registry::createTaggedEntity() {
+
+        auto entity = createEntity();
+        entity.addEmptyComponent<T>();
+
+        return entity;
+
     }
 
 }

@@ -68,7 +68,7 @@ public:
         m_editorLayer->pushPanel("Tools", new ToolsPanel);
         m_editorLayer->pushPanel("Scene", scenePanel);
 
-        auto triangle = scenePanel->createSceneEntity();
+        auto triangle = scenePanel->getScene().getRegistry().createTaggedEntity<gaunlet::Editor::SceneEntityTag>();
         triangle.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Triangle2DModel());
         triangle.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(-1.5f, 1.0f, 2.0f),
@@ -77,7 +77,7 @@ public:
         );
         triangle.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
-        auto circle = scenePanel->createSceneEntity();
+        auto circle = scenePanel->getScene().getRegistry().createTaggedEntity<gaunlet::Editor::SceneEntityTag>();
         circle.addComponent<gaunlet::Scene::CircleComponent>(0.3f, 0.01f);
         circle.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(2.0f, 0.0f, 0.0f),

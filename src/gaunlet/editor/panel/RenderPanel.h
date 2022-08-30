@@ -28,6 +28,7 @@ namespace gaunlet::Editor {
         static const unsigned int SceneEntityIdFramebufferAttachmentIndex = 1;
         static const unsigned int UIEntityIdFramebufferAttachmentIndex = 2;
 
+        inline gaunlet::Scene::Scene& getScene() {return m_scene; }
         inline Core::Ref<gaunlet::Graphics::Framebuffer>& getFramebuffer() {return m_framebuffer; }
         inline Scene::RenderMode getRenderMode() {return m_renderMode; }
 
@@ -37,10 +38,6 @@ namespace gaunlet::Editor {
         virtual bool onEvent(Core::Event& event) {return true;}
 
         void mousePickEntity(unsigned int mousePositionX, unsigned int mousePositionY);
-
-        virtual Scene::Entity createSceneEntity();
-        virtual Scene::Entity createUIEntity();
-        virtual Scene::Entity createUIEntity(Scene::Entity sceneEntity);
 
         Scene::Entity m_selectedSceneEntity = {};
         Scene::Entity m_selectedUIEntity = {};

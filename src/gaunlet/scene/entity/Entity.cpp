@@ -20,10 +20,24 @@ namespace gaunlet::Scene {
         return (int) m_handle;
     }
 
+    Entity Entity::getParent() {
+
+        RelationshipComponent childRelationship = getComponent<RelationshipComponent>();
+        Entity parent(childRelationship.m_parent, m_registry);
+
+        return parent;
+    }
+
     Entity Entity::createChild() {
 
         // Create the child entity, delegating on the registry (so it will attach the Relationship component)
         auto child = m_registry->createEntity();
+        adopt(*this, child);
+        return child;
+
+    }
+
+    void Entity::adopt(Entity& parent, Entity& child) {
 
         auto& parentRelationship = getComponent<RelationshipComponent>();
         auto& childRelationship = child.getComponent<RelationshipComponent>();
@@ -31,16 +45,6 @@ namespace gaunlet::Scene {
         childRelationship.m_parent = m_handle; // Tell the child about its parent (aka, this)
         parentRelationship.m_children.push_back(child.m_handle); // Tell the parent (aka, this) about its new child
 
-        return child;
-
-    }
-
-    Entity Entity::getParent() {
-
-        RelationshipComponent childRelationship = getComponent<RelationshipComponent>();
-        Entity parent(childRelationship.m_parent, m_registry);
-
-        return parent;
     }
 
     // REGISTRY IMPLEMENTATION

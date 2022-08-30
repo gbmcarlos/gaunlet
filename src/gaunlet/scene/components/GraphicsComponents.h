@@ -35,7 +35,6 @@ namespace gaunlet::Scene {
 
     struct ModelComponent {
 
-        ModelComponent() = default;
         ModelComponent(const ModelComponent&) = default;
         ModelComponent(Model model) : m_model(std::move(model)) {}
 

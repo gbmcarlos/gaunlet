@@ -33,33 +33,6 @@ namespace gaunlet::Editor {
 
     }
 
-    Scene::Entity RenderPanel::createSceneEntity() {
-
-        auto entity = m_scene.getRegistry().createEntity();
-        entity.addEmptyComponent<SceneEntityTag>();
-
-        return entity;
-
-    }
-
-    Scene::Entity RenderPanel::createUIEntity() {
-
-        auto entity = m_scene.getRegistry().createEntity();
-        entity.addEmptyComponent<UIEntityTag>();
-
-        return entity;
-
-    }
-
-    Scene::Entity RenderPanel::createUIEntity(Scene::Entity sceneEntity) {
-
-        auto entity = sceneEntity.createChild();
-        entity.addEmptyComponent<UIEntityTag>();
-
-        return entity;
-
-    }
-
     void RenderPanel::mousePickEntity(unsigned int mousePositionX, unsigned int mousePositionY) {
 
         // Reset both to the default (empty, null) entity
@@ -80,7 +53,7 @@ namespace gaunlet::Editor {
         // If there's a selected UI entity, look for the scene entity (the UI's parent)
         if (m_selectedUIEntity) {
 
-            auto sceneEntity = m_selectedUIEntity.getParent();
+            auto sceneEntity = m_selectedUIEntity.findTaggedAncestor<SceneEntityTag>();
             if (sceneEntity) {
                 m_selectedSceneEntity = sceneEntity;
             }
