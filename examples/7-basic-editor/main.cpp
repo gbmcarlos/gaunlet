@@ -102,12 +102,14 @@ public:
         if (m_selectedSceneEntity) {
             m_gizmoEntity = gaunlet::Editor::TranslationGizmo::create(m_scenePanel->getScene().getRegistry());
             m_selectedSceneEntity.addChild(m_gizmoEntity);
+            m_selectedUIEntity = m_gizmoEntity;
+        } else {
+            m_selectedUIEntity = gaunlet::Scene::Entity();
         }
 
     }
 
     void onUISelection(gaunlet::Scene::Entity entity) {
-        std::cout << "new ui entity: " << entity.getId() << std::endl;
         m_selectedUIEntity = entity;
     }
 

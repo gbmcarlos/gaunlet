@@ -1,5 +1,7 @@
 #include "Entity.h"
 
+#include "gaunlet/pch.h"
+
 namespace gaunlet::Scene {
 
     // ENTITY IMPLEMENTATION
@@ -14,12 +16,15 @@ namespace gaunlet::Scene {
         }
     }
 
-    Entity::Entity(int entityHandle, Registry *registry)
-        : m_handle((entt::entity) entityHandle), m_registry(registry) {
-        if (getId() < 0 || registry == nullptr) {
+    Entity::Entity(int entityHandle, Registry *registry) {
+        if (entityHandle < 0 || registry == nullptr) {
             m_handle = entt::null;
             m_registry = nullptr;
+        } else {
+            m_handle = (entt::entity) (unsigned int) entityHandle;
+            m_registry = registry;
         }
+
     }
 
     int Entity::getId() const {
