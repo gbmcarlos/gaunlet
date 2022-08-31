@@ -65,8 +65,8 @@ namespace gaunlet::Editor {
         auto planeXZ = gizmo.createTaggedChild<UIEntityTag>();
         planeXZ.addComponent<Scene::ModelComponent>(Scene::Square2DModel());
         planeXZ.addComponent<Scene::TransformComponent>(
-            glm::vec3(finalGap, finalGap, 0.0f),
-            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(finalGap, 0.0f, finalGap),
+            glm::vec3(90.0f, 00.0f, 00.0f),
             glm::vec3(size, size, 1.0f)
         );
         planeXZ.addComponent<Scene::MaterialComponent>(TranslationGizmo::m_colorY);
@@ -74,8 +74,8 @@ namespace gaunlet::Editor {
         auto planeXY = gizmo.createTaggedChild<UIEntityTag>();
         planeXY.addComponent<Scene::ModelComponent>(Scene::Square2DModel());
         planeXY.addComponent<Scene::TransformComponent>(
-            glm::vec3(finalGap, 0.0f, finalGap),
-            glm::vec3(90.0f, 00.0f, 00.0f),
+            glm::vec3(finalGap, finalGap, 0.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(size, size, 1.0f)
         );
         planeXY.addComponent<Scene::MaterialComponent>(TranslationGizmo::m_colorZ);
