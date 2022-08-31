@@ -213,7 +213,7 @@ namespace gaunlet::Scene {
             }
 
             // Multiply with the parent's transform and move to the next generation
-            result *= parent.getComponent<TransformComponent>().getTransformationMatrix();
+            result = parent.getComponent<TransformComponent>().getTransformationMatrix() * result;
             current = parent;
 
         }

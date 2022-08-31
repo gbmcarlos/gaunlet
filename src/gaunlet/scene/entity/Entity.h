@@ -28,6 +28,10 @@ namespace gaunlet::Scene {
 
         Entity getParent();
         Entity createChild();
+        Entity addChild(Entity child);
+
+        void destroy();
+        void destroyChild(Entity child);
 
         template<typename T>
         Entity createTaggedChild();
@@ -55,6 +59,7 @@ namespace gaunlet::Scene {
         Registry* m_registry = nullptr;
 
         void adopt(Entity& parent, Entity& child);
+        void abandon(Entity& parent, Entity& child);
 
     };
 

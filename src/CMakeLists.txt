@@ -38,6 +38,7 @@ add_library(gaunlet STATIC
         gaunlet/editor/docking/DockingLayout.cpp
         gaunlet/editor/layout-layer/LayoutLayer.cpp
         gaunlet/editor/panel/RenderPanel.cpp
+        gaunlet/editor/gizmos/TranslationGizmo.cpp
 
 #        Dear ImGui
         ${PROJECT_SOURCE_DIR}/vendor/imgui/imgui_impl_glfw.cpp ${PROJECT_SOURCE_DIR}/vendor/imgui/imgui_impl_opengl3.cpp

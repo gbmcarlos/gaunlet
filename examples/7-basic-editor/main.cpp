@@ -45,7 +45,13 @@ class SettingsPanel : public gaunlet::Editor::GuiPanel {
 
 public:
 
-    explicit SettingsPanel(ScenePanel* scenePanel) : m_scenePanel(scenePanel) {}
+    gaunlet::Scene::Entity m_selectedSceneEntity;
+    gaunlet::Scene::Entity m_selectedUIEntity;
+
+    explicit SettingsPanel(ScenePanel* scenePanel) : m_scenePanel(scenePanel) {
+        m_scenePanel->setSceneSelectionCallback(GE_BIND_CALLBACK_FN(SettingsPanel::onSceneSelection));
+        m_scenePanel->setUISelectionCallback(GE_BIND_CALLBACK_FN(SettingsPanel::onUISelection));
+    }
 
     void onGuiRender() override {
 
@@ -67,24 +73,47 @@ public:
 
         ImGui::Text("Selected Scene Entity:");
 
-        if (m_scenePanel->m_selectedSceneEntity) {
-            ImGui::Text("%d", m_scenePanel->m_selectedSceneEntity.getId());
+        if (m_selectedSceneEntity) {
+            ImGui::Text("%d", m_selectedSceneEntity.getId());
         } else {
             ImGui::NewLine();
         }
 
         ImGui::Text("Selected UI Entity:");
 
-        if (m_scenePanel->m_selectedUIEntity) {
-            ImGui::Text("%d", m_scenePanel->m_selectedUIEntity.getId());
+        if (m_selectedUIEntity) {
+            ImGui::Text("%d", m_selectedUIEntity.getId());
         } else {
             ImGui::NewLine();
         }
 
     }
 
+    void onSceneSelection(gaunlet::Scene::Entity entity) {
+
+        // If we had an entity selected, and there was a gizmo, remove
+        if (m_selectedSceneEntity && m_gizmoEntity) {
+            m_selectedSceneEntity.destroyChild(m_gizmoEntity);
+        }
+
+        m_selectedSceneEntity = entity;
+
+        // If we have an entity, add the gizmo
+        if (m_selectedSceneEntity) {
+            m_gizmoEntity = gaunlet::Editor::TranslationGizmo::create(m_scenePanel->getScene().getRegistry());
+            m_selectedSceneEntity.addChild(m_gizmoEntity);
+        }
+
+    }
+
+    void onUISelection(gaunlet::Scene::Entity entity) {
+        std::cout << "new ui entity: " << entity.getId() << std::endl;
+        m_selectedUIEntity = entity;
+    }
+
 private:
     ScenePanel* m_scenePanel = nullptr;
+    gaunlet::Scene::Entity m_gizmoEntity;
 
 };
 
@@ -111,32 +140,26 @@ public:
         m_editorLayer->pushPanel("Tools", new ToolsPanel);
         m_editorLayer->pushPanel("Scene", scenePanel);
 
+        scenePanel->getCamera()->setTranslation({3.0f, 0.0f, 10.0f});
+        scenePanel->getCamera()->setRotation({0.0f, 10.0f, 0.0f});
+
+        auto cup = scenePanel->getScene().getRegistry().createTaggedEntity<gaunlet::Editor::SceneEntityTag>();
+        cup.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Model("assets/cup/cup.obj"));
+        cup.addComponent<gaunlet::Scene::TransformComponent>(
+            glm::vec3(0.0f, -2.0f, 0.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(0.5f, 0.5f, 0.5f)
+        );
+        cup.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(0.8f, 0.2f, 0.2f, 1.0f));
+
         auto triangle = scenePanel->getScene().getRegistry().createTaggedEntity<gaunlet::Editor::SceneEntityTag>();
         triangle.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Triangle2DModel());
         triangle.addComponent<gaunlet::Scene::TransformComponent>(
-            glm::vec3(-1.5f, 1.0f, 2.0f),
+            glm::vec3(3.0f, -2.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f)
         );
-        triangle.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
-
-        auto circle = triangle.createTaggedChild<gaunlet::Editor::SceneEntityTag>();
-        circle.addComponent<gaunlet::Scene::CircleComponent>(0.3f, 0.01f);
-        circle.addComponent<gaunlet::Scene::TransformComponent>(
-            glm::vec3(2.0f, 0.0f, 0.0f),
-            glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec3(0.8f, 0.8f, 1.0f)
-        );
-        circle.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(0.0f, 0.0f, 0.8f, 1.0f));
-
-        auto square = triangle.createTaggedChild<gaunlet::Editor::UIEntityTag>();
-        square.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Square2DModel());
-        square.addComponent<gaunlet::Scene::TransformComponent>(
-            glm::vec3(-1.5f, 1.0f, 2.0f),
-            glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec3(0.5f, 0.5f, 1.0f)
-        );
-        square.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+        triangle.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(0.8f, 0.2f, 0.2f, 1.0f));
 
         scenePanel->startScene();
 

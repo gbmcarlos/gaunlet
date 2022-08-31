@@ -128,7 +128,7 @@ namespace gaunlet::Editor {
             1.0f, 100.0f
         );
 
-        renderPanel.m_camera->setTranslation({0.0f, 2.0f, 10.0f});
+        renderPanel.m_camera->setTranslation({0.0f, 0.0f, 10.0f});
 
         renderPanel.m_framebuffer = gaunlet::Core::CreateRef<gaunlet::Graphics::Framebuffer>(std::initializer_list<gaunlet::Graphics::FramebufferAttachmentSpec>{
             {gaunlet::Core::FramebufferAttachmentType::Color, gaunlet::Graphics::FramebufferDataFormat::RGBA, glm::vec4(0.0f, 0.0f, 0.0f, 0.0f)},
@@ -136,6 +136,12 @@ namespace gaunlet::Editor {
             {gaunlet::Core::FramebufferAttachmentType::Color, gaunlet::Graphics::FramebufferDataFormat::Integer, -1},
             {gaunlet::Core::FramebufferAttachmentType::Depth, gaunlet::Graphics::FramebufferDataFormat::Depth}
         }, m_window->getViewportWidth() * m_window->getDPI(), m_window->getViewportHeight() * m_window->getDPI());
+
+        renderPanel.m_directionalLight = gaunlet::Scene::DirectionalLightComponent(
+            glm::vec3(0.8f, 0.8f, 0.8f),
+            glm::vec3(2.0f, 2.0f, 10.0f),
+            0.6f, 0.8f
+        );
 
     }
 

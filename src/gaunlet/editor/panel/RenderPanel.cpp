@@ -1,4 +1,6 @@
 #include "gaunlet/editor/panel/RenderPanel.h"
+
+#include "gaunlet/editor/Tags.h"
 #include "gaunlet/core/window/Window.h"
 
 namespace gaunlet::Editor {
@@ -56,7 +58,7 @@ namespace gaunlet::Editor {
         m_framebuffer->clear();
 
         // Render the scene entities
-        m_scene.renderTagged<SceneEntityTag>(m_renderMode, m_camera, Scene::DirectionalLightComponent());
+        m_scene.renderTagged<SceneEntityTag>(m_renderMode, m_camera, m_directionalLight);
 
         // Then clear just the depth buffer, and switch the 2 entity id buffers
         m_framebuffer->clearDepthAttachment();

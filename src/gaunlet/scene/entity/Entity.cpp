@@ -6,13 +6,19 @@ namespace gaunlet::Scene {
 
     Entity::Entity() : m_handle(entt::null), m_registry(nullptr) {}
 
-    Entity::Entity(entt::entity entityHandle, Registry *registry) : m_handle(entityHandle), m_registry(registry) {}
+    Entity::Entity(entt::entity entityHandle, Registry *registry)
+        : m_handle(entityHandle), m_registry(registry) {
+        if (registry == nullptr) {
+            m_handle = entt::null;
+            m_registry = nullptr;
+        }
+    }
 
     Entity::Entity(int entityHandle, Registry *registry)
         : m_handle((entt::entity) entityHandle), m_registry(registry) {
         if (getId() < 0 || registry == nullptr) {
             m_handle = entt::null;
-            registry = nullptr;
+            m_registry = nullptr;
         }
     }
 
@@ -60,6 +66,44 @@ namespace gaunlet::Scene {
 
     }
 
+    Entity Entity::addChild(Entity child) {
+
+        adopt(*this, child);
+        return child;
+
+    }
+
+    void Entity::destroy() {
+
+        RelationshipComponent relationship = getComponent<RelationshipComponent>();
+
+        // First abandon and destroy all the children
+        for (auto childHandle : relationship.m_children) {
+
+            Entity child = {childHandle, m_registry};
+            destroyChild(child);
+
+        }
+
+        Entity parent = {relationship.m_parent, m_registry};
+
+        // If this entity has been abandoned first, there will be no parent
+        if (parent) {
+            abandon(parent, *this); // "Emancipate", I guess
+        }
+
+        // Then destroy itself
+        m_registry->m_registry.destroy(m_handle);
+
+    }
+
+    void Entity::destroyChild(Entity child) {
+
+        abandon(*this, child);
+        child.destroy();
+
+    }
+
     void Entity::adopt(Entity& parent, Entity& child) {
 
         auto& parentRelationship = getComponent<RelationshipComponent>();
@@ -67,6 +111,16 @@ namespace gaunlet::Scene {
 
         childRelationship.m_parent = m_handle; // Tell the child about its parent (aka, this)
         parentRelationship.m_children.push_back(child.m_handle); // Tell the parent (aka, this) about its new child
+
+    }
+
+    void Entity::abandon(Entity &parent, Entity &child) {
+
+        auto& parentRelationship = getComponent<RelationshipComponent>();
+        auto& childRelationship = child.getComponent<RelationshipComponent>();
+
+        childRelationship.m_parent = entt::null;
+        parentRelationship.m_children.erase(std::find(parentRelationship.m_children.begin(), parentRelationship.m_children.end(), child.m_handle));
 
     }
 

@@ -10,14 +10,6 @@
 
 namespace gaunlet::Editor {
 
-    struct SceneEntityTag {
-        SceneEntityTag() = default;
-    };
-
-    struct UIEntityTag {
-        UIEntityTag() = default;
-    };
-
     class RenderPanel : public Panel  {
 
         friend LayoutLayer;
@@ -29,6 +21,7 @@ namespace gaunlet::Editor {
         static const unsigned int UIEntityIdFramebufferAttachmentIndex = 2;
 
         inline gaunlet::Scene::Scene& getScene() {return m_scene; }
+        inline gaunlet::Core::Ref<gaunlet::Scene::PerspectiveCamera>& getCamera() {return m_camera; }
         inline Scene::RenderMode getRenderMode() {return m_renderMode; }
 
         void setRenderMode(gaunlet::Scene::RenderMode renderMode) {m_renderMode = renderMode; }
@@ -55,6 +48,7 @@ namespace gaunlet::Editor {
         gaunlet::Core::Ref<gaunlet::Scene::PerspectiveCamera> m_camera;
         gaunlet::Core::Ref<gaunlet::Graphics::Framebuffer> m_framebuffer = nullptr;
         gaunlet::Scene::RenderMode m_renderMode = gaunlet::Scene::RenderMode::Faces;
+        gaunlet::Scene::DirectionalLightComponent m_directionalLight;
 
         Scene::Entity m_selectedSceneEntity = {};
         Scene::Entity m_selectedUIEntity = {};

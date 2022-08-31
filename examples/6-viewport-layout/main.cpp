@@ -71,7 +71,7 @@ public:
         auto triangle = scenePanel->getScene().getRegistry().createTaggedEntity<gaunlet::Editor::SceneEntityTag>();
         triangle.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Triangle2DModel());
         triangle.addComponent<gaunlet::Scene::TransformComponent>(
-            glm::vec3(-1.5f, 1.0f, 2.0f),
+            glm::vec3(-1.5f, 0.0f, 2.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f)
         );
