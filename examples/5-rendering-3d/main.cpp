@@ -13,18 +13,19 @@ public:
     SceneLayer(float viewportWidth, float viewportHeight) {
 
         m_camera = gaunlet::Core::CreateRef<gaunlet::Scene::PerspectiveCamera>(45.0f, (float) viewportWidth /(float) viewportHeight, 100, 1.0f, 100.0f);
-        m_camera->setTranslation({0.0f, 0.0f, 10.0f});
+        m_camera->setPosition({0, 4, 8});
+        m_camera->lookAt({0.0f, 2.0f, 0.0f});
 
         m_directionalLight = gaunlet::Scene::DirectionalLightComponent(
             glm::vec3(0.8f, 0.8f, 0.8f),
-            glm::vec3(1.5f, 1.5f, 10.0f),
-            0.1f, 0.6f
+            glm::vec3(2.0f, 5.0f, 4.0f),
+            0.2f, 0.5f
         );
 
         auto cup = m_scene.getRegistry().createEntity();
         cup.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Model("assets/cup/cup.obj"));
         cup.addComponent<gaunlet::Scene::TransformComponent>(
-            glm::vec3(-2.5f, -2.5f, 0.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(0.0f, 30.0f, 0.0f),
             glm::vec3(0.5f, 0.5f, 0.5f)
         );

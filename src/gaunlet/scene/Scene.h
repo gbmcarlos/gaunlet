@@ -38,7 +38,6 @@ namespace gaunlet::Scene {
 
         bool m_playing = false;
         Registry m_registry;
-        Core::Ref<Camera> m_camera = nullptr;
         Core::Ref<PhysicsWorld> m_physicsWorld = nullptr;
 
         void initPhysics();

@@ -142,13 +142,13 @@ public:
         m_editorLayer->pushPanel("Tools", new ToolsPanel);
         m_editorLayer->pushPanel("Scene", scenePanel);
 
-        scenePanel->getCamera()->setTranslation({3.0f, 0.0f, 10.0f});
-        scenePanel->getCamera()->setRotation({0.0f, 10.0f, 0.0f});
+        scenePanel->getCamera()->setPosition({0.0f, 4.0f, 6.0f});
+        scenePanel->getCamera()->lookAt({0, 2, 0});
 
         auto cup = scenePanel->getScene().getRegistry().createTaggedEntity<gaunlet::Editor::SceneEntityTag>();
         cup.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Model("assets/cup/cup.obj"));
         cup.addComponent<gaunlet::Scene::TransformComponent>(
-            glm::vec3(0.0f, -2.0f, 0.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(0.5f, 0.5f, 0.5f)
         );
@@ -157,7 +157,7 @@ public:
         auto triangle = scenePanel->getScene().getRegistry().createTaggedEntity<gaunlet::Editor::SceneEntityTag>();
         triangle.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Triangle2DModel());
         triangle.addComponent<gaunlet::Scene::TransformComponent>(
-            glm::vec3(3.0f, -2.0f, 0.0f),
+            glm::vec3(0.0f, 4.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f)
         );

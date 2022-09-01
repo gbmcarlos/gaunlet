@@ -12,6 +12,8 @@ public:
     SceneLayer(int viewportWidth, int viewportHeight) {
 
         m_camera = gaunlet::Core::CreateRef<gaunlet::Scene::OrthographicCamera>((float) viewportWidth, (float) viewportHeight, 100);
+        m_camera->setPosition({0, 0, 1});
+
         gaunlet::Core::Ref<gaunlet::Graphics::TextureImage2D> texture1 = gaunlet::Core::CreateRef<gaunlet::Graphics::TextureImage2D>("assets/texture-1.jpeg");
         gaunlet::Core::Ref<gaunlet::Graphics::TextureImage2D> texture2 = gaunlet::Core::CreateRef<gaunlet::Graphics::TextureImage2D>("assets/texture-2.jpeg");
 

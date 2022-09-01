@@ -9,7 +9,7 @@ namespace gaunlet::Scene {
 
     void PerspectiveCamera::calculateProjectionMatrix() {
 
-        m_projectionMatrix = glm::perspective(glm::radians(m_fieldOfView), m_aspectRatio, m_near, m_far);
+        m_projectionMatrix = glm::perspective(glm::radians(m_fieldOfView * m_zoomLevel), m_aspectRatio, m_near, m_far);
 
     }
 

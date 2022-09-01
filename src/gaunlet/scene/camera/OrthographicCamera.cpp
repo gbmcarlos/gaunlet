@@ -14,7 +14,7 @@ namespace gaunlet::Scene {
                 (m_viewportHeight / m_viewportResolution) * m_zoomLevel,
         };
 
-        m_projectionMatrix = glm::ortho(-m_projectionSize.x/2, m_projectionSize.x/2, -m_projectionSize.y/2, m_projectionSize.y/2, -1.0f, 1.0f);
+        m_projectionMatrix = glm::ortho(-m_projectionSize.x/2, m_projectionSize.x/2, -m_projectionSize.y/2, m_projectionSize.y/2, 1.0f, 10.0f);
 
     }
 

@@ -68,7 +68,7 @@ void main() {
 vec4 getDirectionalLightColor(vec3 color, vec3 position, float ambientIntensity, float diffuseIntensity, vec3 normal) {
 
     vec4 ambientColor = vec4(color * ambientIntensity, 1.0f);
-    float diffuseFactor = dot(normalize(normal), -position);
+    float diffuseFactor = dot(normalize(normal), position);
 
     if (diffuseFactor > 0) {
         return vec4(color * diffuseIntensity * diffuseFactor, 1.0f) + ambientColor;

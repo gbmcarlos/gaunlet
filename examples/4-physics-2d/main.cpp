@@ -80,6 +80,7 @@ public:
     SceneLayer(float viewportWidth, float viewportHeight) {
 
         m_camera = gaunlet::Core::CreateRef<gaunlet::Scene::OrthographicCamera>(viewportWidth, viewportHeight, 100);
+        m_camera->setPosition({0, 0, 1});
 
         createRoom(m_camera->getProjectionSize());
         createBall();
