@@ -20,6 +20,10 @@ namespace gaunlet::Scene {
         calculateViewMatrix();
     }
 
+    void Camera::addYaw(float yawDelta) {
+        setYaw(m_yaw + yawDelta);
+    }
+
     void Camera::setPitch(float pitch) {
 
         // Restrict the pitch, to avoid flipping
@@ -34,6 +38,10 @@ namespace gaunlet::Scene {
 
     }
 
+    void Camera::addPitch(float pitchDelta) {
+        setPitch(m_pitch + pitchDelta);
+    }
+
     void Camera::lookAt(const glm::vec3 &target) {
 
         m_viewMatrix = glm::lookAt(
@@ -41,6 +49,8 @@ namespace gaunlet::Scene {
             target,
             {0, 1, 0}
         );
+
+        reverseViewMatrix();
 
     }
 
@@ -58,32 +68,45 @@ namespace gaunlet::Scene {
         calculateProjectionMatrix();
     }
 
+    void Camera::reverseViewMatrix() {
+
+        const glm::mat4 inverted = glm::inverse(m_viewMatrix);
+        const glm::vec3 direction = -glm::vec3(inverted[2]);
+
+        auto yaw = glm::degrees(glm::atan(direction.z, direction.x));
+        auto pitch = glm::degrees(glm::asin(direction.y));
+
+        m_yaw = yaw;
+        m_pitch = pitch;
+
+    }
+
     void Camera::calculateViewMatrix() {
 
-        // Front
-        glm::vec3 front = {
+        // Direction
+        glm::vec3 direction = {
             cos(glm::radians(m_yaw)) * cos(glm::radians(m_pitch)),
             sin(glm::radians(m_pitch)),
             sin(glm::radians(m_yaw)) * cos(glm::radians(m_pitch))
         };
-        front = glm::normalize(front);
+        direction = glm::normalize(direction);
 
         // Right
         glm::vec3 right = glm::normalize(glm::cross(
-            front,
+            direction,
             {0, 1, 0}
         ));
 
         // Up
         glm::vec3 up = glm::normalize(glm::cross(
             right,
-            front
+            direction
         ));
 
         // Look At
         m_viewMatrix = glm::lookAt(
             m_position,
-            m_position + front,
+            m_position + direction,
             up
         );
 

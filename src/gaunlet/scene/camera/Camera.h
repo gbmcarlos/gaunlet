@@ -17,7 +17,9 @@ namespace gaunlet::Scene {
 
         void setPosition(const glm::vec3& position);
         void setYaw(float yaw);
+        void addYaw(float yawDelta);
         void setPitch(float pitch);
+        void addPitch(float pitchDelta);
         void lookAt(const glm::vec3& target);
         void lookAt(const TransformComponent& transform);
 
@@ -40,6 +42,7 @@ namespace gaunlet::Scene {
         float m_yaw = -90.0f;
         float m_pitch = 0.0f;
 
+        void reverseViewMatrix();
         void calculateViewMatrix();
 
     };
