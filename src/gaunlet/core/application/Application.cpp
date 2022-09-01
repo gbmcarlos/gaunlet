@@ -7,7 +7,7 @@ namespace gaunlet::Core {
 
     Application::Application(const std::string& name)
         : m_window(std::make_unique<Window>(name)), m_running(true) {
-        EventBus::getInstance().setEventCallback(GE_BIND_CALLBACK_FN(Application::onEvent));
+        EventBus::getInstance().setEventCallback(GL_BIND_CALLBACK_FN(Application::onEvent));
     }
 
     void Application::onReady() {}
@@ -31,7 +31,7 @@ namespace gaunlet::Core {
 
     void Application::onUpdate(TimeStep timeStep) {
 
-        GE_PROFILE_FUNCTION;
+        GL_PROFILE_FUNCTION;
 
         for (auto layer : m_layerStack) {
             layer->onUpdate(timeStep);
@@ -41,7 +41,7 @@ namespace gaunlet::Core {
 
     void Application::onGuiRender() {
 
-        GE_PROFILE_FUNCTION;
+        GL_PROFILE_FUNCTION;
 
         for (auto layer : m_layerStack) {
             layer->onGuiRender();

@@ -8,9 +8,9 @@ namespace gaunlet::Core {
     RunLoop::RunLoop(Application& application)
         : m_application(application) {
 
-        GE_PROFILE_BEGIN_SESSION("main", ASSETS_PATH"/result.json")
+        GL_PROFILE_BEGIN_SESSION("main", ASSETS_PATH"/result.json")
 
-        GE_PROFILE_SCOPE("init");
+        GL_PROFILE_SCOPE("init");
 
         RenderCommand::init();
 
@@ -27,7 +27,7 @@ namespace gaunlet::Core {
         // Start the main loop
         while (m_application.isRunning()) {
 
-            GE_PROFILE_SCOPE("loop");
+            GL_PROFILE_SCOPE("loop");
 
             float time = (float) glfwGetTime();
             TimeStep ts(time - lastFrameTime);
@@ -52,7 +52,7 @@ namespace gaunlet::Core {
         ImGuiRenderApi::shutdown();
         m_application.getWindow()->close();
 
-        GE_PROFILE_END_SESSION();
+        GL_PROFILE_END_SESSION();
 
     }
 

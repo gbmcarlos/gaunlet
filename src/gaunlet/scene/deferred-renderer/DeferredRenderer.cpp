@@ -198,7 +198,7 @@ namespace gaunlet::Scene {
     // Create the shaders and set the texture slots
     void DeferredRenderer::loadShaders() {
 
-        GE_PROFILE_FUNCTION;
+        GL_PROFILE_FUNCTION;
 
         // Create the Uniform Buffer for the Scene Properties, which will be linked to every shader
         m_rendererStorage->m_scenePropertiesUniformBuffer = Core::CreateRef<Graphics::UniformBuffer>(
@@ -279,7 +279,7 @@ namespace gaunlet::Scene {
 
     void DeferredRenderer::loadDefaultWhiteTexture() {
 
-        GE_PROFILE_FUNCTION;
+        GL_PROFILE_FUNCTION;
 
         // Create a 1x1 white texture, to be used as default
         unsigned int whiteTextureData = 0xffffffff;

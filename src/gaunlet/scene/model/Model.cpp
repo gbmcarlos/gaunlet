@@ -24,7 +24,7 @@ namespace gaunlet::Scene {
 
     void Model::processModelNode(aiNode* node, const aiScene* scene) {
 
-        GE_PROFILE_FUNCTION;
+        GL_PROFILE_FUNCTION;
 
         // process all the node's meshes (if any)
         for (unsigned int i = 0; i < node->mNumMeshes; i++) {
@@ -41,7 +41,7 @@ namespace gaunlet::Scene {
 
     Mesh Model::processNodeMesh(aiMesh *mesh) {
 
-        GE_PROFILE_FUNCTION;
+        GL_PROFILE_FUNCTION;
 
         std::vector<Graphics::Vertex> vertices;
         std::vector<unsigned int> indices;

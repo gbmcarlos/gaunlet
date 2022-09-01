@@ -120,13 +120,13 @@ namespace gaunlet::Core {
 }
 
 #if 0
-#define GE_PROFILE_BEGIN_SESSION(name, outputFilePath) ::gaunlet::Instrumentor::get().beginSession(name, outputFilePath);
-#define GE_PROFILE_END_SESSION() ::gaunlet::Instrumentor::get().endSession();
-#define GE_PROFILE_SCOPE(name) ::gaunlet::InstrumentationTimer timer##__LINE__(name);
-#define GE_PROFILE_FUNCTION GE_PROFILE_SCOPE(BOOST_CURRENT_FUNCTION);
+#define GL_PROFILE_BEGIN_SESSION(name, outputFilePath) ::gaunlet::Instrumentor::get().beginSession(name, outputFilePath);
+#define GL_PROFILE_END_SESSION() ::gaunlet::Instrumentor::get().endSession();
+#define GL_PROFILE_SCOPE(name) ::gaunlet::InstrumentationTimer timer##__LINE__(name);
+#define GL_PROFILE_FUNCTION GL_PROFILE_SCOPE(BOOST_CURRENT_FUNCTION);
 #else
-#define GE_PROFILE_BEGIN_SESSION(name, outputFilePath)
-#define GE_PROFILE_END_SESSION()
-#define GE_PROFILE_SCOPE(name)
-#define GE_PROFILE_FUNCTION
+#define GL_PROFILE_BEGIN_SESSION(name, outputFilePath)
+#define GL_PROFILE_END_SESSION()
+#define GL_PROFILE_SCOPE(name)
+#define GL_PROFILE_FUNCTION
 #endif
