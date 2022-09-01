@@ -94,7 +94,7 @@ public:
     void onEvent(gaunlet::Core::Event &event) override {
 
         gaunlet::Core::EventDispatcher dispatcher(event);
-        dispatcher.dispatch<gaunlet::Core::KeyPressEvent>(GE_BIND_CALLBACK_FN(SceneLayer::onKeyPressEvent));
+        dispatcher.dispatch<gaunlet::Core::KeyPressEvent>(GL_BIND_CALLBACK_FN(SceneLayer::onKeyPressEvent));
 
     }
 
