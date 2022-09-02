@@ -10,17 +10,21 @@ namespace gaunlet::Scene {
 
     public:
 
+        Camera();
+
         glm::mat4 getProjectionMatrix();
         glm::mat4 getViewMatrix();
         virtual float getAspectRatio() const = 0;
         virtual void resize(unsigned int viewportWidth, unsigned int viewportHeight) = 0;
 
         void setPosition(const glm::vec3& position);
+        void move(const glm::vec3& movement);
+        void moveRelative(const glm::vec3& movement);
         void setYaw(float yaw);
         void addYaw(float yawDelta);
         void setPitch(float pitch);
         void addPitch(float pitchDelta);
-        void lookAt(const glm::vec3& target);
+        void lookAt(glm::vec3 target);
         void lookAt(const TransformComponent& transform);
 
         inline float getZoomLevel() const {return m_zoomLevel;}
@@ -42,6 +46,11 @@ namespace gaunlet::Scene {
         float m_yaw = -90.0f;
         float m_pitch = 0.0f;
 
+        glm::vec3 m_right = {1, 0, 0};
+        glm::vec3 m_up = {0, 1, 0};
+        glm::vec3 m_forward = {0, 0, 1}; // Pointing toward the camera
+
+        float constrainPitch(float pitch);
         void reverseViewMatrix();
         void calculateViewMatrix();
 

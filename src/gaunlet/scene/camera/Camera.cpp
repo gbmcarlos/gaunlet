@@ -1,6 +1,12 @@
 #include "gaunlet/scene/camera/Camera.h"
 
+#include "gaunlet/pch.h"
+
 namespace gaunlet::Scene {
+
+    Camera::Camera() {
+        calculateViewMatrix();
+    }
 
     glm::mat4 Camera::getProjectionMatrix() {
         return m_projectionMatrix;
@@ -15,6 +21,25 @@ namespace gaunlet::Scene {
         calculateViewMatrix();
     }
 
+    void Camera::move(const glm::vec3 &movement) {
+        m_position += movement;
+        calculateViewMatrix();
+    }
+
+    void Camera::moveRelative(const glm::vec3 &movement) {
+
+        glm::mat3 relativeTransform = glm::mat3(
+            m_right,
+            m_up,
+            m_forward
+        );
+
+        glm::vec3 relativeMovement = relativeTransform * movement;
+
+        move(relativeMovement);
+
+    }
+
     void Camera::setYaw(float yaw) {
         m_yaw = yaw;
         calculateViewMatrix();
@@ -26,14 +51,7 @@ namespace gaunlet::Scene {
 
     void Camera::setPitch(float pitch) {
 
-        // Restrict the pitch, to avoid flipping
-        if (pitch > 89) {
-            pitch = 89;
-        } else if (pitch < -89) {
-            pitch = -89;
-        }
-
-        m_pitch = pitch;
+        m_pitch = constrainPitch(pitch);
         calculateViewMatrix();
 
     }
@@ -42,7 +60,13 @@ namespace gaunlet::Scene {
         setPitch(m_pitch + pitchDelta);
     }
 
-    void Camera::lookAt(const glm::vec3 &target) {
+    void Camera::lookAt(glm::vec3 target) {
+
+        // If we're trying to look straight up or straight down, move the target slight forward
+        glm::vec3 direction = glm::abs(glm::normalize(target - m_position));
+        if (direction == glm::vec3(0, 1, 0)) {
+            target.z += 0.5;
+        }
 
         m_viewMatrix = glm::lookAt(
             m_position,
@@ -68,46 +92,69 @@ namespace gaunlet::Scene {
         calculateProjectionMatrix();
     }
 
+    float Camera::constrainPitch(float pitch) {
+
+        if (pitch > 89) {
+            return 89;
+        } else if (pitch < -89) {
+            return -89;
+        } else {
+            return pitch;
+        }
+
+    }
+
+    // Calculate the orientation parameters (right, up, yaw, and pitch) based in the current view matrix
     void Camera::reverseViewMatrix() {
 
         const glm::mat4 inverted = glm::inverse(m_viewMatrix);
-        const glm::vec3 direction = -glm::vec3(inverted[2]);
 
-        auto yaw = glm::degrees(glm::atan(direction.z, direction.x));
-        auto pitch = glm::degrees(glm::asin(direction.y));
+        auto forward = -glm::vec3(inverted[2]);
+        auto right = glm::normalize(glm::cross({0, 1, 0}, forward));
+        auto up = glm::normalize(glm::cross(forward, right));
+
+        auto yaw = glm::degrees(glm::atan(forward.z, forward.x));
+        auto pitch = glm::degrees(glm::asin(forward.y));
 
         m_yaw = yaw;
         m_pitch = pitch;
 
+        m_right = right;
+        m_up = up;
+        m_forward = forward;
+
+        calculateViewMatrix();
+
     }
 
+    // Calculate a view matrix and right and up based on the current position and yaw and pitch
     void Camera::calculateViewMatrix() {
 
-        // Direction
-        glm::vec3 direction = {
+        // Direction (points from the target to the camera)
+        glm::vec3 forward = {
             cos(glm::radians(m_yaw)) * cos(glm::radians(m_pitch)),
             sin(glm::radians(m_pitch)),
             sin(glm::radians(m_yaw)) * cos(glm::radians(m_pitch))
         };
-        direction = glm::normalize(direction);
+        m_forward = glm::normalize(forward);
 
         // Right
-        glm::vec3 right = glm::normalize(glm::cross(
-            direction,
+        m_right = glm::normalize(glm::cross(
+            forward,
             {0, 1, 0}
         ));
 
         // Up
-        glm::vec3 up = glm::normalize(glm::cross(
-            right,
-            direction
+        m_up = glm::normalize(glm::cross(
+            m_right,
+            forward
         ));
 
         // Look At
         m_viewMatrix = glm::lookAt(
             m_position,
-            m_position + direction,
-            up
+            m_position + forward,
+            m_up
         );
 
     }
