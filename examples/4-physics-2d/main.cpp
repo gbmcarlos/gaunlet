@@ -12,21 +12,19 @@ public:
         auto& transform = getComponent<gaunlet::Scene::TransformComponent>();
         auto body = collider.getBody();
 
-        auto currentVelocity = body->GetLinearVelocity();
-
         float velocityX = 0.0f;
 
-        if (gaunlet::Core::Input::isKeyPressed(GE_KEY_A) && !gaunlet::Core::Input::isKeyPressed(GE_KEY_D)) {
+        if (gaunlet::Core::Input::isKeyPressed(GL_KEY_A) && !gaunlet::Core::Input::isKeyPressed(GL_KEY_D)) {
             velocityX = -targetVelocity;
-        } else if (!gaunlet::Core::Input::isKeyPressed(GE_KEY_A) && gaunlet::Core::Input::isKeyPressed(GE_KEY_D)) {
+        } else if (!gaunlet::Core::Input::isKeyPressed(GL_KEY_A) && gaunlet::Core::Input::isKeyPressed(GL_KEY_D)) {
             velocityX = targetVelocity;
         }
 
         float velocityY = 0.0f;
 
-        if (gaunlet::Core::Input::isKeyPressed(GE_KEY_S) && !gaunlet::Core::Input::isKeyPressed(GE_KEY_W)) {
+        if (gaunlet::Core::Input::isKeyPressed(GL_KEY_S) && !gaunlet::Core::Input::isKeyPressed(GL_KEY_W)) {
             velocityY = -targetVelocity;
-        } else if (!gaunlet::Core::Input::isKeyPressed(GE_KEY_S) && gaunlet::Core::Input::isKeyPressed(GE_KEY_W)) {
+        } else if (!gaunlet::Core::Input::isKeyPressed(GL_KEY_S) && gaunlet::Core::Input::isKeyPressed(GL_KEY_W)) {
             velocityY = targetVelocity;
         }
 
@@ -48,19 +46,19 @@ public:
         auto& transform = getComponent<gaunlet::Scene::TransformComponent>();
         auto body = collider.getBody();
 
-        if (gaunlet::Core::Input::isKeyPressed(GE_KEY_DOWN)) {
+        if (gaunlet::Core::Input::isKeyPressed(GL_KEY_DOWN)) {
             body->ApplyForceToCenter({0.0f, -targetImpulse}, true);
         }
 
-        if (gaunlet::Core::Input::isKeyPressed(GE_KEY_UP)) {
+        if (gaunlet::Core::Input::isKeyPressed(GL_KEY_UP)) {
             body->ApplyForceToCenter({0.0f, targetImpulse}, true);
         }
 
-        if (gaunlet::Core::Input::isKeyPressed(GE_KEY_LEFT)) {
+        if (gaunlet::Core::Input::isKeyPressed(GL_KEY_LEFT)) {
             body->ApplyForceToCenter({-targetImpulse, 0.0f}, true);
         }
 
-        if (gaunlet::Core::Input::isKeyPressed(GE_KEY_RIGHT)) {
+        if (gaunlet::Core::Input::isKeyPressed(GL_KEY_RIGHT)) {
             body->ApplyForceToCenter({targetImpulse, 0.0f}, true);
         }
 
@@ -100,7 +98,7 @@ public:
 
     bool onKeyPressEvent(gaunlet::Core::KeyPressEvent& event) {
 
-        if (event.getKey() == GE_KEY_SPACE) {
+        if (event.getKey() == GL_KEY_SPACE) {
             m_scene.togglePlay();
             return true;
         }

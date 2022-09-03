@@ -11,6 +11,7 @@ namespace gaunlet::Scene {
     public:
 
         Camera();
+        Camera(float near, float far);
 
         glm::mat4 getProjectionMatrix();
         glm::mat4 getViewMatrix();
@@ -20,10 +21,10 @@ namespace gaunlet::Scene {
         void setPosition(const glm::vec3& position);
         void move(const glm::vec3& movement);
         void moveRelative(const glm::vec3& movement);
+        void setRotation(float yaw, float pitch);
         void setYaw(float yaw);
-        void addYaw(float yawDelta);
         void setPitch(float pitch);
-        void addPitch(float pitchDelta);
+        void addRotation(float yawDelta, float pitchDelta);
         void lookAt(glm::vec3 target);
         void lookAt(const TransformComponent& transform);
 
@@ -34,6 +35,9 @@ namespace gaunlet::Scene {
     protected:
 
         float m_zoomLevel = 1.0f;
+        float m_near;
+        float m_far;
+
         glm::mat4 m_projectionMatrix;
 
         virtual void calculateProjectionMatrix() = 0;

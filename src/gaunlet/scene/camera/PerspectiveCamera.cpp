@@ -2,8 +2,14 @@
 
 namespace gaunlet::Scene {
 
-    PerspectiveCamera::PerspectiveCamera(float fieldOfView, float aspectRatio, float viewportResolution, float near, float far)
-        : Camera(), m_fieldOfView(fieldOfView), m_aspectRatio(aspectRatio), m_near(near), m_far(far) {
+    PerspectiveCamera::PerspectiveCamera()
+        : PerspectiveCamera(45.0f, 1.0f, 1.0f, 10.0f){}
+
+    PerspectiveCamera::PerspectiveCamera(float fieldOfView, float aspectRatio)
+        : PerspectiveCamera(fieldOfView, aspectRatio, 1.0f, 10.0f) {}
+
+    PerspectiveCamera::PerspectiveCamera(float fieldOfView, float aspectRatio, float near, float far)
+        : Camera(near, far), m_fieldOfView(fieldOfView), m_aspectRatio(aspectRatio) {
         PerspectiveCamera::calculateProjectionMatrix();
     }
 

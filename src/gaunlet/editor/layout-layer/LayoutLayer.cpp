@@ -124,7 +124,6 @@ namespace gaunlet::Editor {
         renderPanel.m_camera = gaunlet::Core::CreateRef<gaunlet::Scene::PerspectiveCamera>(
             45.0f,
             (float) m_window->getViewportWidth() /(float) m_window->getViewportHeight(),
-            100,
             1.0f, 100.0f
         );
         renderPanel.m_camera->setPosition({0.0f, 0.0f, 5.0f});

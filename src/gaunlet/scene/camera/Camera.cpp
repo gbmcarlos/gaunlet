@@ -4,7 +4,11 @@
 
 namespace gaunlet::Scene {
 
-    Camera::Camera() {
+    Camera::Camera()
+        : Camera(1.0f, 10.0f) {}
+
+    Camera::Camera(float near, float far)
+        : m_near(near), m_far(far) {
         calculateViewMatrix();
     }
 
@@ -40,13 +44,15 @@ namespace gaunlet::Scene {
 
     }
 
-    void Camera::setYaw(float yaw) {
+    void Camera::setRotation(float yaw, float pitch) {
         m_yaw = yaw;
+        m_pitch = constrainPitch(pitch);
         calculateViewMatrix();
     }
 
-    void Camera::addYaw(float yawDelta) {
-        setYaw(m_yaw + yawDelta);
+    void Camera::setYaw(float yaw) {
+        m_yaw = yaw;
+        calculateViewMatrix();
     }
 
     void Camera::setPitch(float pitch) {
@@ -56,8 +62,12 @@ namespace gaunlet::Scene {
 
     }
 
-    void Camera::addPitch(float pitchDelta) {
-        setPitch(m_pitch + pitchDelta);
+    void Camera::addRotation(float yawDelta, float pitchDelta) {
+
+        m_yaw = m_yaw + yawDelta;
+        m_pitch = constrainPitch(m_pitch + pitchDelta);
+        calculateViewMatrix();
+
     }
 
     void Camera::lookAt(glm::vec3 target) {

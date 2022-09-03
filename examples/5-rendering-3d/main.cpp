@@ -12,7 +12,7 @@ public:
 
     SceneLayer(float viewportWidth, float viewportHeight) {
 
-        m_camera = gaunlet::Core::CreateRef<gaunlet::Scene::PerspectiveCamera>(45.0f, (float) viewportWidth /(float) viewportHeight, 100, 1.0f, 100.0f);
+        m_camera = gaunlet::Core::CreateRef<gaunlet::Scene::PerspectiveCamera>(45.0f, (float) viewportWidth /(float) viewportHeight, 1.0f, 100.0f);
         m_camera->setPosition({0, 4, 8});
         m_camera->lookAt({0.0f, 2.0f, 0.0f});
 
