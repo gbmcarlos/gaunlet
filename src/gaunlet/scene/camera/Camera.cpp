@@ -70,6 +70,31 @@ namespace gaunlet::Scene {
 
     }
 
+    void Camera::orbit(float degreesX, float degreesY) {
+
+        glm::vec3 pivot = {0, 0, 0};
+
+        rotate(pivot, degreesX, degreesY);
+        lookAt(pivot);
+
+    }
+
+    void Camera::orbit(float radius, float degreesX, float degreesY) {
+
+        glm::vec3 pivot = m_position + (m_forward * radius);
+        rotate(pivot, degreesX, degreesY);
+        lookAt(pivot);
+
+    }
+
+    void Camera::orbit(TransformComponent origin, float degreesX, float degreesY) {
+
+        glm::vec3 pivot = origin.m_translation;
+        rotate(pivot, degreesX, degreesY);
+        lookAt(pivot);
+
+    }
+
     void Camera::lookAt(glm::vec3 target) {
 
         // If we're trying to look straight up or straight down, move the target slight forward
@@ -111,6 +136,17 @@ namespace gaunlet::Scene {
         } else {
             return pitch;
         }
+
+    }
+
+    void Camera::rotate(glm::vec3 pivot, float degreesX, float degreesY) {
+
+        auto translation1 = glm::translate(glm::mat4(1), -pivot); // Move the pivot to the center
+        auto rotationX = glm::rotate(glm::mat4(1), glm::radians(degreesX), {1, 0, 0}); // Rotate it
+        auto rotationY = glm::rotate(glm::mat4(1), glm::radians(degreesY), {0, 1, 0}); // Rotate it
+        auto translation2 = glm::translate(glm::mat4(1), pivot); // Move it back
+
+        m_position = glm::vec3(translation1 * rotationX * rotationY * translation2 * glm::vec4(m_position, 1));
 
     }
 

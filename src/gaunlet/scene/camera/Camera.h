@@ -21,10 +21,16 @@ namespace gaunlet::Scene {
         void setPosition(const glm::vec3& position);
         void move(const glm::vec3& movement);
         void moveRelative(const glm::vec3& movement);
+
         void setRotation(float yaw, float pitch);
         void setYaw(float yaw);
         void setPitch(float pitch);
         void addRotation(float yawDelta, float pitchDelta);
+
+        void orbit(float degreesX, float degreesY);
+        void orbit(float radius, float degreesX, float degreesY);
+        void orbit(TransformComponent origin, float degreesX, float degreesY);
+
         void lookAt(glm::vec3 target);
         void lookAt(const TransformComponent& transform);
 
@@ -55,6 +61,7 @@ namespace gaunlet::Scene {
         glm::vec3 m_forward = {0, 0, 1}; // Pointing toward the camera
 
         float constrainPitch(float pitch);
+        void rotate(glm::vec3 pivot, float degreesX, float degreesY);
         void reverseViewMatrix();
         void calculateViewMatrix();
 
