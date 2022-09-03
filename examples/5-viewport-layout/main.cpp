@@ -48,7 +48,7 @@ private:
 class ViewportLayoutApplication : public gaunlet::Core::Application {
 
 public:
-    explicit ViewportLayoutApplication(const std::string &name) : gaunlet::Core::Application(name) {}
+    explicit ViewportLayoutApplication() : gaunlet::Core::Application() {}
 
     void onReady() override {
 
@@ -98,10 +98,11 @@ private:
 
 int main() {
 
-    ViewportLayoutApplication app("Viewport Layout");
-    gaunlet::Core::RunLoop runLoop(app);
+    auto window = gaunlet::Core::CreateRef<gaunlet::Core::Window>("Viewport Layout");
+    gaunlet::Core::RunLoop runLoop(window);
+    ViewportLayoutApplication app;
 
-    runLoop.run();
+    runLoop.run(app);
 
     return 0;
 

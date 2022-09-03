@@ -9,11 +9,11 @@ namespace gaunlet::Core {
     class RunLoop {
 
     public:
-        RunLoop(Application& application);
-        void run();
+        RunLoop(const Core::Ref<Core::Window>& window);
+        void run(Application& application);
 
     private:
-        Application& m_application;
+        Core::Ref<Core::Window> m_window;
 
     };
 

@@ -2,10 +2,11 @@
 
 int main() {
 
-    gaunlet::Core::Application app("Empty Screen");
-    gaunlet::Core::RunLoop runLoop(app);
+    auto window = gaunlet::Core::CreateRef<gaunlet::Core::Window>("Empty Screen");
+    gaunlet::Core::RunLoop runLoop(window);
+    gaunlet::Core::Application app;
 
-    runLoop.run();
+    runLoop.run(app);
 
     return 0;
 

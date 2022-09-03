@@ -11,19 +11,9 @@ namespace gaunlet::Scene {
 
     Scene::~Scene() {
         destroyScripts();
-        m_physicsWorld->destroyPhysics();
-    }
-
-    const Core::Ref<PhysicsWorld>& Scene::enablePhysics(glm::vec2 gravity) {
-        m_physicsWorld = Core::CreateRef<PhysicsWorld>(gravity);
-        return m_physicsWorld;
     }
 
     void Scene::start() {
-
-        if (m_physicsWorld) {
-            initPhysics();
-        }
 
         initScripts();
 
@@ -46,12 +36,7 @@ namespace gaunlet::Scene {
     void Scene::update(Core::TimeStep timeStep) {
 
         if (m_playing) {
-
             runScripts(timeStep);
-            if (m_physicsWorld) {
-                simulatePhysics(timeStep);
-            }
-
         }
 
     }
@@ -73,46 +58,6 @@ namespace gaunlet::Scene {
     }
 
     void Scene::stop() {}
-
-    void Scene::initPhysics() {
-
-        auto group = m_registry.m_registry.group<RigidBodyComponent>(entt::get<TransformComponent>);
-        for (auto e : group) {
-
-            Entity entity = {e, &m_registry};
-
-            auto [rigidBody, transform] = group.get<RigidBodyComponent, TransformComponent>(e);
-            m_physicsWorld->createRigidBody(rigidBody, transform);
-
-            if (entity.hasComponent<BoxColliderComponent>()) {
-                auto& boxCollider = entity.getComponent<BoxColliderComponent>();
-                m_physicsWorld->createBoxFixture(rigidBody.m_runtimeBody, boxCollider, transform);
-            }
-
-            if (entity.hasComponent<CircleColliderComponent>()) {
-                auto& circleCollider = entity.getComponent<CircleColliderComponent>();
-                m_physicsWorld->createCircleFixture(rigidBody.m_runtimeBody, circleCollider, transform);
-            }
-
-        }
-
-    }
-
-    void Scene::simulatePhysics(Core::TimeStep timeStep) {
-
-        m_physicsWorld->simulatePhysics(timeStep);
-
-        auto group = m_registry.m_registry.group<RigidBodyComponent>(entt::get<TransformComponent>);
-        for (auto e : group) {
-
-            Entity entity = {e, &m_registry};
-            auto [rigidBody, transform] = group.get<RigidBodyComponent, TransformComponent>(e);
-
-            m_physicsWorld->updateBody(rigidBody, transform);
-
-        }
-
-    }
 
     void Scene::initScripts() {
 

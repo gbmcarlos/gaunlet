@@ -3,8 +3,6 @@ add_library(gaunlet STATIC
 #        Core
         gaunlet/core/event/EventBus.cpp
         gaunlet/core/window/Window.cpp
-        gaunlet/core/application/Layer.cpp
-        gaunlet/core/application/LayerStack.cpp
         gaunlet/core/application/Application.cpp
         gaunlet/core/render/RenderApi.cpp
         gaunlet/core/render/opengl/OpenGLRenderAPI.cpp
@@ -30,7 +28,6 @@ add_library(gaunlet STATIC
         gaunlet/scene/camera/Camera.cpp
         gaunlet/scene/camera/OrthographicCamera.cpp
         gaunlet/scene/camera/PerspectiveCamera.cpp
-        gaunlet/scene/physics/PhysicsWorld.cpp
         gaunlet/scene/Scene.cpp
         gaunlet/scene/entity/Entity.cpp
 

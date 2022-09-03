@@ -4,7 +4,6 @@
 
 // Application
 #include "gaunlet/core/application/Application.h"
-#include "gaunlet/core/application/Layer.h"
 
 // Events
 #include "gaunlet/core/event/Event.h" // Doesn't depend on anything

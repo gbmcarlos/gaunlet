@@ -1,17 +1,17 @@
 #include "../include/Scene.h"
 
-class SceneLayer : public gaunlet::Core::Layer {
-
-private:
-
-    gaunlet::Scene::Scene m_mainScene;
-    gaunlet::Core::Ref<gaunlet::Scene::OrthographicCamera> m_camera;
+class Rendering2DApplication : public gaunlet::Core::Application {
 
 public:
 
-    SceneLayer(int viewportWidth, int viewportHeight) {
+    explicit Rendering2DApplication() : gaunlet::Core::Application() {}
 
-        m_camera = gaunlet::Core::CreateRef<gaunlet::Scene::OrthographicCamera>((float) viewportWidth, (float) viewportHeight, 100);
+    void onReady() override {
+
+        float viewportWidth = (float) gaunlet::Core::Window::getCurrentInstance()->getViewportWidth();
+        float viewportHeight = (float) gaunlet::Core::Window::getCurrentInstance()->getViewportHeight();
+
+        m_camera = gaunlet::Core::CreateRef<gaunlet::Scene::OrthographicCamera>(viewportWidth, viewportHeight, 100);
         m_camera->setPosition({0, 0, 1});
 
         gaunlet::Core::Ref<gaunlet::Graphics::TextureImage2D> texture1 = gaunlet::Core::CreateRef<gaunlet::Graphics::TextureImage2D>("assets/texture-1.jpeg");
@@ -118,30 +118,19 @@ public:
         m_mainScene.render(gaunlet::Scene::RenderMode::Faces, m_camera, gaunlet::Scene::DirectionalLightComponent());
     }
 
-};
-
-
-class Rendering2DApplication : public gaunlet::Core::Application {
-
-public:
-    explicit Rendering2DApplication(const std::string &name) : gaunlet::Core::Application(name) {}
-
-    void onReady() override {
-        m_sceneLayer = new SceneLayer(m_window->getViewportWidth(), m_window->getViewportHeight());
-        pushLayer(m_sceneLayer);
-    }
-
 private:
-    SceneLayer* m_sceneLayer = nullptr;
+    gaunlet::Scene::Scene m_mainScene;
+    gaunlet::Core::Ref<gaunlet::Scene::OrthographicCamera> m_camera;
 
 };
 
 int main() {
 
-    Rendering2DApplication app("Rendering 2D");
-    gaunlet::Core::RunLoop runLoop(app);
+    auto window = gaunlet::Core::CreateRef<gaunlet::Core::Window>("Rendering 2D");
+    gaunlet::Core::RunLoop runLoop(window);
+    Rendering2DApplication app;
 
-    runLoop.run();
+    runLoop.run(app);
 
     return 0;
 

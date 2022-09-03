@@ -3,7 +3,7 @@
 class RenderTriangleApplication : public gaunlet::Core::Application {
 
 public:
-    explicit RenderTriangleApplication(const std::string& name) : gaunlet::Core::Application(name){}
+    explicit RenderTriangleApplication() : gaunlet::Core::Application() {}
 
     gaunlet::Core::Ref<gaunlet::Graphics::VertexArray> m_vertexArray;
     gaunlet::Core::Ref<gaunlet::Graphics::VertexBuffer> m_vertexBuffer;
@@ -80,9 +80,11 @@ public:
 
 int main() {
 
-    RenderTriangleApplication app("Render Triangle");
-    gaunlet::Core::RunLoop runLoop(app);
-    runLoop.run();
+    auto window = gaunlet::Core::CreateRef<gaunlet::Core::Window>("Render Triangle");
+    gaunlet::Core::RunLoop runLoop(window);
+    RenderTriangleApplication app;
+
+    runLoop.run(app);
 
     return 0;
 

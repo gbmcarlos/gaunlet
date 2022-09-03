@@ -5,54 +5,44 @@
 
 namespace gaunlet::Core {
 
-    RunLoop::RunLoop(Application& application)
-        : m_application(application) {
-
-        GL_PROFILE_BEGIN_SESSION("main", ASSETS_PATH"/result.json")
-
-        GL_PROFILE_SCOPE("init");
+    RunLoop::RunLoop(const Core::Ref<Core::Window>& window)
+        : m_window(window) {
 
         RenderCommand::init();
-
-        ImGuiRenderApi::init(m_application.getWindow()->getContext());
+        ImGuiRenderApi::init(window->getContext());
 
     }
 
-    void RunLoop::run() {
+    void RunLoop::run(Application& application) {
 
-        m_application.onReady();
+        application.onReady();
 
         float lastFrameTime = 0;
 
-        // Start the main loop
-        while (m_application.isRunning()) {
-
-            GL_PROFILE_SCOPE("loop");
+        while (application.isRunning()) {
 
             float time = (float) glfwGetTime();
             TimeStep ts(time - lastFrameTime);
             lastFrameTime = time;
 
-            m_application.getWindow()->pollEvents();
+            m_window->pollEvents();
 
             // Delegate the update to the m_application
-            m_application.onUpdate(ts);
+            application.onUpdate(ts);
 
             // Start ImGUI rendering
             ImGuiRenderApi::newFrame();
             // Delegate the GUI to the application
-            m_application.onGuiRender();
+            application.onGuiRender();
 
             ImGuiRenderApi::render();
 
-            m_application.getWindow()->swap();
+            m_window->swap();
 
         }
 
         ImGuiRenderApi::shutdown();
-        m_application.getWindow()->close();
-
-        GL_PROFILE_END_SESSION();
+        m_window->close();
 
     }
 
