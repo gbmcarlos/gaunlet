@@ -2,50 +2,24 @@
 
 #include "gaunlet/editor/Tags.h"
 #include "gaunlet/core/window/Window.h"
+#include "gaunlet/editor/workspace/Workspace.h"
 
 namespace gaunlet::Editor {
 
-    void RenderPanel::selectSceneEntity(Scene::Entity entity) {
+    RenderPanel::RenderPanel() {
 
-        bool changed = false;
+        auto window = Core::Window::getCurrentInstance();
 
-        if (m_selectedSceneEntity != entity) {
-            changed = true;
-        }
-
-        m_selectedSceneEntity = entity;
-
-        if (changed && m_sceneSelectionCallback) {
-            m_sceneSelectionCallback(entity);
-        }
+        m_framebuffer = gaunlet::Core::CreateRef<gaunlet::Graphics::Framebuffer>(std::initializer_list<gaunlet::Graphics::FramebufferAttachmentSpec>{
+            {gaunlet::Core::FramebufferAttachmentType::Color, gaunlet::Graphics::FramebufferDataFormat::RGBA, glm::vec4(0.0f, 0.0f, 0.0f, 0.0f)},
+            {gaunlet::Core::FramebufferAttachmentType::Color, gaunlet::Graphics::FramebufferDataFormat::Integer, -1},
+            {gaunlet::Core::FramebufferAttachmentType::Color, gaunlet::Graphics::FramebufferDataFormat::Integer, -1},
+            {gaunlet::Core::FramebufferAttachmentType::Depth, gaunlet::Graphics::FramebufferDataFormat::Depth}
+        }, window->getViewportWidth() * window->getDPI(), window->getViewportHeight() * window->getDPI());
 
     }
 
-    void RenderPanel::selectUIEntity(Scene::Entity entity) {
-
-        bool changed = false;
-
-        if (m_selectedUIEntity != entity) {
-            changed = true;
-        }
-
-        m_selectedUIEntity = entity;
-
-        if (changed && m_uiSelectionCallback) {
-            m_uiSelectionCallback(entity);
-        }
-
-    }
-
-    void RenderPanel::setSceneSelectionCallback(const std::function<void(Scene::Entity &)> &callback) {
-        m_sceneSelectionCallback = callback;
-    }
-
-    void RenderPanel::setUISelectionCallback(const std::function<void(Scene::Entity &)> &callback) {
-        m_uiSelectionCallback = callback;
-    }
-
-    void RenderPanel::onUpdate(gaunlet::Core::TimeStep) {
+    void RenderPanel::onUpdate(Core::TimeStep timeStep) {
 
         m_framebuffer->bind();
 
@@ -58,7 +32,11 @@ namespace gaunlet::Editor {
         m_framebuffer->clear();
 
         // Render the scene entities
-        m_scene.renderTagged<SceneEntityTag>(m_renderMode, m_camera, m_directionalLight);
+        getWorkspace()->getScene(m_sceneId)->renderTagged<SceneEntityTag>(
+            m_renderMode,
+            getWorkspace()->getCamera(m_cameraId),
+            getWorkspace()->getDirectionalLight(m_directionalLightId)
+        );
 
         // Then clear just the depth buffer, and switch the 2 entity id buffers
         m_framebuffer->clearDepthAttachment();
@@ -69,10 +47,31 @@ namespace gaunlet::Editor {
         });
 
         // And render the UI entities
-        m_scene.renderTagged<UIEntityTag>(m_renderMode, m_camera, Scene::DirectionalLightComponent());
+        getWorkspace()->getScene(m_sceneId)->renderTagged<UIEntityTag>(
+            m_renderMode,
+            getWorkspace()->getCamera(m_cameraId),
+            Scene::DirectionalLightComponent()
+        );
 
         m_framebuffer->unbind();
 
+    }
+
+    void RenderPanel::resize() {
+
+        getWorkspace()->getCamera(m_cameraId)->resize(
+            getNodeWidth(),
+            getNodeHeight()
+        );
+        m_framebuffer->resize(
+            getNodeWidth() * Core::Window::getCurrentInstance()->getDPI(),
+            getNodeHeight() * Core::Window::getCurrentInstance()->getDPI()
+        );
+
+    }
+
+    const Core::Ref<Graphics::Texture>& RenderPanel::getRenderedTexture() {
+        return m_framebuffer->getColorAttachment(RenderPanel::SceneFramebufferAttachmentIndex);
     }
 
     void RenderPanel::mousePickEntity(unsigned int mousePositionX, unsigned int mousePositionY) {
@@ -83,13 +82,13 @@ namespace gaunlet::Editor {
         Scene::Entity selectedUIEntity = {};
         Scene::Entity selectedSceneEntity = {};
 
-        int selectedUIEntityId = getFramebuffer()->readPixel(
+        int selectedUIEntityId = m_framebuffer->readPixel(
             gaunlet::Editor::RenderPanel::UIEntityIdFramebufferAttachmentIndex,
             pixelPositionX,
             pixelPositionY
         );
 
-        selectedUIEntity = Scene::Entity(selectedUIEntityId, &m_scene.getRegistry());
+        selectedUIEntity = Scene::Entity(selectedUIEntityId, &getWorkspace()->getScene(m_sceneId)->getRegistry());
 
         // If there's a selected UI entity, look for the scene entity (the UI's parent)
         if (selectedUIEntity) {
@@ -98,18 +97,18 @@ namespace gaunlet::Editor {
 
         } else {
 
-            int selectedSceneEntityId = getFramebuffer()->readPixel(
+            int selectedSceneEntityId = m_framebuffer->readPixel(
                 gaunlet::Editor::RenderPanel::SceneEntityIdFramebufferAttachmentIndex,
                 pixelPositionX,
                 pixelPositionY
             );
 
-            selectedSceneEntity = Scene::Entity(selectedSceneEntityId, &m_scene.getRegistry());
+            selectedSceneEntity = Scene::Entity(selectedSceneEntityId, &getWorkspace()->getScene(m_sceneId)->getRegistry());
 
         }
 
-        selectSceneEntity(selectedSceneEntity);
-        selectUIEntity(selectedUIEntity);
+        getWorkspace()->selectSceneEntity(selectedSceneEntity);
+        getWorkspace()->selectUiEntity(selectedUIEntity);
 
     }
 

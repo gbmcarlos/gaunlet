@@ -4,11 +4,11 @@
 
 namespace gaunlet::Editor {
 
-    class LayoutLayer;
+    class Workspace;
 
     class Panel {
 
-        friend LayoutLayer;
+        friend Workspace;
 
     public:
 
@@ -20,7 +20,11 @@ namespace gaunlet::Editor {
         inline unsigned int getNodeHeight() const {return m_nodeHeight; }
         inline float getNodeAspectRatio() const {return ((float) m_nodeWidth) / ((float) m_nodeHeight); }
 
+    protected:
+        inline Workspace* getWorkspace() const {return m_workspace; }
+
     private:
+        Workspace* m_workspace = nullptr;
         unsigned int m_nodeWidth = 0, m_nodeHeight = 0;
         bool m_isHovered = false;
         unsigned int m_mousePositionX = 0, m_mousePositionY = 0, m_mousePositionYInverted = 0;

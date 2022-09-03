@@ -18,8 +18,6 @@ class SettingsPanel : public gaunlet::Editor::GuiPanel {
 
 public:
 
-    explicit SettingsPanel(gaunlet::Editor::RenderPanel* renderPanel) : m_renderPanel(renderPanel) {}
-
     void onGuiRender() override {
 
         ImGui::Text("Window size: %d %d", getNodeWidth(), getNodeHeight());
@@ -32,16 +30,15 @@ public:
 
         ImGui::Text("Scene layer:");
 
-        if (m_renderPanel->isHovered()) {
-            ImGui::Text("%d %d", m_renderPanel->getMousePositionX(), m_renderPanel->getMousePositionYInverted());
+        auto renderPanel = getWorkspace()->getRenderPanel("main");
+
+        if (renderPanel->isHovered()) {
+            ImGui::Text("%d %d", renderPanel->getMousePositionX(), renderPanel->getMousePositionYInverted());
         } else {
             ImGui::NewLine();
         }
 
     }
-
-private:
-    gaunlet::Editor::RenderPanel* m_renderPanel = nullptr;
 
 };
 
@@ -52,23 +49,48 @@ public:
 
     void onReady() override {
 
-        // Create and set up the layer that will show the different dock nodes
-        m_editorLayer = new gaunlet::Editor::LayoutLayer(m_window);
-        m_editorLayer->setLayoutSpec({
-{
-                    {gaunlet::Editor::DockSpacePosition::Left, 0.25f,  {"Settings"}},
-                    {gaunlet::Editor::DockSpacePosition::Center, 0.0f,  {"Scene"}, ImGuiDockNodeFlags_NoTabBar},
-                    {gaunlet::Editor::DockSpacePosition::Right, 0.3f,  {"Tools"}},
-               }, m_window->getViewportWidth(), m_window->getViewportHeight()
+        auto window = gaunlet::Core::Window::getCurrentInstance();
+        unsigned int viewportWidth = window->getViewportWidth();
+        unsigned int viewportHeight = window->getViewportHeight();
+
+        m_workspace = new gaunlet::Editor::Workspace();
+
+        // Set the docking layout
+        m_workspace->setLayoutSpec({
+            {
+                {gaunlet::Editor::DockSpacePosition::Left, 0.25f,  {"Settings"}},
+                {gaunlet::Editor::DockSpacePosition::Center, 0.0f,  {"Scene"}, ImGuiDockNodeFlags_NoTabBar},
+                {gaunlet::Editor::DockSpacePosition::Right, 0.3f,  {"Tools"}},
+            }, viewportWidth, viewportHeight
         });
 
-        auto* scenePanel = new gaunlet::Editor::RenderPanel();
+        // Create and push the GUI panels
+        m_workspace->pushPanel("settings", new SettingsPanel(), "Settings");
+        m_workspace->pushPanel("tools", new ToolsPanel, "Tools");
 
-        m_editorLayer->pushPanel("Settings", new SettingsPanel(scenePanel));
-        m_editorLayer->pushPanel("Tools", new ToolsPanel);
-        m_editorLayer->pushPanel("Scene", scenePanel);
+        // Prepare the components of the main render panel
+        m_workspace->addCamera("main", gaunlet::Core::CreateRef<gaunlet::Scene::PerspectiveCamera>(45.0f, (float) viewportWidth / (float) viewportHeight, 1.0f, 100.0f));
+        m_workspace->addScene("main", gaunlet::Core::CreateRef<gaunlet::Scene::Scene>());
+        m_workspace->addDirectionalLight("main", gaunlet::Scene::DirectionalLightComponent());
 
-        auto triangle = scenePanel->getScene().getRegistry().createTaggedEntity<gaunlet::Editor::SceneEntityTag>();
+        // Create and push the main render panel, referencing the main components
+        m_workspace->pushPanel(
+            "main",
+            new gaunlet::Editor::RenderPanel(),
+            "Scene",
+            "main",
+            "main",
+            "main",
+            gaunlet::Scene::RenderMode::Faces
+        );
+
+        // Prepare the scene
+        auto& mainScene = m_workspace->getScene("main");
+        auto& mainCamera = m_workspace->getCamera("main");
+        mainCamera->setPosition({0.0f, 0.0f, 5.0f});
+        mainCamera->setZoomLevel(1.5f);
+
+        auto triangle = mainScene->getRegistry().createTaggedEntity<gaunlet::Editor::SceneEntityTag>();
         triangle.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Triangle2DModel());
         triangle.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(-1.5f, 0.0f, 0.0f),
@@ -77,7 +99,7 @@ public:
         );
         triangle.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
-        auto circle = scenePanel->getScene().getRegistry().createTaggedEntity<gaunlet::Editor::SceneEntityTag>();
+        auto circle = mainScene->getRegistry().createTaggedEntity<gaunlet::Editor::SceneEntityTag>();
         circle.addComponent<gaunlet::Scene::CircleComponent>(0.3f, 0.01f);
         circle.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(1.5f, 0.0f, 0.0f),
@@ -86,13 +108,18 @@ public:
         );
         circle.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(0.0f, 0.0f, 0.8f, 1.0f));
 
-        scenePanel->startScene();
+    }
 
-        pushLayer(m_editorLayer);
+    void onUpdate(gaunlet::Core::TimeStep timeStep) override {
+        m_workspace->update(timeStep);
+    }
+
+    void onGuiRender() override {
+        m_workspace->render();
     }
 
 private:
-    gaunlet::Editor::LayoutLayer* m_editorLayer = nullptr;
+    gaunlet::Editor::Workspace* m_workspace = nullptr;
 
 };
 

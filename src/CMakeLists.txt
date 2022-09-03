@@ -33,7 +33,7 @@ add_library(gaunlet STATIC
 
 #        Layout
         gaunlet/editor/docking/DockingLayout.cpp
-        gaunlet/editor/layout-layer/LayoutLayer.cpp
+        gaunlet/editor/workspace/Workspace.cpp
         gaunlet/editor/panel/RenderPanel.cpp
         gaunlet/editor/gizmos/TranslationGizmo.cpp
 

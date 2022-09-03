@@ -4,9 +4,7 @@
 #include "gaunlet/graphics/framebuffer/Framebuffer.h"
 #include "gaunlet/scene/camera/OrthographicCamera.h"
 #include "gaunlet/scene/components/GraphicsComponents.h"
-#include "gaunlet/scene/components/PhysicsComponents.h"
 #include "gaunlet/scene/components/LightingComponents.h"
-#include "gaunlet/scene/physics/PhysicsWorld.h"
 #include "gaunlet/scene/deferred-renderer/DeferredRenderer.h"
 #include "gaunlet/core/render/RenderCommand.h"
 #include "gaunlet/scene/entity/Entity.h"
@@ -20,7 +18,6 @@ namespace gaunlet::Scene {
         ~Scene();
 
         Registry& getRegistry() {return m_registry; }
-        const Core::Ref<PhysicsWorld>& enablePhysics(glm::vec2 gravity);
         void start();
         void play();
         void pause();
@@ -38,10 +35,6 @@ namespace gaunlet::Scene {
 
         bool m_playing = false;
         Registry m_registry;
-        Core::Ref<PhysicsWorld> m_physicsWorld = nullptr;
-
-        void initPhysics();
-        void simulatePhysics(Core::TimeStep timeStep);
 
         void initScripts();
         void runScripts(Core::TimeStep e);
