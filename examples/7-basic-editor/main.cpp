@@ -1,14 +1,90 @@
 #include "../include/Editor.h"
 
-class ToolsPanel : public gaunlet::Editor::GuiPanel {
+class FPCameraController {
 
-    void onGuiRender() override {
+public:
 
-        ImGui::Text("Window size: %d %d", getNodeWidth(), getNodeHeight());
+    enum class State {
+        Idle, Moving
+    };
 
-        if (isHovered()) {
-            ImGui::Text("%d %d", getMousePositionX(), getMousePositionY());
+    State m_state = State::Idle;
+    glm::vec2 m_initialPosition = {};
+    glm::vec2 m_finalPosition = {};
+    gaunlet::Core::Ref<gaunlet::Scene::Camera> m_camera;
+
+    bool onEvent(gaunlet::Core::Event &event) {
+
+        gaunlet::Core::EventDispatcher dispatcher(event);
+        dispatcher.dispatch<gaunlet::Core::MouseButtonPress>(GL_BIND_CALLBACK_FN(FPCameraController::onMousePressEvent));
+        dispatcher.dispatch<gaunlet::Core::MouseButtonRelease>(GL_BIND_CALLBACK_FN(FPCameraController::onMouseReleaseEvent));
+        dispatcher.dispatch<gaunlet::Core::CursorMoveEvent>(GL_BIND_CALLBACK_FN(FPCameraController::onCursorMoveEvent));
+
+        return true;
+
+    }
+
+protected:
+
+    bool onMousePressEvent(gaunlet::Core::MouseButtonPress& event) {
+
+        m_state = State::Moving;
+
+        m_initialPosition = {
+            gaunlet::Core::Input::getMousePositionX(),
+            gaunlet::Core::Input::getMousePositionY()
+        };
+
+        return true;
+    }
+
+    bool onMouseReleaseEvent(gaunlet::Core::MouseButtonRelease& event) {
+
+        m_state = State::Idle;
+
+        return true;
+    }
+
+    bool onCursorMoveEvent(gaunlet::Core::CursorMoveEvent& event) {
+
+        if (m_state != State::Moving || m_camera == nullptr) {
+            return true;
         }
+
+        glm::vec2 currentPosition = {
+            gaunlet::Core::Input::getMousePositionX(),
+            gaunlet::Core::Input::getMousePositionY()
+        };
+
+        glm::vec2 delta = m_initialPosition - currentPosition;
+
+        // Alt (aka "option"): rotate
+        if (gaunlet::Core::Input::isKeyPressed(GL_KEY_LEFT_ALT) || gaunlet::Core::Input::isKeyPressed(GL_KEY_RIGHT_ALT)) {
+
+            m_camera->addRotation(
+                delta.x / 10,
+                -delta.y / 10
+            );
+
+        // Shift: orbit
+        } else if (gaunlet::Core::Input::isKeyPressed(GL_KEY_LEFT_SHIFT) || gaunlet::Core::Input::isKeyPressed(GL_KEY_RIGHT_SHIFT)) {
+
+            m_camera->orbit(
+                -delta.y / 10, // Moving the mouse vertically, rotates around the X axis
+                -delta.x / 10 // Moving the mouse horizontally, rotates around the Y axis
+            );
+
+        } else {
+            m_camera->moveRelative({
+                delta.x / 50,
+                -delta.y / 50,
+                0
+            });
+        }
+
+        m_initialPosition = currentPosition;
+
+        return true;
 
     }
 
@@ -18,24 +94,15 @@ class ScenePanel : public gaunlet::Editor::RenderPanel {
 
 public:
 
-    bool onEvent(gaunlet::Core::Event &event) override {
+    FPCameraController m_cameraController;
 
-        gaunlet::Core::EventDispatcher dispatcher(event);
-        dispatcher.dispatch<gaunlet::Core::MouseButtonPress>(GE_BIND_CALLBACK_FN(ScenePanel::onMouseButtonPressEvent));
-        return true;
-
+    void onReady() override {
+        m_cameraController.m_camera = getCamera();
     }
 
-private:
+    bool onEvent(gaunlet::Core::Event &event) override {
 
-    bool onMouseButtonPressEvent(gaunlet::Core::MouseButtonPress& event) {
-
-        mousePickEntity(
-            getMousePositionX(),
-            getMousePositionYInverted()
-        );
-
-        return true;
+        return m_cameraController.onEvent(event);
 
     }
 
@@ -45,13 +112,7 @@ class SettingsPanel : public gaunlet::Editor::GuiPanel {
 
 public:
 
-    gaunlet::Scene::Entity m_selectedSceneEntity;
-    gaunlet::Scene::Entity m_selectedUIEntity;
-
-    explicit SettingsPanel(ScenePanel* scenePanel) : m_scenePanel(scenePanel) {
-        m_scenePanel->setSceneSelectionCallback(GE_BIND_CALLBACK_FN(SettingsPanel::onSceneSelection));
-        m_scenePanel->setUISelectionCallback(GE_BIND_CALLBACK_FN(SettingsPanel::onUISelection));
-    }
+    explicit SettingsPanel(ScenePanel* scenePanel) : m_scenePanel(scenePanel) {}
 
     void onGuiRender() override {
 
@@ -71,51 +132,18 @@ public:
             ImGui::NewLine();
         }
 
-        ImGui::Text("Selected Scene Entity:");
-
-        if (m_selectedSceneEntity) {
-            ImGui::Text("%d", m_selectedSceneEntity.getId());
-        } else {
-            ImGui::NewLine();
-        }
-
-        ImGui::Text("Selected UI Entity:");
-
-        if (m_selectedUIEntity) {
-            ImGui::Text("%d", m_selectedUIEntity.getId());
-        } else {
-            ImGui::NewLine();
+        ImGui::Text("Camera control state: ");
+        if (m_scenePanel->m_cameraController.m_state == FPCameraController::State::Idle) {
+            ImGui::Text("Idle");
+        } else if (m_scenePanel->m_cameraController.m_state == FPCameraController::State::Moving) {
+            ImGui::Text("Moving");
         }
 
     }
 
-    void onSceneSelection(gaunlet::Scene::Entity entity) {
-
-        // If we had an entity selected, and there was a gizmo, remove
-        if (m_selectedSceneEntity && m_gizmoEntity) {
-            m_selectedSceneEntity.destroyChild(m_gizmoEntity);
-        }
-
-        m_selectedSceneEntity = entity;
-
-        // If we have an entity, add the gizmo
-        if (m_selectedSceneEntity) {
-            m_gizmoEntity = gaunlet::Editor::TranslationGizmo::create(m_scenePanel->getScene().getRegistry());
-            m_selectedSceneEntity.addChild(m_gizmoEntity);
-            m_selectedUIEntity = m_gizmoEntity;
-        } else {
-            m_selectedUIEntity = gaunlet::Scene::Entity();
-        }
-
-    }
-
-    void onUISelection(gaunlet::Scene::Entity entity) {
-        m_selectedUIEntity = entity;
-    }
 
 private:
     ScenePanel* m_scenePanel = nullptr;
-    gaunlet::Scene::Entity m_gizmoEntity;
 
 };
 
@@ -132,14 +160,12 @@ public:
 {
                     {gaunlet::Editor::DockSpacePosition::Left, 0.25f,  {"Settings"}},
                     {gaunlet::Editor::DockSpacePosition::Center, 0.0f,  {"Scene"}, ImGuiDockNodeFlags_NoTabBar},
-                    {gaunlet::Editor::DockSpacePosition::Right, 0.3f,  {"Tools"}},
                }, m_window->getViewportWidth(), m_window->getViewportHeight()
         });
 
         auto* scenePanel = new ScenePanel();
 
         m_editorLayer->pushPanel("Settings", new SettingsPanel(scenePanel));
-        m_editorLayer->pushPanel("Tools", new ToolsPanel);
         m_editorLayer->pushPanel("Scene", scenePanel);
 
         scenePanel->getCamera()->setPosition({0.0f, 4.0f, 6.0f});

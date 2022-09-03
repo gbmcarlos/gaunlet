@@ -142,6 +142,8 @@ namespace gaunlet::Editor {
             0.2f, 0.5f
         );
 
+        renderPanel.onReady();
+
     }
 
     void LayoutLayer::updateNodeProperties(Panel *node) {

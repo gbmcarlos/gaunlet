@@ -16,6 +16,8 @@ namespace gaunlet::Editor {
 
     public:
 
+        virtual void onReady() {}
+
         static const unsigned int SceneFramebufferAttachmentIndex = 0;
         static const unsigned int SceneEntityIdFramebufferAttachmentIndex = 1;
         static const unsigned int UIEntityIdFramebufferAttachmentIndex = 2;
