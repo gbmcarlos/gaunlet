@@ -3,10 +3,10 @@
 namespace gaunlet::Scene {
 
     OrthographicCamera::OrthographicCamera()
-        : OrthographicCamera(2.0f, 2.0f, 100.0f, 1.0f, 10.0f) {}
+        : OrthographicCamera(2.0f, 2.0f, 100.0f, 0.0f, 10.0f) {}
 
     OrthographicCamera::OrthographicCamera(unsigned int viewportWidth, unsigned int viewportHeight, float viewportResolution)
-        : OrthographicCamera(viewportWidth, viewportHeight, viewportResolution, 1.0f, 10.0f) {}
+        : OrthographicCamera(viewportWidth, viewportHeight, viewportResolution, 0.0f, 10.0f) {}
 
     OrthographicCamera::OrthographicCamera(unsigned int viewportWidth, unsigned int viewportHeight, float viewportResolution, float near, float far)
         : Camera(near, far), m_viewportWidth(viewportWidth), m_viewportHeight(viewportHeight), m_viewportResolution(viewportResolution) {
