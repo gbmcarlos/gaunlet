@@ -2,8 +2,6 @@
 
 #include "Graphics.h"
 
-#include <box2d/box2d.h> // Expose box2d to the client
-
 #include "gaunlet/scene/deferred-renderer/DeferredRenderer.h" // Depends on Graphics and GraphicsComponents
 #include "gaunlet/scene/Scene.h" // Depends on ENTT
 
