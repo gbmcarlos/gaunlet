@@ -4,7 +4,7 @@ class ToolsPanel : public gaunlet::Editor::GuiPanel {
 
     void onGuiRender() override {
 
-        ImGui::Text("Window size: %d %d", getNodeWidth(), getNodeHeight());
+        ImGui::Text("Window size: %d %d", getWidth(), getHeight());
 
         if (isHovered()) {
             ImGui::Text("%d %d", getMousePositionX(), getMousePositionY());
@@ -20,7 +20,7 @@ public:
 
     void onGuiRender() override {
 
-        ImGui::Text("Window size: %d %d", getNodeWidth(), getNodeHeight());
+        ImGui::Text("Window size: %d %d", getWidth(), getHeight());
 
         if (isHovered()) {
             ImGui::Text("%d %d", getMousePositionX(), getMousePositionY());

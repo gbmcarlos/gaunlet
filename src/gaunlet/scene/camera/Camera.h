@@ -10,18 +10,28 @@ namespace gaunlet::Scene {
 
     public:
 
+        enum class ProjectionType {
+            Orthographic, Perspective
+        };
+
         Camera();
         Camera(float near, float far);
 
-        glm::mat4 getProjectionMatrix();
-        glm::mat4 getViewMatrix();
+        virtual ProjectionType getProjectionType() const = 0;
         virtual float getAspectRatio() const = 0;
         virtual void resize(unsigned int viewportWidth, unsigned int viewportHeight) = 0;
 
+
+        glm::mat4 getProjectionMatrix();
+        glm::mat4 getViewMatrix();
+
+        inline const glm::vec3& getPosition() const {return m_position; }
         void setPosition(const glm::vec3& position);
         void move(const glm::vec3& movement);
         void moveRelative(const glm::vec3& movement);
 
+        inline const float& getYaw() const {return m_yaw; }
+        inline const float& getPitch() const {return m_pitch; }
         void setRotation(float yaw, float pitch);
         void setYaw(float yaw);
         void setPitch(float pitch);

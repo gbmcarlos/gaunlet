@@ -1,6 +1,7 @@
 #include "gaunlet/editor/workspace/Workspace.h"
 
 #include "gaunlet/core/window/Window.h"
+#include "boost/range/adaptor/map.hpp"
 
 namespace gaunlet::Editor {
 
@@ -8,7 +9,8 @@ namespace gaunlet::Editor {
         m_layoutSpec = layoutSpec;
     }
 
-    void Workspace::pushPanel(const char* panelId, GuiPanel *panel, const char* windowId) {
+    void Workspace::pushPanel(const char* panelId, GuiPanel* panel, const char* windowId) {
+        panel->m_id = panelId;
         panel->m_workspace = this;
         m_guiPanelSpecs.push_back({
             panel,
@@ -18,6 +20,7 @@ namespace gaunlet::Editor {
     }
 
     void Workspace::pushPanel(const char* panelId, RenderPanel* panel, const char* windowId, const char* cameraId, const char* sceneId, const char* directionalLightId, Scene::RenderMode renderMode) {
+        panel->m_id = panelId;
         panel->m_workspace = this;
         panel->m_cameraId = cameraId;
         panel->m_sceneId = sceneId;
@@ -30,19 +33,19 @@ namespace gaunlet::Editor {
         });
     }
 
-    void Workspace::addCamera(const char *id, const Core::Ref<Scene::Camera>& camera) {
+    void Workspace::addCamera(const char* id, const Core::Ref<Scene::Camera>& camera) {
         m_cameras[id] = camera;
     }
 
-    void Workspace::addScene(const char *id, const Core::Ref<Scene::Scene> &scene) {
+    void Workspace::addScene(const char* id, const Core::Ref<Scene::Scene> &scene) {
         m_scenes[id] = scene;
     }
 
-    void Workspace::addDirectionalLight(const char *id, Scene::DirectionalLightComponent directionalLight) {
+    void Workspace::addDirectionalLight(const char* id, Scene::DirectionalLightComponent directionalLight) {
         m_directionalLights[id] = directionalLight;
     }
 
-    const Core::Ref<Scene::Camera>& Workspace::getCamera(const char *id) {
+    const Core::Ref<Scene::Camera>& Workspace::getCamera(const char* id) {
 
         auto iterator = m_cameras.find(id);
 
@@ -54,7 +57,7 @@ namespace gaunlet::Editor {
 
     }
 
-    const Core::Ref<Scene::Scene>& Workspace::getScene(const char *id) {
+    const Core::Ref<Scene::Scene>& Workspace::getScene(const char* id) {
 
         auto iterator = m_scenes.find(id);
 
@@ -78,7 +81,31 @@ namespace gaunlet::Editor {
 
     }
 
-    GuiPanel* Workspace::getGuiPanel(const char *id) {
+    std::vector<GuiPanel*> Workspace::getGuiPanels() {
+
+        std::vector<GuiPanel*> guiPanels = {};
+
+        for (auto& guiPanelSpec : m_guiPanelSpecs) {
+            guiPanels.push_back(guiPanelSpec.m_panel);
+        }
+
+        return guiPanels;
+
+    }
+
+    std::vector<RenderPanel*> Workspace::getRenderPanels() {
+
+        std::vector<RenderPanel*> renderPanels = {};
+
+        for (auto& renderPanelSpec : m_renderPanelSpecs) {
+            renderPanels.push_back(renderPanelSpec.m_panel);
+        }
+
+        return renderPanels;
+
+    }
+
+    GuiPanel* Workspace::getGuiPanel(const char* id) {
 
         for (auto& guiPanelSpec : m_guiPanelSpecs) {
             if (guiPanelSpec.m_panelId == id) {
@@ -90,7 +117,7 @@ namespace gaunlet::Editor {
 
     }
 
-    RenderPanel* Workspace::getRenderPanel(const char *id) {
+    RenderPanel* Workspace::getRenderPanel(const char* id) {
 
         for (auto& renderPanelSpec : m_renderPanelSpecs) {
             if (renderPanelSpec.m_panelId == id) {
@@ -188,12 +215,12 @@ namespace gaunlet::Editor {
 
     }
 
-    void Workspace::addTool(const char *id, const Core::Ref<Tool> &tool) {
+    void Workspace::addTool(const char* id, const Core::Ref<Tool> &tool) {
         tool->m_workspace = this;
         m_tools[id] = tool;
     }
 
-    void Workspace::activateTool(const char *id) {
+    void Workspace::activateTool(const char* id) {
         m_activeToolId = id;
     }
 
@@ -225,7 +252,7 @@ namespace gaunlet::Editor {
 
     }
 
-    void Workspace::updateNodeProperties(Panel *node) {
+    void Workspace::updateNodeProperties(Panel* node) {
 
         ImVec2 windowMin = ImGui::GetWindowContentRegionMin();
         ImVec2 windowMax = ImGui::GetWindowContentRegionMax();
@@ -238,8 +265,8 @@ namespace gaunlet::Editor {
         windowMax.x += windowPosition.x + padding.x;
         windowMax.y += windowPosition.y + padding.y;
 
-        node->m_nodeWidth = windowMax.x - windowMin.x;
-        node->m_nodeHeight = windowMax.y - windowMin.y;
+        node->m_width = windowMax.x - windowMin.x;
+        node->m_height = windowMax.y - windowMin.y;
         node->m_isHovered = ImGui::IsWindowHovered();
         node->m_mousePositionX = std::max(mousePosition.x - windowMin.x, 0.0f);
         node->m_mousePositionY = std::max(mousePosition.y - windowMin.y, 0.0f);

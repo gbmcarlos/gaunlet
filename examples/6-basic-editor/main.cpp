@@ -73,6 +73,7 @@ protected:
                 -delta.x / 10 // Moving the mouse horizontally, rotates around the Y axis
             );
 
+        // Drag: pan
         } else {
             getWorkspace()->getCamera("main")->moveRelative({
                 delta.x / 50,
@@ -84,34 +85,6 @@ protected:
         m_initialPosition = currentPosition;
 
         return true;
-
-    }
-
-};
-
-class SettingsPanel : public gaunlet::Editor::GuiPanel {
-
-public:
-
-    void onGuiRender() override {
-
-        ImGui::Text("Window size: %d %d", getNodeWidth(), getNodeHeight());
-
-        if (isHovered()) {
-            ImGui::Text("%d %d", getMousePositionX(), getMousePositionY());
-        } else {
-            ImGui::NewLine();
-        }
-
-        ImGui::Text("Scene layer:");
-
-        auto renderPanel = getWorkspace()->getRenderPanel("main");
-
-        if (renderPanel->isHovered()) {
-            ImGui::Text("%d %d", renderPanel->getMousePositionX(), renderPanel->getMousePositionYInverted());
-        } else {
-            ImGui::NewLine();
-        }
 
     }
 
@@ -132,14 +105,14 @@ public:
 
         // Set the docking layout
         m_workspace->setLayoutSpec({
-                                       {
-                                           {gaunlet::Editor::DockSpacePosition::Left, 0.25f,  {"Settings"}},
-                                           {gaunlet::Editor::DockSpacePosition::Center, 0.0f,  {"Scene"}, ImGuiDockNodeFlags_NoTabBar}
-                                       }, viewportWidth, viewportHeight
-                                   });
+            {
+                {gaunlet::Editor::DockSpacePosition::Left, 0.25f,  {"Workspace Properties"}},
+                {gaunlet::Editor::DockSpacePosition::Center, 0.0f,  {"Scene"}, ImGuiDockNodeFlags_NoTabBar}
+            }, viewportWidth, viewportHeight
+        });
 
         // Create and push the GUI panels
-        m_workspace->pushPanel("settings", new SettingsPanel(), "Settings");
+        m_workspace->pushPanel("settings", new gaunlet::Editor::WorkspacePropertiesPanel, "Workspace Properties");
 
         // Prepare the components of the main render panel
         m_workspace->addCamera("main", gaunlet::Core::CreateRef<gaunlet::Scene::PerspectiveCamera>(45.0f, (float) viewportWidth / (float) viewportHeight, 1.0f, 100.0f));

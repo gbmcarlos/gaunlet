@@ -37,6 +37,8 @@ namespace gaunlet::Editor {
         const Core::Ref<Scene::Scene>& getScene(const char* id);
         Scene::DirectionalLightComponent& getDirectionalLight(const char* id);
 
+        std::vector<GuiPanel*> getGuiPanels();
+        std::vector<RenderPanel*> getRenderPanels();
         GuiPanel* getGuiPanel(const char* id);
         RenderPanel* getRenderPanel(const char* id);
 

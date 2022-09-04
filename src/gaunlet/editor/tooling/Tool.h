@@ -13,12 +13,13 @@ namespace gaunlet::Editor {
 
         virtual bool onEvent(Core::Event& event) {return true; }
         virtual void onUpdate(Core::TimeStep timeStep) {}
+        virtual void onGuiRender() {}
 
     protected:
         Workspace* getWorkspace() {return m_workspace; }
 
     private:
-        Workspace* m_workspace;
+        Workspace* m_workspace = nullptr;
 
     };
 

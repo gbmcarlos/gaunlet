@@ -11,6 +11,7 @@ namespace gaunlet::Scene {
         PerspectiveCamera(float fieldOfView, float aspectRatio);
         PerspectiveCamera(float fieldOfView, float aspectRatio, float near, float far);
 
+        inline Camera::ProjectionType getProjectionType() const override {return Camera::ProjectionType::Perspective; }
         void resize(unsigned int viewportWidth, unsigned int viewportHeight) override;
         inline float getAspectRatio() const override {return m_aspectRatio; }
 

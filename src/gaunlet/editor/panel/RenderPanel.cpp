@@ -60,12 +60,12 @@ namespace gaunlet::Editor {
     void RenderPanel::resize() {
 
         getWorkspace()->getCamera(m_cameraId)->resize(
-            getNodeWidth(),
-            getNodeHeight()
+            getWidth(),
+            getHeight()
         );
         m_framebuffer->resize(
-            getNodeWidth() * Core::Window::getCurrentInstance()->getDPI(),
-            getNodeHeight() * Core::Window::getCurrentInstance()->getDPI()
+            getWidth() * Core::Window::getCurrentInstance()->getDPI(),
+            getHeight() * Core::Window::getCurrentInstance()->getDPI()
         );
 
     }

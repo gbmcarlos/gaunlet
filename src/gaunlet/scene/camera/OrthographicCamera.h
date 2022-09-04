@@ -11,6 +11,7 @@ namespace gaunlet::Scene {
         OrthographicCamera(unsigned int viewportWidth, unsigned int viewportHeight, float viewportResolution);
         OrthographicCamera(unsigned int viewportWidth, unsigned int viewportHeight, float viewportResolution, float near, float far);
 
+        inline Camera::ProjectionType getProjectionType() const override {return Camera::ProjectionType::Orthographic; }
         void resize(unsigned int viewportWidth, unsigned int viewportHeight) override;
         inline float getAspectRatio() const override {return ((float) m_viewportWidth) / ((float) m_viewportHeight); }
         inline const glm::vec2& getProjectionSize() const {return m_projectionSize;}

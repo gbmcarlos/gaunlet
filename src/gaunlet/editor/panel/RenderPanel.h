@@ -22,6 +22,11 @@ namespace gaunlet::Editor {
         static const unsigned int SceneEntityIdFramebufferAttachmentIndex = 1;
         static const unsigned int UIEntityIdFramebufferAttachmentIndex = 2;
 
+        inline const char* getCameraId() {return m_cameraId; }
+        inline const char* getSceneId() {return m_sceneId; }
+        inline const char* getDirectionalLightId() {return m_directionalLightId; }
+        inline Scene::RenderMode getRenderMove() {return m_renderMode; }
+
 //        void selectSceneEntity(Scene::Entity entity);
 //        void selectUIEntity(Scene::Entity entity);
 
