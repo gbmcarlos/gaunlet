@@ -130,14 +130,26 @@ namespace gaunlet::Editor {
 
     const Core::Ref<Tool>& Workspace::getTool(const char* id) {
 
-        auto iterator = m_tools.find(id);
-
-        if (iterator == m_tools.end()) {
-            throw std::runtime_error("Tool not found");
+        for (auto& tool : m_tools) {
+            if (tool->m_id == id) {
+                return tool;
+            }
         }
 
-        return iterator->second;
+        throw std::runtime_error("Tool not found");
 
+    }
+
+    const std::vector<Core::Ref<Tool>> Workspace::getTools() {
+        return m_tools;
+    }
+
+    const char* Workspace::getActiveToolId() {
+        return m_activeToolId;
+    }
+
+    const Core::Ref<Tool> Workspace::getActiveTool() {
+        return m_activeToolId != nullptr ? getTool(m_activeToolId) : nullptr;
     }
 
     Scene::Entity Workspace::getSelectedSceneEntity() {
@@ -237,7 +249,8 @@ namespace gaunlet::Editor {
 
     void Workspace::addTool(const char* id, const Core::Ref<Tool>& tool) {
         tool->m_workspace = this;
-        m_tools[id] = tool;
+        tool->m_id = id;
+        m_tools.push_back(tool);
     }
 
     void Workspace::activateTool(const char* id) {

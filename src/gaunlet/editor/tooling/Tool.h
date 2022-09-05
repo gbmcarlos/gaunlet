@@ -11,15 +11,21 @@ namespace gaunlet::Editor {
 
         friend class Workspace;
 
+    public:
+
+        virtual const char* getName() = 0;
         virtual bool onEvent(Core::Event& event) {return true; }
         virtual void onUpdate(Core::TimeStep timeStep) {}
         virtual void onGuiRender() {}
+
+        inline const char* getId() {return m_id; }
 
     protected:
         Workspace* getWorkspace() {return m_workspace; }
 
     private:
         Workspace* m_workspace = nullptr;
+        const char* m_id = nullptr;
 
     };
 

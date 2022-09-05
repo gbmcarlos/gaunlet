@@ -27,11 +27,7 @@ namespace gaunlet::Editor {
         inline const char* getDirectionalLightId() {return m_directionalLightId; }
         inline Scene::RenderMode getRenderMove() {return m_renderMode; }
 
-//        void selectSceneEntity(Scene::Entity entity);
-//        void selectUIEntity(Scene::Entity entity);
-
-//        void setSceneSelectionCallback(const std::function<void(Scene::Entity&)>& callback);
-//        void setUISelectionCallback(const std::function<void(Scene::Entity&)>& callback);
+        void mousePickEntity(unsigned int mousePositionX, unsigned int mousePositionY);
 
     protected:
 
@@ -40,8 +36,6 @@ namespace gaunlet::Editor {
         virtual void onUpdate(Core::TimeStep timeStep);
         virtual void resize();
         virtual const Core::Ref<Graphics::Texture>& getRenderedTexture();
-
-        void mousePickEntity(unsigned int mousePositionX, unsigned int mousePositionY);
 
     private:
 

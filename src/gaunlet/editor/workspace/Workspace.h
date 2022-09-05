@@ -43,6 +43,9 @@ namespace gaunlet::Editor {
         RenderPanel* getRenderPanel(const char* id);
 
         const Core::Ref<Tool>& getTool(const char* id);
+        const std::vector<Core::Ref<Tool>> getTools();
+        const char* getActiveToolId();
+        const Core::Ref<Tool> getActiveTool();
 
         Scene::Entity getSelectedSceneEntity();
         Scene::Entity getSelectedUIEntity();
@@ -72,7 +75,7 @@ namespace gaunlet::Editor {
         std::vector<GuiPanelSpec> m_guiPanelSpecs = {};
         std::vector<RenderPanelSpec> m_renderPanelSpecs = {};
 
-        std::unordered_map<const char*, Core::Ref<Tool>> m_tools;
+        std::vector<Core::Ref<Tool>> m_tools;
         const char* m_activeToolId = nullptr;
 
         Scene::Entity m_selectedSceneEntity = {};
