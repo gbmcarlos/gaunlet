@@ -1,7 +1,6 @@
 #include "gaunlet/editor/workspace/Workspace.h"
 
 #include "gaunlet/core/window/Window.h"
-#include "boost/range/adaptor/map.hpp"
 
 namespace gaunlet::Editor {
 
@@ -142,6 +141,19 @@ namespace gaunlet::Editor {
     }
 
     void Workspace::onEvent(Core::Event &event) {
+
+        if (event.getCategory() == Core::EventCategory::Mouse || event.getCategory() == Core::EventCategory::Scroll) {
+
+            bool renderPanelHovered = false;
+            for (auto renderPanelSpec : m_renderPanelSpecs) {
+                renderPanelHovered = renderPanelHovered || renderPanelSpec.m_panel->isHovered();
+            }
+
+            if (!renderPanelHovered) {
+                return;
+            }
+
+        }
 
         if (m_activeToolId) {
             auto& activeTool = getTool(m_activeToolId);
