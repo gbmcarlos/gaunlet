@@ -44,8 +44,8 @@ namespace gaunlet::Editor {
 
         const Core::Ref<Tool>& getTool(const char* id);
 
-//        Scene::Entity getSelectedEntity();
-//        Core::Ref<Scene::Registry> getRegistry();
+        Scene::Entity getSelectedSceneEntity();
+        Scene::Entity getSelectedUIEntity();
 
     private:
         void updateNodeProperties(Panel* node);

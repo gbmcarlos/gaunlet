@@ -13,6 +13,11 @@ namespace gaunlet::Scene {
         std::vector<entt::entity> m_children = {};
     };
 
+    struct NameComponent {
+        explicit NameComponent(const char* name = nullptr) : m_name(name) {}
+        const char* m_name = nullptr;
+    };
+
     class Entity {
 
     public:
@@ -22,12 +27,14 @@ namespace gaunlet::Scene {
         Entity(int entityHandle, Registry* registry);
 
         int getId() const;
+        bool hasName();
+        const char* getName();
         explicit operator bool() const;
         bool operator==(const Entity& other) const;
         bool operator!=(const Entity& other) const;
 
         Entity getParent();
-        Entity createChild();
+        Entity createChild(const char* name = nullptr);
         Entity addChild(Entity child);
 
         void destroy();
@@ -73,10 +80,10 @@ namespace gaunlet::Scene {
         friend class Scene;
 
     public:
-        Entity createEntity();
+        Entity createEntity(const char* name = nullptr);
 
         template<typename T>
-        Entity createTaggedEntity();
+        Entity createTaggedEntity(const char* name = nullptr);
 
         int countEntities();
 
@@ -165,9 +172,9 @@ namespace gaunlet::Scene {
     // REGISTRY IMPLEMENTATION
 
     template<typename T>
-    Entity Registry::createTaggedEntity() {
+    Entity Registry::createTaggedEntity(const char* name) {
 
-        auto entity = createEntity();
+        auto entity = createEntity(name);
         entity.addEmptyComponent<T>();
 
         return entity;

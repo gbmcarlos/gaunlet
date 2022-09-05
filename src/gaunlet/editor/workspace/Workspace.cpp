@@ -36,7 +36,7 @@ namespace gaunlet::Editor {
         m_cameras[id] = camera;
     }
 
-    void Workspace::addScene(const char* id, const Core::Ref<Scene::Scene> &scene) {
+    void Workspace::addScene(const char* id, const Core::Ref<Scene::Scene>& scene) {
         m_scenes[id] = scene;
     }
 
@@ -128,7 +128,7 @@ namespace gaunlet::Editor {
 
     }
 
-    const Core::Ref<Tool> &Workspace::getTool(const char* id) {
+    const Core::Ref<Tool>& Workspace::getTool(const char* id) {
 
         auto iterator = m_tools.find(id);
 
@@ -140,7 +140,15 @@ namespace gaunlet::Editor {
 
     }
 
-    void Workspace::onEvent(Core::Event &event) {
+    Scene::Entity Workspace::getSelectedSceneEntity() {
+        return m_selectedSceneEntity;
+    }
+
+    Scene::Entity Workspace::getSelectedUIEntity() {
+        return m_selectedUIEntity;
+    }
+
+    void Workspace::onEvent(Core::Event& event) {
 
         if (event.getCategory() == Core::EventCategory::Mouse || event.getCategory() == Core::EventCategory::Scroll) {
 
@@ -227,7 +235,7 @@ namespace gaunlet::Editor {
 
     }
 
-    void Workspace::addTool(const char* id, const Core::Ref<Tool> &tool) {
+    void Workspace::addTool(const char* id, const Core::Ref<Tool>& tool) {
         tool->m_workspace = this;
         m_tools[id] = tool;
     }

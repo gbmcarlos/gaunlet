@@ -16,6 +16,10 @@ namespace gaunlet::Editor {
                 windowProperties();
             }
 
+            if (ImGui::CollapsingHeader("Selection")) {
+                selectionProperties();
+            }
+
             panels();
 
         }
@@ -27,6 +31,24 @@ namespace gaunlet::Editor {
             ImGui::Text("Window size: (%d, %d)", Core::Window::getCurrentInstance()->getWidth(), Core::Window::getCurrentInstance()->getHeight());
             ImGui::Text("Viewport size: (%d, %d)", Core::Window::getCurrentInstance()->getViewportWidth(), Core::Window::getCurrentInstance()->getViewportHeight());
             ImGui::Text("Mouse position: (%d, %d)", Core::Input::getMousePositionX(), Core::Input::getMousePositionY());
+
+        }
+
+        void selectionProperties() {
+
+            const char* sceneEntityLabel = "None";
+            auto selectedSceneEntity = getWorkspace()->getSelectedSceneEntity();
+            if (selectedSceneEntity) {
+                sceneEntityLabel = selectedSceneEntity.hasName() ? selectedSceneEntity.getName() : "Unnamed entity";
+            }
+            ImGui::Text("Selected Scene Entity: %s", sceneEntityLabel);
+
+            const char* uiEntityLabel = "None";
+            auto selectedUIEntity = getWorkspace()->getSelectedUIEntity();
+            if (selectedUIEntity) {
+                uiEntityLabel = selectedUIEntity.hasName() ? selectedUIEntity.getName() : "Unnamed entity";
+            }
+            ImGui::Text("Selected UI Entity: %s", uiEntityLabel);
 
         }
 

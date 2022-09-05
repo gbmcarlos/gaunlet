@@ -34,6 +34,15 @@ namespace gaunlet::Scene {
         return (int) m_handle;
     }
 
+    bool Entity::hasName() {
+        auto& nameComponent = getComponent<NameComponent>();
+        return nameComponent.m_name != nullptr;
+    }
+
+    const char* Entity::getName() {
+        return getComponent<NameComponent>().m_name;
+    }
+
     Entity::operator bool() const {
         return m_handle != entt::null && m_registry != nullptr;
     }
@@ -56,13 +65,13 @@ namespace gaunlet::Scene {
 
     Entity Entity::getParent() {
 
-        RelationshipComponent childRelationship = getComponent<RelationshipComponent>();
+        auto& childRelationship = getComponent<RelationshipComponent>();
         Entity parent(childRelationship.m_parent, m_registry);
 
         return parent;
     }
 
-    Entity Entity::createChild() {
+    Entity Entity::createChild(const char* name) {
 
         // Create the child entity, delegating on the registry (so it will attach the Relationship component)
         auto child = m_registry->createEntity();
@@ -80,7 +89,7 @@ namespace gaunlet::Scene {
 
     void Entity::destroy() {
 
-        RelationshipComponent relationship = getComponent<RelationshipComponent>();
+        auto& relationship = getComponent<RelationshipComponent>();
 
         // First abandon and destroy all the children
         for (auto childHandle : relationship.m_children) {
@@ -131,11 +140,13 @@ namespace gaunlet::Scene {
 
     // REGISTRY IMPLEMENTATION
 
-    Entity Registry::createEntity() {
+    Entity Registry::createEntity(const char* name) {
 
         entt::entity entityHandle = m_registry.create();
         Entity entity(entityHandle, this);
+
         entity.addComponent<RelationshipComponent>();
+        entity.addComponent<NameComponent>(name);
 
         return entity;
     }
