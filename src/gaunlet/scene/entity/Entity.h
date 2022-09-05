@@ -78,6 +78,11 @@ namespace gaunlet::Scene {
         template<typename T>
         Entity createTaggedEntity();
 
+        int countEntities();
+
+        template<typename T>
+        int countTaggedEntities();
+
     private:
         entt::registry m_registry;
 
@@ -166,6 +171,14 @@ namespace gaunlet::Scene {
         entity.addEmptyComponent<T>();
 
         return entity;
+
+    }
+
+    template<typename T>
+    int Registry::countTaggedEntities() {
+
+        auto view = m_registry.view<T>();
+        return view.size();
 
     }
 

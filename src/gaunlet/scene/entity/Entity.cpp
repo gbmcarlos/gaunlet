@@ -140,4 +140,8 @@ namespace gaunlet::Scene {
         return entity;
     }
 
+    int Registry::countEntities() {
+        return m_registry.alive();
+    }
+
 }

@@ -112,7 +112,10 @@ namespace gaunlet::Editor {
         }
 
         void sceneProperties(const Core::Ref<Scene::Scene>& scene) {
-            // TODO
+
+            ImGui::Text("Scene Entities: %d", scene->getRegistry().countTaggedEntities<SceneEntityTag>());
+            ImGui::Text("UI Entities: %d", scene->getRegistry().countTaggedEntities<UIEntityTag>());
+
         }
 
         void directionalLightProperties(Scene::DirectionalLightComponent& directionalLight) {
