@@ -16,6 +16,7 @@ namespace gaunlet::Scene {
 
         Camera();
         Camera(float near, float far);
+        Camera(float near, float far, float maxZoomLevel);
 
         virtual ProjectionType getProjectionType() const = 0;
         virtual float getAspectRatio() const = 0;
@@ -51,6 +52,11 @@ namespace gaunlet::Scene {
     protected:
 
         float m_zoomLevel = 1.0f;
+        float m_minPitch = -89;
+        float m_maxPitch = 89;
+        float m_minZoomLevel = 0.1;
+
+        float m_maxZoomLevel;
         float m_near;
         float m_far;
 
@@ -71,6 +77,7 @@ namespace gaunlet::Scene {
         glm::vec3 m_forward = {0, 0, 1}; // Pointing toward the camera
 
         float constrainPitch(float pitch);
+        float constrainZoomLevel(float zoomLevel);
         void rotate(glm::vec3 pivot, float degreesX, float degreesY);
         void reverseViewMatrix();
         void calculateViewMatrix();

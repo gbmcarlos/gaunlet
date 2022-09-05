@@ -8,7 +8,10 @@ namespace gaunlet::Scene {
         : Camera(1.0f, 10.0f) {}
 
     Camera::Camera(float near, float far)
-        : m_near(near), m_far(far) {
+        : Camera(near, far, 5.0f) {}
+
+    Camera::Camera(float near, float far, float maxZoomLevel)
+        : m_near(near), m_far(far), m_maxZoomLevel(maxZoomLevel) {
         calculateViewMatrix();
     }
 
@@ -118,23 +121,39 @@ namespace gaunlet::Scene {
     }
 
     void Camera::setZoomLevel(float zoomLevel) {
-        m_zoomLevel = zoomLevel;
+
+        m_zoomLevel = constrainZoomLevel(zoomLevel);
         calculateProjectionMatrix();
+
     }
 
     void Camera::addZoomLevel(float zoomLevelDelta) {
-        m_zoomLevel += zoomLevelDelta;
+
+        m_zoomLevel = constrainZoomLevel(m_zoomLevel + zoomLevelDelta);
         calculateProjectionMatrix();
+
     }
 
     float Camera::constrainPitch(float pitch) {
 
-        if (pitch > 89) {
-            return 89;
-        } else if (pitch < -89) {
-            return -89;
+        if (pitch > m_maxPitch) {
+            return m_maxPitch;
+        } else if (pitch < m_minPitch) {
+            return m_minPitch;
         } else {
             return pitch;
+        }
+
+    }
+
+    float Camera::constrainZoomLevel(float zoomLevel) {
+
+        if (zoomLevel < m_minZoomLevel) {
+            return m_minZoomLevel;
+        } else if (zoomLevel > m_maxZoomLevel) {
+            return m_maxZoomLevel;
+        } else {
+            return zoomLevel;
         }
 
     }

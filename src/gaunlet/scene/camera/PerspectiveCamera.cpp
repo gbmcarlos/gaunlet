@@ -9,7 +9,7 @@ namespace gaunlet::Scene {
         : PerspectiveCamera(fieldOfView, aspectRatio, 1.0f, 10.0f) {}
 
     PerspectiveCamera::PerspectiveCamera(float fieldOfView, float aspectRatio, float near, float far)
-        : Camera(near, far), m_fieldOfView(fieldOfView), m_aspectRatio(aspectRatio) {
+        : Camera(near, far, (180.0f / fieldOfView) - 0.1f), m_fieldOfView(fieldOfView), m_aspectRatio(aspectRatio) {
         PerspectiveCamera::calculateProjectionMatrix();
     }
 
