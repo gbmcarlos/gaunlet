@@ -18,6 +18,7 @@ public:
         dispatcher.dispatch<gaunlet::Core::MouseButtonPress>(GL_BIND_CALLBACK_FN(FPCameraController::onMousePressEvent));
         dispatcher.dispatch<gaunlet::Core::MouseButtonRelease>(GL_BIND_CALLBACK_FN(FPCameraController::onMouseReleaseEvent));
         dispatcher.dispatch<gaunlet::Core::CursorMoveEvent>(GL_BIND_CALLBACK_FN(FPCameraController::onCursorMoveEvent));
+        dispatcher.dispatch<gaunlet::Core::ScrollEvent>(GL_BIND_CALLBACK_FN(FPCameraController::onScrollEvent));
 
         return true;
 
@@ -83,6 +84,16 @@ protected:
         }
 
         m_initialPosition = currentPosition;
+
+        return true;
+
+    }
+
+    bool onScrollEvent(gaunlet::Core::ScrollEvent& event) {
+
+        getWorkspace()->getCamera("main")->addZoomLevel(
+            0.1f * -event.getYOffset()
+        );
 
         return true;
 
