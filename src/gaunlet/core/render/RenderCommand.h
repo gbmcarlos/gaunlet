@@ -23,6 +23,8 @@ namespace gaunlet::Core {
         static void clearColorBuffer(const glm::vec4& color);
         static void clearDepthBuffer();
 
+        static void setDepthFunction(DepthFunction function);
+
         static void getViewport(unsigned int& x0, unsigned int& y0, unsigned int& x1, unsigned int& y1);
         static void setViewport(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1);
 
@@ -62,7 +64,8 @@ namespace gaunlet::Core {
         static void bindUniformBufferToBindingPoint(unsigned int bufferId, unsigned int bindingPoint, unsigned int size);
         static void bindUniformBufferFromBindingPoint(unsigned int shaderId, int location, unsigned int bindingPoint);
 
-        static void loadTexture(unsigned int& id, TextureType type, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data);
+        static void loadTextureImage2d(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data);
+        static void loadTextureCubeMap(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, std::vector<void *> imagesData);
         static void activateTexture(unsigned int id, TextureType type, unsigned int slot);
         static void deleteTexture(unsigned int& id);
 

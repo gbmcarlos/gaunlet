@@ -18,6 +18,10 @@ namespace gaunlet::Core {
         Fragment
     };
 
+    enum class DepthFunction {
+        Less, LessOrEqual
+    };
+
     enum class TextureDataFormat {
         RGB, RGBA,
         RedInteger32, RedInteger,
@@ -44,6 +48,8 @@ namespace gaunlet::Core {
 
         virtual void clearColorBuffer(float red, float green, float blue, float alpha) = 0;
         virtual void clearDepthBuffer() = 0;
+
+        virtual void setDepthFunction(DepthFunction function) = 0;
 
         virtual void getViewport(unsigned int& x0, unsigned int& y0, unsigned int& x1, unsigned int& y1) = 0;
         virtual void setViewport(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1) = 0;
@@ -84,7 +90,8 @@ namespace gaunlet::Core {
         virtual unsigned int sizeOfPrimitiveDataType(PrimitiveDataType type) = 0;
         virtual void addVertexArrayAttribute(unsigned int vertexArrayId, unsigned int index, int count, PrimitiveDataType type, bool normalized, int stride, int offset) = 0;
 
-        virtual void loadTexture(unsigned int& id, TextureType type, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data) = 0;
+        virtual void loadTextureImage2d(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data) = 0;
+        virtual void loadTextureCubeMap(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, std::vector<void *> imagesData) = 0;
         virtual void activateTexture(unsigned int id, TextureType type, unsigned int slot) = 0;
         virtual void deleteTexture(unsigned int& id) = 0;
 

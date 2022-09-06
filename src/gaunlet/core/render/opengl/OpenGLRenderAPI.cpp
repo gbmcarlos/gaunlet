@@ -41,6 +41,10 @@ namespace gaunlet::Core {
         glCall(glClear(GL_DEPTH_BUFFER_BIT));
     }
 
+    void OpenGLRenderApi::setDepthFunction(DepthFunction function) {
+        glCall(glDepthFunc(convertDepthFunction(function)));
+    }
+
     void OpenGLRenderApi::getViewport(unsigned int& x0, unsigned int& y0, unsigned int& x1, unsigned int& y1) {
 
         GLint viewport[4];
@@ -281,20 +285,39 @@ namespace gaunlet::Core {
     }
 
 
-    void OpenGLRenderApi::loadTexture(unsigned int& id, TextureType type, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data) {
-
-        GLenum glTextureType = convertTextureType(type);
+    void OpenGLRenderApi::loadTextureImage2d(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data) {
 
         glCall(glGenTextures(1, &id));
-        glCall(glBindTexture(glTextureType, id));
+        glCall(glBindTexture(GL_TEXTURE_2D, id));
 
         GLenum glInternalFormat = convertTextureDataFormat(internalFormat);
         GLenum glDataFormat = convertTextureDataFormat(dataFormat);
 
-        glCall(glTexImage2D(glTextureType, 0, glInternalFormat, width, height, 0, glDataFormat, GL_UNSIGNED_BYTE, data));
+        glCall(glTexImage2D(GL_TEXTURE_2D, 0, glInternalFormat, width, height, 0, glDataFormat, GL_UNSIGNED_BYTE, data));
 
-        glCall(glTexParameteri(glTextureType, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-        glCall(glTexParameteri(glTextureType, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+        glCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+        glCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+
+    }
+
+    void OpenGLRenderApi::loadTextureCubeMap(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, std::vector<void *> imagesData) {
+
+        glCall(glGenTextures(1, &id));
+        glCall(glBindTexture(GL_TEXTURE_CUBE_MAP, id));
+
+        GLenum glInternalFormat = convertTextureDataFormat(internalFormat);
+        GLenum glDataFormat = convertTextureDataFormat(dataFormat);
+
+        for (unsigned int index = 0; index < imagesData.size(); index++) {
+            void* imageData = imagesData[index];
+            glCall(glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + index, 0, glInternalFormat, width, height, 0, glDataFormat, GL_UNSIGNED_BYTE, imageData));
+        }
+
+        glCall(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+        glCall(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+        glCall(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
+        glCall(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
+        glCall(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE));
 
     }
 
@@ -468,6 +491,17 @@ namespace gaunlet::Core {
         }
 
         throw std::runtime_error("Unknown shader type");
+
+    }
+
+    GLenum OpenGLRenderApi::convertDepthFunction(DepthFunction function) {
+
+        switch (function) {
+            case DepthFunction::Less:           return GL_LESS;
+            case DepthFunction::LessOrEqual:    return GL_LEQUAL;
+        }
+
+        throw std::runtime_error("Unknown depth function");
 
     }
 

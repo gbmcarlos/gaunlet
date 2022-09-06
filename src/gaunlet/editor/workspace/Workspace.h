@@ -17,11 +17,12 @@ namespace gaunlet::Editor {
         void setLayoutSpec(const DockingLayoutSpec& layoutSpec);
 
         void pushPanel(const char* panelId, GuiPanel* panel, const char* windowId);
-        void pushPanel(const char* panelId, RenderPanel* panel, const char* windowId, const char* cameraId, const char* sceneId, const char* directionalLightId, Scene::RenderMode renderMode);
+        void pushPanel(const char* panelId, RenderPanel* panel, const char* windowId, const char* cameraId, const char* sceneId, const char* directionalLightId, const char* skyboxId, Scene::RenderMode renderMode);
 
         void addCamera(const char* id, const Core::Ref<Scene::Camera>& camera);
         void addScene(const char* id, const Core::Ref<Scene::Scene>& scene);
-        void addDirectionalLight(const char* id, Scene::DirectionalLightComponent directionalLight);
+        void addDirectionalLight(const char* id, const Core::Ref<Scene::DirectionalLightComponent>& directionalLight);
+        void addSkybox(const char* id, const Core::Ref<Scene::SkyboxComponent>& skybox);
 
         void onEvent(Core::Event& event);
         void update(Core::TimeStep timeStep);
@@ -35,7 +36,8 @@ namespace gaunlet::Editor {
 
         const Core::Ref<Scene::Camera>& getCamera(const char* id);
         const Core::Ref<Scene::Scene>& getScene(const char* id);
-        Scene::DirectionalLightComponent& getDirectionalLight(const char* id);
+        const Core::Ref<Scene::DirectionalLightComponent>& getDirectionalLight(const char* id);
+        const Core::Ref<Scene::SkyboxComponent>& getSkybox(const char* id);
 
         std::vector<GuiPanel*> getGuiPanels();
         std::vector<RenderPanel*> getRenderPanels();
@@ -58,7 +60,8 @@ namespace gaunlet::Editor {
 
         std::unordered_map<const char*, Core::Ref<Scene::Camera>> m_cameras = {};
         std::unordered_map<const char*, Core::Ref<Scene::Scene>> m_scenes = {};
-        std::unordered_map<const char*, Scene::DirectionalLightComponent> m_directionalLights = {};
+        std::unordered_map<const char*, Core::Ref<Scene::DirectionalLightComponent>> m_directionalLights = {};
+        std::unordered_map<const char*, Core::Ref<Scene::SkyboxComponent>> m_skyboxes = {};
 
         struct GuiPanelSpec {
             GuiPanel* m_panel;

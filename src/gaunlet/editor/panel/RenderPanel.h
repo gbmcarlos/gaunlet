@@ -25,6 +25,7 @@ namespace gaunlet::Editor {
         inline const char* getCameraId() {return m_cameraId; }
         inline const char* getSceneId() {return m_sceneId; }
         inline const char* getDirectionalLightId() {return m_directionalLightId; }
+        inline const char* getSkyboxId() {return m_skyboxId; }
         inline Scene::RenderMode getRenderMove() {return m_renderMode; }
 
         void mousePickEntity(unsigned int mousePositionX, unsigned int mousePositionY);
@@ -42,6 +43,7 @@ namespace gaunlet::Editor {
         const char* m_cameraId;
         const char* m_sceneId;
         const char* m_directionalLightId;
+        const char* m_skyboxId;
         Scene::RenderMode m_renderMode;
 
         gaunlet::Core::Ref<gaunlet::Graphics::Framebuffer> m_framebuffer = nullptr;

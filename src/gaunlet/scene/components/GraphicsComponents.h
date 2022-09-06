@@ -3,6 +3,7 @@
 #include "gaunlet/scene/model/Model.h"
 #include "gaunlet/scene/model/Sprites.h"
 #include "gaunlet/graphics/texture/Texture.h"
+#include "gaunlet/graphics/texture/TextureCubeMap.h"
 
 #include "gaunlet/pch.h"
 
@@ -74,6 +75,19 @@ namespace gaunlet::Scene {
 
         glm::vec4 m_color;
         Core::Ref<Graphics::Texture> m_texture;
+
+    };
+
+    struct SkyboxComponent {
+
+        SkyboxComponent()
+            : m_cubeMap(nullptr) {}
+        explicit SkyboxComponent(Core::Ref<Graphics::TextureCubeMap> cubeMap)
+            : m_cubeMap(std::move(cubeMap)) {}
+        explicit SkyboxComponent(const std::vector<const char*>& filePaths)
+            : m_cubeMap(Core::CreateRef<Graphics::TextureCubeMap>(filePaths)) {}
+
+        Core::Ref<Graphics::TextureCubeMap> m_cubeMap = nullptr;
 
     };
 

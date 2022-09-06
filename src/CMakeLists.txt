@@ -18,7 +18,9 @@ add_library(gaunlet STATIC
         gaunlet/graphics/uniform-buffer/UniformBuffer.cpp
         gaunlet/graphics/shader/Shader.cpp
         gaunlet/graphics/shader/ShaderLibrary.cpp
+        gaunlet/graphics/texture/Image.cpp
         gaunlet/graphics/texture/TextureImage2D.cpp
+        gaunlet/graphics/texture/TextureCubeMap.cpp
         gaunlet/graphics/texture/TextureLibrary.cpp
         gaunlet/graphics/framebuffer/Framebuffer.cpp
 

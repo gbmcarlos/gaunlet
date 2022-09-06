@@ -10,5 +10,6 @@
 #include "gaunlet/graphics/shader/ShaderLibrary.h" // Depends on Shader
 #include "gaunlet/graphics/texture/Texture.h" // Depends on STB and Core/RenderCommand
 #include "gaunlet/graphics/texture/TextureImage2D.h" // Depends on Texture
+#include "gaunlet/graphics/texture/TextureCubeMap.h" // Depends on Texture
 #include "gaunlet/graphics/framebuffer/Framebuffer.h"
 #include "gaunlet/graphics/Vertex.h"

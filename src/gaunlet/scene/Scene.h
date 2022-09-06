@@ -26,8 +26,8 @@ namespace gaunlet::Scene {
         void update(Core::TimeStep timeStep);
 
         template<typename T>
-        void renderTagged(RenderMode renderMode, const Core::Ref<Camera>& camera, const DirectionalLightComponent& directionalLight);
-        void render(RenderMode renderMode, const Core::Ref<Camera>& camera, const DirectionalLightComponent& directionalLight);
+        void renderTagged(RenderMode renderMode, const Core::Ref<Camera>& camera, const Core::Ref<DirectionalLightComponent>& directionalLight, const Core::Ref<SkyboxComponent>& skybox);
+        void render(RenderMode renderMode, const Core::Ref<Camera>& camera, const Core::Ref<DirectionalLightComponent>& directionalLight, const Core::Ref<SkyboxComponent>& skybox);
 
         void stop();
 
@@ -56,13 +56,14 @@ namespace gaunlet::Scene {
     };
 
     template<typename T>
-    void Scene::renderTagged(RenderMode renderMode, const Core::Ref<Camera> &camera, const DirectionalLightComponent &directionalLight) {
+    void Scene::renderTagged(RenderMode renderMode, const Core::Ref<Camera> &camera, const Core::Ref<DirectionalLightComponent>& directionalLight, const Core::Ref<SkyboxComponent>& skybox) {
 
         DeferredRenderer::beginScene(
             renderMode,
             camera->getViewMatrix(),
             camera->getProjectionMatrix(),
-            directionalLight
+            directionalLight,
+            skybox->m_cubeMap
         );
 
         renderTaggedModels<T>();

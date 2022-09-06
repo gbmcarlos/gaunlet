@@ -28,6 +28,8 @@ namespace gaunlet::Core {
         void clearColorBuffer(float red, float green, float blue, float alpha);
         void clearDepthBuffer();
 
+        void setDepthFunction(DepthFunction function);
+
         void getViewport(unsigned int& x0, unsigned int& y0, unsigned int& x1, unsigned int& y1);
         void setViewport(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1);
 
@@ -67,7 +69,8 @@ namespace gaunlet::Core {
         void bindUniformBufferToBindingPoint(unsigned int bufferId, unsigned int bindingPoint, unsigned int size);
         void bindUniformBufferFromBindingPoint(unsigned int shaderId, int location, unsigned int bindingPoint);
 
-        void loadTexture(unsigned int& id, TextureType type, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data);
+        void loadTextureImage2d(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data);
+        void loadTextureCubeMap(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, std::vector<void *> imagesData);
         void activateTexture(unsigned int id, TextureType type, unsigned int slot);
         void deleteTexture(unsigned int& id);
 
@@ -104,6 +107,7 @@ namespace gaunlet::Core {
 
         GLenum convertPrimitiveDataType(PrimitiveDataType type);
         GLenum convertShaderType(ShaderType type);
+        GLenum convertDepthFunction(DepthFunction function);
         GLenum convertTextureDataFormat(TextureDataFormat format);
         GLenum convertTextureType(TextureType type);
         GLenum convertFramebufferAttachmentType(FramebufferAttachmentType type);

@@ -35,7 +35,8 @@ namespace gaunlet::Editor {
         getWorkspace()->getScene(m_sceneId)->renderTagged<SceneEntityTag>(
             m_renderMode,
             getWorkspace()->getCamera(m_cameraId),
-            getWorkspace()->getDirectionalLight(m_directionalLightId)
+            getWorkspace()->getDirectionalLight(m_directionalLightId),
+            getWorkspace()->getSkybox(m_skyboxId)
         );
 
         // Then clear just the depth buffer, and switch the 2 entity id buffers
@@ -50,7 +51,8 @@ namespace gaunlet::Editor {
         getWorkspace()->getScene(m_sceneId)->renderTagged<UIEntityTag>(
             m_renderMode,
             getWorkspace()->getCamera(m_cameraId),
-            Scene::DirectionalLightComponent()
+            Core::CreateRef<Scene::DirectionalLightComponent>(),
+            Core::CreateRef<Scene::SkyboxComponent>()
         );
 
         m_framebuffer->unbind();

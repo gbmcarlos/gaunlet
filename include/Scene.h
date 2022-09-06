@@ -11,6 +11,7 @@
 
 #include "gaunlet/scene/model/Model.h"
 #include "gaunlet/scene/model/Sprites.h"
+#include "gaunlet/scene/prefab/Skyboxes.h"
 
 #include "gaunlet/scene/components/GraphicsComponents.h" // Depends on PolygonMesh and CircleMesh
 #include "gaunlet/scene/components/ScriptComponents.h" // Depends on Entity

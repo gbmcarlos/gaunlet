@@ -14,6 +14,10 @@ namespace gaunlet::Core {
         getApi().clearDepthBuffer();
     }
 
+    void RenderCommand::setDepthFunction(DepthFunction function) {
+        getApi().setDepthFunction(function);
+    }
+
     void RenderCommand::getViewport(unsigned int& x0, unsigned int& y0, unsigned int& x1, unsigned int& y1) {
         getApi().getViewport(x0, y0, x1, y1);
     }
@@ -144,8 +148,12 @@ namespace gaunlet::Core {
     }
 
 
-    void RenderCommand::loadTexture(unsigned int& id, TextureType type, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data) {
-        getApi().loadTexture(id, type, internalFormat, dataFormat, width, height, data);
+    void RenderCommand::loadTextureImage2d(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data) {
+        getApi().loadTextureImage2d(id, internalFormat, dataFormat, width, height, data);
+    }
+
+    void RenderCommand::loadTextureCubeMap(unsigned int &id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, std::vector<void *> imagesData) {
+        getApi().loadTextureCubeMap(id, internalFormat, dataFormat, width, height, std::move(imagesData));
     }
 
     void RenderCommand::activateTexture(unsigned int id, TextureType type, unsigned int slot) {

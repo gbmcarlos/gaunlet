@@ -11,9 +11,9 @@ public:
         gaunlet::Core::RenderCommand::clearDepthBuffer();
 
         if (m_renderMode == 0) {
-            m_scene.render(gaunlet::Scene::RenderMode::Faces, m_camera, m_directionalLight);
+            m_scene.render(gaunlet::Scene::RenderMode::Faces, m_camera, m_directionalLight, m_skybox);
         } else {
-            m_scene.render(gaunlet::Scene::RenderMode::Wireframe, m_camera, m_directionalLight);
+            m_scene.render(gaunlet::Scene::RenderMode::Wireframe, m_camera, m_directionalLight, m_skybox);
         }
     }
 
@@ -31,18 +31,27 @@ public:
 
     void onReady() override {
 
-        float viewportWidth = (float) gaunlet::Core::Window::getCurrentInstance()->getViewportWidth();
-        float viewportHeight = (float) gaunlet::Core::Window::getCurrentInstance()->getViewportHeight();
+        auto viewportWidth = (float) gaunlet::Core::Window::getCurrentInstance()->getViewportWidth();
+        auto viewportHeight = (float) gaunlet::Core::Window::getCurrentInstance()->getViewportHeight();
 
         m_camera = gaunlet::Core::CreateRef<gaunlet::Scene::PerspectiveCamera>(45.0f, viewportWidth / viewportHeight, 1.0f, 100.0f);
         m_camera->setPosition({0, 4, 8});
         m_camera->lookAt({0.0f, 2.0f, 0.0f});
 
-        m_directionalLight = gaunlet::Scene::DirectionalLightComponent(
+        m_directionalLight = gaunlet::Core::CreateRef<gaunlet::Scene::DirectionalLightComponent>(
             glm::vec3(0.8f, 0.8f, 0.8f),
             glm::vec3(2.0f, 5.0f, 4.0f),
             0.2f, 0.5f
         );
+
+        m_skybox = gaunlet::Core::CreateRef<gaunlet::Scene::SkyboxComponent>(std::vector<const char*>{
+            "assets/skybox/right.jpg",
+            "assets/skybox/left.jpg",
+            "assets/skybox/top.jpg",
+            "assets/skybox/bottom.jpg",
+            "assets/skybox/front.jpg",
+            "assets/skybox/back.jpg"
+        });
 
         auto cup = m_scene.getRegistry().createEntity();
         cup.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Model("assets/cup/cup.obj"));
@@ -58,10 +67,11 @@ public:
     }
 
 private:
+    int m_renderMode = 0;
     gaunlet::Scene::Scene m_scene;
     gaunlet::Core::Ref<gaunlet::Scene::PerspectiveCamera> m_camera;
-    gaunlet::Scene::DirectionalLightComponent m_directionalLight;
-    int m_renderMode = 0;
+    gaunlet::Core::Ref<gaunlet::Scene::DirectionalLightComponent> m_directionalLight;
+    gaunlet::Core::Ref<gaunlet::Scene::SkyboxComponent> m_skybox;
 
 };
 

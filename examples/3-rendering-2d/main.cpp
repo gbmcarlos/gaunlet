@@ -113,9 +113,16 @@ public:
     }
 
     void onUpdate(gaunlet::Core::TimeStep timeStep) override {
+
         gaunlet::Core::RenderCommand::clearColorBuffer(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
         gaunlet::Core::RenderCommand::clearDepthBuffer();
-        m_mainScene.render(gaunlet::Scene::RenderMode::Faces, m_camera, gaunlet::Scene::DirectionalLightComponent());
+
+        m_mainScene.render(
+            gaunlet::Scene::RenderMode::Faces,
+            m_camera,
+            gaunlet::Core::CreateRef<gaunlet::Scene::DirectionalLightComponent>(),
+            gaunlet::Core::CreateRef<gaunlet::Scene::SkyboxComponent>()
+        );
     }
 
 private:

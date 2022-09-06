@@ -140,11 +140,11 @@ namespace gaunlet::Editor {
 
         }
 
-        void directionalLightProperties(Scene::DirectionalLightComponent& directionalLight) {
+        void directionalLightProperties(const Core::Ref<Scene::DirectionalLightComponent>& directionalLight) {
 
-            glm::vec4 color = glm::vec4(directionalLight.m_color, 1.0f);
+            glm::vec4 color = glm::vec4(directionalLight->m_color, 1.0f);
             ImGui::Text("Color: "); ImGui::SameLine(); ImGui::ColorButton("Color", *(ImVec4*)&color);
-            ImGui::Text("Position: (%f, %f, %f)", directionalLight.m_position.x, directionalLight.m_position.y, directionalLight.m_position.z);
+            ImGui::Text("Position: (%f, %f, %f)", directionalLight->m_position.x, directionalLight->m_position.y, directionalLight->m_position.z);
 
         }
 

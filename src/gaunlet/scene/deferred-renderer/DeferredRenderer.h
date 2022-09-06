@@ -32,7 +32,7 @@ namespace gaunlet::Scene {
 
         static void init();
 
-        static void beginScene(RenderMode renderMode, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const DirectionalLightComponent& directionalLight);
+        static void beginScene(RenderMode renderMode, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const Core::Ref<DirectionalLightComponent>& directionalLight, const Core::Ref<Graphics::TextureCubeMap> skyboxCubeMap);
         static void endScene();
 
         // Batched draw calls
@@ -45,12 +45,15 @@ namespace gaunlet::Scene {
         static void flushPolygons();
         static void flushCircles();
 
+        static void flushSkybox();
+
         static void render(const std::vector<gaunlet::Graphics::Vertex>& vertices, const std::vector<unsigned int>& indices, const std::vector<Core::Ref<Graphics::Texture>>& textures, const Core::Ref<Graphics::Shader>& shader);
 
         // Init loaders
         static void loadShaders();
         static void loadPolygonShaders();
         static void loadCircleShaders();
+        static void loadSkyboxShader();
         static void loadDefaultWhiteTexture();
 
         struct SceneProperties {
@@ -73,10 +76,12 @@ namespace gaunlet::Scene {
 
             RenderMode m_renderMode;
 
+            // Batching
             Batch<PolygonEntityProperties> m_polygonBatch;
             Batch<CircleEntityProperties> m_circleBatch;
 
             // Shared
+            Core::Ref<Graphics::TextureCubeMap> m_skyboxCubeMap = nullptr;
             Core::Ref<Graphics::Texture> m_whiteTexture = nullptr;
             Graphics::ShaderLibrary m_shaderLibrary;
             Core::Ref<Graphics::UniformBuffer> m_scenePropertiesUniformBuffer = nullptr;

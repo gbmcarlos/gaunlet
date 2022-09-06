@@ -12,14 +12,14 @@ namespace gaunlet::Scene {
         loadDefaultWhiteTexture();
     }
 
-    void DeferredRenderer::beginScene(RenderMode renderMode, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const DirectionalLightComponent& directionalLight) {
+    void DeferredRenderer::beginScene(RenderMode renderMode, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const Core::Ref<DirectionalLightComponent>& directionalLight, const Core::Ref<Graphics::TextureCubeMap> skyboxCubeMap) {
 
         m_rendererStorage->m_renderMode = renderMode;
 
         SceneProperties sceneProperties(
             viewMatrix, projectionMatrix,
-            directionalLight.m_color, directionalLight.m_position,
-            directionalLight.m_ambientIntensity, directionalLight.m_diffuseIntensity
+            directionalLight->m_color, directionalLight->m_position,
+            directionalLight->m_ambientIntensity, directionalLight->m_diffuseIntensity
         );
 
         std::vector<glm::mat4> sceneData;
@@ -30,6 +30,8 @@ namespace gaunlet::Scene {
             (const void*) &sceneProperties,
             sizeof(SceneProperties)
         );
+
+        m_rendererStorage->m_skyboxCubeMap = skyboxCubeMap;
 
     }
 
@@ -43,6 +45,10 @@ namespace gaunlet::Scene {
         // Flush the circles, if any
         if (!m_rendererStorage->m_circleBatch.getVertices().empty()) {
             flushCircles();
+        }
+
+        if (m_rendererStorage->m_skyboxCubeMap != nullptr) {
+            flushSkybox();
         }
 
     }
@@ -130,6 +136,8 @@ namespace gaunlet::Scene {
             shader = m_rendererStorage->m_shaderLibrary.get("polygon-wireframe-shader");
         }
 
+        Core::RenderCommand::setDepthFunction(Core::DepthFunction::Less);
+
         // Render
         render(
             vertices, indices, textures, shader
@@ -155,6 +163,8 @@ namespace gaunlet::Scene {
             sizeof(CircleEntityProperties) * entityProperties.size()
         );
 
+        Core::RenderCommand::setDepthFunction(Core::DepthFunction::Less);
+
         // Render
         render(
             vertices, indices, textures, m_rendererStorage->m_shaderLibrary.get("circle-shader")
@@ -163,6 +173,23 @@ namespace gaunlet::Scene {
         // Clear the batch (and add the white texture back)
         m_rendererStorage->m_circleBatch.clear();
         m_rendererStorage->m_circleBatch.addTexture(m_rendererStorage->m_whiteTexture);
+
+    }
+
+    void DeferredRenderer::flushSkybox() {
+
+        CubeModel cube;
+
+        std::vector<Core::Ref<Graphics::Texture>> textures = {
+            m_rendererStorage->m_skyboxCubeMap
+        };
+
+        Core::RenderCommand::setDepthFunction(Core::DepthFunction::LessOrEqual);
+
+        // Render
+        render(
+            cube.getMeshes()[0].getVertices(), cube.getMeshes()[0].getIndices(), textures, m_rendererStorage->m_shaderLibrary.get("skybox-shader")
+        );
 
     }
 
@@ -209,6 +236,7 @@ namespace gaunlet::Scene {
 
         loadPolygonShaders();
         loadCircleShaders();
+        loadSkyboxShader();
 
     }
 
@@ -274,6 +302,22 @@ namespace gaunlet::Scene {
         // Link the EntityProperties uniform buffers
         circleShader->linkUniformBuffer(m_rendererStorage->m_circleEntityPropertiesUniformBuffer);
         circleShader->linkUniformBuffer(m_rendererStorage->m_scenePropertiesUniformBuffer);
+
+    }
+
+    void DeferredRenderer::loadSkyboxShader() {
+
+        std::map<Core::ShaderType, std::string> skyboxShaderSource {
+            {Core::ShaderType::Vertex, ASSETS_PATH"/shaders/skybox/vertex.glsl"},
+            {Core::ShaderType::Fragment, ASSETS_PATH"/shaders/skybox/fragment.glsl"}
+        };
+        auto skyboxShader = m_rendererStorage->m_shaderLibrary.load("skybox-shader", skyboxShaderSource);
+
+        // Set a single "skybox" texture
+        skyboxShader->setUniform1i("skybox", 0);
+
+        // Link  uniform buffers
+        skyboxShader->linkUniformBuffer(m_rendererStorage->m_scenePropertiesUniformBuffer);
 
     }
 

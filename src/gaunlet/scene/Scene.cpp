@@ -41,13 +41,14 @@ namespace gaunlet::Scene {
 
     }
 
-    void Scene::render(RenderMode renderMode, const Core::Ref<Camera>& camera, const DirectionalLightComponent& directionalLight) {
+    void Scene::render(RenderMode renderMode, const Core::Ref<Camera>& camera, const Core::Ref<DirectionalLightComponent>& directionalLight, const Core::Ref<SkyboxComponent>& skybox) {
 
         DeferredRenderer::beginScene(
             renderMode,
             camera->getViewMatrix(),
             camera->getProjectionMatrix(),
-            directionalLight
+            directionalLight,
+            skybox->m_cubeMap
         );
 
         renderModels();

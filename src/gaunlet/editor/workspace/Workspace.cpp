@@ -18,12 +18,13 @@ namespace gaunlet::Editor {
         });
     }
 
-    void Workspace::pushPanel(const char* panelId, RenderPanel* panel, const char* windowId, const char* cameraId, const char* sceneId, const char* directionalLightId, Scene::RenderMode renderMode) {
+    void Workspace::pushPanel(const char* panelId, RenderPanel* panel, const char* windowId, const char* cameraId, const char* sceneId, const char* directionalLightId, const char* skyboxId, Scene::RenderMode renderMode) {
         panel->m_id = panelId;
         panel->m_workspace = this;
         panel->m_cameraId = cameraId;
         panel->m_sceneId = sceneId;
         panel->m_directionalLightId = directionalLightId;
+        panel->m_skyboxId = skyboxId;
         panel->m_renderMode = renderMode;
         m_renderPanelSpecs.push_back({
             panel,
@@ -40,8 +41,12 @@ namespace gaunlet::Editor {
         m_scenes[id] = scene;
     }
 
-    void Workspace::addDirectionalLight(const char* id, Scene::DirectionalLightComponent directionalLight) {
+    void Workspace::addDirectionalLight(const char* id, const Core::Ref<Scene::DirectionalLightComponent>& directionalLight) {
         m_directionalLights[id] = directionalLight;
+    }
+
+    void Workspace::addSkybox(const char *id, const Core::Ref<Scene::SkyboxComponent>& skybox) {
+        m_skyboxes[id] = skybox;
     }
 
     const Core::Ref<Scene::Camera>& Workspace::getCamera(const char* id) {
@@ -68,12 +73,24 @@ namespace gaunlet::Editor {
 
     }
 
-    Scene::DirectionalLightComponent& Workspace::getDirectionalLight(const char* id) {
+    const Core::Ref<Scene::DirectionalLightComponent>& Workspace::getDirectionalLight(const char* id) {
 
         auto iterator = m_directionalLights.find(id);
 
         if (iterator == m_directionalLights.end()) {
             throw std::runtime_error("DirectionalLight not found");
+        }
+
+        return iterator->second;
+
+    }
+
+    const Core::Ref<Scene::SkyboxComponent>& Workspace::getSkybox(const char *id) {
+
+        auto iterator = m_skyboxes.find(id);
+
+        if (iterator == m_skyboxes.end()) {
+            throw std::runtime_error("Skybox not found");
         }
 
         return iterator->second;
