@@ -14,6 +14,8 @@ namespace gaunlet::Editor {
     public:
 
         virtual const char* getName() = 0;
+        virtual void start() {}
+        virtual void stop() {}
         virtual bool onEvent(Core::Event& event) {return true; }
         virtual void onUpdate(Core::TimeStep timeStep) {}
         virtual void onGuiRender() {}

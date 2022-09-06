@@ -1,5 +1,89 @@
 #include "../include/Editor.h"
 
+class TransformerTool : public gaunlet::Editor::Tool {
+
+public:
+
+    const char* getName() override {
+        return "Transformer";
+    }
+
+    void onGuiRender() override {
+
+        ImGui::Text("State: %s", m_moving ? "Transforming" : "Idle");
+
+        const char* handleLabel = gaunlet::Editor::TranslationGizmo::convert(m_handle);
+        ImGui::Text("Handle: %s", handleLabel);
+
+    }
+
+    void start() override {
+
+        auto selectedSceneEntity = getWorkspace()->getSelectedSceneEntity();
+        if (selectedSceneEntity) {
+            m_gizmo = gaunlet::Editor::TranslationGizmo::create(getWorkspace()->getScene("main")->getRegistry());
+            selectedSceneEntity.addChild(m_gizmo);
+        }
+
+    }
+
+    void stop() override {
+
+        if (m_gizmo) {
+            m_gizmo.destroy();
+        }
+
+    }
+
+    bool onEvent(gaunlet::Core::Event &event) {
+
+        gaunlet::Core::EventDispatcher dispatcher(event);
+        dispatcher.dispatch<gaunlet::Core::MouseButtonPress>(GL_BIND_CALLBACK_FN(TransformerTool::onMousePressEvent));
+        dispatcher.dispatch<gaunlet::Core::MouseButtonRelease>(GL_BIND_CALLBACK_FN(TransformerTool::onMouseReleaseEvent));
+        dispatcher.dispatch<gaunlet::Core::CursorMoveEvent>(GL_BIND_CALLBACK_FN(TransformerTool::onCursorMoveEvent));
+
+        return true;
+
+    }
+
+private:
+
+    bool m_moving = false;
+    gaunlet::Scene::Entity m_gizmo = {};
+    gaunlet::Editor::TranslationGizmo::Handle m_handle = gaunlet::Editor::TranslationGizmo::Handle::None;
+
+    bool onMousePressEvent(gaunlet::Core::MouseButtonPress& event) {
+
+        auto uiEntity = getWorkspace()->mousePickUIEntity("main");
+        getWorkspace()->selectUiEntity(uiEntity);
+
+        m_handle = gaunlet::Editor::TranslationGizmo::convert(uiEntity.getName());
+
+        return true;
+
+    }
+
+    bool onMouseReleaseEvent(gaunlet::Core::MouseButtonRelease& event) {
+
+        m_moving = false;
+        m_handle = gaunlet::Editor::TranslationGizmo::Handle::None;
+
+        return true;
+
+    }
+
+    bool onCursorMoveEvent(gaunlet::Core::CursorMoveEvent& event) {
+
+        if (!m_moving) {
+            return true;
+        }
+
+        return true;
+
+    }
+
+};
+
 class SelectorTool : public gaunlet::Editor::Tool {
 
     const char* getName() override {
@@ -17,11 +101,8 @@ class SelectorTool : public gaunlet::Editor::Tool {
 
     bool onMousePressEvent(gaunlet::Core::MouseButtonPress& event) {
 
-        auto scenePanel = getWorkspace()->getRenderPanel("main");
-        scenePanel->mousePickEntity(
-            scenePanel->getMousePositionX(),
-            scenePanel->getMousePositionYInverted()
-        );
+        auto selectedSceneEntity = getWorkspace()->mousePickSceneEntity("main");
+        getWorkspace()->selectSceneEntity(selectedSceneEntity);
 
         return true;
     }
@@ -178,7 +259,6 @@ public:
         ));
         m_workspace->addSkybox("main", gaunlet::Core::CreateRef<gaunlet::Scene::SkyboxComponent>(gaunlet::Core::CreateRef<gaunlet::Scene::SimpleSkyboxCubeMap>()));
 
-
         // Create and push the main render panel, referencing the main components
         m_workspace->pushPanel(
             "main",
@@ -194,6 +274,7 @@ public:
         // Create and push the tools
         m_workspace->addTool("camera-controller", gaunlet::Core::CreateRef<CameraControllerTool>());
         m_workspace->addTool("selector", gaunlet::Core::CreateRef<SelectorTool>());
+        m_workspace->addTool("transformer", gaunlet::Core::CreateRef<TransformerTool>());
 
         // Prepare the scene
         auto& mainScene = m_workspace->getScene("main");

@@ -1,5 +1,6 @@
 #include "gaunlet/editor/workspace/Workspace.h"
 
+#include "gaunlet/editor/Tags.h"
 #include "gaunlet/core/window/Window.h"
 
 namespace gaunlet::Editor {
@@ -157,7 +158,7 @@ namespace gaunlet::Editor {
 
     }
 
-    const std::vector<Core::Ref<Tool>> Workspace::getTools() {
+    const std::vector<Core::Ref<Tool>>& Workspace::getTools() {
         return m_tools;
     }
 
@@ -165,7 +166,7 @@ namespace gaunlet::Editor {
         return m_activeToolId;
     }
 
-    const Core::Ref<Tool> Workspace::getActiveTool() {
+    Core::Ref<Tool> Workspace::getActiveTool() {
         return m_activeToolId != nullptr ? getTool(m_activeToolId) : nullptr;
     }
 
@@ -175,6 +176,14 @@ namespace gaunlet::Editor {
 
     Scene::Entity Workspace::getSelectedUIEntity() {
         return m_selectedUIEntity;
+    }
+
+    Scene::Entity Workspace::mousePickSceneEntity(const char* renderPanelId) {
+        return mousePickTaggedEntity<SceneEntityTag>(renderPanelId, gaunlet::Editor::RenderPanel::SceneEntityIdFramebufferAttachmentIndex);
+    }
+
+    Scene::Entity Workspace::mousePickUIEntity(const char* renderPanelId) {
+        return mousePickTaggedEntity<UIEntityTag>(renderPanelId, gaunlet::Editor::RenderPanel::UIEntityIdFramebufferAttachmentIndex);
     }
 
     void Workspace::onEvent(Core::Event& event) {
@@ -271,7 +280,21 @@ namespace gaunlet::Editor {
     }
 
     void Workspace::activateTool(const char* id) {
+
+        // Stop the current active tool, if any
+        auto previousActiveTool = getActiveTool();
+        if (previousActiveTool) {
+            previousActiveTool->stop();
+        }
+
         m_activeToolId = id;
+
+        // Start the newly active tool, if any
+        auto newActiveTool = getActiveTool();
+        if (newActiveTool) {
+            newActiveTool->start();
+        }
+
     }
 
     void Workspace::selectSceneEntity(Scene::Entity entity) {

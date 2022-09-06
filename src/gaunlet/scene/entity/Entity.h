@@ -41,7 +41,7 @@ namespace gaunlet::Scene {
         void destroyChild(Entity child);
 
         template<typename T>
-        Entity createTaggedChild();
+        Entity createTaggedChild(const char* name = nullptr);
 
         template<typename T>
         Entity findTaggedAncestor();
@@ -98,10 +98,10 @@ namespace gaunlet::Scene {
     // ENTITY IMPLEMENTATION
 
     template<typename T>
-    Entity Entity::createTaggedChild() {
+    Entity Entity::createTaggedChild(const char* name) {
 
         // Create the child entity, delegating on the registry (so it will attach the Relationship component)
-        auto child = m_registry->createTaggedEntity<T>();
+        auto child = m_registry->createTaggedEntity<T>(name);
         adopt(*this, child);
 
         return child;

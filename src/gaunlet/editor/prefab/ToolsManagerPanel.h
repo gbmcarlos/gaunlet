@@ -11,6 +11,7 @@ namespace gaunlet::Editor {
         void onGuiRender() override {
 
             toolSelection();
+            toolProperties();
 
         }
 
@@ -22,7 +23,7 @@ namespace gaunlet::Editor {
 
             if (ImGui::BeginCombo("tools", previewLabel)) {
 
-                for (auto &tool: getWorkspace()->getTools()) {
+                for (auto& tool: getWorkspace()->getTools()) {
 
                     if (ImGui::Selectable(tool->getName(), getWorkspace()->getActiveToolId() == tool->getId())) {
 
@@ -37,6 +38,16 @@ namespace gaunlet::Editor {
                 }
 
                 ImGui::EndCombo();
+            }
+
+        }
+
+        void toolProperties() {
+
+            auto activeTool = getWorkspace()->getActiveTool();
+            if (activeTool) {
+                ImGui::Text("Tool \"%s\" properties:", activeTool->getName());
+                activeTool->onGuiRender();
             }
 
         }

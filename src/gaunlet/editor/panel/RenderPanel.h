@@ -28,8 +28,6 @@ namespace gaunlet::Editor {
         inline const char* getSkyboxId() {return m_skyboxId; }
         inline Scene::RenderMode getRenderMove() {return m_renderMode; }
 
-        void mousePickEntity(unsigned int mousePositionX, unsigned int mousePositionY);
-
     protected:
 
         // To be called by the LayoutLayer (friend), or overriden

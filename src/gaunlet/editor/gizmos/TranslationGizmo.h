@@ -8,7 +8,15 @@ namespace gaunlet::Editor {
 
     public:
 
+        enum class Handle {
+            None,
+            AxisX, AxisY, AxisZ,
+            PlaneYZ, PlaneXZ, PlaneXY
+        };
+
         static Scene::Entity create(Scene::Registry& registry);
+        static const char* convert(Handle handleType);
+        static Handle convert(const char* handleName);
 
     private:
 

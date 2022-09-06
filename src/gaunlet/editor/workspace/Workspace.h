@@ -6,6 +6,7 @@
 #include "gaunlet/editor/panel/Panel.h"
 #include "gaunlet/editor/panel/RenderPanel.h"
 #include "gaunlet/editor/tooling/Tool.h"
+#include "gaunlet/core/window/Window.h"
 #include "gaunlet/pch.h"
 
 namespace gaunlet::Editor {
@@ -45,12 +46,17 @@ namespace gaunlet::Editor {
         RenderPanel* getRenderPanel(const char* id);
 
         const Core::Ref<Tool>& getTool(const char* id);
-        const std::vector<Core::Ref<Tool>> getTools();
+        const std::vector<Core::Ref<Tool>>& getTools();
         const char* getActiveToolId();
-        const Core::Ref<Tool> getActiveTool();
+        Core::Ref<Tool> getActiveTool();
 
         Scene::Entity getSelectedSceneEntity();
         Scene::Entity getSelectedUIEntity();
+
+        template<typename T>
+        Scene::Entity mousePickTaggedEntity(const char* renderPanelId, unsigned int framebufferAttachmentIndex);
+        Scene::Entity mousePickSceneEntity(const char* renderPanelId);
+        Scene::Entity mousePickUIEntity(const char* renderPanelId);
 
     private:
         void updateNodeProperties(Panel* node);
@@ -85,5 +91,29 @@ namespace gaunlet::Editor {
         Scene::Entity m_selectedUIEntity = {};
 
     };
+
+    template<typename T>
+    Scene::Entity Workspace::mousePickTaggedEntity(const char *renderPanelId, unsigned int framebufferAttachmentIndex) {
+
+        auto renderPanel = getRenderPanel(renderPanelId);
+
+        unsigned int pixelPositionX = renderPanel->getMousePositionX() * Core::Window::getCurrentInstance()->getDPI();
+        unsigned int pixelPositionY = renderPanel->getMousePositionYInverted() * Core::Window::getCurrentInstance()->getDPI();
+
+        int selectedEntityId = renderPanel->m_framebuffer->readPixel(
+            framebufferAttachmentIndex,
+            pixelPositionX,
+            pixelPositionY
+        );
+
+        Scene::Entity selectedEntity = Scene::Entity(selectedEntityId, &getScene(renderPanel->getSceneId())->getRegistry());
+
+        if (selectedEntity && selectedEntity.hasComponent<T>()) {
+            return selectedEntity;
+        } else {
+            return {};
+        }
+
+    }
 
 }

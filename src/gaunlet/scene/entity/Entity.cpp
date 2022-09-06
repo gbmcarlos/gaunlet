@@ -92,9 +92,9 @@ namespace gaunlet::Scene {
         auto& relationship = getComponent<RelationshipComponent>();
 
         // First abandon and destroy all the children
-        for (auto childHandle : relationship.m_children) {
+        while (!relationship.m_children.empty()) {
 
-            Entity child = {childHandle, m_registry};
+            Entity child = {relationship.m_children[0], m_registry};
             destroyChild(child);
 
         }
@@ -120,7 +120,7 @@ namespace gaunlet::Scene {
 
     void Entity::adopt(Entity& parent, Entity& child) {
 
-        auto& parentRelationship = getComponent<RelationshipComponent>();
+        auto& parentRelationship = parent.getComponent<RelationshipComponent>();
         auto& childRelationship = child.getComponent<RelationshipComponent>();
 
         childRelationship.m_parent = m_handle; // Tell the child about its parent (aka, this)
@@ -130,7 +130,7 @@ namespace gaunlet::Scene {
 
     void Entity::abandon(Entity &parent, Entity &child) {
 
-        auto& parentRelationship = getComponent<RelationshipComponent>();
+        auto& parentRelationship = parent.getComponent<RelationshipComponent>();
         auto& childRelationship = child.getComponent<RelationshipComponent>();
 
         childRelationship.m_parent = entt::null;

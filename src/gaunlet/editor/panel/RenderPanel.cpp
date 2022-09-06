@@ -76,42 +76,4 @@ namespace gaunlet::Editor {
         return m_framebuffer->getColorAttachment(RenderPanel::SceneFramebufferAttachmentIndex);
     }
 
-    void RenderPanel::mousePickEntity(unsigned int mousePositionX, unsigned int mousePositionY) {
-
-        unsigned int pixelPositionX = mousePositionX * Core::Window::getCurrentInstance()->getDPI();
-        unsigned int pixelPositionY = mousePositionY * Core::Window::getCurrentInstance()->getDPI();
-
-        Scene::Entity selectedUIEntity = {};
-        Scene::Entity selectedSceneEntity = {};
-
-        int selectedUIEntityId = m_framebuffer->readPixel(
-            gaunlet::Editor::RenderPanel::UIEntityIdFramebufferAttachmentIndex,
-            pixelPositionX,
-            pixelPositionY
-        );
-
-        selectedUIEntity = Scene::Entity(selectedUIEntityId, &getWorkspace()->getScene(m_sceneId)->getRegistry());
-
-        // If there's a selected UI entity, look for the scene entity (the UI's parent)
-        if (selectedUIEntity) {
-
-            selectedSceneEntity = selectedUIEntity.findTaggedAncestor<SceneEntityTag>();
-
-        } else {
-
-            int selectedSceneEntityId = m_framebuffer->readPixel(
-                gaunlet::Editor::RenderPanel::SceneEntityIdFramebufferAttachmentIndex,
-                pixelPositionX,
-                pixelPositionY
-            );
-
-            selectedSceneEntity = Scene::Entity(selectedSceneEntityId, &getWorkspace()->getScene(m_sceneId)->getRegistry());
-
-        }
-
-        getWorkspace()->selectSceneEntity(selectedSceneEntity);
-        getWorkspace()->selectUiEntity(selectedUIEntity);
-
-    }
-
 }
