@@ -10,7 +10,7 @@ struct EntityProperties {
 struct DirectionalLight {
     vec3 color;
     float ambientIntensity;
-    vec3 position;
+    vec3 direction;
     float diffuseIntensity;
 };
 
@@ -39,7 +39,7 @@ flat out uint v_entityIndex;
 void main() {
 
     v_textureCoordinates = a_textureCoordinates;
-    v_normal = (properties[a_entityIndex].transform * vec4(a_normal, 1.0f)).xyz;
+    v_normal = a_normal;
     v_entityIndex = a_entityIndex;
 
     gl_Position = projection * view * properties[a_entityIndex].transform * a_position;

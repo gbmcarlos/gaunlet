@@ -10,7 +10,7 @@ struct EntityProperties {
 struct DirectionalLight {
     vec3 color;
     float ambientIntensity;
-    vec3 position;
+    vec3 direction;
     float diffuseIntensity;
 };
 

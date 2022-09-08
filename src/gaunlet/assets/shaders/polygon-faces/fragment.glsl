@@ -10,7 +10,7 @@ struct EntityProperties {
 struct DirectionalLight {
     vec3 color;
     float ambientIntensity;
-    vec3 position;
+    vec3 direction;
     float diffuseIntensity;
 };
 
@@ -49,7 +49,7 @@ uniform sampler2D texture10;
 
 vec4 sampleTexture(uint textureIndex, vec2 textureCoordinates);
 vec4 getDirectionalLightColor(
-    vec3 color, vec3 position,
+    vec3 color, vec3 direction,
     float ambientIntensity, float diffuseIntensity,
     vec3 normal
 );
@@ -57,7 +57,7 @@ vec4 getDirectionalLightColor(
 void main() {
 
     vec4 textureColor = sampleTexture(properties[v_entityIndex].textureIndex, v_textureCoordinates);
-    vec4 directionalLightColor = getDirectionalLightColor(directionalLight.color, directionalLight.position, directionalLight.ambientIntensity, directionalLight.diffuseIntensity, v_normal);
+    vec4 directionalLightColor = getDirectionalLightColor(directionalLight.color, directionalLight.direction, directionalLight.ambientIntensity, directionalLight.diffuseIntensity, v_normal);
 
     o_color = textureColor * properties[v_entityIndex].color * directionalLightColor;
 
@@ -65,10 +65,10 @@ void main() {
 
 }
 
-vec4 getDirectionalLightColor(vec3 color, vec3 position, float ambientIntensity, float diffuseIntensity, vec3 normal) {
+vec4 getDirectionalLightColor(vec3 color, vec3 direction, float ambientIntensity, float diffuseIntensity, vec3 normal) {
 
     vec4 ambientColor = vec4(color * ambientIntensity, 1.0f);
-    float diffuseFactor = dot(normalize(normal), position);
+    float diffuseFactor = dot(normalize(normal), -direction);
 
     if (diffuseFactor > 0) {
         return vec4(color * diffuseIntensity * diffuseFactor, 1.0f) + ambientColor;

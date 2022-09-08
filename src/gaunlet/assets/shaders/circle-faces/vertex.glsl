@@ -12,7 +12,7 @@ struct EntityProperties {
 struct DirectionalLight {
     vec3 color;
     float ambientIntensity;
-    vec3 position;
+    vec3 direction;
     float diffuseIntensity;
 };
 
@@ -42,7 +42,7 @@ out vec2 v_localCoordinates;
 void main() {
 
     v_textureCoordinates = a_textureCoordinates;
-    v_normal = (properties[a_entityIndex].transform * vec4(a_normal, 1.0f)).xyz;
+    v_normal = a_normal;
     v_entityIndex = a_entityIndex;
     v_localCoordinates = vec2(sign(a_position.x), sign(a_position.y));
 

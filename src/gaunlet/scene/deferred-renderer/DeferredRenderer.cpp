@@ -18,7 +18,7 @@ namespace gaunlet::Scene {
 
         SceneProperties sceneProperties(
             viewMatrix, projectionMatrix,
-            directionalLight->m_color, directionalLight->m_position,
+            directionalLight->m_color, directionalLight->m_direction,
             directionalLight->m_ambientIntensity, directionalLight->m_diffuseIntensity
         );
 
