@@ -14,9 +14,13 @@ namespace gaunlet::Editor {
             PlaneYZ, PlaneXZ, PlaneXY
         };
 
-        static Scene::Entity create(Scene::Registry& registry);
+        static Scene::Entity create(Scene::Registry& registry, float axisLength, float axisThickness, float planeGap, float planeSize);
         static const char* convert(Handle handleType);
         static Handle convert(const char* handleName);
+
+        static glm::vec3 getPlaneNormal(Handle handleType);
+        static glm::vec3 constraintMovement(Handle handleType, glm::vec3 movement);
+        static glm::vec3 getMovementConstraint(Handle handleType);
 
     private:
 

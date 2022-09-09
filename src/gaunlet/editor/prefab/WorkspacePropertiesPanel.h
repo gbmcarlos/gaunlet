@@ -16,11 +16,11 @@ namespace gaunlet::Editor {
                 windowProperties();
             }
 
+            panels();
+
             if (ImGui::CollapsingHeader("Selection")) {
                 selectionProperties();
             }
-
-            panels();
 
         }
 
@@ -36,19 +36,23 @@ namespace gaunlet::Editor {
 
         void selectionProperties() {
 
-            const char* sceneEntityLabel = "None";
             auto selectedSceneEntity = getWorkspace()->getSelectedSceneEntity();
             if (selectedSceneEntity) {
-                sceneEntityLabel = selectedSceneEntity.hasName() ? selectedSceneEntity.getName() : "Unnamed entity";
+                const char* sceneEntityLabel = selectedSceneEntity.hasName() ? selectedSceneEntity.getName() : "Unnamed entity";
+                ImGui::Text("Selected Scene Entity: %s", sceneEntityLabel);
+                entityProperties(selectedSceneEntity);
+            } else {
+                ImGui::Text("Selected Scene Entity: None");
             }
-            ImGui::Text("Selected Scene Entity: %s", sceneEntityLabel);
 
-            const char* uiEntityLabel = "None";
             auto selectedUIEntity = getWorkspace()->getSelectedUIEntity();
             if (selectedUIEntity) {
-                uiEntityLabel = selectedUIEntity.hasName() ? selectedUIEntity.getName() : "Unnamed entity";
+                const char* uiEntityLabel = selectedUIEntity.hasName() ? selectedUIEntity.getName() : "Unnamed entity";
+                ImGui::Text("Selected UI Entity: %s", uiEntityLabel);
+                entityProperties(selectedUIEntity);
+            } else {
+                ImGui::Text("Selected UI Entity: None");
             }
-            ImGui::Text("Selected UI Entity: %s", uiEntityLabel);
 
         }
 
@@ -144,7 +148,30 @@ namespace gaunlet::Editor {
 
             glm::vec4 color = glm::vec4(directionalLight->m_color, 1.0f);
             ImGui::Text("Color: "); ImGui::SameLine(); ImGui::ColorButton("Color", *(ImVec4*)&color);
-            ImGui::Text("Position: (%f, %f, %f)", directionalLight->m_position.x, directionalLight->m_position.y, directionalLight->m_position.z);
+            ImGui::Text("Position: (%f, %f, %f)", directionalLight->m_direction.x, directionalLight->m_direction.y, directionalLight->m_direction.z);
+
+        }
+
+        void entityProperties(Scene::Entity entity) {
+
+            ImGui::Text("Components:");
+
+            if (entity.hasComponent<Scene::TransformComponent>()) {
+                auto& transform = entity.getComponent<Scene::TransformComponent>();
+                ImGui::Text("Transform:");
+                ImGui::Text("Translation: (%f %f %f)", transform.m_translation.x, transform.m_translation.y, transform.m_translation.z);
+                ImGui::Text("Rotation: (%f %f %f)", transform.m_rotation.x, transform.m_rotation.y, transform.m_rotation.z);
+            }
+
+            ImGui::Text("Tags: "); ImGui::SameLine();
+            if (entity.hasComponent<Editor::SceneEntityTag>()) {
+                ImGui::Text("SceneEntity"); ImGui::SameLine();
+            }
+            if (entity.hasComponent<Editor::UIEntityTag>()) {
+                ImGui::Text("UIEntity"); ImGui::SameLine();
+            }
+
+            ImGui::NewLine();
 
         }
 

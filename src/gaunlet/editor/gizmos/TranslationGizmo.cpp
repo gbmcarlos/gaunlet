@@ -6,13 +6,13 @@
 
 namespace gaunlet::Editor {
 
-    Scene::Entity TranslationGizmo::create(Scene::Registry &registry) {
+    Scene::Entity TranslationGizmo::create(Scene::Registry &registry, float axisLength, float axisThickness, float planeGap, float planeSize) {
 
         auto gizmo = registry.createTaggedEntity<UIEntityTag>();
         gizmo.addComponent<Scene::TransformComponent>();
 
-        createAxis(gizmo, 1.5f, 0.03f);
-        createPlanes(gizmo, 0.5f, 0.5f);
+        createAxis(gizmo, axisLength, axisThickness);
+        createPlanes(gizmo, planeGap, planeSize);
 
         return gizmo;
 
@@ -88,8 +88,8 @@ namespace gaunlet::Editor {
         switch (handleType) {
             case Handle::None:     return "";
             case Handle::AxisX:     return "axis-x";
-            case Handle::AxisY:     return "axis-x";
-            case Handle::AxisZ:     return "axis-x";
+            case Handle::AxisY:     return "axis-y";
+            case Handle::AxisZ:     return "axis-z";
             case Handle::PlaneYZ:   return "plane-yz";
             case Handle::PlaneXZ:   return "plane-xz";
             case Handle::PlaneXY:   return "plane-xy";
@@ -116,6 +116,51 @@ namespace gaunlet::Editor {
         } else {
             return TranslationGizmo::Handle::None;
         }
+
+    }
+
+    glm::vec3 TranslationGizmo::constraintMovement(Handle handleType, glm::vec3 movement) {
+
+        switch (handleType) {
+            case Handle::AxisX:     return {movement.x, 0, 0};
+            case Handle::AxisY:     return {0, movement.y, 0};
+            case Handle::AxisZ:     return {0, 0, movement.z};
+            case Handle::PlaneYZ:   return {0, movement.y, movement.z};
+            case Handle::PlaneXZ:   return {movement.x, 0, movement.z};
+            case Handle::PlaneXY:   return {movement.x, movement.y, 0};
+        }
+
+        throw std::runtime_error("Unknown handle type");
+
+    }
+
+    glm::vec3 TranslationGizmo::getPlaneNormal(Handle handleType) {
+
+        switch (handleType) {
+            case Handle::AxisX:     return {0, 1, 0};
+            case Handle::AxisY:     return {1, 0, 0};
+            case Handle::AxisZ:     return {0, 1, 0};
+            case Handle::PlaneYZ:   return {1, 0, 0};
+            case Handle::PlaneXZ:   return {0, 1, 0};
+            case Handle::PlaneXY:   return {0, 0, 1};
+        }
+
+        throw std::runtime_error("Unknown handle type");
+
+    }
+
+    glm::vec3 TranslationGizmo::getMovementConstraint(Handle handleType) {
+
+        switch (handleType) {
+            case Handle::AxisX:     return {1, 0, 0};
+            case Handle::AxisY:     return {0, 1, 0};
+            case Handle::AxisZ:     return {0, 0, 1};
+            case Handle::PlaneYZ:   return glm::normalize(glm::vec3(0, 1, 1));
+            case Handle::PlaneXZ:   return glm::normalize(glm::vec3(1, 0, 1));
+            case Handle::PlaneXY:   return glm::normalize(glm::vec3(1, 1, 0));
+        }
+
+        throw std::runtime_error("Unknown handle type");
 
     }
 

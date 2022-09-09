@@ -134,6 +134,50 @@ namespace gaunlet::Scene {
 
     }
 
+    glm::vec3 Camera::ray(glm::vec2 viewportCoordinates, glm::vec2 viewportSize) {
+
+        // Normalized device coordinates (-1:1, -1:1, -1:1)
+        float ndcX = (2.0f * viewportCoordinates.x) / viewportSize.x - 1.0f;
+        float ndcY = 1.0f - (2.0f * viewportCoordinates.y) / viewportSize.y;
+        float ndcZ = 1.0f;
+        glm::vec3 ndcRay = {ndcX, ndcY, ndcZ};
+
+        // Homogeneous clip coordinates (point Z forward)
+        glm::vec4 clipRay = {ndcRay.x, ndcRay.y, -1.0, 1.0};
+
+        // Camera coordinates ([-x:x, -y:y, -z:z])
+        glm::vec4 cameraRayT = glm::inverse(getProjectionMatrix()) * clipRay;
+        glm::vec4 cameraRay = {cameraRayT.x, cameraRayT.y, -1.0f, 0.0f};
+
+        // World coordinates ([-x:x, -y:y, -z:z])
+        glm::vec4 worldRayT = {glm::inverse(getViewMatrix()) * cameraRay};
+        glm::vec3 worldRay = {worldRayT.x, worldRayT.y, worldRayT.z};
+
+        // Normalized ray
+        glm::vec ray = glm::normalize(worldRay);
+
+        return ray;
+
+    }
+
+    glm::vec3 Camera::rayPlaneIntersection(glm::vec3 rayOrigin, glm::vec3 rayDirection, glm::vec3 planePoint, glm::vec3 planeNormal) {
+
+        float distance;
+
+        bool intersects = glm::intersectRayPlane(
+            rayOrigin, rayDirection,
+            planePoint, planeNormal,
+            distance
+        );
+
+        if (intersects) {
+            return rayOrigin + (rayDirection * distance);
+        } else {
+            return {NAN, NAN, NAN};
+        }
+
+    }
+
     float Camera::constrainPitch(float pitch) {
 
         if (pitch > m_maxPitch) {

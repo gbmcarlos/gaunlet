@@ -186,6 +186,31 @@ namespace gaunlet::Editor {
         return mousePickTaggedEntity<UIEntityTag>(renderPanelId, gaunlet::Editor::RenderPanel::UIEntityIdFramebufferAttachmentIndex);
     }
 
+    glm::vec3 Workspace::mousePickPoint(const char* renderPanelId, glm::vec3 planePoint, glm::vec3 planeNormal) {
+
+        auto window = gaunlet::Core::Window::getCurrentInstance();
+        auto renderPanel = getRenderPanel(renderPanelId);
+        auto camera = getCamera(renderPanel->getCameraId());
+
+        glm::mat4 projection = camera->getProjectionMatrix();
+        glm::mat4 view = camera->getViewMatrix();
+
+        auto ray = camera->ray(
+            {renderPanel->getMousePositionX(), window->getMousePositionY()},
+            {renderPanel->getWidth(), renderPanel->getHeight()}
+        );
+
+        auto intersection = camera->rayPlaneIntersection(
+            camera->getPosition(),
+            ray,
+            planePoint,
+            planeNormal
+        );
+
+        return intersection;
+
+    }
+
     void Workspace::onEvent(Core::Event& event) {
 
         if (event.getCategory() == Core::EventCategory::Mouse || event.getCategory() == Core::EventCategory::Scroll) {

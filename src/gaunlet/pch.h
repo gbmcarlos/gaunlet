@@ -22,6 +22,7 @@
 // Commonly-used
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/intersect.hpp>
 #include "core/Pointers.h"
 #include "core/debug/Instrumentation.h"
 #include "core/utils.h"

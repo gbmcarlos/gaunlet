@@ -22,7 +22,6 @@ namespace gaunlet::Scene {
         virtual float getAspectRatio() const = 0;
         virtual void resize(unsigned int viewportWidth, unsigned int viewportHeight) = 0;
 
-
         glm::mat4 getProjectionMatrix();
         glm::mat4 getViewMatrix();
 
@@ -48,6 +47,9 @@ namespace gaunlet::Scene {
         inline float getZoomLevel() const {return m_zoomLevel;}
         void setZoomLevel(float zoomLevel);
         void addZoomLevel(float zoomLevelDelta);
+
+        glm::vec3 ray(glm::vec2 viewportCoordinates, glm::vec2 viewportSize);
+        static glm::vec3 rayPlaneIntersection(glm::vec3 rayOrigin, glm::vec3 rayDirection, glm::vec3 planePoint, glm::vec3 planeNormal);
 
     protected:
 

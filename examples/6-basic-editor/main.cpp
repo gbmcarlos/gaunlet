@@ -10,18 +10,24 @@ public:
 
     void onGuiRender() override {
 
-        ImGui::Text("State: %s", m_moving ? "Transforming" : "Idle");
-
         const char* handleLabel = gaunlet::Editor::TranslationGizmo::convert(m_handle);
         ImGui::Text("Handle: %s", handleLabel);
+        ImGui::Text("Position: (%f %f %f)", m_handlePosition.x, m_handlePosition.y, m_handlePosition.z);
+        ImGui::Text("Movement: (%f %f %f)", m_movement.x, m_movement.y, m_movement.z);
 
     }
 
     void start() override {
 
+        // If there's already an entity selected, create the gizmo
         auto selectedSceneEntity = getWorkspace()->getSelectedSceneEntity();
         if (selectedSceneEntity) {
-            m_gizmo = gaunlet::Editor::TranslationGizmo::create(getWorkspace()->getScene("main")->getRegistry());
+            m_sceneEntity = selectedSceneEntity;
+            m_gizmo = gaunlet::Editor::TranslationGizmo::create(
+                getWorkspace()->getScene("main")->getRegistry(),
+                1.5f, 0.1f,
+                0.5f, 0.5f
+            );
             selectedSceneEntity.addChild(m_gizmo);
         }
 
@@ -29,7 +35,9 @@ public:
 
     void stop() override {
 
+        // If there is a gizmo, remove it (and unselect it)
         if (m_gizmo) {
+            getWorkspace()->selectUiEntity({});
             m_gizmo.destroy();
         }
 
@@ -48,16 +56,29 @@ public:
 
 private:
 
-    bool m_moving = false;
+    glm::vec3 m_entityInitialPosition;
+    glm::vec3 m_handleInitialPosition;
+    glm::vec3 m_handlePosition;
+    glm::vec3 m_movement;
+    gaunlet::Scene::Entity m_sceneEntity;
     gaunlet::Scene::Entity m_gizmo = {};
-    gaunlet::Editor::TranslationGizmo::Handle m_handle = gaunlet::Editor::TranslationGizmo::Handle::None;
+    gaunlet::Editor::TranslationGizmo::Handle m_handle = gaunlet::Editor::TranslationGizmo::Handle::PlaneXY;
 
     bool onMousePressEvent(gaunlet::Core::MouseButtonPress& event) {
 
+        // Check if we're clicking on any of the handles
         auto uiEntity = getWorkspace()->mousePickUIEntity("main");
-        getWorkspace()->selectUiEntity(uiEntity);
-
-        m_handle = gaunlet::Editor::TranslationGizmo::convert(uiEntity.getName());
+        if (uiEntity) {
+            getWorkspace()->selectUiEntity(uiEntity);
+            m_handle = gaunlet::Editor::TranslationGizmo::convert(uiEntity.getName());
+            m_entityInitialPosition = m_sceneEntity.getComponent<gaunlet::Scene::TransformComponent>().m_translation;
+            m_handleInitialPosition = getWorkspace()->mousePickPoint(
+                "main",
+                m_sceneEntity.getComponent<gaunlet::Scene::TransformComponent>().m_translation,
+                gaunlet::Editor::TranslationGizmo::getPlaneNormal(m_handle)
+            );
+            m_handlePosition = m_handleInitialPosition;
+        }
 
         return true;
 
@@ -65,8 +86,9 @@ private:
 
     bool onMouseReleaseEvent(gaunlet::Core::MouseButtonRelease& event) {
 
-        m_moving = false;
+        getWorkspace()->selectUiEntity({});
         m_handle = gaunlet::Editor::TranslationGizmo::Handle::None;
+        m_movement = {0, 0, 0};
 
         return true;
 
@@ -74,9 +96,26 @@ private:
 
     bool onCursorMoveEvent(gaunlet::Core::CursorMoveEvent& event) {
 
-        if (!m_moving) {
+        gaunlet::Scene::Entity handle = getWorkspace()->getSelectedUIEntity();
+
+        // If we don't have any handle clicked, there's nothing to do
+        if (!handle) {
             return true;
         }
+
+        m_handlePosition = getWorkspace()->mousePickPoint(
+            "main",
+            m_sceneEntity.getComponent<gaunlet::Scene::TransformComponent>().m_translation,
+            gaunlet::Editor::TranslationGizmo::getPlaneNormal(m_handle)
+        );
+
+        if (glm::any(glm::isnan(m_handlePosition))) {
+            return true;
+        }
+
+        m_movement = gaunlet::Editor::TranslationGizmo::constraintMovement(m_handle, m_handlePosition - m_handleInitialPosition);
+
+        m_sceneEntity.getComponent<gaunlet::Scene::TransformComponent>().m_translation = m_entityInitialPosition + m_movement;
 
         return true;
 
@@ -144,8 +183,8 @@ protected:
         m_state = State::Moving;
 
         m_initialPosition = {
-            gaunlet::Core::Input::getMousePositionX(),
-            gaunlet::Core::Input::getMousePositionY()
+            getWorkspace()->getRenderPanel("main")->getMousePositionX(),
+            getWorkspace()->getRenderPanel("main")->getMousePositionY()
         };
 
         return true;
@@ -165,8 +204,8 @@ protected:
         }
 
         glm::vec2 currentPosition = {
-            gaunlet::Core::Input::getMousePositionX(),
-            gaunlet::Core::Input::getMousePositionY()
+            getWorkspace()->getRenderPanel("main")->getMousePositionX(),
+            getWorkspace()->getRenderPanel("main")->getMousePositionY()
         };
 
         glm::vec2 delta = m_initialPosition - currentPosition;
@@ -254,8 +293,8 @@ public:
         m_workspace->addScene("main", gaunlet::Core::CreateRef<gaunlet::Scene::Scene>());
         m_workspace->addDirectionalLight("main", gaunlet::Core::CreateRef<gaunlet::Scene::DirectionalLightComponent>(
             glm::vec3(0.8f, 0.8f, 0.8f),
-            glm::vec3(2.0f, 5.0f, 4.0f),
-            0.2f, 0.5f
+            glm::vec3(-0.2f, -1.0f, -0.3f),
+            0.5f, 0.7f
         ));
         m_workspace->addSkybox("main", gaunlet::Core::CreateRef<gaunlet::Scene::SkyboxComponent>(gaunlet::Core::CreateRef<gaunlet::Scene::SimpleSkyboxCubeMap>()));
 

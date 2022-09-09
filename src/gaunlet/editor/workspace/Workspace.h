@@ -58,6 +58,8 @@ namespace gaunlet::Editor {
         Scene::Entity mousePickSceneEntity(const char* renderPanelId);
         Scene::Entity mousePickUIEntity(const char* renderPanelId);
 
+        glm::vec3 mousePickPoint(const char* renderPanelId, glm::vec3 planePoint, glm::vec3 planeNormal);
+
     private:
         void updateNodeProperties(Panel* node);
 
