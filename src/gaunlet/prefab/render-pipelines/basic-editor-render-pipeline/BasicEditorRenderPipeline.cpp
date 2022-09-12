@@ -336,7 +336,8 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
         auto modelOutlineShader = m_shaderLibrary.load("model-outline", modelOutlineShaderSource);
 
         // Set a single "skybox" texture
-        modelOutlineShader->setUniform1f("u_width", 0.1f);
+        modelOutlineShader->setUniform1f("u_width", 0.015f);
+        modelOutlineShader->setUniform3f("u_color", {0.9f, 0.9f, 0.1f});
 
         // Link uniform buffers
         modelOutlineShader->linkUniformBuffer(m_scenePropertiesUniformBuffer);

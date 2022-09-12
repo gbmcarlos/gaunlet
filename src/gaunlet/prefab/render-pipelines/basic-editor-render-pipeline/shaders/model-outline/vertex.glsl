@@ -43,7 +43,7 @@ void main() {
     vec4 clipPosition = projection * view * properties[a_entityIndex].transform * a_position;
     vec4 clipNormal = projection * view * properties[a_entityIndex].transform * vec4(a_normal, 0.0f);
 
-    vec2 offset = normalize(clipNormal.xy) * u_width;
+    vec2 offset = normalize(clipNormal.xy) * u_width * clipPosition.w;
     clipPosition.xy += offset;
 
     gl_Position = clipPosition;

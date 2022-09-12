@@ -12,6 +12,8 @@ layout (std140) uniform EntityPropertiesBlock {
     EntityProperties properties[100];
 };
 
+uniform vec3 u_color;
+
 // Inputs
 flat in uint v_entityIndex;
 
@@ -21,7 +23,7 @@ layout (location = 1) out int o_entityId;
 
 void main() {
 
-    o_color = vec4(0.0f, 1.0f, 0.0f, 1.0f);
+    o_color = vec4(u_color, 1.0f);
 
     o_entityId = properties[v_entityIndex].entityId;
 
