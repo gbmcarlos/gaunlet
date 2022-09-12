@@ -19,14 +19,14 @@ namespace gaunlet::Editor {
         });
     }
 
-    void Workspace::pushPanel(const char* panelId, RenderPanel* panel, const char* windowId, const char* cameraId, const char* sceneId, const char* directionalLightId, const char* skyboxId, Scene::RenderMode renderMode) {
+    void Workspace::pushPanel(const char* panelId, RenderPanel* panel, const char* windowId, const char* cameraId, const char* sceneId, const char* directionalLightId, const char* skyboxId, const char* renderPipelineId) {
         panel->m_id = panelId;
         panel->m_workspace = this;
         panel->m_cameraId = cameraId;
         panel->m_sceneId = sceneId;
         panel->m_directionalLightId = directionalLightId;
         panel->m_skyboxId = skyboxId;
-        panel->m_renderMode = renderMode;
+        panel->m_renderPipelineId = renderPipelineId;
         m_renderPanelSpecs.push_back({
             panel,
             panelId,
@@ -48,6 +48,10 @@ namespace gaunlet::Editor {
 
     void Workspace::addSkybox(const char *id, const Core::Ref<Scene::SkyboxComponent>& skybox) {
         m_skyboxes[id] = skybox;
+    }
+
+    void Workspace::addRenderPipeline(const char *id, const Core::Ref<FramebufferRenderPipeline>& renderPipeline) {
+        m_renderPipelines[id] = renderPipeline;
     }
 
     const Core::Ref<Scene::Camera>& Workspace::getCamera(const char* id) {
@@ -91,6 +95,18 @@ namespace gaunlet::Editor {
         auto iterator = m_skyboxes.find(id);
 
         if (iterator == m_skyboxes.end()) {
+            throw std::runtime_error("Skybox not found");
+        }
+
+        return iterator->second;
+
+    }
+
+    const Core::Ref<FramebufferRenderPipeline>& Workspace::getRenderPipeline(const char *id) {
+
+        auto iterator = m_renderPipelines.find(id);
+
+        if (iterator == m_renderPipelines.end()) {
             throw std::runtime_error("Skybox not found");
         }
 
@@ -179,11 +195,11 @@ namespace gaunlet::Editor {
     }
 
     Scene::Entity Workspace::mousePickSceneEntity(const char* renderPanelId) {
-        return mousePickTaggedEntity<SceneEntityTag>(renderPanelId, gaunlet::Editor::RenderPanel::SceneEntityIdFramebufferAttachmentIndex);
+        return mousePickTaggedEntity<SceneEntityTag>(renderPanelId, FramebufferLayer::SceneEntity);
     }
 
     Scene::Entity Workspace::mousePickUIEntity(const char* renderPanelId) {
-        return mousePickTaggedEntity<UIEntityTag>(renderPanelId, gaunlet::Editor::RenderPanel::UIEntityIdFramebufferAttachmentIndex);
+        return mousePickTaggedEntity<UIEntityTag>(renderPanelId, FramebufferLayer::UIEntity);
     }
 
     glm::vec3 Workspace::mousePickPoint(const char* renderPanelId, glm::vec3 planePoint, glm::vec3 planeNormal) {
@@ -213,6 +229,7 @@ namespace gaunlet::Editor {
 
     void Workspace::onEvent(Core::Event& event) {
 
+        // Mouse and scroll will be ignored if the cursor is not hovering any render panel
         if (event.getCategory() == Core::EventCategory::Mouse || event.getCategory() == Core::EventCategory::Scroll) {
 
             bool renderPanelHovered = false;
@@ -226,6 +243,7 @@ namespace gaunlet::Editor {
 
         }
 
+        // Delegate the event to the active tool
         if (m_activeToolId) {
             auto& activeTool = getTool(m_activeToolId);
 

@@ -32,8 +32,8 @@ namespace gaunlet::Graphics {
         for (auto& attachmentSpec : attachmentSpecs) {
             if (attachmentSpec.m_attachmentType == Core::FramebufferAttachmentType::Color) {
                 m_colorAttachmentSpecs.emplace_back(attachmentSpec);
-            } else if (attachmentSpec.m_attachmentType == Core::FramebufferAttachmentType::Depth) {
-                m_depthAttachmentSpec = attachmentSpec;
+            } else if (attachmentSpec.m_attachmentType == Core::FramebufferAttachmentType::DepthStencil) {
+                m_depthStencilAttachmentSpec = attachmentSpec;
             }
         }
 
@@ -69,7 +69,7 @@ namespace gaunlet::Graphics {
             clearColorAttachment(i);
         }
 
-        clearDepthAttachment();
+        clearDepthStencilAttachment();
 
     }
 
@@ -90,9 +90,11 @@ namespace gaunlet::Graphics {
 
     }
 
-    void Framebuffer::clearDepthAttachment() {
-        if (m_depthAttachmentSpec.m_attachmentType != Core::FramebufferAttachmentType::None) {
-            Core::RenderCommand::clearDepthAttachment(m_rendererId);
+    void Framebuffer::clearDepthStencilAttachment() {
+        if (m_depthStencilAttachmentSpec.m_attachmentType != Core::FramebufferAttachmentType::None) {
+            // Make sure to clear the whole stencil buffer
+            Core::RenderCommand::setStencilOperation(true, Core::StencilOperation::Replace, Core::StencilOperation::Replace, Core::StencilOperation::Replace);
+            Core::RenderCommand::clearDepthStencilAttachment(m_rendererId, 1.0f, 0);
         }
     }
 
@@ -156,12 +158,10 @@ namespace gaunlet::Graphics {
 
         }
 
-        // Create and attach the depth texture, if any
-        if (m_depthAttachmentSpec.m_attachmentType != Core::FramebufferAttachmentType::None) {
-
-            attachDepth(m_depthAttachmentSpec);
+        // Create and attach the depth-stencil texture, if any
+        if (m_depthStencilAttachmentSpec.m_attachmentType != Core::FramebufferAttachmentType::None) {
+            attachDepthStencil(m_depthStencilAttachmentSpec);
             drawBuffers.emplace_back(-1);
-
         }
 
         setDrawBuffers(drawBuffers);
@@ -186,12 +186,12 @@ namespace gaunlet::Graphics {
                 internalFormat = Core::TextureDataFormat::RedInteger32;
                 format = Core::TextureDataFormat::RedInteger;
                 break;
-            case FramebufferDataFormat::Depth:
+            case FramebufferDataFormat::DepthStencil:
                 throw std::runtime_error("Invalid framebuffer data format");
         }
 
         Core::Ref<Texture> texture = Core::CreateRef<TextureImage2D>(
-            internalFormat, format,
+            internalFormat, format, Core::PrimitiveDataType::UByte,
             m_width, m_height,
             nullptr
         );
@@ -208,11 +208,11 @@ namespace gaunlet::Graphics {
 
     }
 
-    void Framebuffer::attachDepth(FramebufferAttachmentSpec depthAttachmentSpec) {
+    void Framebuffer::attachDepthStencil(FramebufferAttachmentSpec depthStencilAttachmentSpec) {
 
         // Create the buffer texture
         Core::Ref<Texture> texture = Core::CreateRef<TextureImage2D>(
-            Core::TextureDataFormat::Depth, Core::TextureDataFormat::Depth,
+            Core::TextureDataFormat::Depth24Stencil8, Core::TextureDataFormat::DepthStencil, Core::PrimitiveDataType::UInt24_8,
             m_width, m_height,
             nullptr
         );
@@ -222,7 +222,7 @@ namespace gaunlet::Graphics {
         Core::RenderCommand::framebufferAttach(
             m_rendererId,
             Core::TextureType::Image2D,
-            m_depthAttachmentSpec.m_attachmentType,
+            m_depthStencilAttachmentSpec.m_attachmentType,
             0,
             texture->getRendererId()
         );

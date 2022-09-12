@@ -1,4 +1,5 @@
 #include "../include/Editor.h"
+#include "../include/Prefab.h"
 
 class ToolsPanel : public gaunlet::Editor::GuiPanel {
 
@@ -73,6 +74,7 @@ public:
         m_workspace->addScene("main", gaunlet::Core::CreateRef<gaunlet::Scene::Scene>());
         m_workspace->addDirectionalLight("main", gaunlet::Core::CreateRef<gaunlet::Scene::DirectionalLightComponent>());
         m_workspace->addSkybox("main", gaunlet::Core::CreateRef<gaunlet::Scene::SkyboxComponent>());
+        m_workspace->addRenderPipeline("main", gaunlet::Core::CreateRef<gaunlet::Prefab::BasicEditorRenderPipeline::BasicEditorRenderPipeline>());
 
         // Create and push the main render panel, referencing the main components
         m_workspace->pushPanel(
@@ -83,7 +85,7 @@ public:
             "main",
             "main",
             "main",
-            gaunlet::Scene::RenderMode::Faces
+            "main"
         );
 
         // Prepare the scene
@@ -92,8 +94,8 @@ public:
         mainCamera->setPosition({0.0f, 0.0f, 5.0f});
         mainCamera->setZoomLevel(1.5f);
 
-        auto triangle = mainScene->getRegistry().createTaggedEntity<gaunlet::Editor::SceneEntityTag>();
-        triangle.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Triangle2DModel());
+        auto triangle = mainScene->createTaggedEntity<gaunlet::Editor::SceneEntityTag>();
+        triangle.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Prefab::Sprites::Triangle2DModel());
         triangle.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(-1.5f, 0.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
@@ -101,7 +103,7 @@ public:
         );
         triangle.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
-        auto circle = mainScene->getRegistry().createTaggedEntity<gaunlet::Editor::SceneEntityTag>();
+        auto circle = mainScene->createTaggedEntity<gaunlet::Editor::SceneEntityTag>();
         circle.addComponent<gaunlet::Scene::CircleComponent>(0.3f, 0.01f);
         circle.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(1.5f, 0.0f, 0.0f),

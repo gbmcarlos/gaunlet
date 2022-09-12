@@ -6,7 +6,7 @@ namespace gaunlet::Scene {
 
     // ENTITY DECLARATION
 
-    class Registry; // Forward-declare the Registry, for the Entity
+    class Scene; // Forward-declare the Registry, for the Entity
 
     struct RelationshipComponent {
         entt::entity m_parent = entt::null;
@@ -23,8 +23,8 @@ namespace gaunlet::Scene {
     public:
 
         Entity();
-        Entity(entt::entity entityHandle, Registry* registry);
-        Entity(int entityHandle, Registry* registry);
+        Entity(entt::entity entityHandle, Scene* scene);
+        Entity(int entityHandle, Scene* scene);
 
         int getId() const;
         bool hasName();
@@ -63,7 +63,7 @@ namespace gaunlet::Scene {
 
     private:
         entt::entity m_handle = entt::null;
-        Registry* m_registry = nullptr;
+        Scene* m_scene = nullptr;
 
         void adopt(Entity& parent, Entity& child);
         void abandon(Entity& parent, Entity& child);
@@ -72,12 +72,9 @@ namespace gaunlet::Scene {
 
     // REGISTRY DECLARATION
 
-    class Scene; // Forward-declare the scene, for the Registry
-
-    class Registry {
+    class Scene {
 
         friend class Entity;
-        friend class Scene;
 
     public:
         Entity createEntity(const char* name = nullptr);
@@ -90,6 +87,8 @@ namespace gaunlet::Scene {
         template<typename T>
         int countTaggedEntities();
 
+        inline entt::registry& getRegistry() {return m_registry; }
+
     private:
         entt::registry m_registry;
 
@@ -101,7 +100,7 @@ namespace gaunlet::Scene {
     Entity Entity::createTaggedChild(const char* name) {
 
         // Create the child entity, delegating on the registry (so it will attach the Relationship component)
-        auto child = m_registry->createTaggedEntity<T>(name);
+        auto child = m_scene->createTaggedEntity<T>(name);
         adopt(*this, child);
 
         return child;
@@ -143,7 +142,7 @@ namespace gaunlet::Scene {
 
     template<typename T>
     bool Entity::hasComponent() {
-        return m_registry->m_registry.all_of<T>(m_handle);
+        return m_scene->m_registry.all_of<T>(m_handle);
     }
 
     template<typename T>
@@ -151,28 +150,28 @@ namespace gaunlet::Scene {
         if (!hasComponent<T>()) {
             throw std::runtime_error("Component not found");
         }
-        return m_registry->m_registry.get<T>(m_handle);
+        return m_scene->m_registry.get<T>(m_handle);
     }
 
     template<typename T, typename... Args>
     T& Entity::addComponent(Args&&... args) {
-        return m_registry->m_registry.emplace<T>(m_handle, std::forward<Args>(args)...);
+        return m_scene->m_registry.emplace<T>(m_handle, std::forward<Args>(args)...);
     }
 
     template<typename T, typename... Args>
     void Entity::addEmptyComponent(Args&&... args) {
-        m_registry->m_registry.emplace<T>(m_handle, std::forward<Args>(args)...);
+        m_scene->m_registry.emplace<T>(m_handle, std::forward<Args>(args)...);
     }
 
     template<typename T>
     void Entity::removeComponent() {
-        m_registry->m_registry.remove<T>(m_handle);
+        m_scene->m_registry.remove<T>(m_handle);
     }
 
     // REGISTRY IMPLEMENTATION
 
     template<typename T>
-    Entity Registry::createTaggedEntity(const char* name) {
+    Entity Scene::createTaggedEntity(const char* name) {
 
         auto entity = createEntity(name);
         entity.addEmptyComponent<T>();
@@ -182,7 +181,7 @@ namespace gaunlet::Scene {
     }
 
     template<typename T>
-    int Registry::countTaggedEntities() {
+    int Scene::countTaggedEntities() {
 
         auto view = m_registry.view<T>();
         return view.size();

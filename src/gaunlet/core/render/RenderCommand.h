@@ -21,9 +21,11 @@ namespace gaunlet::Core {
         static void init();
 
         static void clearColorBuffer(const glm::vec4& color);
-        static void clearDepthBuffer();
+        static void clearDepthStencilBuffer();
 
-        static void setDepthFunction(DepthFunction function);
+        static void setDepthFunction(DepthStencilFunction function);
+        static void setStencilFunction(DepthStencilFunction function, unsigned int reference);
+        static void setStencilOperation(bool enabled, StencilOperation stencilFailOperation, StencilOperation stencilPassDepthFailOperation, StencilOperation depthStencilPassOperation);
 
         static void getViewport(unsigned int& x0, unsigned int& y0, unsigned int& x1, unsigned int& y1);
         static void setViewport(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1);
@@ -64,7 +66,7 @@ namespace gaunlet::Core {
         static void bindUniformBufferToBindingPoint(unsigned int bufferId, unsigned int bindingPoint, unsigned int size);
         static void bindUniformBufferFromBindingPoint(unsigned int shaderId, int location, unsigned int bindingPoint);
 
-        static void loadTextureImage2d(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data);
+        static void loadTextureImage2d(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, PrimitiveDataType dataType, unsigned int width, unsigned int height, void* data);
         static void loadTextureCubeMap(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, std::vector<void *> imagesData);
         static void activateTexture(unsigned int id, TextureType type, unsigned int slot);
         static void deleteTexture(unsigned int& id);
@@ -77,7 +79,7 @@ namespace gaunlet::Core {
         static void setDrawBuffers(unsigned int id, const std::vector<int>& drawBuffers);
         static void checkFramebufferCompleteness(unsigned int id);
         static void clearColorAttachment(unsigned int id, unsigned int colorAttachmentIndex, PrimitiveDataType dataType, void* value);
-        static void clearDepthAttachment(unsigned int id);
+        static void clearDepthStencilAttachment(unsigned int id, float depthValue, int stencilValue);
 
         static void readFramebuffer(unsigned int id, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, TextureDataFormat internalFormat, PrimitiveDataType type, unsigned int x, unsigned int y, unsigned int width, unsigned int height, void* data);
 

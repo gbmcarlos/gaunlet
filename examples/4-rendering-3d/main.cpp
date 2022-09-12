@@ -1,35 +1,15 @@
 #include "../include/Scene.h"
+#include "../include/Prefab.h"
 
 class Rendering3DApplication : public gaunlet::Core::Application {
 
 public:
     explicit Rendering3DApplication() : gaunlet::Core::Application() {}
 
-    void onUpdate(gaunlet::Core::TimeStep timeStep) override {
-
-        gaunlet::Core::RenderCommand::clearColorBuffer(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
-        gaunlet::Core::RenderCommand::clearDepthBuffer();
-
-        if (m_renderMode == 0) {
-            m_scene.render(gaunlet::Scene::RenderMode::Faces, m_camera, m_directionalLight, m_skybox);
-        } else {
-            m_scene.render(gaunlet::Scene::RenderMode::Wireframe, m_camera, m_directionalLight, m_skybox);
-        }
-    }
-
-    void onGuiRender() override {
-        ImGui::ShowMetricsWindow();
-
-        ImGui::Begin("Settings");
-
-        ImGui::RadioButton("Faces", &m_renderMode, 0);
-        ImGui::RadioButton("Wireframe", &m_renderMode, 1);
-
-        ImGui::End();
-
-    }
-
     void onReady() override {
+
+        m_scene = gaunlet::Core::CreateRef<gaunlet::Scene::Scene>();
+        m_renderPipeline = gaunlet::Core::CreateRef<gaunlet::Prefab::Basic3DRenderPipeline::Basic3DRenderPipeline>();
 
         auto viewportWidth = (float) gaunlet::Core::Window::getCurrentInstance()->getViewportWidth();
         auto viewportHeight = (float) gaunlet::Core::Window::getCurrentInstance()->getViewportHeight();
@@ -40,8 +20,8 @@ public:
 
         m_directionalLight = gaunlet::Core::CreateRef<gaunlet::Scene::DirectionalLightComponent>(
             glm::vec3(0.8f, 0.8f, 0.8f),
-            glm::vec3(2.0f, 5.0f, 4.0f),
-            0.2f, 0.5f
+            glm::vec3(-0.2f, -1.0f, -0.3f),
+            0.5f, 0.7f
         );
 
         m_skybox = gaunlet::Core::CreateRef<gaunlet::Scene::SkyboxComponent>(std::vector<const char*>{
@@ -53,7 +33,7 @@ public:
             "assets/skybox/back.jpg"
         });
 
-        auto cup = m_scene.getRegistry().createEntity();
+        auto cup = m_scene->createEntity();
         cup.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Model("assets/cup/cup.obj"));
         cup.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(0.0f, 0.0f, 0.0f),
@@ -62,16 +42,18 @@ public:
         );
         cup.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(0.8f, 0.2f, 0.2f, 1.0f));
 
-        m_scene.start();
+    }
 
+    void onUpdate(gaunlet::Core::TimeStep timeStep) override {
+        m_renderPipeline->run(m_scene, m_camera, m_directionalLight, m_skybox);
     }
 
 private:
-    int m_renderMode = 0;
-    gaunlet::Scene::Scene m_scene;
+    gaunlet::Core::Ref<gaunlet::Scene::Scene> m_scene;
     gaunlet::Core::Ref<gaunlet::Scene::PerspectiveCamera> m_camera;
     gaunlet::Core::Ref<gaunlet::Scene::DirectionalLightComponent> m_directionalLight;
     gaunlet::Core::Ref<gaunlet::Scene::SkyboxComponent> m_skybox;
+    gaunlet::Core::Ref<gaunlet::Prefab::Basic3DRenderPipeline::Basic3DRenderPipeline> m_renderPipeline;
 
 };
 

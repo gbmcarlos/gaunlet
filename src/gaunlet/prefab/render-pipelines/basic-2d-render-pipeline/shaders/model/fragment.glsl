@@ -4,16 +4,6 @@ struct EntityProperties {
     mat4 transform;
     vec4 color;
     uint textureIndex;
-    int entityId;
-    float thickness;
-    float fade;
-};
-
-struct DirectionalLight {
-    vec3 color;
-    float ambientIntensity;
-    vec3 direction;
-    float diffuseIntensity;
 };
 
 // Uniforms
@@ -24,18 +14,15 @@ layout (std140) uniform EntityPropertiesBlock {
 layout (std140) uniform ScenePropertiesBlock {
     mat4 view;
     mat4 projection;
-    DirectionalLight directionalLight;
 };
 
 // Inputs
 in vec2 v_textureCoordinates;
 in vec3 v_normal;
 flat in uint v_entityIndex;
-in vec2 v_localCoordinates;
 
 // Outputs
 layout (location = 0) out vec4 o_color;
-layout (location = 1) out int o_entityId;
 
 // Textures
 uniform sampler2D texture0;
@@ -51,51 +38,12 @@ uniform sampler2D texture9;
 uniform sampler2D texture10;
 
 vec4 sampleTexture(uint textureIndex, vec2 textureCoordinates);
-float getCirclePoint(vec2 localCoordinates, float thickness, float fade);
-vec4 getDirectionalLightColor(
-    vec3 color, vec3 direction,
-    float ambientIntensity, float diffuseIntensity,
-    vec3 normal
-);
 
 void main() {
 
-    float circlePoint = getCirclePoint(v_localCoordinates, properties[v_entityIndex].thickness, properties[v_entityIndex].fade);
-
-    if (circlePoint == 0.0f) {
-        discard;
-    }
-
     vec4 textureColor = sampleTexture(properties[v_entityIndex].textureIndex, v_textureCoordinates);
-    vec4 directionalLightColor = getDirectionalLightColor(directionalLight.color, directionalLight.direction, directionalLight.ambientIntensity, directionalLight.diffuseIntensity, v_normal);
 
-    o_color = textureColor * properties[v_entityIndex].color * directionalLightColor;
-    o_color *= circlePoint;
-
-    o_entityId = properties[v_entityIndex].entityId;
-
-}
-
-float getCirclePoint(vec2 localCoordinates, float thickness, float fade) {
-
-    float distance = 1.0f - length(localCoordinates);
-    float circle = smoothstep(0.0f, fade, distance);
-    circle *= smoothstep(thickness + fade, thickness, distance);
-
-    return circle;
-
-}
-
-vec4 getDirectionalLightColor(vec3 color, vec3 direction, float ambientIntensity, float diffuseIntensity, vec3 normal) {
-
-    vec4 ambientColor = vec4(color * ambientIntensity, 1.0f);
-    float diffuseFactor = dot(normalize(normal), normalize(direction));
-
-    if (diffuseFactor > 0) {
-        return vec4(color * diffuseIntensity * diffuseFactor, 1.0f) + ambientColor;
-    } else {
-        return ambientColor;
-    }
+    o_color = textureColor * properties[v_entityIndex].color;
 
 }
 

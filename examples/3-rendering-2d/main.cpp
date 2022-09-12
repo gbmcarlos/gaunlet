@@ -1,4 +1,5 @@
 #include "../include/Scene.h"
+#include "../include/Prefab.h"
 
 class Rendering2DApplication : public gaunlet::Core::Application {
 
@@ -7,6 +8,9 @@ public:
     explicit Rendering2DApplication() : gaunlet::Core::Application() {}
 
     void onReady() override {
+
+        m_scene = gaunlet::Core::CreateRef<gaunlet::Scene::Scene>();
+        m_renderPipeline = gaunlet::Core::CreateRef<gaunlet::Prefab::Basic2DRenderPipeline::Basic2DRenderPipeline>();
 
         float viewportWidth = (float) gaunlet::Core::Window::getCurrentInstance()->getViewportWidth();
         float viewportHeight = (float) gaunlet::Core::Window::getCurrentInstance()->getViewportHeight();
@@ -18,8 +22,8 @@ public:
         gaunlet::Core::Ref<gaunlet::Graphics::TextureImage2D> texture2 = gaunlet::Core::CreateRef<gaunlet::Graphics::TextureImage2D>("assets/texture-2.jpeg");
 
         // TRIANGLE 1
-        auto triangle1 = m_mainScene.getRegistry().createEntity();
-        triangle1.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Triangle2DModel());
+        auto triangle1 = m_scene->createEntity();
+        triangle1.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Prefab::Sprites::Triangle2DModel());
         triangle1.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(-5.0f, 3.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
@@ -28,8 +32,8 @@ public:
         triangle1.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(0.8f, 0.0f, 0.0f, 1.0f));
 
         // TRIANGLE 2
-        auto triangle2 = m_mainScene.getRegistry().createEntity();
-        triangle2.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Triangle2DModel());
+        auto triangle2 = m_scene->createEntity();
+        triangle2.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Prefab::Sprites::Triangle2DModel());
         triangle2.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(-5.0f, 0.5f, 0.0f),
             glm::vec3(0.0f, 0.0f, -20.0f),
@@ -38,8 +42,8 @@ public:
         triangle2.addComponent<gaunlet::Scene::MaterialComponent>(texture1);
 
         // TRIANGLE 3
-        auto triangle3 = m_mainScene.getRegistry().createEntity();
-        triangle3.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Triangle2DModel());
+        auto triangle3 = m_scene->createEntity();
+        triangle3.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Prefab::Sprites::Triangle2DModel());
         triangle3.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(-5.0f, -2.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, -40.0f),
@@ -48,8 +52,8 @@ public:
         triangle3.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(0.0f, 0.0f, 0.8f, 1.0f), texture2);
 
         // SQUARE 1
-        auto square1 = m_mainScene.getRegistry().createEntity();
-        square1.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Square2DModel());
+        auto square1 = m_scene->createEntity();
+        square1.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Prefab::Sprites::Square2DModel());
         square1.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(0.0f, 3.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
@@ -58,8 +62,8 @@ public:
         square1.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(0.0f, 0.8f, 0.0f, 1.0f));
 
         // SQUARE 2
-        auto square2 = m_mainScene.getRegistry().createEntity();
-        square2.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Square2DModel());
+        auto square2 = m_scene->createEntity();
+        square2.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Prefab::Sprites::Square2DModel());
         square2.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(0.0f, 0.5f, 0.0f),
             glm::vec3(0.0f, 0.0f, -20.0f),
@@ -68,8 +72,8 @@ public:
         square2.addComponent<gaunlet::Scene::MaterialComponent>(texture1);
 
         // SQUARE 3
-        auto square3 = m_mainScene.getRegistry().createEntity();
-        square3.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Square2DModel());
+        auto square3 = m_scene->createEntity();
+        square3.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Prefab::Sprites::Square2DModel());
         square3.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(0.0f, -2.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, -40.0f),
@@ -78,7 +82,7 @@ public:
         square3.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(0.8f, 0.0f, 0.0f, 1.0f), texture2);
 
         // CIRCLE 1
-        auto circle1 = m_mainScene.getRegistry().createEntity();
+        auto circle1 = m_scene->createEntity();
         circle1.addComponent<gaunlet::Scene::CircleComponent>(0.1f, 0.01f);
         circle1.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(5.0f, 3.0f, 0.0f),
@@ -88,7 +92,7 @@ public:
         circle1.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(0.0f, 0.0f, 0.8f, 1.0f));
 
         // CIRCLE 2
-        auto circle2 = m_mainScene.getRegistry().createEntity();
+        auto circle2 = m_scene->createEntity();
         circle2.addComponent<gaunlet::Scene::CircleComponent>(0.5, 0.1f);
         circle2.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(5.0f, 0.5f, 0.0f),
@@ -98,7 +102,7 @@ public:
         circle2.addComponent<gaunlet::Scene::MaterialComponent>(texture1);
 
         // CIRCLE 3
-        auto circle3 = m_mainScene.getRegistry().createEntity();
+        auto circle3 = m_scene->createEntity();
         circle3.addComponent<gaunlet::Scene::CircleComponent>(1.0f, 0.3f);
         circle3.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(5.0f, -2.0f, 0.0f),
@@ -107,27 +111,16 @@ public:
         );
         circle3.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(0.0f, 0.8f, 0.0f, 1.0f), texture2);
 
-        gaunlet::Core::Ref<gaunlet::Scene::OrthographicCamera> camera = gaunlet::Core::CreateRef<gaunlet::Scene::OrthographicCamera>((float) viewportWidth, (float) viewportHeight, 100);
-        m_mainScene.start();
-
     }
 
     void onUpdate(gaunlet::Core::TimeStep timeStep) override {
-
-        gaunlet::Core::RenderCommand::clearColorBuffer(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
-        gaunlet::Core::RenderCommand::clearDepthBuffer();
-
-        m_mainScene.render(
-            gaunlet::Scene::RenderMode::Faces,
-            m_camera,
-            gaunlet::Core::CreateRef<gaunlet::Scene::DirectionalLightComponent>(),
-            gaunlet::Core::CreateRef<gaunlet::Scene::SkyboxComponent>()
-        );
+        m_renderPipeline->run(m_scene, m_camera);
     }
 
 private:
-    gaunlet::Scene::Scene m_mainScene;
+    gaunlet::Core::Ref<gaunlet::Scene::Scene> m_scene;
     gaunlet::Core::Ref<gaunlet::Scene::OrthographicCamera> m_camera;
+    gaunlet::Core::Ref<gaunlet::Prefab::Basic2DRenderPipeline::Basic2DRenderPipeline> m_renderPipeline;
 
 };
 

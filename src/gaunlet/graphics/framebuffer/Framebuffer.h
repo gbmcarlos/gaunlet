@@ -8,7 +8,7 @@
 namespace gaunlet::Graphics {
 
     enum class FramebufferDataFormat {
-        RGBA, Integer, Depth
+        RGBA, Integer, DepthStencil
     };
 
     struct FramebufferAttachmentSpec {
@@ -34,7 +34,7 @@ namespace gaunlet::Graphics {
         void unbind();
         void clear();
         void clearColorAttachment(unsigned int index);
-        void clearDepthAttachment();
+        void clearDepthStencilAttachment();
         void resize(unsigned int width, unsigned int height);
         void setDrawBuffers(const std::vector<int>& drawBuffers);
 
@@ -51,13 +51,13 @@ namespace gaunlet::Graphics {
         unsigned int m_rendererId = 0;
 
         std::vector<FramebufferAttachmentSpec> m_colorAttachmentSpecs = {};
-        FramebufferAttachmentSpec m_depthAttachmentSpec = {Core::FramebufferAttachmentType::None, FramebufferDataFormat::Depth};
+        FramebufferAttachmentSpec m_depthStencilAttachmentSpec = {Core::FramebufferAttachmentType::None, FramebufferDataFormat::DepthStencil};
 
         std::vector<Core::Ref<Texture> > m_textures;
 
         void recreate();
         void attachColor(FramebufferAttachmentSpec colorAttachmentSpec, unsigned int index);
-        void attachDepth(FramebufferAttachmentSpec depthAttachmentSpec);
+        void attachDepthStencil(FramebufferAttachmentSpec depthStencilAttachmentSpec);
 
     };
 

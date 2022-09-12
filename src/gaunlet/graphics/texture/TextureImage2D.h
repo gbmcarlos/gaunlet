@@ -10,7 +10,7 @@ namespace gaunlet::Graphics {
 
     public:
         explicit TextureImage2D(const std::string& path);
-        TextureImage2D(Core::TextureDataFormat internalFormat, Core::TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data);
+        TextureImage2D(Core::TextureDataFormat internalFormat, Core::TextureDataFormat dataFormat, Core::PrimitiveDataType dataType, unsigned int width, unsigned int height, void* data);
         ~TextureImage2D();
 
         void activate(unsigned int slot) override;

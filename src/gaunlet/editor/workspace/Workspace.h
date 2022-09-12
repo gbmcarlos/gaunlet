@@ -1,12 +1,13 @@
 #pragma once
 
 #include "gaunlet/editor/docking/DockingLayout.h"
-#include "gaunlet/scene/Scene.h"
+#include "gaunlet/scene/entity/Entity.h"
 #include "gaunlet/scene/camera/Camera.h"
 #include "gaunlet/editor/panel/Panel.h"
 #include "gaunlet/editor/panel/RenderPanel.h"
 #include "gaunlet/editor/tooling/Tool.h"
 #include "gaunlet/core/window/Window.h"
+#include "gaunlet/editor/workspace/FramebufferRenderPipeline.h"
 #include "gaunlet/pch.h"
 
 namespace gaunlet::Editor {
@@ -18,12 +19,13 @@ namespace gaunlet::Editor {
         void setLayoutSpec(const DockingLayoutSpec& layoutSpec);
 
         void pushPanel(const char* panelId, GuiPanel* panel, const char* windowId);
-        void pushPanel(const char* panelId, RenderPanel* panel, const char* windowId, const char* cameraId, const char* sceneId, const char* directionalLightId, const char* skyboxId, Scene::RenderMode renderMode);
+        void pushPanel(const char* panelId, RenderPanel* panel, const char* windowId, const char* cameraId, const char* sceneId, const char* directionalLightId, const char* skyboxId, const char* renderPipelineId);
 
         void addCamera(const char* id, const Core::Ref<Scene::Camera>& camera);
         void addScene(const char* id, const Core::Ref<Scene::Scene>& scene);
         void addDirectionalLight(const char* id, const Core::Ref<Scene::DirectionalLightComponent>& directionalLight);
         void addSkybox(const char* id, const Core::Ref<Scene::SkyboxComponent>& skybox);
+        void addRenderPipeline(const char* id, const Core::Ref<FramebufferRenderPipeline>& renderPipeline);
 
         void onEvent(Core::Event& event);
         void update(Core::TimeStep timeStep);
@@ -39,6 +41,7 @@ namespace gaunlet::Editor {
         const Core::Ref<Scene::Scene>& getScene(const char* id);
         const Core::Ref<Scene::DirectionalLightComponent>& getDirectionalLight(const char* id);
         const Core::Ref<Scene::SkyboxComponent>& getSkybox(const char* id);
+        const Core::Ref<FramebufferRenderPipeline>& getRenderPipeline(const char* id);
 
         std::vector<GuiPanel*> getGuiPanels();
         std::vector<RenderPanel*> getRenderPanels();
@@ -54,7 +57,7 @@ namespace gaunlet::Editor {
         Scene::Entity getSelectedUIEntity();
 
         template<typename T>
-        Scene::Entity mousePickTaggedEntity(const char* renderPanelId, unsigned int framebufferAttachmentIndex);
+        Scene::Entity mousePickTaggedEntity(const char* renderPanelId, FramebufferLayer layer);
         Scene::Entity mousePickSceneEntity(const char* renderPanelId);
         Scene::Entity mousePickUIEntity(const char* renderPanelId);
 
@@ -70,6 +73,7 @@ namespace gaunlet::Editor {
         std::unordered_map<const char*, Core::Ref<Scene::Scene>> m_scenes = {};
         std::unordered_map<const char*, Core::Ref<Scene::DirectionalLightComponent>> m_directionalLights = {};
         std::unordered_map<const char*, Core::Ref<Scene::SkyboxComponent>> m_skyboxes = {};
+        std::unordered_map<const char*, Core::Ref<FramebufferRenderPipeline>> m_renderPipelines;
 
         struct GuiPanelSpec {
             GuiPanel* m_panel;
@@ -95,20 +99,22 @@ namespace gaunlet::Editor {
     };
 
     template<typename T>
-    Scene::Entity Workspace::mousePickTaggedEntity(const char *renderPanelId, unsigned int framebufferAttachmentIndex) {
+    Scene::Entity Workspace::mousePickTaggedEntity(const char *renderPanelId, FramebufferLayer layer) {
 
         auto renderPanel = getRenderPanel(renderPanelId);
 
         unsigned int pixelPositionX = renderPanel->getMousePositionX() * Core::Window::getCurrentInstance()->getDPI();
         unsigned int pixelPositionY = renderPanel->getMousePositionYInverted() * Core::Window::getCurrentInstance()->getDPI();
 
-        int selectedEntityId = renderPanel->m_framebuffer->readPixel(
-            framebufferAttachmentIndex,
+        int selectedEntityId = getRenderPipeline(renderPanel->m_renderPipelineId)->readFramebuffer(
+            layer,
             pixelPositionX,
             pixelPositionY
         );
 
-        Scene::Entity selectedEntity = Scene::Entity(selectedEntityId, &getScene(renderPanel->getSceneId())->getRegistry());
+        auto& scene = getScene(renderPanel->getSceneId());
+
+        Scene::Entity selectedEntity = Scene::Entity(selectedEntityId, scene.get());
 
         if (selectedEntity && selectedEntity.hasComponent<T>()) {
             return selectedEntity;

@@ -19,8 +19,14 @@ namespace gaunlet::Core {
             glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
         }
 
+        // Enable and configure basic depth testing
         glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LESS);
+        setDepthFunction(DepthStencilFunction::Less);
+
+        // Enable and configure basic stencil testing
+        glEnable(GL_STENCIL_TEST);
+        setStencilFunction(DepthStencilFunction::GreaterOrEqual, 0); // Draw whenever it's empty
+        setStencilOperation(true, StencilOperation::Keep, StencilOperation::Keep, StencilOperation::Replace); // Write to the stencil buffer whenever we actually draw
 
         std::cout << "OpenGL Specs:" << std::endl;
         std::cout << "openGL version: " << glGetString(GL_VERSION) << std::endl;
@@ -37,12 +43,28 @@ namespace gaunlet::Core {
         glCall(glClear(GL_COLOR_BUFFER_BIT));
     }
 
-    void OpenGLRenderApi::clearDepthBuffer() {
-        glCall(glClear(GL_DEPTH_BUFFER_BIT));
+    void OpenGLRenderApi::clearDepthStencilBuffer() {
+        glCall(glClearStencil(0));
+        glCall(glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT));
     }
 
-    void OpenGLRenderApi::setDepthFunction(DepthFunction function) {
-        glCall(glDepthFunc(convertDepthFunction(function)));
+    void OpenGLRenderApi::setDepthFunction(DepthStencilFunction function) {
+        glCall(glDepthFunc(convertDepthStencilFunction(function)));
+    }
+
+    void OpenGLRenderApi::setStencilFunction(DepthStencilFunction function, unsigned int reference) {
+        glCall(glStencilFunc(convertDepthStencilFunction(function), reference, 0xFF));
+    }
+
+    void OpenGLRenderApi::setStencilOperation(bool enabled, StencilOperation stencilFailOperation, StencilOperation stencilPassDepthFailOperation, StencilOperation depthStencilPassOperation) {
+
+        glCall(glStencilMask(enabled ? 0xFF : 0x00));
+        glCall(glStencilOp(
+            convertStencilOperation(stencilFailOperation),
+            convertStencilOperation(stencilPassDepthFailOperation),
+            convertStencilOperation(depthStencilPassOperation)
+        ));
+
     }
 
     void OpenGLRenderApi::getViewport(unsigned int& x0, unsigned int& y0, unsigned int& x1, unsigned int& y1) {
@@ -285,15 +307,16 @@ namespace gaunlet::Core {
     }
 
 
-    void OpenGLRenderApi::loadTextureImage2d(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data) {
+    void OpenGLRenderApi::loadTextureImage2d(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, PrimitiveDataType dataType, unsigned int width, unsigned int height, void* data) {
 
         glCall(glGenTextures(1, &id));
         glCall(glBindTexture(GL_TEXTURE_2D, id));
 
         GLenum glInternalFormat = convertTextureDataFormat(internalFormat);
         GLenum glDataFormat = convertTextureDataFormat(dataFormat);
+        GLenum glDataType = convertPrimitiveDataType(dataType);
 
-        glCall(glTexImage2D(GL_TEXTURE_2D, 0, glInternalFormat, width, height, 0, glDataFormat, GL_UNSIGNED_BYTE, data));
+        glCall(glTexImage2D(GL_TEXTURE_2D, 0, glInternalFormat, width, height, 0, glDataFormat, glDataType, data));
 
         glCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
         glCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
@@ -365,7 +388,7 @@ namespace gaunlet::Core {
         }
 
         bindFramebuffer(id);
-        glCall(glBindTexture(GL_TEXTURE_2D, id));
+        glCall(glBindTexture(GL_TEXTURE_2D, textureId));
 
         glCall(glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, glAttachmentType, glTextureType, textureId, 0));
 
@@ -414,10 +437,10 @@ namespace gaunlet::Core {
 
     }
 
-    void OpenGLRenderApi::clearDepthAttachment(unsigned int id) {
+    void OpenGLRenderApi::clearDepthStencilAttachment(unsigned int id, float depthValue, int stencilValue) {
 
         bindFramebuffer(id);
-        glClear(GL_DEPTH_BUFFER_BIT);
+        glCall(glClearBufferfi(GL_DEPTH_STENCIL, 0, depthValue, stencilValue));
 
     }
 
@@ -473,9 +496,10 @@ namespace gaunlet::Core {
         switch (type) {
             case PrimitiveDataType::Bool:       return GL_BOOL;
             case PrimitiveDataType::Int:        return GL_INT;
-            case PrimitiveDataType::UInt:        return GL_UNSIGNED_INT;
+            case PrimitiveDataType::UInt:       return GL_UNSIGNED_INT;
             case PrimitiveDataType::Float:      return GL_FLOAT;
             case PrimitiveDataType::UByte:      return GL_UNSIGNED_BYTE;
+            case PrimitiveDataType::UInt24_8:    return GL_UNSIGNED_INT_24_8;
         }
 
         throw std::runtime_error("Unknown layout element type");
@@ -494,11 +518,27 @@ namespace gaunlet::Core {
 
     }
 
-    GLenum OpenGLRenderApi::convertDepthFunction(DepthFunction function) {
+    GLenum OpenGLRenderApi::convertDepthStencilFunction(DepthStencilFunction function) {
 
         switch (function) {
-            case DepthFunction::Less:           return GL_LESS;
-            case DepthFunction::LessOrEqual:    return GL_LEQUAL;
+            case DepthStencilFunction::Less:            return GL_LESS;
+            case DepthStencilFunction::LessOrEqual:     return GL_LEQUAL;
+            case DepthStencilFunction::Greater:         return GL_GREATER;
+            case DepthStencilFunction::GreaterOrEqual:  return GL_GEQUAL;
+            case DepthStencilFunction::Equal:           return GL_EQUAL;
+            case DepthStencilFunction::NotEqual:        return GL_NOTEQUAL;
+            case DepthStencilFunction::Always:          return GL_ALWAYS;
+        }
+
+        throw std::runtime_error("Unknown depth function");
+
+    }
+
+    GLenum OpenGLRenderApi::convertStencilOperation(StencilOperation operation) {
+
+        switch (operation) {
+            case StencilOperation::Keep:           return GL_KEEP;
+            case StencilOperation::Replace:           return GL_REPLACE;
         }
 
         throw std::runtime_error("Unknown depth function");
@@ -512,8 +552,8 @@ namespace gaunlet::Core {
             case TextureDataFormat::RGBA:  return GL_RGBA;
             case TextureDataFormat::RedInteger32:  return GL_R32I;
             case TextureDataFormat::RedInteger:  return GL_RED_INTEGER;
-            case TextureDataFormat::Depth:  return GL_DEPTH_COMPONENT;
-            case TextureDataFormat::Stencil:  return GL_STENCIL_INDEX;
+            case TextureDataFormat::DepthStencil:  return GL_DEPTH_STENCIL;
+            case TextureDataFormat::Depth24Stencil8:  return GL_DEPTH24_STENCIL8;
         }
 
         throw std::runtime_error("Unknown texture format");
@@ -536,8 +576,7 @@ namespace gaunlet::Core {
         switch (type) {
             case FramebufferAttachmentType::None: return GL_NONE;
             case FramebufferAttachmentType::Color: return GL_COLOR_ATTACHMENT0;
-            case FramebufferAttachmentType::Depth:  return GL_DEPTH_ATTACHMENT;
-            case FramebufferAttachmentType::Stencil:  return GL_STENCIL_ATTACHMENT;
+            case FramebufferAttachmentType::DepthStencil:  return GL_DEPTH_STENCIL_ATTACHMENT;
         }
 
         throw std::runtime_error("Unknown texture format");

@@ -1,4 +1,5 @@
 #include "../include/Editor.h"
+#include "../include/Prefab.h"
 
 class TransformerTool : public gaunlet::Editor::Tool {
 
@@ -24,7 +25,7 @@ public:
         if (selectedSceneEntity) {
             m_sceneEntity = selectedSceneEntity;
             m_gizmo = gaunlet::Editor::TranslationGizmo::create(
-                getWorkspace()->getScene("main")->getRegistry(),
+                getWorkspace()->getScene("main"),
                 1.5f, 0.1f,
                 0.5f, 0.5f
             );
@@ -43,7 +44,7 @@ public:
 
     }
 
-    bool onEvent(gaunlet::Core::Event &event) {
+    bool onEvent(gaunlet::Core::Event &event) override {
 
         gaunlet::Core::EventDispatcher dispatcher(event);
         dispatcher.dispatch<gaunlet::Core::MouseButtonPress>(GL_BIND_CALLBACK_FN(TransformerTool::onMousePressEvent));
@@ -129,7 +130,7 @@ class SelectorTool : public gaunlet::Editor::Tool {
         return "Selector";
     }
 
-    bool onEvent(gaunlet::Core::Event &event) {
+    bool onEvent(gaunlet::Core::Event &event) override {
 
         gaunlet::Core::EventDispatcher dispatcher(event);
         dispatcher.dispatch<gaunlet::Core::MouseButtonPress>(GL_BIND_CALLBACK_FN(SelectorTool::onMousePressEvent));
@@ -164,7 +165,7 @@ public:
         return "Camera Controller";
     }
 
-    bool onEvent(gaunlet::Core::Event &event) {
+    bool onEvent(gaunlet::Core::Event &event) override {
 
         gaunlet::Core::EventDispatcher dispatcher(event);
         dispatcher.dispatch<gaunlet::Core::MouseButtonPress>(GL_BIND_CALLBACK_FN(CameraControllerTool::onMousePressEvent));
@@ -296,7 +297,8 @@ public:
             glm::vec3(-0.2f, -1.0f, -0.3f),
             0.5f, 0.7f
         ));
-        m_workspace->addSkybox("main", gaunlet::Core::CreateRef<gaunlet::Scene::SkyboxComponent>(gaunlet::Core::CreateRef<gaunlet::Scene::SimpleSkyboxCubeMap>()));
+        m_workspace->addSkybox("main", gaunlet::Core::CreateRef<gaunlet::Scene::SkyboxComponent>(gaunlet::Core::CreateRef<gaunlet::Prefab::Skyboxes::SimpleSkyboxCubeMap>()));
+        m_workspace->addRenderPipeline("main", gaunlet::Core::CreateRef<gaunlet::Prefab::BasicEditorRenderPipeline::BasicEditorRenderPipeline>());
 
         // Create and push the main render panel, referencing the main components
         m_workspace->pushPanel(
@@ -307,7 +309,7 @@ public:
             "main",
             "main",
             "main",
-            gaunlet::Scene::RenderMode::Faces
+            "main"
         );
 
         // Create and push the tools
@@ -322,7 +324,7 @@ public:
         mainCamera->setZoomLevel(1.5f);
         mainCamera->lookAt({0, 2, 0});
 
-        auto cup = mainScene->getRegistry().createTaggedEntity<gaunlet::Editor::SceneEntityTag>("Cup");
+        auto cup = mainScene->createTaggedEntity<gaunlet::Editor::SceneEntityTag>("Cup");
         cup.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Model("assets/cup/cup.obj"));
         cup.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(0.0f, 0.0f, 0.0f),
@@ -341,7 +343,7 @@ public:
         m_workspace->render();
     }
 
-    void onEvent(gaunlet::Core::Event &event) {
+    void onEvent(gaunlet::Core::Event &event) override {
         m_workspace->onEvent(event);
     }
 

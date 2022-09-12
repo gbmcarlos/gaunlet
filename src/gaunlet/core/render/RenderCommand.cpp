@@ -10,12 +10,20 @@ namespace gaunlet::Core {
         getApi().clearColorBuffer(color.r, color.g, color.b, color.a);
     }
 
-    void RenderCommand::clearDepthBuffer() {
-        getApi().clearDepthBuffer();
+    void RenderCommand::clearDepthStencilBuffer() {
+        getApi().clearDepthStencilBuffer();
     }
 
-    void RenderCommand::setDepthFunction(DepthFunction function) {
+    void RenderCommand::setDepthFunction(DepthStencilFunction function) {
         getApi().setDepthFunction(function);
+    }
+
+    void RenderCommand::setStencilFunction(DepthStencilFunction function, unsigned int reference) {
+        getApi().setStencilFunction(function, reference);
+    }
+
+    void RenderCommand::setStencilOperation(bool enabled, StencilOperation stencilFailOperation, StencilOperation stencilPassDepthFailOperation, StencilOperation depthStencilPassOperation) {
+        getApi().setStencilOperation(enabled, stencilFailOperation, stencilPassDepthFailOperation, depthStencilPassOperation);
     }
 
     void RenderCommand::getViewport(unsigned int& x0, unsigned int& y0, unsigned int& x1, unsigned int& y1) {
@@ -148,8 +156,8 @@ namespace gaunlet::Core {
     }
 
 
-    void RenderCommand::loadTextureImage2d(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, void* data) {
-        getApi().loadTextureImage2d(id, internalFormat, dataFormat, width, height, data);
+    void RenderCommand::loadTextureImage2d(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, PrimitiveDataType dataType, unsigned int width, unsigned int height, void* data) {
+        getApi().loadTextureImage2d(id, internalFormat, dataFormat, dataType, width, height, data);
     }
 
     void RenderCommand::loadTextureCubeMap(unsigned int &id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, std::vector<void *> imagesData) {
@@ -196,8 +204,8 @@ namespace gaunlet::Core {
         getApi().clearColorAttachment(id, colorAttachmentIndex, dataType, value);
     }
 
-    void RenderCommand::clearDepthAttachment(unsigned int id) {
-        getApi().clearDepthAttachment(id);
+    void RenderCommand::clearDepthStencilAttachment(unsigned int id, float depthValue, int stencilValue) {
+        getApi().clearDepthStencilAttachment(id, depthValue, stencilValue);
     }
 
     void RenderCommand::readFramebuffer(unsigned int id, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, TextureDataFormat internalFormat, PrimitiveDataType dataType, unsigned int x, unsigned int y, unsigned int width, unsigned int height, void *data) {

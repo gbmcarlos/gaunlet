@@ -14,7 +14,7 @@ namespace gaunlet::Editor {
             PlaneYZ, PlaneXZ, PlaneXY
         };
 
-        static Scene::Entity create(Scene::Registry& registry, float axisLength, float axisThickness, float planeGap, float planeSize);
+        static Scene::Entity create(const Core::Ref<Scene::Scene>& scene, float axisLength, float axisThickness, float planeGap, float planeSize);
         static const char* convert(Handle handleType);
         static Handle convert(const char* handleName);
 

@@ -6,23 +6,23 @@ namespace gaunlet::Scene {
 
     // ENTITY IMPLEMENTATION
 
-    Entity::Entity() : m_handle(entt::null), m_registry(nullptr) {}
+    Entity::Entity() : m_handle(entt::null), m_scene(nullptr) {}
 
-    Entity::Entity(entt::entity entityHandle, Registry *registry)
-        : m_handle(entityHandle), m_registry(registry) {
-        if (registry == nullptr) {
+    Entity::Entity(entt::entity entityHandle, Scene *scene)
+        : m_handle(entityHandle), m_scene(scene) {
+        if (scene == nullptr) {
             m_handle = entt::null;
-            m_registry = nullptr;
+            m_scene = nullptr;
         }
     }
 
-    Entity::Entity(int entityHandle, Registry *registry) {
-        if (entityHandle < 0 || registry == nullptr) {
+    Entity::Entity(int entityHandle, Scene *scene) {
+        if (entityHandle < 0 || scene == nullptr) {
             m_handle = entt::null;
-            m_registry = nullptr;
+            m_scene = nullptr;
         } else {
             m_handle = (entt::entity) (unsigned int) entityHandle;
-            m_registry = registry;
+            m_scene = scene;
         }
 
     }
@@ -44,11 +44,11 @@ namespace gaunlet::Scene {
     }
 
     Entity::operator bool() const {
-        return m_handle != entt::null && m_registry != nullptr;
+        return m_handle != entt::null && m_scene != nullptr;
     }
 
     bool Entity::operator==(const Entity &other) const {
-        return other.m_handle == m_handle && other.m_registry == m_registry;
+        return other.m_handle == m_handle && other.m_scene == m_scene;
     }
 
     bool Entity::operator!=(const Entity &other) const {
@@ -66,7 +66,7 @@ namespace gaunlet::Scene {
     Entity Entity::getParent() {
 
         auto& childRelationship = getComponent<RelationshipComponent>();
-        Entity parent(childRelationship.m_parent, m_registry);
+        Entity parent(childRelationship.m_parent, m_scene);
 
         return parent;
     }
@@ -74,7 +74,7 @@ namespace gaunlet::Scene {
     Entity Entity::createChild(const char* name) {
 
         // Create the child entity, delegating on the registry (so it will attach the Relationship component)
-        auto child = m_registry->createEntity();
+        auto child = m_scene->createEntity();
         adopt(*this, child);
         return child;
 
@@ -94,12 +94,12 @@ namespace gaunlet::Scene {
         // First abandon and destroy all the children
         while (!relationship.m_children.empty()) {
 
-            Entity child = {relationship.m_children[0], m_registry};
+            Entity child = {relationship.m_children[0], m_scene};
             destroyChild(child);
 
         }
 
-        Entity parent = {relationship.m_parent, m_registry};
+        Entity parent = {relationship.m_parent, m_scene};
 
         // If this entity has been abandoned first, there will be no parent
         if (parent) {
@@ -107,7 +107,7 @@ namespace gaunlet::Scene {
         }
 
         // Then destroy itself
-        m_registry->m_registry.destroy(m_handle);
+        m_scene->m_registry.destroy(m_handle);
 
     }
 
@@ -140,7 +140,7 @@ namespace gaunlet::Scene {
 
     // REGISTRY IMPLEMENTATION
 
-    Entity Registry::createEntity(const char* name) {
+    Entity Scene::createEntity(const char* name) {
 
         entt::entity entityHandle = m_registry.create();
         Entity entity(entityHandle, this);
@@ -151,7 +151,7 @@ namespace gaunlet::Scene {
         return entity;
     }
 
-    int Registry::countEntities() {
+    int Scene::countEntities() {
         return m_registry.alive();
     }
 

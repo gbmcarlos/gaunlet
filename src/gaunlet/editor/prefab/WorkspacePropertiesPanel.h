@@ -99,8 +99,6 @@ namespace gaunlet::Editor {
                 ImGui::Text("(%d, %d)", (int) (renderPanel->getMousePositionX() * Core::Window::getCurrentInstance()->getDPI()), (int) (renderPanel->getMousePositionYInverted() * Core::Window::getCurrentInstance()->getDPI()));
             }
 
-            ImGui::Text("Render Mode: %s", renderPanel->getRenderMove() == Scene::RenderMode::Faces ? "Faces" : "Wireframe");
-
             std::string cameraNodeLabel = std::string("Camera: " + std::string(renderPanel->getCameraId() ));
             if (ImGui::TreeNodeEx(cameraNodeLabel.c_str())) {
                 cameraProperties(getWorkspace()->getCamera(renderPanel->getCameraId()));
@@ -139,8 +137,8 @@ namespace gaunlet::Editor {
 
         void sceneProperties(const Core::Ref<Scene::Scene>& scene) {
 
-            ImGui::Text("Scene Entities: %d", scene->getRegistry().countTaggedEntities<SceneEntityTag>());
-            ImGui::Text("UI Entities: %d", scene->getRegistry().countTaggedEntities<UIEntityTag>());
+            ImGui::Text("Scene Entities: %d", scene->countTaggedEntities<SceneEntityTag>());
+            ImGui::Text("UI Entities: %d", scene->countTaggedEntities<UIEntityTag>());
 
         }
 

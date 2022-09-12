@@ -1,0 +1,131 @@
+#pragma once
+
+#include "gaunlet/graphics/renderer/BatchedRenderer.h"
+#include "gaunlet/graphics/shader/ShaderLibrary.h"
+#include "gaunlet/scene/entity/Entity.h"
+#include "gaunlet/scene/components/GraphicsComponents.h"
+
+namespace gaunlet::Scene {
+
+    template<typename T, typename Y>
+    class ObjectRenderer {
+
+    public:
+
+        ObjectRenderer(const char* uniformBufferName, unsigned int uniformBufferBindingPoint, const Graphics::BatchParameters& batchParameters);
+
+        void submitObject(Entity entity, const Core::Ref<Graphics::Shader>& shader);
+        void renderObjects(const Core::Ref<Graphics::Shader>& shader);
+        inline const Core::Ref<Graphics::UniformBuffer>& getPropertySetsUniformBuffer() {return m_propertySetsUniformBuffer; }
+        inline unsigned int getMaxTextures() {return m_renderer.getMaxTextures(); }
+
+    protected:
+
+        virtual Y getEntityProperties(Entity entity) = 0;
+
+        glm::mat4 getHierarchicalTransform(Entity entity);
+
+        Graphics::BatchedRenderer<Y> m_renderer;
+        Core::Ref<Graphics::UniformBuffer> m_propertySetsUniformBuffer = nullptr;
+
+    };
+
+    template<typename T, typename Y>
+    ObjectRenderer<T, Y>::ObjectRenderer(const char *uniformBufferName, unsigned int uniformBufferBindingPoint, const Graphics::BatchParameters& batchParameters) : m_renderer(batchParameters) {
+
+        // Create a uniform buffer that will contain the properties of every object, and will be linked to the shader
+        m_propertySetsUniformBuffer = Core::CreateRef<Graphics::UniformBuffer>(
+            uniformBufferName,
+            uniformBufferBindingPoint,
+            sizeof (Y) * batchParameters.m_maxPropertySets
+        );
+
+    }
+
+    template<typename T, typename Y>
+    void ObjectRenderer<T, Y>::submitObject(Entity entity, const Core::Ref<Graphics::Shader>& shader) {
+
+        if (!entity.hasComponent<T>()) {
+            throw std::runtime_error("Entity doesn't have a required component");
+        }
+
+        if (!entity.hasComponent<TransformComponent>()) {
+            throw std::runtime_error("Entity doesn't have a TransformComponent");
+        }
+
+        auto object = entity.getComponent<T>();
+
+        // Get the entity's transform, relative to its parent's (all the way up the chain)
+        auto hierarchicalTransform = getHierarchicalTransform(entity);
+
+        // MaterialComponent is optional
+        auto material = entity.hasComponent<MaterialComponent>() ? entity.getComponent<MaterialComponent>() : MaterialComponent();
+
+        auto[vertices, indices] = object.getContent();
+
+        auto entityProperties = getEntityProperties(entity);
+
+        bool batched = m_renderer.submitIndexedTriangles(
+            vertices,
+            indices,
+            material.m_texture,
+            entityProperties
+        );
+
+        // If this submission was the one that crossed the batch limit, flush, and submit again
+        if (!batched) {
+            renderObjects(shader);
+            m_renderer.submitIndexedTriangles(
+                vertices,
+                indices,
+                material.m_texture,
+                entityProperties
+            );
+        }
+
+    }
+
+    template<typename T, typename Y>
+    void ObjectRenderer<T, Y>::renderObjects(const Core::Ref<Graphics::Shader>& shader) {
+
+        auto& entityPropertySets = m_renderer.getPropertySets();
+
+        // Submit the entity properties to the uniform buffer
+        m_propertySetsUniformBuffer->setData(
+            (const void*) entityPropertySets.data(),
+            sizeof(Y) * entityPropertySets.size()
+        );
+
+        m_renderer.flush(shader);
+
+    }
+
+    template<typename T, typename Y>
+    glm::mat4 ObjectRenderer<T, Y>::getHierarchicalTransform(Entity entity) {
+
+        if (!entity.hasComponent<TransformComponent>()) {
+            return glm::mat4(1);
+        }
+
+        glm::mat4 result = entity.getComponent<TransformComponent>().getTransformationMatrix();
+        Entity current = entity;
+
+        while (true) {
+
+            auto parent = current.getParent();
+
+            if (!parent || !parent.hasComponent<TransformComponent>()) {
+                break;
+            }
+
+            // Multiply with the parent's transform and move to the next generation
+            result = parent.getComponent<TransformComponent>().getTransformationMatrix() * result;
+            current = parent;
+
+        }
+
+        return result;
+
+    }
+
+}

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "gaunlet/scene/model/Model.h"
-#include "gaunlet/scene/model/Sprites.h"
+#include "gaunlet/prefab/sprites//Sprites.h"
 #include "gaunlet/graphics/texture/Texture.h"
 #include "gaunlet/graphics/texture/TextureCubeMap.h"
 
@@ -37,7 +37,22 @@ namespace gaunlet::Scene {
     struct ModelComponent {
 
         ModelComponent(const ModelComponent&) = default;
-        ModelComponent(Model model) : m_model(std::move(model)) {}
+        explicit ModelComponent(Model model) : m_model(std::move(model)) {}
+
+        std::tuple<std::vector<Graphics::Vertex>, std::vector<unsigned int>> getContent() {
+
+            std::vector<Graphics::Vertex> vertices = {};
+            std::vector<unsigned int> indices = {};
+
+            // Get the vertices and indices of all the meshes of the model
+            for (auto& mesh : m_model.getMeshes()) {
+                vertices.insert(vertices.end(), mesh.getVertices().begin(), mesh.getVertices().end());
+                indices.insert(indices.end(), mesh.getIndices().begin(), mesh.getIndices().end());
+            }
+
+            return {vertices, indices};
+
+        }
 
         Model m_model;
 
@@ -55,9 +70,13 @@ namespace gaunlet::Scene {
             CircleComponent(thickness, 0.01f) {}
 
         CircleComponent(float thickness, float fade) :
-            m_mesh(Square2DModel().getMeshes()[0]),
+            m_mesh(Prefab::Sprites::Square2DModel().getMeshes()[0]),
             m_thickness(thickness),
             m_fade(fade) {}
+
+        std::tuple<std::vector<Graphics::Vertex>, std::vector<unsigned int>> getContent() {
+            return {m_mesh.getVertices(), m_mesh.getIndices()};
+        }
 
         Mesh m_mesh;
         float m_thickness;

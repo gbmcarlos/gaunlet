@@ -23,14 +23,13 @@ add_library(gaunlet STATIC
         gaunlet/graphics/texture/TextureCubeMap.cpp
         gaunlet/graphics/texture/TextureLibrary.cpp
         gaunlet/graphics/framebuffer/Framebuffer.cpp
+        gaunlet/graphics/renderer/DirectRenderer.cpp
 
 #        Scene
         gaunlet/scene/model/Model.cpp
-        gaunlet/scene/deferred-renderer/DeferredRenderer.cpp
         gaunlet/scene/camera/Camera.cpp
         gaunlet/scene/camera/OrthographicCamera.cpp
         gaunlet/scene/camera/PerspectiveCamera.cpp
-        gaunlet/scene/Scene.cpp
         gaunlet/scene/entity/Entity.cpp
 
 #        Layout
@@ -38,6 +37,11 @@ add_library(gaunlet STATIC
         gaunlet/editor/workspace/Workspace.cpp
         gaunlet/editor/panel/RenderPanel.cpp
         gaunlet/editor/gizmos/TranslationGizmo.cpp
+
+#        Prefab
+        gaunlet/prefab/render-pipelines/basic-2d-render-pipeline/Basic2DRenderPipeline.cpp
+        gaunlet/prefab/render-pipelines/basic-3d-render-pipeline/Basic3DRenderPipeline.cpp
+        gaunlet/prefab/render-pipelines/basic-editor-render-pipeline/BasicEditorRenderPipeline.cpp
 
 #        Dear ImGui
         ${PROJECT_SOURCE_DIR}/vendor/imgui/imgui_impl_glfw.cpp ${PROJECT_SOURCE_DIR}/vendor/imgui/imgui_impl_opengl3.cpp
@@ -53,7 +57,9 @@ target_precompile_headers(gaunlet
 )
 
 target_compile_definitions(gaunlet
-        PUBLIC ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/gaunlet/assets"
+        PUBLIC
+            ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/gaunlet/assets"
+            PREFABS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/gaunlet/prefab"
 )
 
 target_include_directories(gaunlet
