@@ -326,6 +326,7 @@ public:
 
         auto cup = mainScene->createTaggedEntity<gaunlet::Editor::SceneEntityTag>("Cup");
         cup.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Model("assets/cup/cup.obj"));
+        cup.addEmptyComponent<gaunlet::Editor::WireframeModelTag>();
         cup.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),

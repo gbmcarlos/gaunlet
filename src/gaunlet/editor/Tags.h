@@ -2,12 +2,10 @@
 
 namespace gaunlet::Editor {
 
-    struct SceneEntityTag {
-        SceneEntityTag() = default;
-    };
+    struct WireframeModelTag {};
 
-    struct UIEntityTag {
-        UIEntityTag() = default;
-    };
+    struct SceneEntityTag {};
+
+    struct UIEntityTag {};
 
 }

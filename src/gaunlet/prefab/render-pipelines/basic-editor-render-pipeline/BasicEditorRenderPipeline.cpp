@@ -148,14 +148,25 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
 
     void BasicEditorRenderPipeline::submitSceneModels(const Core::Ref<Scene::Scene>& scene) {
 
-        auto view = scene->getRegistry().view<Scene::ModelComponent, Scene::TransformComponent, Editor::SceneEntityTag>();
-        for (auto e : view) {
+        // Model faces: those models that don't have the Wireframe tag
+        auto facesView = scene->getRegistry().view<Scene::ModelComponent, Scene::TransformComponent, Editor::SceneEntityTag>(entt::exclude<Editor::WireframeModelTag>);
+        for (auto e : facesView) {
             m_modelRenderer.submitObject(
                 {e, scene.get()},
-                getShaderLibrary().get("model")
+                getShaderLibrary().get("model-faces")
             );
         }
-        m_modelRenderer.renderObjects(getShaderLibrary().get("model"));
+        m_modelRenderer.renderObjects(getShaderLibrary().get("model-faces"));
+
+        // Model wireframes: those models that have the Wireframe tag
+        auto wireframesView = scene->getRegistry().view<Scene::ModelComponent, Scene::TransformComponent, Editor::SceneEntityTag, Editor::WireframeModelTag>();
+        for (auto e : wireframesView) {
+            m_modelRenderer.submitObject(
+                {e, scene.get()},
+                getShaderLibrary().get("model-wireframe")
+            );
+        }
+        m_modelRenderer.renderObjects(getShaderLibrary().get("model-wireframe"));
 
     }
 
@@ -178,10 +189,10 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
         for (auto e : group) {
             m_modelRenderer.submitObject(
                 {e, scene.get()},
-                getShaderLibrary().get("model")
+                getShaderLibrary().get("model-faces")
             );
         }
-        m_modelRenderer.renderObjects(getShaderLibrary().get("model"));
+        m_modelRenderer.renderObjects(getShaderLibrary().get("model-faces"));
 
     }
 
@@ -216,22 +227,40 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
 
     void BasicEditorRenderPipeline::loadModelShaders() {
 
-        // Polygon Shader
-        std::map<Core::ShaderType, std::string> modelShaderSources {
-            {Core::ShaderType::Vertex, PREFABS_PATH"/render-pipelines/basic-editor-render-pipeline/shaders/model/vertex.glsl"},
-            {Core::ShaderType::Fragment, PREFABS_PATH"/render-pipelines/basic-editor-render-pipeline/shaders/model/fragment.glsl"}
+        // Model faces shader
+        std::map<Core::ShaderType, std::string> modelFacesShaderSources {
+            {Core::ShaderType::Vertex, PREFABS_PATH"/render-pipelines/basic-editor-render-pipeline/shaders/model-faces/vertex.glsl"},
+            {Core::ShaderType::Fragment, PREFABS_PATH"/render-pipelines/basic-editor-render-pipeline/shaders/model-faces/fragment.glsl"}
         };
-        auto modelShader = m_shaderLibrary.load("model", modelShaderSources);
+        auto modelFacesShader = m_shaderLibrary.load("model-faces", modelFacesShaderSources);
 
         // Set all the texture slots as uniforms
         for (int i = 0; i < m_modelRenderer.getMaxTextures(); i++) {
             auto textureName = std::string("texture") + std::to_string(i);
-            modelShader->setUniform1i(textureName, i);
+            modelFacesShader->setUniform1i(textureName, i);
         }
 
         // Link the SceneProperties and EntityProperties uniform buffers to the polygon shader
-        modelShader->linkUniformBuffer(m_modelRenderer.getPropertySetsUniformBuffer());
-        modelShader->linkUniformBuffer(m_scenePropertiesUniformBuffer);
+        modelFacesShader->linkUniformBuffer(m_modelRenderer.getPropertySetsUniformBuffer());
+        modelFacesShader->linkUniformBuffer(m_scenePropertiesUniformBuffer);
+
+        // Model wireframe shader
+        std::map<Core::ShaderType, std::string> modelWireframeShaderSources {
+            {Core::ShaderType::Vertex, PREFABS_PATH"/render-pipelines/basic-editor-render-pipeline/shaders/model-wireframe/vertex.glsl"},
+            {Core::ShaderType::Geometry, PREFABS_PATH"/render-pipelines/basic-editor-render-pipeline/shaders/model-wireframe/geometry.glsl"},
+            {Core::ShaderType::Fragment, PREFABS_PATH"/render-pipelines/basic-editor-render-pipeline/shaders/model-wireframe/fragment.glsl"}
+        };
+        auto modelWireframeShader = m_shaderLibrary.load("model-wireframe", modelWireframeShaderSources);
+
+        // Set all the texture slots as uniforms
+        for (int i = 0; i < m_modelRenderer.getMaxTextures(); i++) {
+            auto textureName = std::string("texture") + std::to_string(i);
+            modelWireframeShader->setUniform1i(textureName, i);
+        }
+
+        // Link the SceneProperties and EntityProperties uniform buffers to the polygon shader
+        modelWireframeShader->linkUniformBuffer(m_modelRenderer.getPropertySetsUniformBuffer());
+        modelWireframeShader->linkUniformBuffer(m_scenePropertiesUniformBuffer);
 
     }
 

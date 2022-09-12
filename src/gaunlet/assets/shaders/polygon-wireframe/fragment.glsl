@@ -36,10 +36,11 @@ layout (location = 1) out int o_entityId;
 void main() {
 
     if (v_barycentricCoordinates.x > 0.01 && v_barycentricCoordinates.y > 0.01 && v_barycentricCoordinates.z > 0.01) {
-        discard;
+        o_color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    } else {
+        o_color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
-    o_color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
     o_entityId = properties[v_entityIndex].entityId;
 
 }
