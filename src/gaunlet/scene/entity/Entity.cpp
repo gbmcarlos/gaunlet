@@ -44,7 +44,7 @@ namespace gaunlet::Scene {
     }
 
     Entity::operator bool() const {
-        return m_handle != entt::null && m_scene != nullptr;
+        return m_handle != entt::null && m_scene != nullptr && m_scene->m_registry.valid(m_handle);
     }
 
     bool Entity::operator==(const Entity &other) const {

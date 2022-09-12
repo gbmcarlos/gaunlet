@@ -1,7 +1,7 @@
 #include "../include/Editor.h"
 #include "../include/Prefab.h"
 
-class TransformerTool : public gaunlet::Editor::Tool {
+class TransformerTool : public gaunlet::Editor::SelectionTool {
 
 public:
 
@@ -20,28 +20,14 @@ public:
 
     void start() override {
 
-        // If there's already an entity selected, create the gizmo
-        auto selectedSceneEntity = getWorkspace()->getSelectedSceneEntity();
-        if (selectedSceneEntity) {
-            m_sceneEntity = selectedSceneEntity;
-            m_gizmo = gaunlet::Editor::TranslationGizmo::create(
-                getWorkspace()->getScene("main"),
-                1.5f, 0.1f,
-                0.5f, 0.5f
-            );
-            selectedSceneEntity.addChild(m_gizmo);
+        if (getSelectedSceneEntity()) {
+            createGizmo(getSelectedSceneEntity());
         }
 
     }
 
     void stop() override {
-
-        // If there is a gizmo, remove it (and unselect it)
-        if (m_gizmo) {
-            getWorkspace()->selectUiEntity({});
-            m_gizmo.destroy();
-        }
-
+        destroyGizmo();
     }
 
     bool onEvent(gaunlet::Core::Event &event) override {
@@ -55,30 +41,43 @@ public:
 
     }
 
+protected:
+
+    void onSceneEntitySelected(gaunlet::Scene::Entity sceneEntity) override {
+        createGizmo(sceneEntity);
+    }
+
+    void onSceneEntityUnselected(gaunlet::Scene::Entity sceneEntity) override {
+        destroyGizmo();
+    }
+
 private:
 
+    bool m_moving;
     glm::vec3 m_entityInitialPosition;
     glm::vec3 m_handleInitialPosition;
     glm::vec3 m_handlePosition;
     glm::vec3 m_movement;
-    gaunlet::Scene::Entity m_sceneEntity;
     gaunlet::Scene::Entity m_gizmo = {};
     gaunlet::Editor::TranslationGizmo::Handle m_handle = gaunlet::Editor::TranslationGizmo::Handle::PlaneXY;
 
     bool onMousePressEvent(gaunlet::Core::MouseButtonPress& event) {
 
-        // Check if we're clicking on any of the handles
-        auto uiEntity = getWorkspace()->mousePickUIEntity("main");
+        m_moving = false;
+        auto uiEntity = selectUIEntity("main");
+
         if (uiEntity) {
-            getWorkspace()->selectUiEntity(uiEntity);
+
+            // Save the handle, the scene entity's and the handle's current position,
             m_handle = gaunlet::Editor::TranslationGizmo::convert(uiEntity.getName());
-            m_entityInitialPosition = m_sceneEntity.getComponent<gaunlet::Scene::TransformComponent>().m_translation;
+            m_entityInitialPosition = getSelectedSceneEntity().getComponent<gaunlet::Scene::TransformComponent>().m_translation;
             m_handleInitialPosition = getWorkspace()->mousePickPoint(
                 "main",
-                m_sceneEntity.getComponent<gaunlet::Scene::TransformComponent>().m_translation,
+                getSelectedSceneEntity().getComponent<gaunlet::Scene::TransformComponent>().m_translation,
                 gaunlet::Editor::TranslationGizmo::getPlaneNormal(m_handle)
             );
             m_handlePosition = m_handleInitialPosition;
+
         }
 
         return true;
@@ -87,15 +86,25 @@ private:
 
     bool onMouseReleaseEvent(gaunlet::Core::MouseButtonRelease& event) {
 
+        // If the cursor hasn't moved between press and release, it's a simple click, so try to select an entity
+        if (!m_moving) {
+            selectSceneEntity("main");
+            return true;
+        }
+
+        // Otherwise, reset everything
         getWorkspace()->selectUiEntity({});
         m_handle = gaunlet::Editor::TranslationGizmo::Handle::None;
         m_movement = {0, 0, 0};
+        m_moving = false;
 
         return true;
 
     }
 
     bool onCursorMoveEvent(gaunlet::Core::CursorMoveEvent& event) {
+
+        m_moving = true;
 
         gaunlet::Scene::Entity handle = getWorkspace()->getSelectedUIEntity();
 
@@ -106,7 +115,7 @@ private:
 
         m_handlePosition = getWorkspace()->mousePickPoint(
             "main",
-            m_sceneEntity.getComponent<gaunlet::Scene::TransformComponent>().m_translation,
+            getSelectedSceneEntity().getComponent<gaunlet::Scene::TransformComponent>().m_translation,
             gaunlet::Editor::TranslationGizmo::getPlaneNormal(m_handle)
         );
 
@@ -116,15 +125,35 @@ private:
 
         m_movement = gaunlet::Editor::TranslationGizmo::constraintMovement(m_handle, m_handlePosition - m_handleInitialPosition);
 
-        m_sceneEntity.getComponent<gaunlet::Scene::TransformComponent>().m_translation = m_entityInitialPosition + m_movement;
+        getSelectedSceneEntity().getComponent<gaunlet::Scene::TransformComponent>().m_translation = m_entityInitialPosition + m_movement;
 
         return true;
 
     }
 
+    void createGizmo(gaunlet::Scene::Entity sceneEntity) {
+
+        m_gizmo = gaunlet::Editor::TranslationGizmo::create(
+            getWorkspace()->getScene("main"),
+            1.5f, 0.1f,
+            0.5f, 0.5f
+        );
+        sceneEntity.addChild(m_gizmo);
+
+    }
+
+    void destroyGizmo() {
+
+        if (m_gizmo) {
+            m_gizmo.destroy();
+            m_gizmo = {};
+        }
+
+    }
+
 };
 
-class SelectorTool : public gaunlet::Editor::Tool {
+class SelectorTool : public gaunlet::Editor::SelectionTool {
 
     const char* getName() override {
         return "Selector";
@@ -141,8 +170,7 @@ class SelectorTool : public gaunlet::Editor::Tool {
 
     bool onMousePressEvent(gaunlet::Core::MouseButtonPress& event) {
 
-        auto selectedSceneEntity = getWorkspace()->mousePickSceneEntity("main");
-        getWorkspace()->selectSceneEntity(selectedSceneEntity);
+        selectSceneEntity("main");
 
         return true;
     }
@@ -316,7 +344,7 @@ public:
         m_workspace->addTool("selector", gaunlet::Core::CreateRef<SelectorTool>());
         m_workspace->addTool("camera-controller", gaunlet::Core::CreateRef<CameraControllerTool>());
         m_workspace->addTool("transformer", gaunlet::Core::CreateRef<TransformerTool>());
-        m_workspace->activateTool("selector");
+        m_workspace->activateTool("transformer");
 
         // Prepare the scene
         auto& mainScene = m_workspace->getScene("main");
