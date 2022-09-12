@@ -237,6 +237,11 @@ namespace gaunlet::Core {
         glCall(glUniform1i(location, value));
     }
 
+    void OpenGLRenderApi::setUniform1f(unsigned int id, int location, float value) {
+        bindShader(id);
+        glCall(glUniform1f(location, value));
+    }
+
     void OpenGLRenderApi::setUniform3f(unsigned int id, int location, const glm::vec3 &value) {
         bindShader(id);
         glCall(glUniform3f(location, value.x, value.y, value.z));

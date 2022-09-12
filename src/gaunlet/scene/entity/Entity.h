@@ -155,12 +155,12 @@ namespace gaunlet::Scene {
 
     template<typename T, typename... Args>
     T& Entity::addComponent(Args&&... args) {
-        return m_scene->m_registry.emplace<T>(m_handle, std::forward<Args>(args)...);
+        return m_scene->m_registry.emplace_or_replace<T>(m_handle, std::forward<Args>(args)...);
     }
 
     template<typename T, typename... Args>
     void Entity::addEmptyComponent(Args&&... args) {
-        m_scene->m_registry.emplace<T>(m_handle, std::forward<Args>(args)...);
+        m_scene->m_registry.emplace_or_replace<T>(m_handle, std::forward<Args>(args)...);
     }
 
     template<typename T>

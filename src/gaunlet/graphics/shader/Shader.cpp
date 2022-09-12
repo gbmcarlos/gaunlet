@@ -38,6 +38,13 @@ namespace gaunlet::Graphics {
 
     }
 
+    void Shader::setUniform1f(const std::string& name, float value) {
+
+        int location = getUniformLocation(name);
+        Core::RenderCommand::setUniform1f(m_rendererId, location, value);
+
+    }
+
     void Shader::setUniform3f(const std::string& name, const glm::vec3& value) {
 
         int location = getUniformLocation(name);

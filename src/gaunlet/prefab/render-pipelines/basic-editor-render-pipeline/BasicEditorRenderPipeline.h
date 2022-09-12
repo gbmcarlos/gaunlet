@@ -24,18 +24,18 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
         static const unsigned int UIEntityIdFramebufferAttachmentIndex = 2;
 
         void drawScene(const Core::Ref<Scene::Scene>& scene);
+        void drawOutlines(const Core::Ref<Scene::Scene>& scene);
         void drawUI(const Core::Ref<Scene::Scene>& scene);
         void drawSkybox(const Core::Ref<Scene::SkyboxComponent>& skybox);
 
         virtual void submitSceneModels(const Core::Ref<Scene::Scene>& scene);
         virtual void submitSceneCircles(const Core::Ref<Scene::Scene>& scene);
 
+        void submitOutlines(const Core::Ref<Scene::Scene>& scene);
+
         virtual void submitUIModels(const Core::Ref<Scene::Scene>& scene);
         virtual void submitUICircles(const Core::Ref<Scene::Scene>& scene);
 
-        void submitOutlines(const Core::Ref<Scene::Scene>& scene);
-        void submitOutline(Scene::Entity entity);
-        void renderOutlines();
 
     protected:
 
@@ -51,7 +51,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
         void loadModelShaders();
         void loadCircleShaders();
         void loadSkyboxShaders();
-        void loadOutlineShaders();
+        void loadModelOutlineShaders();
 
     };
 

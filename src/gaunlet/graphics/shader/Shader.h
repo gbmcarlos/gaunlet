@@ -25,6 +25,7 @@ namespace gaunlet::Graphics {
         void compile() const;
 
         void setUniform1i(const std::string& name, int value);
+        void setUniform1f(const std::string& name, float value);
         void setUniform3f(const std::string& name, const glm::vec3& value);
         void setUniform4f(const std::string& name, const glm::vec4& value);
         void setUniformMat3f(const std::string& name, const glm::mat3& value);

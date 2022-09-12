@@ -348,7 +348,20 @@ namespace gaunlet::Editor {
             changed = true;
         }
 
+        auto previousEntity = m_selectedSceneEntity;
         m_selectedSceneEntity = entity;
+
+        // If we have newly selected an entity
+        if (changed && m_selectedSceneEntity) {
+            m_selectedSceneEntity.addEmptyComponent<ModelOutlineTag>();
+            m_selectedSceneEntity.addEmptyComponent<WireframeModelTag>();
+        }
+
+        // If an entity has been unselected
+        if (changed && previousEntity) {
+            previousEntity.removeComponent<ModelOutlineTag>();
+            previousEntity.removeComponent<WireframeModelTag>();
+        }
 
         // Event callback
 

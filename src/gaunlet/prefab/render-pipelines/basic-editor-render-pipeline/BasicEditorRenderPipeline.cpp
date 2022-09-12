@@ -30,6 +30,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
         m_framebuffer->bind();
 
         drawScene(scene);
+        drawOutlines(scene);
         drawUI(scene);
         drawSkybox(skybox);
 
@@ -96,6 +97,17 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
         // Then draw the objects
         submitSceneModels(scene);
         submitSceneCircles(scene);
+
+    }
+
+    void BasicEditorRenderPipeline::drawOutlines(const Core::Ref<Scene::Scene> &scene) {
+
+        // Draw only wherever we didn't draw anything before
+        Core::RenderCommand::setStencilFunction(
+            Core::DepthStencilFunction::NotEqual, 1
+        );
+
+        submitOutlines(scene);
 
     }
 
@@ -183,6 +195,20 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
 
     }
 
+    void BasicEditorRenderPipeline::submitOutlines(const Core::Ref<Scene::Scene> &scene) {
+
+        // Model wireframes: those models that have the Wireframe tag
+        auto view = scene->getRegistry().view<Scene::ModelComponent, Scene::TransformComponent, Editor::SceneEntityTag, Editor::ModelOutlineTag>();
+        for (auto e : view) {
+            m_modelRenderer.submitObject(
+                {e, scene.get()},
+                getShaderLibrary().get("model-outline")
+            );
+        }
+        m_modelRenderer.renderObjects(getShaderLibrary().get("model-outline"));
+
+    }
+
     void BasicEditorRenderPipeline::submitUIModels(const Core::Ref<Scene::Scene>& scene) {
 
         auto group = scene->getRegistry().group<Scene::ModelComponent>(entt::get<Scene::TransformComponent, Editor::UIEntityTag>);
@@ -221,7 +247,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
         loadModelShaders();
         loadCircleShaders();
         loadSkyboxShaders();
-        loadOutlineShaders();
+        loadModelOutlineShaders();
 
     }
 
@@ -301,9 +327,20 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
 
     }
 
-    void BasicEditorRenderPipeline::loadOutlineShaders() {
+    void BasicEditorRenderPipeline::loadModelOutlineShaders() {
 
+        std::map<Core::ShaderType, std::string> modelOutlineShaderSource {
+            {Core::ShaderType::Vertex, PREFABS_PATH"/render-pipelines/basic-editor-render-pipeline/shaders/model-outline/vertex.glsl"},
+            {Core::ShaderType::Fragment, PREFABS_PATH"/render-pipelines/basic-editor-render-pipeline/shaders/model-outline/fragment.glsl"}
+        };
+        auto modelOutlineShader = m_shaderLibrary.load("model-outline", modelOutlineShaderSource);
 
+        // Set a single "skybox" texture
+        modelOutlineShader->setUniform1f("u_width", 0.1f);
+
+        // Link uniform buffers
+        modelOutlineShader->linkUniformBuffer(m_scenePropertiesUniformBuffer);
+        modelOutlineShader->linkUniformBuffer(m_modelRenderer.getPropertySetsUniformBuffer());
 
     }
 

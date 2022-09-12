@@ -2,10 +2,12 @@
 
 namespace gaunlet::Editor {
 
-    struct WireframeModelTag {};
-
     struct SceneEntityTag {};
 
     struct UIEntityTag {};
+
+    struct WireframeModelTag {};
+
+    struct ModelOutlineTag {};
 
 }

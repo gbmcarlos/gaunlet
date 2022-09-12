@@ -313,9 +313,10 @@ public:
         );
 
         // Create and push the tools
-        m_workspace->addTool("camera-controller", gaunlet::Core::CreateRef<CameraControllerTool>());
         m_workspace->addTool("selector", gaunlet::Core::CreateRef<SelectorTool>());
+        m_workspace->addTool("camera-controller", gaunlet::Core::CreateRef<CameraControllerTool>());
         m_workspace->addTool("transformer", gaunlet::Core::CreateRef<TransformerTool>());
+        m_workspace->activateTool("selector");
 
         // Prepare the scene
         auto& mainScene = m_workspace->getScene("main");
@@ -324,15 +325,23 @@ public:
         mainCamera->setZoomLevel(1.5f);
         mainCamera->lookAt({0, 2, 0});
 
-        auto cup = mainScene->createTaggedEntity<gaunlet::Editor::SceneEntityTag>("Cup");
-        cup.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Model("assets/cup/cup.obj"));
-        cup.addEmptyComponent<gaunlet::Editor::WireframeModelTag>();
-        cup.addComponent<gaunlet::Scene::TransformComponent>(
-            glm::vec3(0.0f, 0.0f, 0.0f),
+        auto cup1 = mainScene->createTaggedEntity<gaunlet::Editor::SceneEntityTag>("Cup1");
+        cup1.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Model("assets/cup/cup.obj"));
+        cup1.addComponent<gaunlet::Scene::TransformComponent>(
+            glm::vec3(-2.0f, 0.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(0.5f, 0.5f, 0.5f)
         );
-        cup.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(0.8f, 0.2f, 0.2f, 1.0f));
+        cup1.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(0.8f, 0.2f, 0.2f, 1.0f));
+
+        auto cup2 = mainScene->createTaggedEntity<gaunlet::Editor::SceneEntityTag>("Cup2");
+        cup2.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Model("assets/cup/cup.obj"));
+        cup2.addComponent<gaunlet::Scene::TransformComponent>(
+            glm::vec3(2.0f, 0.0f, 0.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(0.5f, 0.5f, 0.5f)
+        );
+        cup2.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(0.2f, 0.2f, 0.8f, 1.0f));
 
     }
 
