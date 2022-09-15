@@ -103,7 +103,7 @@ namespace gaunlet::Scene {
         // If we're trying to look straight up or straight down, move the target slight forward
         glm::vec3 direction = glm::abs(glm::normalize(target - m_position));
         if (direction == glm::vec3(0, 1, 0)) {
-            target.z += 0.5;
+            target.z += -0.5;
         }
 
         m_viewMatrix = glm::lookAt(
