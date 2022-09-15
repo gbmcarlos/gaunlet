@@ -120,7 +120,6 @@ namespace gaunlet::Core {
         unsigned int m_boundIndexBufferId = 0;
         unsigned int m_boundVertexArrayId = 0;
         unsigned int m_boundUniformBufferId = 0;
-        std::array<unsigned int, 31> m_activeTextureIds = {};
         unsigned int m_boundShaderId = 0;
         unsigned int m_boundFramebufferId = 0;
 

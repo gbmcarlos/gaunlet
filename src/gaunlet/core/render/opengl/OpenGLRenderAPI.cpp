@@ -350,12 +350,8 @@ namespace gaunlet::Core {
     }
 
     void OpenGLRenderApi::activateTexture(unsigned int id, TextureType type, unsigned int slot) {
-
-        if (m_activeTextureIds[slot] != id) {
-            glCall(glActiveTexture(GL_TEXTURE0 + slot));
-            glCall(glBindTexture(convertTextureType(type), id));
-            m_activeTextureIds[slot] = id;
-        }
+        glCall(glActiveTexture(GL_TEXTURE0 + slot));
+        glCall(glBindTexture(convertTextureType(type), id));
     }
 
     void OpenGLRenderApi::deleteTexture(unsigned int& id) {
