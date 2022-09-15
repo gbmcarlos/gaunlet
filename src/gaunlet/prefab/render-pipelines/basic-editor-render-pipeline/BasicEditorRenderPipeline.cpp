@@ -7,7 +7,7 @@
 namespace gaunlet::Prefab::BasicEditorRenderPipeline {
 
     BasicEditorRenderPipeline::BasicEditorRenderPipeline()
-        : m_modelRenderer(1), m_circleRenderer(2) {
+        : m_modelRenderer(1), m_circleRenderer(2), m_planeRenderer(3) {
 
         prepareShaders();
 
@@ -113,7 +113,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
         // Then draw the objects
         renderSceneModels(scene);
         renderSceneCircles(scene);
-//        submitScenePlanes(scene);
+        submitScenePlanes(scene);
 
     }
 
@@ -209,6 +209,30 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
             );
         }
         m_circleRenderer.renderObjects(m_circleRenderer.getShaders().get("circle-faces"));
+
+    }
+
+    void BasicEditorRenderPipeline::submitScenePlanes(const Core::Ref<Scene::Scene> &scene) {
+
+        // Model faces: those models that don't have the Wireframe tag
+        auto facesView = scene->getRegistry().view<Scene::PlaneComponent, Scene::TransformComponent, Editor::SceneEntityTag>(entt::exclude<Editor::WireframeModelTag>);
+        for (auto e : facesView) {
+            m_planeRenderer.submitObject(
+                {e, scene.get()},
+                m_planeRenderer.getShaders().get("plane-faces")
+            );
+        }
+        m_planeRenderer.renderObjects(m_planeRenderer.getShaders().get("plane-faces"));
+
+        // Model wireframes: those models that have the Wireframe tag
+        auto wireframesView = scene->getRegistry().view<Scene::PlaneComponent, Scene::TransformComponent, Editor::SceneEntityTag, Editor::WireframeModelTag>();
+        for (auto e : wireframesView) {
+            m_planeRenderer.submitObject(
+                {e, scene.get()},
+                m_planeRenderer.getShaders().get("plane-wireframe")
+            );
+        }
+        m_planeRenderer.renderObjects(m_planeRenderer.getShaders().get("plane-wireframe"));
 
     }
 

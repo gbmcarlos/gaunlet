@@ -3,6 +3,7 @@
 #include "gaunlet/prefab/object-renderers/model-renderer/ModelRenderer.h"
 #include "gaunlet/prefab/object-renderers/circle-renderer/CircleRenderer.h"
 #include "gaunlet/prefab/object-renderers/skybox-renderer/SkyboxRenderer.h"
+#include "gaunlet/prefab/object-renderers/plane-renderer/PlaneRenderer.h"
 #include "gaunlet/prefab/render-pipelines/basic-3d-render-pipeline/Basic3DRenderPipeline.h"
 #include "gaunlet/editor/workspace/FramebufferRenderPipeline.h"
 #include "gaunlet/graphics/framebuffer/Framebuffer.h"
@@ -33,7 +34,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
 
         virtual void renderSceneModels(const Core::Ref<Scene::Scene>& scene);
         virtual void renderSceneCircles(const Core::Ref<Scene::Scene>& scene);
-//        virtual void submitScenePlanes(const Core::Ref<Scene::Scene>& scene);
+        virtual void submitScenePlanes(const Core::Ref<Scene::Scene>& scene);
 
         void renderOutlines(const Core::Ref<Scene::Scene>& scene);
 
@@ -49,6 +50,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
         Prefab::ObjectRenderers::ModelRenderer m_modelRenderer;
         Prefab::ObjectRenderers::CircleRenderer m_circleRenderer;
         Prefab::ObjectRenderers::SkyboxRenderer m_skyboxRenderer;
+        Prefab::ObjectRenderers::PlaneRenderer m_planeRenderer;
 
     private:
 
