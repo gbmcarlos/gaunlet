@@ -39,7 +39,6 @@ add_library(gaunlet STATIC
         gaunlet/editor/gizmos/TranslationGizmo.cpp
 
 #        Prefab
-        gaunlet/prefab/render-pipelines/basic-2d-render-pipeline/Basic2DRenderPipeline.cpp
         gaunlet/prefab/render-pipelines/basic-3d-render-pipeline/Basic3DRenderPipeline.cpp
         gaunlet/prefab/render-pipelines/basic-editor-render-pipeline/BasicEditorRenderPipeline.cpp
 

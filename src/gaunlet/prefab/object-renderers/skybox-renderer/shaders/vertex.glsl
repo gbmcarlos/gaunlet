@@ -7,7 +7,7 @@ struct DirectionalLight {
     float diffuseIntensity;
 };
 
-layout (std140) uniform ScenePropertiesBlock {
+layout (std140) uniform SceneProperties {
     mat4 view;
     mat4 projection;
     DirectionalLight directionalLight;

@@ -16,13 +16,17 @@ namespace gaunlet::Scene {
 
         void submitObject(Entity entity, const Core::Ref<Graphics::Shader>& shader);
         void renderObjects(const Core::Ref<Graphics::Shader>& shader);
-        inline const Core::Ref<Graphics::UniformBuffer>& getPropertySetsUniformBuffer() {return m_propertySetsUniformBuffer; }
+
         inline unsigned int getMaxTextures() {return m_renderer.getMaxTextures(); }
+
+        inline const Core::Ref<Graphics::UniformBuffer>& getPropertySetsUniformBuffer() {return m_propertySetsUniformBuffer; }
 
     protected:
 
         virtual Y getEntityProperties(Entity entity) = 0;
+        virtual Graphics::RenderMode getRenderMode() {return Graphics::RenderMode::Triangle; }
 
+        const Core::Ref<Graphics::Shader>& loadShader(const std::map<Core::ShaderType, std::string>& sources, const char *name, Graphics::ShaderLibrary &library, const Core::Ref<Graphics::UniformBuffer>& uniformBuffer, unsigned int maxTextures);
         glm::mat4 getHierarchicalTransform(Entity entity);
 
         Graphics::BatchedRenderer<Y> m_renderer;
@@ -96,7 +100,23 @@ namespace gaunlet::Scene {
             sizeof(Y) * entityPropertySets.size()
         );
 
-        m_renderer.flush(shader);
+        m_renderer.flush(shader, getRenderMode());
+
+    }
+
+    template<typename T, typename Y>
+    const Core::Ref<Graphics::Shader>& ObjectRenderer<T, Y>::loadShader(const std::map<Core::ShaderType, std::string>& sources, const char *name, Graphics::ShaderLibrary &library, const Core::Ref<Graphics::UniformBuffer>& uniformBuffer, unsigned int maxTextures) {
+
+        auto shader = library.load(name, sources);
+
+        for (int i = 0; i < maxTextures; i++) {
+            auto textureName = std::string("texture") + std::to_string(i);
+            shader->setUniform1i(textureName, i);
+        }
+
+        shader->linkUniformBuffer(uniformBuffer);
+
+        return library.get(name);
 
     }
 

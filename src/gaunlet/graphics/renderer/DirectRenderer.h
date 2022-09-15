@@ -6,11 +6,15 @@
 
 namespace gaunlet::Graphics {
 
+    enum class RenderMode {
+        Triangle
+    };
+
     class DirectRenderer {
 
     public:
 
-        static void renderIndexedTriangles(const std::vector<gaunlet::Graphics::Vertex>& vertices, const std::vector<unsigned int>& indices, const Core::Ref<Graphics::Texture>& texture, const Core::Ref<Graphics::Shader>& shader);
+        static void renderIndexedVertices(const std::vector<gaunlet::Graphics::Vertex>& vertices, const std::vector<unsigned int>& indices, const Core::Ref<Graphics::Shader>& shader, RenderMode mode);
 
     };
 

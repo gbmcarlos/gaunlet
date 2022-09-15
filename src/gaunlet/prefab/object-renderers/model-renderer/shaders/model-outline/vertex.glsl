@@ -1,6 +1,6 @@
 #version 410 core
 
-struct EntityProperties {
+struct EntityPropertySet {
     mat4 transform;
     vec4 color;
     uint textureIndex;
@@ -15,11 +15,11 @@ struct DirectionalLight {
 };
 
 // Uniforms
-layout (std140) uniform EntityPropertiesBlock {
-    EntityProperties properties[100];
+layout (std140) uniform EntityPropertySets {
+    EntityPropertySet entityPropertySets[100];
 };
 
-layout (std140) uniform ScenePropertiesBlock {
+layout (std140) uniform SceneProperties {
     mat4 view;
     mat4 projection;
     DirectionalLight directionalLight;
@@ -40,8 +40,8 @@ void main() {
 
     v_entityIndex = a_entityIndex;
 
-    vec4 clipPosition = projection * view * properties[a_entityIndex].transform * a_position;
-    vec4 clipNormal = projection * view * properties[a_entityIndex].transform * vec4(a_normal, 0.0f);
+    vec4 clipPosition = projection * view * entityPropertySets[a_entityIndex].transform * a_position;
+    vec4 clipNormal = projection * view * entityPropertySets[a_entityIndex].transform * vec4(a_normal, 0.0f);
 
     vec2 offset = normalize(clipNormal.xy) * u_width * clipPosition.w;
     clipPosition.xy += offset;

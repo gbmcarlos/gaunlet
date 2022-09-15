@@ -34,8 +34,6 @@ namespace gaunlet::Core {
         std::cout << "renderer: " << glGetString(GL_RENDERER) << std::endl;
         std::cout << "shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 
-        m_activeTextureIds.fill(0);
-
     }
 
     void OpenGLRenderApi::clearColorBuffer(float red, float green, float blue, float alpha) {
@@ -500,7 +498,7 @@ namespace gaunlet::Core {
             case PrimitiveDataType::UInt:       return GL_UNSIGNED_INT;
             case PrimitiveDataType::Float:      return GL_FLOAT;
             case PrimitiveDataType::UByte:      return GL_UNSIGNED_BYTE;
-            case PrimitiveDataType::UInt24_8:    return GL_UNSIGNED_INT_24_8;
+            case PrimitiveDataType::UInt24_8:   return GL_UNSIGNED_INT_24_8;
         }
 
         throw std::runtime_error("Unknown layout element type");
@@ -510,9 +508,9 @@ namespace gaunlet::Core {
     GLenum OpenGLRenderApi::convertShaderType(ShaderType type) {
 
         switch (type) {
-            case ShaderType::Vertex:    return GL_VERTEX_SHADER;
-            case ShaderType::Geometry:  return GL_GEOMETRY_SHADER;
-            case ShaderType::Fragment:  return GL_FRAGMENT_SHADER;
+            case ShaderType::Vertex:                    return GL_VERTEX_SHADER;
+            case ShaderType::Geometry:                  return GL_GEOMETRY_SHADER;
+            case ShaderType::Fragment:                  return GL_FRAGMENT_SHADER;
         }
 
         throw std::runtime_error("Unknown shader type");
@@ -538,8 +536,8 @@ namespace gaunlet::Core {
     GLenum OpenGLRenderApi::convertStencilOperation(StencilOperation operation) {
 
         switch (operation) {
-            case StencilOperation::Keep:           return GL_KEEP;
-            case StencilOperation::Replace:           return GL_REPLACE;
+            case StencilOperation::Keep:        return GL_KEEP;
+            case StencilOperation::Replace:     return GL_REPLACE;
         }
 
         throw std::runtime_error("Unknown depth function");
@@ -549,12 +547,12 @@ namespace gaunlet::Core {
     GLenum OpenGLRenderApi::convertTextureDataFormat(TextureDataFormat format) {
 
         switch (format) {
-            case TextureDataFormat::RGB:  return GL_RGB;
-            case TextureDataFormat::RGBA:  return GL_RGBA;
-            case TextureDataFormat::RedInteger32:  return GL_R32I;
-            case TextureDataFormat::RedInteger:  return GL_RED_INTEGER;
-            case TextureDataFormat::DepthStencil:  return GL_DEPTH_STENCIL;
-            case TextureDataFormat::Depth24Stencil8:  return GL_DEPTH24_STENCIL8;
+            case TextureDataFormat::RGB:                return GL_RGB;
+            case TextureDataFormat::RGBA:               return GL_RGBA;
+            case TextureDataFormat::RedInteger32:       return GL_R32I;
+            case TextureDataFormat::RedInteger:         return GL_RED_INTEGER;
+            case TextureDataFormat::DepthStencil:       return GL_DEPTH_STENCIL;
+            case TextureDataFormat::Depth24Stencil8:    return GL_DEPTH24_STENCIL8;
         }
 
         throw std::runtime_error("Unknown texture format");
@@ -575,9 +573,9 @@ namespace gaunlet::Core {
     GLenum OpenGLRenderApi::convertFramebufferAttachmentType(FramebufferAttachmentType type) {
 
         switch (type) {
-            case FramebufferAttachmentType::None: return GL_NONE;
-            case FramebufferAttachmentType::Color: return GL_COLOR_ATTACHMENT0;
-            case FramebufferAttachmentType::DepthStencil:  return GL_DEPTH_STENCIL_ATTACHMENT;
+            case FramebufferAttachmentType::None:           return GL_NONE;
+            case FramebufferAttachmentType::Color:          return GL_COLOR_ATTACHMENT0;
+            case FramebufferAttachmentType::DepthStencil:   return GL_DEPTH_STENCIL_ATTACHMENT;
         }
 
         throw std::runtime_error("Unknown texture format");

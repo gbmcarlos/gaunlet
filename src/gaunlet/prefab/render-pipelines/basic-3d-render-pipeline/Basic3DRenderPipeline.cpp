@@ -1,12 +1,10 @@
 #include "gaunlet/prefab/render-pipelines/basic-3d-render-pipeline/Basic3DRenderPipeline.h"
-#include "gaunlet/prefab/render-pipelines/basic-3d-render-pipeline/PropertySets.h"
-#include "gaunlet/graphics/renderer/DirectRenderer.h"
-#include "gaunlet/prefab/sprites/Sprites.h"
 
 namespace gaunlet::Prefab::Basic3DRenderPipeline {
 
-    Basic3DRenderPipeline::Basic3DRenderPipeline() {
-        loadShaders();
+    Basic3DRenderPipeline::Basic3DRenderPipeline()
+        : m_modelRenderer(1), m_circleRenderer(2) {
+        prepareShaders();
     }
 
     void Basic3DRenderPipeline::run(const Core::Ref<Scene::Scene>& scene, const Core::Ref<Scene::Camera>& camera, const Core::Ref<Scene::DirectionalLightComponent>& directionalLight, const Core::Ref<Scene::SkyboxComponent>& skybox) {
@@ -29,8 +27,8 @@ namespace gaunlet::Prefab::Basic3DRenderPipeline {
             Core::StencilOperation::Replace // We only write if we actually draw
         );
 
-        submitModels(scene);
-        submitCircles(scene);
+        renderCircles(scene);
+        renderModels(scene);
 
         if (skybox->m_cubeMap) {
 
@@ -55,6 +53,13 @@ namespace gaunlet::Prefab::Basic3DRenderPipeline {
 
     }
 
+    void Basic3DRenderPipeline::clearBuffers() {
+
+        gaunlet::Core::RenderCommand::clearColorBuffer(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
+        gaunlet::Core::RenderCommand::clearDepthStencilBuffer();
+
+    }
+
     void Basic3DRenderPipeline::startScene(const Core::Ref<Scene::Scene>& scene, const Core::Ref<Scene::Camera>& camera, const Core::Ref<Scene::DirectionalLightComponent>& directionalLight) {
 
         SceneProperties sceneProperties(
@@ -70,89 +75,55 @@ namespace gaunlet::Prefab::Basic3DRenderPipeline {
 
     }
 
-    void Basic3DRenderPipeline::renderSkybox(const Core::Ref<Scene::SkyboxComponent>& skybox) {
+    void Basic3DRenderPipeline::renderModels(const Core::Ref<Scene::Scene> &scene) {
 
-        Prefab::Sprites::CubeModel cube;
-
-        Graphics::DirectRenderer::renderIndexedTriangles(
-            cube.getMeshes()[0].getVertices(),
-            cube.getMeshes()[0].getIndices(),
-            skybox->m_cubeMap,
-            getShaderLibrary().get("skybox")
-        );
+        auto group = scene->getRegistry().group<Scene::ModelComponent>(entt::get<Scene::TransformComponent>);
+        for (auto e : group) {
+            m_modelRenderer.submitObject(
+                {e, scene.get()},
+                m_modelRenderer.getShaders().get("model-faces")
+            );
+        }
+        m_modelRenderer.renderObjects(m_modelRenderer.getShaders().get("model-faces"));
 
     }
 
-    void Basic3DRenderPipeline::loadShaders() {
+    void Basic3DRenderPipeline::renderCircles(const Core::Ref<Scene::Scene> &scene) {
+
+        auto group = scene->getRegistry().group<Scene::CircleComponent>(entt::get<Scene::TransformComponent>);
+        for (auto e : group) {
+            m_circleRenderer.submitObject(
+                {e, scene.get()},
+                m_circleRenderer.getShaders().get("circle-faces")
+            );
+        }
+        m_circleRenderer.renderObjects(m_circleRenderer.getShaders().get("circle-faces"));
+
+    }
+
+    void Basic3DRenderPipeline::renderSkybox(const Core::Ref<Scene::SkyboxComponent>& skybox) {
+
+        if (skybox->m_cubeMap) {
+            m_skyboxRenderer.render(
+                skybox->m_cubeMap,
+                m_skyboxRenderer.getShaders().get("skybox")
+            );
+        }
+
+    }
+
+    void Basic3DRenderPipeline::prepareShaders() {
 
         // Create the Uniform Buffer for the Scene Properties, which will be linked to every shader
         m_scenePropertiesUniformBuffer = Core::CreateRef<Graphics::UniformBuffer>(
-            "ScenePropertiesBlock",
+            "SceneProperties",
             0,
             sizeof (SceneProperties)
         );
 
-        loadModelShaders();
-        loadCircleShaders();
-        loadSkyboxShaders();
-
-    }
-
-    void Basic3DRenderPipeline::loadModelShaders() {
-
-        // Polygon Shader
-        std::map<Core::ShaderType, std::string> modelShaderSources {
-            {Core::ShaderType::Vertex, PREFABS_PATH"/render-pipelines/basic-3d-render-pipeline/shaders/model/vertex.glsl"},
-            {Core::ShaderType::Fragment, PREFABS_PATH"/render-pipelines/basic-3d-render-pipeline/shaders/model/fragment.glsl"}
-        };
-        auto modelShader = m_shaderLibrary.load("model", modelShaderSources);
-
-        // Set all the texture slots as uniforms
-        for (int i = 0; i < m_modelRenderer.getMaxTextures(); i++) {
-            auto textureName = std::string("texture") + std::to_string(i);
-            modelShader->setUniform1i(textureName, i);
-        }
-
-        // Link the SceneProperties and EntityProperties uniform buffers to the polygon shader
-        modelShader->linkUniformBuffer(m_modelRenderer.getPropertySetsUniformBuffer());
-        modelShader->linkUniformBuffer(m_scenePropertiesUniformBuffer);
-
-    }
-
-    void Basic3DRenderPipeline::loadCircleShaders() {
-
-        // Polygon Shader
-        std::map<Core::ShaderType, std::string> circleShaderSources {
-            {Core::ShaderType::Vertex, PREFABS_PATH"/render-pipelines/basic-3d-render-pipeline/shaders/circle/vertex.glsl"},
-            {Core::ShaderType::Fragment, PREFABS_PATH"/render-pipelines/basic-3d-render-pipeline/shaders/circle/fragment.glsl"}
-        };
-        auto circleShader = m_shaderLibrary.load("circle", circleShaderSources);
-
-        // Set all the texture slots as uniforms
-        for (int i = 0; i < m_circleRenderer.getMaxTextures(); i++) {
-            auto textureName = std::string("texture") + std::to_string(i);
-            circleShader->setUniform1i(textureName, i);
-        }
-
-        // Link the SceneProperties and EntityProperties uniform buffers to the polygon shader
-        circleShader->linkUniformBuffer(m_circleRenderer.getPropertySetsUniformBuffer());
-        circleShader->linkUniformBuffer(m_scenePropertiesUniformBuffer);
-
-    }
-
-    void Basic3DRenderPipeline::loadSkyboxShaders() {
-
-        std::map<Core::ShaderType, std::string> skyboxShaderSource {
-            {Core::ShaderType::Vertex, PREFABS_PATH"/render-pipelines/basic-3d-render-pipeline/shaders/skybox/vertex.glsl"},
-            {Core::ShaderType::Fragment, PREFABS_PATH"/render-pipelines/basic-3d-render-pipeline/shaders/skybox/fragment.glsl"}
-        };
-        auto skyboxShader = m_shaderLibrary.load("skybox", skyboxShaderSource);
-
-        // Set a single "skybox" texture
-        skyboxShader->setUniform1i("skybox", 0);
-
-        // Link uniform buffers
-        skyboxShader->linkUniformBuffer(m_scenePropertiesUniformBuffer);
+        m_modelRenderer.getShaders().get("model-faces")->linkUniformBuffer(m_scenePropertiesUniformBuffer);
+        m_circleRenderer.getShaders().get("circle-faces")->linkUniformBuffer(m_scenePropertiesUniformBuffer);
+        m_skyboxRenderer.getShaders().get("skybox")->linkUniformBuffer(m_scenePropertiesUniformBuffer);
 
     }
 

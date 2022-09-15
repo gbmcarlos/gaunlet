@@ -24,14 +24,14 @@ namespace gaunlet::Graphics {
         void attach(Core::ShaderType type, const std::string& shaderPath);
         void compile() const;
 
-        void setUniform1i(const std::string& name, int value);
-        void setUniform1f(const std::string& name, float value);
-        void setUniform3f(const std::string& name, const glm::vec3& value);
-        void setUniform4f(const std::string& name, const glm::vec4& value);
-        void setUniformMat3f(const std::string& name, const glm::mat3& value);
-        void setUniformMat4f(const std::string& name, const glm::mat4& value);
+        Shader* setUniform1i(const std::string& name, int value);
+        Shader* setUniform1f(const std::string& name, float value);
+        Shader* setUniform3f(const std::string& name, const glm::vec3& value);
+        Shader* setUniform4f(const std::string& name, const glm::vec4& value);
+        Shader* setUniformMat3f(const std::string& name, const glm::mat3& value);
+        Shader* setUniformMat4f(const std::string& name, const glm::mat4& value);
 
-        void linkUniformBuffer(const Core::Ref<UniformBuffer>& uniformBuffer);
+        Shader* linkUniformBuffer(const Core::Ref<UniformBuffer>& uniformBuffer);
     };
 
 }

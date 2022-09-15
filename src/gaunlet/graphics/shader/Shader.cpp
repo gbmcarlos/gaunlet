@@ -31,49 +31,61 @@ namespace gaunlet::Graphics {
         Core::RenderCommand::compileShaderProgram(m_rendererId);
     }
 
-    void Shader::setUniform1i(const std::string& name, int value) {
+    Shader* Shader::setUniform1i(const std::string& name, int value) {
 
         int location = getUniformLocation(name);
         Core::RenderCommand::setUniform1i(m_rendererId, location, value);
 
+        return this;
+
     }
 
-    void Shader::setUniform1f(const std::string& name, float value) {
+    Shader* Shader::setUniform1f(const std::string& name, float value) {
 
         int location = getUniformLocation(name);
         Core::RenderCommand::setUniform1f(m_rendererId, location, value);
 
+        return this;
+
     }
 
-    void Shader::setUniform3f(const std::string& name, const glm::vec3& value) {
+    Shader* Shader::setUniform3f(const std::string& name, const glm::vec3& value) {
 
         int location = getUniformLocation(name);
         Core::RenderCommand::setUniform3f(m_rendererId, location, value);
 
+        return this;
+
     }
 
-    void Shader::setUniform4f(const std::string& name, const glm::vec4& value) {
+    Shader* Shader::setUniform4f(const std::string& name, const glm::vec4& value) {
 
         int location = getUniformLocation(name);
         Core::RenderCommand::setUniform4f(m_rendererId, location, value);
 
+        return this;
+
     }
 
-    void Shader::setUniformMat3f(const std::string& name, const glm::mat3& value) {
+    Shader* Shader::setUniformMat3f(const std::string& name, const glm::mat3& value) {
 
         int location = getUniformLocation(name);
         Core::RenderCommand::setUniformMat3f(m_rendererId, location, value);
 
+        return this;
+
     }
 
-    void Shader::setUniformMat4f(const std::string& name, const glm::mat4& value) {
+    Shader* Shader::setUniformMat4f(const std::string& name, const glm::mat4& value) {
 
         int location = getUniformLocation(name);
         Core::RenderCommand::setUniformMat4f(m_rendererId, location, value);
 
+        return this;
+
     }
 
-    void Shader::linkUniformBuffer(const Core::Ref<UniformBuffer>& uniformBuffer) {
+    Shader* Shader::linkUniformBuffer(const Core::Ref<UniformBuffer>& uniformBuffer) {
 
         int location = getUniformBlockLocation(uniformBuffer->getName());
         Core::RenderCommand::bindUniformBufferFromBindingPoint(
@@ -81,6 +93,8 @@ namespace gaunlet::Graphics {
             location,
             uniformBuffer->getBindingPoint()
         );
+
+        return this;
 
     }
 

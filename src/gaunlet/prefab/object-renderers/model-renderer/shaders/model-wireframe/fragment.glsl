@@ -1,6 +1,6 @@
 #version 410 core
 
-struct EntityProperties {
+struct EntityPropertySet {
     mat4 transform;
     vec4 color;
     uint textureIndex;
@@ -15,11 +15,11 @@ struct DirectionalLight {
 };
 
 // Uniforms
-layout (std140) uniform EntityPropertiesBlock {
-    EntityProperties properties[100];
+layout (std140) uniform EntityPropertySets {
+    EntityPropertySet entityPropertySets[100];
 };
 
-layout (std140) uniform ScenePropertiesBlock {
+layout (std140) uniform SceneProperties {
     mat4 view;
     mat4 projection;
     DirectionalLight directionalLight;
@@ -29,6 +29,7 @@ layout (std140) uniform ScenePropertiesBlock {
 in vec2 v_textureCoordinates;
 in vec3 v_normal;
 flat in uint v_entityIndex;
+in vec3 v_barycentricCoordinates;
 
 // Outputs
 layout (location = 0) out vec4 o_color;
@@ -56,14 +57,25 @@ vec4 getDirectionalLightColor(
 
 void main() {
 
-    vec4 textureColor = sampleTexture(properties[v_entityIndex].textureIndex, v_textureCoordinates);
-    vec4 directionalLightColor = getDirectionalLightColor(directionalLight.color, directionalLight.direction, directionalLight.ambientIntensity, directionalLight.diffuseIntensity, v_normal);
+    vec4 textureColor = sampleTexture(entityPropertySets[v_entityIndex].textureIndex, v_textureCoordinates);
 
-    o_color = textureColor * properties[v_entityIndex].color * directionalLightColor;
+    // If the fragment is close to the edge, it's a wire
+    if (v_barycentricCoordinates.x < 0.02 || v_barycentricCoordinates.y < 0.02 || v_barycentricCoordinates.z < 0.02) {
 
-    o_entityId = properties[v_entityIndex].entityId;
+        o_color = vec4(0.0f, 0.0f, 0.0f, 1.0f);
+
+    } else {
+
+        vec4 directionalLightColor = getDirectionalLightColor(directionalLight.color, directionalLight.direction, directionalLight.ambientIntensity, directionalLight.diffuseIntensity, v_normal);
+        o_color = textureColor * entityPropertySets[v_entityIndex].color * directionalLightColor;
+        //o_color = vec4(v_textureCoordinates.x, v_textureCoordinates.y, 0, 1);
+
+    }
+
+    o_entityId = entityPropertySets[v_entityIndex].entityId;
 
 }
+
 
 vec4 getDirectionalLightColor(vec3 color, vec3 direction, float ambientIntensity, float diffuseIntensity, vec3 normal) {
 

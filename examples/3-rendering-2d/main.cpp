@@ -10,7 +10,7 @@ public:
     void onReady() override {
 
         m_scene = gaunlet::Core::CreateRef<gaunlet::Scene::Scene>();
-        m_renderPipeline = gaunlet::Core::CreateRef<gaunlet::Prefab::Basic2DRenderPipeline::Basic2DRenderPipeline>();
+        m_renderPipeline = gaunlet::Core::CreateRef<gaunlet::Prefab::Basic3DRenderPipeline::Basic3DRenderPipeline>();
 
         float viewportWidth = (float) gaunlet::Core::Window::getCurrentInstance()->getViewportWidth();
         float viewportHeight = (float) gaunlet::Core::Window::getCurrentInstance()->getViewportHeight();
@@ -93,7 +93,7 @@ public:
 
         // CIRCLE 2
         auto circle2 = m_scene->createEntity();
-        circle2.addComponent<gaunlet::Scene::CircleComponent>(0.5, 0.1f);
+        circle2.addComponent<gaunlet::Scene::CircleComponent>(0.5f, 0.1f);
         circle2.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(5.0f, 0.5f, 0.0f),
             glm::vec3(0.0f, 0.0f, -20.0f),
@@ -114,13 +114,18 @@ public:
     }
 
     void onUpdate(gaunlet::Core::TimeStep timeStep) override {
-        m_renderPipeline->run(m_scene, m_camera);
+        m_renderPipeline->run(
+            m_scene,
+            m_camera,
+            gaunlet::Core::CreateRef<gaunlet::Scene::DirectionalLightComponent>(),
+            gaunlet::Core::CreateRef<gaunlet::Scene::SkyboxComponent>()
+        );
     }
 
 private:
     gaunlet::Core::Ref<gaunlet::Scene::Scene> m_scene;
     gaunlet::Core::Ref<gaunlet::Scene::OrthographicCamera> m_camera;
-    gaunlet::Core::Ref<gaunlet::Prefab::Basic2DRenderPipeline::Basic2DRenderPipeline> m_renderPipeline;
+    gaunlet::Core::Ref<gaunlet::Prefab::Basic3DRenderPipeline::Basic3DRenderPipeline> m_renderPipeline;
 
 };
 

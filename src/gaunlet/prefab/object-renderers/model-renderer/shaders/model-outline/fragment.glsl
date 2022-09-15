@@ -1,6 +1,6 @@
 #version 410 core
 
-struct EntityProperties {
+struct EntityPropertySet {
     mat4 transform;
     vec4 color;
     uint textureIndex;
@@ -8,8 +8,8 @@ struct EntityProperties {
 };
 
 // Uniforms
-layout (std140) uniform EntityPropertiesBlock {
-    EntityProperties properties[100];
+layout (std140) uniform EntityPropertySets {
+    EntityPropertySet entityPropertySets[100];
 };
 
 uniform vec3 u_color;
@@ -25,6 +25,6 @@ void main() {
 
     o_color = vec4(u_color, 1.0f);
 
-    o_entityId = properties[v_entityIndex].entityId;
+    o_entityId = entityPropertySets[v_entityIndex].entityId;
 
 }

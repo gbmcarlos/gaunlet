@@ -3,11 +3,9 @@
 #include "gaunlet/graphics/renderer/Batch.h"
 #include "gaunlet/graphics/shader/Shader.h"
 
-#include "gaunlet/graphics/vertex-buffer/VertexBuffer.h"
-#include "gaunlet/graphics/index-buffer/IndexBuffer.h"
-#include "gaunlet/graphics/vertex-array/VertexArray.h"
 #include "gaunlet/core/render/RenderCommand.h"
 #include "gaunlet/graphics/texture/TextureImage2D.h"
+#include "gaunlet/graphics/renderer/DirectRenderer.h"
 
 namespace gaunlet::Graphics {
 
@@ -19,7 +17,7 @@ namespace gaunlet::Graphics {
         explicit BatchedRenderer(const BatchParameters& batchParameters);
 
         bool submitIndexedTriangles(std::vector<gaunlet::Graphics::Vertex>& vertices, std::vector<unsigned int>& indices, const Core::Ref<Graphics::Texture>& texture, T& propertySet);
-        void flush(const Core::Ref<Graphics::Shader>& shader);
+        void flush(const Core::Ref<Graphics::Shader>& shader, RenderMode mode);
 
         inline unsigned int getMaxTextures() {return m_batch.getMaxTextures(); }
         inline const std::vector<T>& getPropertySets() {return m_batch.getPropertySets(); }
@@ -59,33 +57,21 @@ namespace gaunlet::Graphics {
     }
 
     template<typename T>
-    void BatchedRenderer<T>::flush(const Core::Ref<Graphics::Shader> &shader) {
+    void BatchedRenderer<T>::flush(const Core::Ref<Graphics::Shader> &shader, RenderMode mode) {
 
         auto[vertices, indices, textures] = m_batch.get();
 
-        // Create a layout, based on the structure of PolygonVertex
-        static gaunlet::Graphics::BufferLayout vertexLayout = gaunlet::Graphics::Vertex::getBufferLayout();
-
-        // Create the vertex and index buffers
-        gaunlet::Graphics::VertexBuffer vertexBuffer((const void*) vertices.data(), sizeof(gaunlet::Graphics::Vertex) * vertices.size());
-        gaunlet::Graphics::IndexBuffer indexBuffer((unsigned int*) indices.data(), indices.size());
-
-        // Bind them together into a vertex array
-        gaunlet::Graphics::VertexArray vertexArray;
-        vertexArray.addBuffer(vertexLayout);
+        if (vertices.empty()) {
+            return;
+        }
 
         // Bind all the textures
         for (unsigned int i = 0; i < textures.size(); i++) {
             textures[i]->activate(i);
         }
 
-        // Render the polygons as triangles
-        Core::RenderCommand::drawIndexedTriangles(
-            vertexBuffer.getRendererId(),
-            indexBuffer.getRendererId(),
-            vertexArray.getRendererId(),
-            shader->getRendererId(),
-            indexBuffer.getCount()
+        DirectRenderer::renderIndexedVertices(
+            vertices, indices, shader, mode
         );
 
         m_batch.clear();

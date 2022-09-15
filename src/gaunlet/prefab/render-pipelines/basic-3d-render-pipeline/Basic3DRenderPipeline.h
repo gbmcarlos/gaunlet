@@ -1,11 +1,15 @@
 #pragma once
 
-#include "gaunlet/prefab/render-pipelines/basic-2d-render-pipeline/Basic2DRenderPipeline.h"
+#include "gaunlet/scene/camera/Camera.h"
 #include "gaunlet/scene/components/LightingComponents.h"
+#include "gaunlet/prefab/object-renderers/model-renderer/ModelRenderer.h"
+#include "gaunlet/prefab/object-renderers/circle-renderer/CircleRenderer.h"
+#include "gaunlet/prefab/object-renderers/skybox-renderer/SkyboxRenderer.h"
+#include "gaunlet/prefab/render-pipelines/basic-3d-render-pipeline/PropertySets.h"
 
 namespace gaunlet::Prefab::Basic3DRenderPipeline {
 
-    class Basic3DRenderPipeline : public gaunlet::Prefab::Basic2DRenderPipeline::Basic2DRenderPipeline {
+    class Basic3DRenderPipeline {
 
     public:
 
@@ -14,17 +18,24 @@ namespace gaunlet::Prefab::Basic3DRenderPipeline {
 
     protected:
 
+        virtual void clearBuffers();
         void startScene(const Core::Ref<Scene::Scene>& scene, const Core::Ref<Scene::Camera>& camera, const Core::Ref<Scene::DirectionalLightComponent>& directionalLight);
-        void renderSkybox(const Core::Ref<Scene::SkyboxComponent>& skybox);
+        virtual void renderModels(const Core::Ref<Scene::Scene>& scene);
+        virtual void renderCircles(const Core::Ref<Scene::Scene>& scene);
+        virtual void renderSkybox(const Core::Ref<Scene::SkyboxComponent>& skybox);
+
+    protected:
+
+        Core::Ref<Graphics::UniformBuffer> m_scenePropertiesUniformBuffer = nullptr;
+
+        Prefab::ObjectRenderers::ModelRenderer m_modelRenderer;
+        Prefab::ObjectRenderers::CircleRenderer m_circleRenderer;
+        Prefab::ObjectRenderers::SkyboxRenderer m_skyboxRenderer;
 
     private:
 
-        Graphics::ShaderLibrary m_shaderLibrary;
-        inline Graphics::ShaderLibrary & getShaderLibrary() override {return m_shaderLibrary; }
-        void loadShaders();
-        void loadModelShaders();
-        void loadCircleShaders();
-        void loadSkyboxShaders();
+        void prepareShaders();
+
 
     };
 

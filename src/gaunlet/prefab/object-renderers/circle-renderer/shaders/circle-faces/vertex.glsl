@@ -1,21 +1,30 @@
 #version 410 core
 
-struct EntityProperties {
+struct EntityPropertySet {
     mat4 transform;
     vec4 color;
     uint textureIndex;
+    int entityId;
     float thickness;
     float fade;
 };
 
-// Uniforms
-layout (std140) uniform EntityPropertiesBlock {
-    EntityProperties properties[100];
+struct DirectionalLight {
+    vec3 color;
+    float ambientIntensity;
+    vec3 direction;
+    float diffuseIntensity;
 };
 
-layout (std140) uniform ScenePropertiesBlock {
+// Uniforms
+layout (std140) uniform EntityPropertySets {
+    EntityPropertySet entityPropertySet[100];
+};
+
+layout (std140) uniform SceneProperties {
     mat4 view;
     mat4 projection;
+    DirectionalLight directionalLight;
 };
 
 // Vertex attributes
@@ -37,6 +46,6 @@ void main() {
     v_entityIndex = a_entityIndex;
     v_localCoordinates = vec2(sign(a_position.x), sign(a_position.y));
 
-    gl_Position = projection * view * properties[a_entityIndex].transform * a_position;
+    gl_Position = projection * view * entityPropertySet[a_entityIndex].transform * a_position;
 
 }

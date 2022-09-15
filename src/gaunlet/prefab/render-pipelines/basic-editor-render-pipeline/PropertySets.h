@@ -4,31 +4,19 @@
 
 namespace gaunlet::Prefab::BasicEditorRenderPipeline {
 
-    struct ModelEntityProperties {
+    struct SceneProperties {
 
-        ModelEntityProperties(int entityId, const glm::mat4& transform, glm::vec4 color)
-            : m_entityId(entityId), m_transform(transform), m_color(color), m_textureIndex(0) {}
+        SceneProperties(glm::mat4 viewMatrix, glm::mat4 projectionMatrix, glm::vec3 directionalLightColor, glm::vec3 directionalLightDirection, float directionalLightAmbientStrength, float directionalLightDiffuseIntensity)
+            : m_viewMatrix(viewMatrix), m_projectionMatrix(projectionMatrix), m_directionalLightColor(directionalLightColor), m_directionalLightDirection(directionalLightDirection), m_directionalLightAmbientIntensity(directionalLightAmbientStrength), m_directionalLightDiffuseIntensity(directionalLightDiffuseIntensity) {}
 
-        // The order of these properties is optimized to minimize required padding when using this data in a uniform buffer
-        glm::mat4 m_transform;
-        glm::vec4 m_color;
-        unsigned int m_textureIndex;
-        int m_entityId; glm::vec2 pad2 = {};
-
-    };
-
-    struct CircleEntityProperties {
-
-        CircleEntityProperties(int entityId, const glm::mat4& transform, glm::vec4 color, float thickness, float fade)
-            : m_entityId(entityId), m_transform(transform), m_color(color), m_textureIndex(0), m_thickness(thickness), m_fade(fade) {}
+        glm::mat4 m_viewMatrix;
+        glm::mat4 m_projectionMatrix;
 
         // The order of these properties is optimized to minimize required padding when using this data in a uniform buffer
-        glm::mat4 m_transform;
-        glm::vec4 m_color;
-        unsigned int m_textureIndex;
-        int m_entityId;
-        float m_thickness;
-        float m_fade;
+        glm::vec3 m_directionalLightColor;
+        float m_directionalLightAmbientIntensity;
+        glm::vec3 m_directionalLightDirection;
+        float m_directionalLightDiffuseIntensity;
 
     };
 

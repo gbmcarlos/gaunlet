@@ -1,13 +1,15 @@
 #pragma once
 
+#include "gaunlet/prefab/object-renderers/model-renderer/ModelRenderer.h"
+#include "gaunlet/prefab/object-renderers/circle-renderer/CircleRenderer.h"
+#include "gaunlet/prefab/object-renderers/skybox-renderer/SkyboxRenderer.h"
 #include "gaunlet/prefab/render-pipelines/basic-3d-render-pipeline/Basic3DRenderPipeline.h"
-#include "gaunlet/prefab/render-pipelines/basic-editor-render-pipeline/Renderer.h"
 #include "gaunlet/editor/workspace/FramebufferRenderPipeline.h"
 #include "gaunlet/graphics/framebuffer/Framebuffer.h"
 
 namespace gaunlet::Prefab::BasicEditorRenderPipeline {
 
-    class BasicEditorRenderPipeline : public Editor::FramebufferRenderPipeline, Basic3DRenderPipeline::Basic3DRenderPipeline {
+    class BasicEditorRenderPipeline : public Editor::FramebufferRenderPipeline {
 
     public:
 
@@ -23,35 +25,36 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
         static const unsigned int SceneEntityIdFramebufferAttachmentIndex = 1;
         static const unsigned int UIEntityIdFramebufferAttachmentIndex = 2;
 
+        void startScene(const Core::Ref<Scene::Scene>& scene, const Core::Ref<Scene::Camera>& camera, const Core::Ref<Scene::DirectionalLightComponent>& directionalLight);
         void drawScene(const Core::Ref<Scene::Scene>& scene);
         void drawOutlines(const Core::Ref<Scene::Scene>& scene);
         void drawUI(const Core::Ref<Scene::Scene>& scene);
         void drawSkybox(const Core::Ref<Scene::SkyboxComponent>& skybox);
 
-        virtual void submitSceneModels(const Core::Ref<Scene::Scene>& scene);
-        virtual void submitSceneCircles(const Core::Ref<Scene::Scene>& scene);
+        virtual void renderSceneModels(const Core::Ref<Scene::Scene>& scene);
+        virtual void renderSceneCircles(const Core::Ref<Scene::Scene>& scene);
+//        virtual void submitScenePlanes(const Core::Ref<Scene::Scene>& scene);
 
-        void submitOutlines(const Core::Ref<Scene::Scene>& scene);
+        void renderOutlines(const Core::Ref<Scene::Scene>& scene);
 
-        virtual void submitUIModels(const Core::Ref<Scene::Scene>& scene);
-        virtual void submitUICircles(const Core::Ref<Scene::Scene>& scene);
+        virtual void renderUIModels(const Core::Ref<Scene::Scene>& scene);
+        virtual void renderUICircles(const Core::Ref<Scene::Scene>& scene);
 
+        virtual void renderSkybox(const Core::Ref<Scene::SkyboxComponent>& skybox);
 
     protected:
 
-        ModelRenderer m_modelRenderer;
-        CircleRenderer m_circleRenderer;
+        Core::Ref<Graphics::UniformBuffer> m_scenePropertiesUniformBuffer = nullptr;
+
+        Prefab::ObjectRenderers::ModelRenderer m_modelRenderer;
+        Prefab::ObjectRenderers::CircleRenderer m_circleRenderer;
+        Prefab::ObjectRenderers::SkyboxRenderer m_skyboxRenderer;
 
     private:
 
+        void prepareShaders();
+
         gaunlet::Core::Ref<gaunlet::Graphics::Framebuffer> m_framebuffer = nullptr;
-        Graphics::ShaderLibrary m_shaderLibrary;
-        inline virtual Graphics::ShaderLibrary& getShaderLibrary() override {return m_shaderLibrary; }
-        void loadShaders();
-        void loadModelShaders();
-        void loadCircleShaders();
-        void loadSkyboxShaders();
-        void loadModelOutlineShaders();
 
     };
 
