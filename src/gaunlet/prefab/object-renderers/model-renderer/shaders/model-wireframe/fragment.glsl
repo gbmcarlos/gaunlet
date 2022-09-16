@@ -26,10 +26,10 @@ layout (std140) uniform SceneProperties {
 };
 
 // Inputs
-in vec2 v_textureCoordinates;
-in vec3 v_normal;
-flat in uint v_entityIndex;
-in vec3 v_barycentricCoordinates;
+in vec2 g_textureCoordinates;
+in vec3 g_normal;
+flat in uint g_entityIndex;
+in vec3 g_barycentricCoordinates;
 
 // Outputs
 layout (location = 0) out vec4 o_color;
@@ -57,22 +57,21 @@ vec4 getDirectionalLightColor(
 
 void main() {
 
-    vec4 textureColor = sampleTexture(entityPropertySets[v_entityIndex].textureIndex, v_textureCoordinates);
+    vec4 textureColor = sampleTexture(entityPropertySets[g_entityIndex].textureIndex, g_textureCoordinates);
 
     // If the fragment is close to the edge, it's a wire
-    if (v_barycentricCoordinates.x < 0.02 || v_barycentricCoordinates.y < 0.02 || v_barycentricCoordinates.z < 0.02) {
+    if (g_barycentricCoordinates.x < 0.02 || g_barycentricCoordinates.y < 0.02 || g_barycentricCoordinates.z < 0.02) {
 
         o_color = vec4(0.0f, 0.0f, 0.0f, 1.0f);
 
     } else {
 
-        vec4 directionalLightColor = getDirectionalLightColor(directionalLight.color, directionalLight.direction, directionalLight.ambientIntensity, directionalLight.diffuseIntensity, v_normal);
-        o_color = textureColor * entityPropertySets[v_entityIndex].color * directionalLightColor;
-        //o_color = vec4(v_textureCoordinates.x, v_textureCoordinates.y, 0, 1);
+        vec4 directionalLightColor = getDirectionalLightColor(directionalLight.color, directionalLight.direction, directionalLight.ambientIntensity, directionalLight.diffuseIntensity, g_normal);
+        o_color = textureColor * entityPropertySets[g_entityIndex].color * directionalLightColor;
 
     }
 
-    o_entityId = entityPropertySets[v_entityIndex].entityId;
+    o_entityId = entityPropertySets[g_entityIndex].entityId;
 
 }
 

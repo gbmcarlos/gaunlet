@@ -10,37 +10,37 @@ in gl_PerVertex {
 } gl_in[];
 
 // Inputs
-in vec2 v_textureCoordinatesVertex[];
-in vec3 v_normalVertex[];
-flat in uint v_entityIndexVertex[];
+in vec2 v_textureCoordinates[];
+in vec3 v_normal[];
+flat in uint v_entityIndex[];
 
 // Ouputs
-out vec2 v_textureCoordinates;
-out vec3 v_normal;
-flat out uint v_entityIndex;
-out vec3 v_barycentricCoordinates;
+out vec2 g_textureCoordinates;
+out vec3 g_normal;
+flat out uint g_entityIndex;
+out vec3 g_barycentricCoordinates;
 
 void main() {
 
     gl_Position = gl_in[0].gl_Position;
-    v_textureCoordinates = v_textureCoordinatesVertex[0];
-    v_normal = v_normalVertex[0];
-    v_entityIndex = v_entityIndexVertex[0];
-    v_barycentricCoordinates = vec3(1, 0, 0);
+    g_textureCoordinates = v_textureCoordinates[0];
+    g_normal = v_normal[0];
+    g_entityIndex = v_entityIndex[0];
+    g_barycentricCoordinates = vec3(1, 0, 0);
     EmitVertex();
 
     gl_Position = gl_in[1].gl_Position;
-    v_textureCoordinates = v_textureCoordinatesVertex[1];
-    v_normal = v_normalVertex[1];
-    v_entityIndex = v_entityIndexVertex[1];
-    v_barycentricCoordinates = vec3(0, 1, 0);
+    g_textureCoordinates = v_textureCoordinates[1];
+    g_normal = v_normal[1];
+    g_entityIndex = v_entityIndex[1];
+    g_barycentricCoordinates = vec3(0, 1, 0);
     EmitVertex();
 
     gl_Position = gl_in[2].gl_Position;
-    v_textureCoordinates = v_textureCoordinatesVertex[2];
-    v_normal = v_normalVertex[2];
-    v_entityIndex = v_entityIndexVertex[2];
-    v_barycentricCoordinates = vec3(0, 0, 1);
+    g_textureCoordinates = v_textureCoordinates[2];
+    g_normal = v_normal[2];
+    g_entityIndex = v_entityIndex[2];
+    g_barycentricCoordinates = vec3(0, 0, 1);
     EmitVertex();
 
     EndPrimitive();
