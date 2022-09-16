@@ -7,7 +7,7 @@
 namespace gaunlet::Graphics {
 
     enum class RenderMode {
-        Triangle
+        Triangle, Quad
     };
 
     class DirectRenderer {

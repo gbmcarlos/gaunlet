@@ -26,9 +26,9 @@ layout (std140) uniform SceneProperties {
 };
 
 // Inputs
-in vec2 v_textureCoordinates;
-in vec3 v_normal;
-flat in uint v_entityIndex;
+in vec2 te_textureCoordinates;
+in vec3 te_normal;
+flat in uint te_entityIndex;
 
 // Outputs
 layout (location = 0) out vec4 o_color;
@@ -56,14 +56,15 @@ vec4 getDirectionalLightColor(
 
 void main() {
 
-    vec4 textureColor = sampleTexture(entityPropertySets[v_entityIndex].textureIndex, v_textureCoordinates);
-    vec4 directionalLightColor = getDirectionalLightColor(directionalLight.color, directionalLight.direction, directionalLight.ambientIntensity, directionalLight.diffuseIntensity, v_normal);
+    vec4 textureColor = sampleTexture(entityPropertySets[te_entityIndex].textureIndex, te_textureCoordinates);
+    vec4 directionalLightColor = getDirectionalLightColor(directionalLight.color, directionalLight.direction, directionalLight.ambientIntensity, directionalLight.diffuseIntensity, te_normal);
 
-    o_color = textureColor * entityPropertySets[v_entityIndex].color * directionalLightColor;
+    o_color = textureColor * entityPropertySets[te_entityIndex].color;
 
-    o_entityId = entityPropertySets[v_entityIndex].entityId;
+    o_entityId = entityPropertySets[te_entityIndex].entityId;
 
 }
+
 
 vec4 getDirectionalLightColor(vec3 color, vec3 direction, float ambientIntensity, float diffuseIntensity, vec3 normal) {
 

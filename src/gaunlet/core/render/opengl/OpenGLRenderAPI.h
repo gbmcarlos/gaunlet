@@ -89,8 +89,9 @@ namespace gaunlet::Core {
 
         void readFramebuffer(unsigned int id, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, TextureDataFormat internalFormat, PrimitiveDataType dataType, unsigned int x, unsigned int y, unsigned int width, unsigned int height, void* data);
 
+        void setPolygonMode(PolygonMode mode, float polygonOffsetFactor, float polygonOffsetUnits);
         void drawIndexedTriangles(unsigned int vertexBufferId, unsigned int indexBufferId, unsigned int vertexArrayId, unsigned int shaderId, unsigned int indexCount);
-        void drawIndexedLines(unsigned int vertexBufferId, unsigned int indexBufferId, unsigned int vertexArrayId, unsigned int shaderId, unsigned int indexCount);
+        void drawIndexedQuads(unsigned int vertexBufferId, unsigned int indexBufferId, unsigned int vertexArrayId, unsigned int shaderId, unsigned int vertexCount);
 
     private:
 
@@ -115,6 +116,7 @@ namespace gaunlet::Core {
         GLenum convertTextureDataFormat(TextureDataFormat format);
         GLenum convertTextureType(TextureType type);
         GLenum convertFramebufferAttachmentType(FramebufferAttachmentType type);
+        GLenum convertPolygonMode(PolygonMode mode);
 
         unsigned int m_boundVertexBufferId = 0;
         unsigned int m_boundIndexBufferId = 0;

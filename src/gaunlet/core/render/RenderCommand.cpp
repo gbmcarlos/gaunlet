@@ -216,12 +216,16 @@ namespace gaunlet::Core {
         getApi().readFramebuffer(id, attachmentType, attachmentIndex, internalFormat, dataType, x, y, width, height, data);
     }
 
+    void RenderCommand::setPolygonMode(PolygonMode mode, float polygonOffsetFactor, float polygonOffsetUnits) {
+        getApi().setPolygonMode(mode, polygonOffsetFactor, polygonOffsetUnits);
+    }
+
     void RenderCommand::drawIndexedTriangles(unsigned int vertexBufferId, unsigned int indexBufferId, unsigned int vertexArrayId, unsigned int shaderId, unsigned int indexCount) {
         getApi().drawIndexedTriangles(vertexBufferId, indexBufferId, vertexArrayId, shaderId, indexCount);
     }
 
-    void RenderCommand::drawIndexedLines(unsigned int vertexBufferId, unsigned int indexBufferId, unsigned int vertexArrayId, unsigned int shaderId, unsigned int indexCount) {
-        getApi().drawIndexedLines(vertexBufferId, indexBufferId, vertexArrayId, shaderId, indexCount);
+    void RenderCommand::drawIndexedQuads(unsigned int vertexBufferId, unsigned int indexBufferId, unsigned int vertexArrayId, unsigned int shaderId, unsigned int vertexCount) {
+        getApi().drawIndexedQuads(vertexBufferId, indexBufferId, vertexArrayId, shaderId, vertexCount);
     }
 
 }

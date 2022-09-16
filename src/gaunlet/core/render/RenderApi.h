@@ -15,8 +15,14 @@ namespace gaunlet::Core {
 
     enum class ShaderType {
         Vertex,
+        TessellationControl,
+        TessellationEvaluation,
         Geometry,
         Fragment
+    };
+
+    enum class PolygonMode {
+        Fill, Line
     };
 
     enum class DepthStencilFunction {
@@ -116,8 +122,9 @@ namespace gaunlet::Core {
 
         virtual void readFramebuffer(unsigned int id, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, TextureDataFormat internalFormat, PrimitiveDataType dataType, unsigned int x, unsigned int y, unsigned int width, unsigned int height, void* data) = 0;
 
+        virtual void setPolygonMode(PolygonMode mode, float polygonOffsetFactor, float polygonOffsetUnits) = 0;
         virtual void drawIndexedTriangles(unsigned int vertexBufferId, unsigned int indexBufferId, unsigned int vertexArrayId, unsigned int shaderId, unsigned int indexCount) = 0;
-        virtual void drawIndexedLines(unsigned int vertexBufferId, unsigned int indexBufferId, unsigned int vertexArrayId, unsigned int shaderId, unsigned int indexCount) = 0;
+        virtual void drawIndexedQuads(unsigned int vertexBufferId, unsigned int indexBufferId, unsigned int vertexArrayId, unsigned int shaderId, unsigned int vertexCount) = 0;
 
     };
 

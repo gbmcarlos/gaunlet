@@ -463,6 +463,13 @@ namespace gaunlet::Core {
 
     }
 
+    void OpenGLRenderApi::setPolygonMode(PolygonMode mode, float polygonOffsetFactor, float polygonOffsetUnits) {
+
+        glCall(glPolygonOffset(polygonOffsetFactor,polygonOffsetUnits));
+        glCall(glPolygonMode(GL_FRONT_AND_BACK, convertPolygonMode(mode)));
+
+    }
+
     void OpenGLRenderApi::drawIndexedTriangles(unsigned int vertexBufferId, unsigned int indexBufferId, unsigned int vertexArrayId, unsigned int shaderId, unsigned int indexCount) {
 
         m_boundIndexBufferId = 0; // Make sure the index buffer gets bound
@@ -476,16 +483,19 @@ namespace gaunlet::Core {
 
     }
 
-    void OpenGLRenderApi::drawIndexedLines(unsigned int vertexBufferId, unsigned int indexBufferId, unsigned int vertexArrayId, unsigned int shaderId, unsigned int indexCount) {
+    void OpenGLRenderApi::drawIndexedQuads(unsigned int vertexBufferId, unsigned int indexBufferId, unsigned int vertexArrayId, unsigned int shaderId, unsigned int vertexCount) {
 
         m_boundIndexBufferId = 0; // Make sure the index buffer gets bound
+        m_boundVertexArrayId = 0;
 
         bindVertexBuffer(vertexBufferId);
         bindIndexBuffer(indexBufferId);
         bindVertexArray(vertexArrayId);
         bindShader(shaderId);
 
-        glCall(glDrawElements(GL_LINES, indexCount, GL_UNSIGNED_INT, nullptr));
+        glPatchParameteri(GL_PATCH_VERTICES, 4);
+
+        glCall(glDrawArrays(GL_PATCHES, 0, vertexCount));
 
     }
 
@@ -509,6 +519,8 @@ namespace gaunlet::Core {
 
         switch (type) {
             case ShaderType::Vertex:                    return GL_VERTEX_SHADER;
+            case ShaderType::TessellationControl:       return GL_TESS_CONTROL_SHADER;
+            case ShaderType::TessellationEvaluation:    return GL_TESS_EVALUATION_SHADER;
             case ShaderType::Geometry:                  return GL_GEOMETRY_SHADER;
             case ShaderType::Fragment:                  return GL_FRAGMENT_SHADER;
         }
@@ -579,6 +591,17 @@ namespace gaunlet::Core {
         }
 
         throw std::runtime_error("Unknown texture format");
+
+    }
+
+    GLenum OpenGLRenderApi::convertPolygonMode(PolygonMode mode) {
+
+        switch (mode) {
+            case PolygonMode::Fill:     return GL_FILL;
+            case PolygonMode::Line:     return GL_LINE;
+        }
+
+        throw std::runtime_error("Unknown polygon mode");
 
     }
 

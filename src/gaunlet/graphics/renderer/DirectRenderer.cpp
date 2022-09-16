@@ -30,6 +30,14 @@ namespace gaunlet::Graphics {
                 shader->getRendererId(),
                 indexBuffer.getCount()
             );
+        } else if (mode == RenderMode::Quad) {
+            Core::RenderCommand::drawIndexedQuads(
+                vertexBuffer.getRendererId(),
+                indexBuffer.getRendererId(),
+                vertexArray.getRendererId(),
+                shader->getRendererId(),
+                vertices.size()
+            );
         }
 
     }

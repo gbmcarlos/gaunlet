@@ -172,9 +172,7 @@ namespace gaunlet::Scene {
                     indices.push_back(0 + indexOffset);
                     indices.push_back(1 + indexOffset);
                     indices.push_back(2 + indexOffset);
-                    indices.push_back(2 + indexOffset);
                     indices.push_back(3 + indexOffset);
-                    indices.push_back(0 + indexOffset);
 
                     indexOffset += 4;
 
