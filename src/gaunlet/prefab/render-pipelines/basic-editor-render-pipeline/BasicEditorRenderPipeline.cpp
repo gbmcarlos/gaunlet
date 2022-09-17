@@ -151,7 +151,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
 
     void BasicEditorRenderPipeline::drawSkybox(const Core::Ref<Scene::SkyboxComponent>& skybox) {
 
-        if (!skybox->m_cubeMap) {
+        if (skybox == nullptr || !skybox->m_cubeMap) {
             return;
         }
 
