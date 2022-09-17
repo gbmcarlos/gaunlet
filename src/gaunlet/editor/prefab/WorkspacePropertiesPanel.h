@@ -129,6 +129,7 @@ namespace gaunlet::Editor {
             }
 
             ImGui::Text("Projection type: %s", projectionType);
+            ImGui::Text("Aspect Ratio: %f", camera->getAspectRatio());
             ImGui::Text("Position: (%f, %f, %f)", camera->getPosition().x, camera->getPosition().y, camera->getPosition().z);
             ImGui::Text("Yaw, Pitch: (%f, %f)", camera->getYaw(), camera->getPitch());
             ImGui::Text("Zoom Level: %f", camera->getZoomLevel());

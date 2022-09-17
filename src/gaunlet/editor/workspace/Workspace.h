@@ -18,14 +18,14 @@ namespace gaunlet::Editor {
 
         void setLayoutSpec(const DockingLayoutSpec& layoutSpec);
 
-        void pushPanel(const char* panelId, GuiPanel* panel, const char* windowId);
-        void pushPanel(const char* panelId, RenderPanel* panel, const char* windowId, const char* cameraId, const char* sceneId, const char* directionalLightId, const char* skyboxId, const char* renderPipelineId);
+        GuiPanel* pushPanel(const char* panelId, GuiPanel* panel, const char* windowId);
+        RenderPanel* pushPanel(const char* panelId, RenderPanel* panel, const char* windowId, const char* cameraId, const char* sceneId, const char* directionalLightId, const char* skyboxId, const char* renderPipelineId);
 
-        void addCamera(const char* id, const Core::Ref<Scene::Camera>& camera);
-        void addScene(const char* id, const Core::Ref<Scene::Scene>& scene);
-        void addDirectionalLight(const char* id, const Core::Ref<Scene::DirectionalLightComponent>& directionalLight);
-        void addSkybox(const char* id, const Core::Ref<Scene::SkyboxComponent>& skybox);
-        void addRenderPipeline(const char* id, const Core::Ref<FramebufferRenderPipeline>& renderPipeline);
+        const Core::Ref<Scene::Camera>& addCamera(const char* id, const Core::Ref<Scene::Camera>& camera);
+        const Core::Ref<Scene::Scene>& addScene(const char* id, const Core::Ref<Scene::Scene>& scene);
+        const Core::Ref<Scene::DirectionalLightComponent>& addDirectionalLight(const char* id, const Core::Ref<Scene::DirectionalLightComponent>& directionalLight);
+        const Core::Ref<Scene::SkyboxComponent>& addSkybox(const char* id, const Core::Ref<Scene::SkyboxComponent>& skybox);
+        const Core::Ref<FramebufferRenderPipeline>& addRenderPipeline(const char* id, const Core::Ref<FramebufferRenderPipeline>& renderPipeline);
 
         void onEvent(Core::Event& event);
         void update(Core::TimeStep timeStep);
@@ -47,6 +47,7 @@ namespace gaunlet::Editor {
         std::vector<RenderPanel*> getRenderPanels();
         GuiPanel* getGuiPanel(const char* id);
         RenderPanel* getRenderPanel(const char* id);
+        const char* getHoveredRenderPanel();
 
         const Core::Ref<Tool>& getTool(const char* id);
         const std::vector<Core::Ref<Tool>>& getTools();
@@ -95,6 +96,9 @@ namespace gaunlet::Editor {
 
         Scene::Entity m_selectedSceneEntity = {};
         Scene::Entity m_selectedUIEntity = {};
+
+        Core::Ref<Scene::DirectionalLightComponent> m_nullDirectionalLight = nullptr;
+        Core::Ref<Scene::SkyboxComponent> m_nullSkybox = nullptr;
 
     };
 

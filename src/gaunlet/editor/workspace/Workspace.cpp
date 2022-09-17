@@ -9,7 +9,7 @@ namespace gaunlet::Editor {
         m_layoutSpec = layoutSpec;
     }
 
-    void Workspace::pushPanel(const char* panelId, GuiPanel* panel, const char* windowId) {
+    GuiPanel* Workspace::pushPanel(const char* panelId, GuiPanel* panel, const char* windowId) {
         panel->m_id = panelId;
         panel->m_workspace = this;
         m_guiPanelSpecs.push_back({
@@ -17,9 +17,10 @@ namespace gaunlet::Editor {
             panelId,
             windowId
         });
+        return panel;
     }
 
-    void Workspace::pushPanel(const char* panelId, RenderPanel* panel, const char* windowId, const char* cameraId, const char* sceneId, const char* directionalLightId, const char* skyboxId, const char* renderPipelineId) {
+    RenderPanel* Workspace::pushPanel(const char* panelId, RenderPanel* panel, const char* windowId, const char* cameraId, const char* sceneId, const char* directionalLightId, const char* skyboxId, const char* renderPipelineId) {
         panel->m_id = panelId;
         panel->m_workspace = this;
         panel->m_cameraId = cameraId;
@@ -32,26 +33,32 @@ namespace gaunlet::Editor {
             panelId,
             windowId
         });
+        return panel;
     }
 
-    void Workspace::addCamera(const char* id, const Core::Ref<Scene::Camera>& camera) {
+    const Core::Ref<Scene::Camera>& Workspace::addCamera(const char* id, const Core::Ref<Scene::Camera>& camera) {
         m_cameras[id] = camera;
+        return camera;
     }
 
-    void Workspace::addScene(const char* id, const Core::Ref<Scene::Scene>& scene) {
+    const Core::Ref<Scene::Scene>& Workspace::addScene(const char* id, const Core::Ref<Scene::Scene>& scene) {
         m_scenes[id] = scene;
+        return scene;
     }
 
-    void Workspace::addDirectionalLight(const char* id, const Core::Ref<Scene::DirectionalLightComponent>& directionalLight) {
+    const Core::Ref<Scene::DirectionalLightComponent>& Workspace::addDirectionalLight(const char* id, const Core::Ref<Scene::DirectionalLightComponent>& directionalLight) {
         m_directionalLights[id] = directionalLight;
+        return directionalLight;
     }
 
-    void Workspace::addSkybox(const char *id, const Core::Ref<Scene::SkyboxComponent>& skybox) {
+    const Core::Ref<Scene::SkyboxComponent>& Workspace::addSkybox(const char *id, const Core::Ref<Scene::SkyboxComponent>& skybox) {
         m_skyboxes[id] = skybox;
+        return skybox;
     }
 
-    void Workspace::addRenderPipeline(const char *id, const Core::Ref<FramebufferRenderPipeline>& renderPipeline) {
+    const Core::Ref<FramebufferRenderPipeline>& Workspace::addRenderPipeline(const char *id, const Core::Ref<FramebufferRenderPipeline>& renderPipeline) {
         m_renderPipelines[id] = renderPipeline;
+        return renderPipeline;
     }
 
     const Core::Ref<Scene::Camera>& Workspace::getCamera(const char* id) {
@@ -80,6 +87,10 @@ namespace gaunlet::Editor {
 
     const Core::Ref<Scene::DirectionalLightComponent>& Workspace::getDirectionalLight(const char* id) {
 
+        if (id == nullptr) {
+            return m_nullDirectionalLight;
+        }
+
         auto iterator = m_directionalLights.find(id);
 
         if (iterator == m_directionalLights.end()) {
@@ -91,6 +102,10 @@ namespace gaunlet::Editor {
     }
 
     const Core::Ref<Scene::SkyboxComponent>& Workspace::getSkybox(const char *id) {
+
+        if (id == nullptr) {
+            return m_nullSkybox;
+        }
 
         auto iterator = m_skyboxes.find(id);
 
@@ -159,6 +174,20 @@ namespace gaunlet::Editor {
         }
 
         throw std::runtime_error("Panel not found");
+
+    }
+
+    const char* Workspace::getHoveredRenderPanel() {
+
+        for (auto& renderPanelSpec : m_renderPanelSpecs) {
+
+            if (renderPanelSpec.m_panel->isHovered()) {
+                return renderPanelSpec.m_panel->m_id;
+            }
+
+        }
+
+        return nullptr;
 
     }
 
@@ -287,7 +316,9 @@ namespace gaunlet::Editor {
         }
 
         // Update and run the Render panel windows
-        for (auto& renderPanelSpec : m_renderPanelSpecs) {
+        for (unsigned int i = 0; i < m_renderPanelSpecs.size(); i++) {
+
+            auto& renderPanelSpec = m_renderPanelSpecs[i];
 
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
             ImGui::Begin(renderPanelSpec.m_windowId);
@@ -305,7 +336,7 @@ namespace gaunlet::Editor {
             auto& colorAttachmentTexture = renderPanelSpec.m_panel->getRenderedTexture();
             ImGui::Image(
                 (void *)(intptr_t)colorAttachmentTexture->getRendererId(),
-                ImGui::GetContentRegionAvail(),
+                ImVec2(renderPanelSpec.m_panel->getWidth(), renderPanelSpec.m_panel->getHeight()),
                 ImVec2(0, 1), ImVec2(1, 0)
             );
 
