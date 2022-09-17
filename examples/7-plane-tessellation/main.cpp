@@ -19,15 +19,15 @@ public:
             {
                 {gaunlet::Editor::DockSpacePosition::Left, 0.2f,  {"Workspace Properties"}},
                 {gaunlet::Editor::DockSpacePosition::Down, 0.4f,  0, {"Tools Manager"}},
-                {gaunlet::Editor::DockSpacePosition::Center, 0.0f,  {"Scene"}, ImGuiDockNodeFlags_NoTabBar}
+                {gaunlet::Editor::DockSpacePosition::Center, 0.0f,  {"Preview"}, ImGuiDockNodeFlags_NoTabBar},
+                {gaunlet::Editor::DockSpacePosition::Right, 0.4f, {"Scene"}},
             }, viewportWidth, viewportHeight
         });
 
         m_workspace->pushPanel("settings", new gaunlet::Editor::WorkspacePropertiesPanel, "Workspace Properties");
         m_workspace->pushPanel("tools", new gaunlet::Editor::ToolsManagerPanel, "Tools Manager");
 
-        // Prepare the components of the main render panel
-        m_workspace->addCamera("main", gaunlet::Core::CreateRef<gaunlet::Scene::PerspectiveCamera>(45.0f, (float) viewportWidth / (float) viewportHeight, 1.0f, 100.0f));
+        // Common components
         m_workspace->addScene("main", gaunlet::Core::CreateRef<gaunlet::Scene::Scene>());
         m_workspace->addDirectionalLight("main", gaunlet::Core::CreateRef<gaunlet::Scene::DirectionalLightComponent>(
             glm::vec3(0.8f, 0.8f, 0.8f),
@@ -35,9 +35,9 @@ public:
             0.5f, 0.7f
         ));
         m_workspace->addSkybox("main", gaunlet::Core::CreateRef<gaunlet::Scene::SkyboxComponent>(gaunlet::Core::CreateRef<gaunlet::Prefab::Skyboxes::SimpleSkyboxCubeMap>()));
-        m_workspace->addRenderPipeline("main", gaunlet::Core::CreateRef<gaunlet::Prefab::BasicEditorRenderPipeline::BasicEditorRenderPipeline>());
 
-        // Create and push the main render panel, referencing the main components
+        // Main Render Panel, with its own camera
+        m_workspace->addRenderPipeline("main", gaunlet::Core::CreateRef<gaunlet::Prefab::BasicEditorRenderPipeline::BasicEditorRenderPipeline>());
         m_workspace->pushPanel(
             "main",
             new gaunlet::Editor::RenderPanel(),
@@ -48,22 +48,46 @@ public:
             "main",
             "main"
         );
+        // Prepare the main camera
+        auto& mainCamera = m_workspace->addCamera("main", gaunlet::Core::CreateRef<gaunlet::Scene::PerspectiveCamera>(45.0f, (float) viewportWidth / (float) viewportHeight, 1.0f, -1000.0f));
+        mainCamera->setPosition({-5.0f, 10.0f, 5.0f});
+        mainCamera->setZoomLevel(1.0f);
+        mainCamera->setRotation(-40.0f, -20.0f);
 
+        // Preview Render Panel, with its own camera
+        m_workspace->addRenderPipeline("preview", gaunlet::Core::CreateRef<gaunlet::Prefab::BasicEditorRenderPipeline::BasicEditorRenderPipeline>(gaunlet::Prefab::BasicEditorRenderPipeline::BasicEditorRenderPipeline::getUniformBufferBindingPointOffset()));
+        m_workspace->pushPanel(
+            "preview",
+            new gaunlet::Editor::RenderPanel(),
+            "Preview",
+            "preview",
+            "main",
+            "main",
+            nullptr,
+            "preview"
+        );
+        // Prepare the preview camera
+        auto& previewCamera = m_workspace->addCamera("preview", gaunlet::Core::CreateRef<gaunlet::Scene::OrthographicCamera>(viewportWidth, viewportHeight, 1, 0, 10000));
+        previewCamera->setPosition({0.0f, 100.0f, 0.0f});
+        previewCamera->lookAt({0, 0, 0});
+
+        // Tools
         m_workspace->addTool("camera-controller", gaunlet::Core::CreateRef<gaunlet::Prefab::EditorTools::GlobalCameraController>(0.01f, 1.0f));
         m_workspace->addTool("transformer", gaunlet::Core::CreateRef<gaunlet::Prefab::EditorTools::TransformerTool>());
         m_workspace->activateTool("camera-controller");
 
         // Prepare the scene
         auto& mainScene = m_workspace->getScene("main");
-        auto& mainCamera = m_workspace->getCamera("main");
-        mainCamera->setPosition({0.0f, 60.0f, 10.0f});
-        mainCamera->setZoomLevel(1.5f);
-        mainCamera->lookAt({0, 0, 0});
 
         gaunlet::Core::Ref<gaunlet::Graphics::TextureImage2D> texture1 = gaunlet::Core::CreateRef<gaunlet::Graphics::TextureImage2D>("assets/texture-1.jpeg");
 
         auto plane = mainScene->createTaggedEntity<gaunlet::Editor::SceneEntityTag>("plane");
-        plane.addComponent<gaunlet::Scene::PlaneComponent>(5, 5, 1.0f, 1.0f);
+        plane.addComponent<gaunlet::Scene::PlaneComponent>(
+            5, 5,
+            1.0f, 1.0f,
+            1.0f, 64.0f,
+            100.0f, 1000.0f
+        );
         plane.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
