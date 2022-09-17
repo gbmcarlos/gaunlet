@@ -64,7 +64,7 @@ private:
     bool onMousePressEvent(gaunlet::Core::MouseButtonPress& event) {
 
         m_moving = false;
-        auto uiEntity = selectUIEntity("main");
+        auto uiEntity = selectUIEntity(getWorkspace()->getRenderPanel("main"));
 
         if (uiEntity) {
 
@@ -72,7 +72,7 @@ private:
             m_handle = gaunlet::Editor::TranslationGizmo::convert(uiEntity.getName());
             m_entityInitialPosition = getSelectedSceneEntity().getComponent<gaunlet::Scene::TransformComponent>().m_translation;
             m_handleInitialPosition = getWorkspace()->mousePickPoint(
-                "main",
+                getWorkspace()->getRenderPanel("main"),
                 getSelectedSceneEntity().getComponent<gaunlet::Scene::TransformComponent>().m_translation,
                 gaunlet::Editor::TranslationGizmo::getPlaneNormal(m_handle)
             );
@@ -88,7 +88,7 @@ private:
 
         // If the cursor hasn't moved between press and release, it's a simple click, so try to select an entity
         if (!m_moving) {
-            selectSceneEntity("main");
+            selectSceneEntity(getWorkspace()->getRenderPanel("main"));
             return true;
         }
 
@@ -114,7 +114,7 @@ private:
         }
 
         m_handlePosition = getWorkspace()->mousePickPoint(
-            "main",
+            getWorkspace()->getRenderPanel("main"),
             getSelectedSceneEntity().getComponent<gaunlet::Scene::TransformComponent>().m_translation,
             gaunlet::Editor::TranslationGizmo::getPlaneNormal(m_handle)
         );
@@ -170,7 +170,7 @@ class SelectorTool : public gaunlet::Editor::SelectionTool {
 
     bool onMousePressEvent(gaunlet::Core::MouseButtonPress& event) {
 
-        selectSceneEntity("main");
+        selectSceneEntity(getWorkspace()->getRenderPanel("main"));
 
         return true;
     }
