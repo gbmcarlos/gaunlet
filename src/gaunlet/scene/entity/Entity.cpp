@@ -8,7 +8,7 @@ namespace gaunlet::Scene {
 
     Entity::Entity() : m_handle(entt::null), m_scene(nullptr) {}
 
-    Entity::Entity(entt::entity entityHandle, Scene *scene)
+    Entity::Entity(entt::entity entityHandle, const Core::Ref<Scene>& scene)
         : m_handle(entityHandle), m_scene(scene) {
         if (scene == nullptr) {
             m_handle = entt::null;
@@ -16,7 +16,7 @@ namespace gaunlet::Scene {
         }
     }
 
-    Entity::Entity(int entityHandle, Scene *scene) {
+    Entity::Entity(int entityHandle, const Core::Ref<Scene>& scene) {
         if (entityHandle < 0 || scene == nullptr) {
             m_handle = entt::null;
             m_scene = nullptr;
@@ -41,6 +41,10 @@ namespace gaunlet::Scene {
 
     const char* Entity::getName() {
         return getComponent<NameComponent>().m_name;
+    }
+
+    const Core::Ref<Scene>& Entity::getScene() {
+        return m_scene;
     }
 
     Entity::operator bool() const {
@@ -143,7 +147,7 @@ namespace gaunlet::Scene {
     Entity Scene::createEntity(const char* name) {
 
         entt::entity entityHandle = m_registry.create();
-        Entity entity(entityHandle, this);
+        Entity entity(entityHandle, shared_from_this());
 
         entity.addComponent<RelationshipComponent>();
         entity.addComponent<NameComponent>(name);

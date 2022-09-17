@@ -181,7 +181,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
         auto facesView = scene->getRegistry().view<Scene::ModelComponent, Scene::TransformComponent, Editor::SceneEntityTag>(entt::exclude<Editor::WireframeModelTag>);
         for (auto e : facesView) {
             m_modelRenderer.submitObject(
-                {e, scene.get()},
+                {e, scene},
                 m_modelRenderer.getShaders().get("model-faces")
             );
         }
@@ -191,7 +191,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
         auto wireframesView = scene->getRegistry().view<Scene::ModelComponent, Scene::TransformComponent, Editor::SceneEntityTag, Editor::WireframeModelTag>();
         for (auto e : wireframesView) {
             m_modelRenderer.submitObject(
-                {e, scene.get()},
+                {e, scene},
                 m_modelRenderer.getShaders().get("model-wireframe")
             );
         }
@@ -204,7 +204,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
         auto view = scene->getRegistry().view<Scene::CircleComponent, Scene::TransformComponent, Editor::SceneEntityTag>();
         for (auto e : view) {
             m_circleRenderer.submitObject(
-                {e, scene.get()},
+                {e, scene},
                 m_circleRenderer.getShaders().get("circle-faces")
             );
         }
@@ -218,7 +218,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
         auto facesView = scene->getRegistry().view<Scene::PlaneComponent, Scene::TransformComponent, Editor::SceneEntityTag>(entt::exclude<Editor::WireframeModelTag>);
         for (auto e : facesView) {
             m_planeRenderer.submitObject(
-                {e, scene.get()},
+                {e, scene},
                 m_planeRenderer.getShaders().get("plane-faces")
             );
         }
@@ -229,7 +229,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
         auto wireframesView = scene->getRegistry().view<Scene::PlaneComponent, Scene::TransformComponent, Editor::SceneEntityTag, Editor::WireframeModelTag>();
         for (auto e : wireframesView) {
             m_planeRenderer.submitObject(
-                {e, scene.get()},
+                {e, scene},
                 m_planeRenderer.getShaders().get("plane-faces")
             );
         }
@@ -244,7 +244,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
         auto view = scene->getRegistry().view<Scene::ModelComponent, Scene::TransformComponent, Editor::SceneEntityTag, Editor::ModelOutlineTag>();
         for (auto e : view) {
             m_modelRenderer.submitObject(
-                {e, scene.get()},
+                {e, scene},
                 m_modelRenderer.getShaders().get("model-outline")
             );
         }
@@ -257,7 +257,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
         auto group = scene->getRegistry().group<Scene::ModelComponent>(entt::get<Scene::TransformComponent, Editor::UIEntityTag>);
         for (auto e : group) {
             m_modelRenderer.submitObject(
-                {e, scene.get()},
+                {e, scene},
                 m_modelRenderer.getShaders().get("model-faces")
             );
         }
@@ -270,7 +270,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
         auto group = scene->getRegistry().group<Scene::CircleComponent>(entt::get<Scene::TransformComponent, Editor::UIEntityTag>);
         for (auto e : group) {
             m_circleRenderer.submitObject(
-                {e, scene.get()},
+                {e, scene},
                 m_circleRenderer.getShaders().get("circle-faces")
             );
         }

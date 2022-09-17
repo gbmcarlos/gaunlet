@@ -114,7 +114,7 @@ namespace gaunlet::Editor {
 
         auto& scene = getScene(renderPanel->getSceneId());
 
-        Scene::Entity selectedEntity = Scene::Entity(selectedEntityId, scene.get());
+        Scene::Entity selectedEntity = Scene::Entity(selectedEntityId, scene);
 
         if (selectedEntity && selectedEntity.hasComponent<T>()) {
             return selectedEntity;

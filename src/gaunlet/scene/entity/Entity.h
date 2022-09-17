@@ -23,12 +23,14 @@ namespace gaunlet::Scene {
     public:
 
         Entity();
-        Entity(entt::entity entityHandle, Scene* scene);
-        Entity(int entityHandle, Scene* scene);
+        Entity(entt::entity entityHandle, const Core::Ref<Scene>& scene);
+        Entity(int entityHandle, const Core::Ref<Scene>& scene);
 
         int getId() const;
         bool hasName();
         const char* getName();
+        const Core::Ref<Scene>& getScene();
+
         explicit operator bool() const;
         bool operator==(const Entity& other) const;
         bool operator!=(const Entity& other) const;
@@ -63,7 +65,7 @@ namespace gaunlet::Scene {
 
     private:
         entt::entity m_handle = entt::null;
-        Scene* m_scene = nullptr;
+        Core::Ref<Scene> m_scene = nullptr;
 
         void adopt(Entity& parent, Entity& child);
         void abandon(Entity& parent, Entity& child);
@@ -72,7 +74,7 @@ namespace gaunlet::Scene {
 
     // REGISTRY DECLARATION
 
-    class Scene {
+    class Scene : public std::enable_shared_from_this<Scene> {
 
         friend class Entity;
 

@@ -80,7 +80,7 @@ namespace gaunlet::Prefab::Basic3DRenderPipeline {
         auto group = scene->getRegistry().group<Scene::ModelComponent>(entt::get<Scene::TransformComponent>);
         for (auto e : group) {
             m_modelRenderer.submitObject(
-                {e, scene.get()},
+                {e, scene},
                 m_modelRenderer.getShaders().get("model-faces")
             );
         }
@@ -93,7 +93,7 @@ namespace gaunlet::Prefab::Basic3DRenderPipeline {
         auto group = scene->getRegistry().group<Scene::CircleComponent>(entt::get<Scene::TransformComponent>);
         for (auto e : group) {
             m_circleRenderer.submitObject(
-                {e, scene.get()},
+                {e, scene},
                 m_circleRenderer.getShaders().get("circle-faces")
             );
         }
