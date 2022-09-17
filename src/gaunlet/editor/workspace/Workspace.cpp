@@ -177,12 +177,12 @@ namespace gaunlet::Editor {
 
     }
 
-    const char* Workspace::getHoveredRenderPanel() {
+    RenderPanel* Workspace::getHoveredRenderPanel() {
 
         for (auto& renderPanelSpec : m_renderPanelSpecs) {
 
             if (renderPanelSpec.m_panel->isHovered()) {
-                return renderPanelSpec.m_panel->m_id;
+                return renderPanelSpec.m_panel;
             }
 
         }
@@ -223,18 +223,17 @@ namespace gaunlet::Editor {
         return m_selectedUIEntity;
     }
 
-    Scene::Entity Workspace::mousePickSceneEntity(const char* renderPanelId) {
-        return mousePickTaggedEntity<SceneEntityTag>(renderPanelId, FramebufferLayer::SceneEntity);
+    Scene::Entity Workspace::mousePickSceneEntity(RenderPanel* renderPanel) {
+        return mousePickTaggedEntity<SceneEntityTag>(renderPanel, FramebufferLayer::SceneEntity);
     }
 
-    Scene::Entity Workspace::mousePickUIEntity(const char* renderPanelId) {
-        return mousePickTaggedEntity<UIEntityTag>(renderPanelId, FramebufferLayer::UIEntity);
+    Scene::Entity Workspace::mousePickUIEntity(RenderPanel* renderPanel) {
+        return mousePickTaggedEntity<UIEntityTag>(renderPanel, FramebufferLayer::UIEntity);
     }
 
-    glm::vec3 Workspace::mousePickPoint(const char* renderPanelId, glm::vec3 planePoint, glm::vec3 planeNormal) {
+    glm::vec3 Workspace::mousePickPoint(RenderPanel* renderPanel, glm::vec3 planePoint, glm::vec3 planeNormal) {
 
         auto window = gaunlet::Core::Window::getCurrentInstance();
-        auto renderPanel = getRenderPanel(renderPanelId);
         auto camera = getCamera(renderPanel->getCameraId());
 
         glm::mat4 projection = camera->getProjectionMatrix();
@@ -275,9 +274,7 @@ namespace gaunlet::Editor {
         // Delegate the event to the active tool
         if (m_activeToolId) {
             auto& activeTool = getTool(m_activeToolId);
-
             activeTool->onEvent(event);
-
         }
 
     }

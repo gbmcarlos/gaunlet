@@ -58,7 +58,7 @@ namespace gaunlet::Prefab::EditorTools {
 
     private:
 
-        const char* m_renderPanelId = nullptr;
+        Editor::RenderPanel* m_renderPanel = nullptr;
         bool m_moving;
         glm::vec3 m_entityInitialPosition;
         glm::vec3 m_handleInitialPosition;
@@ -69,13 +69,13 @@ namespace gaunlet::Prefab::EditorTools {
 
         bool onMousePressEvent(gaunlet::Core::MouseButtonPress& event) {
 
-            m_renderPanelId = getWorkspace()->getHoveredRenderPanel();
-            if (!m_renderPanelId) {
+            m_renderPanel = getWorkspace()->getHoveredRenderPanel();
+            if (!m_renderPanel) {
                 return true;
             }
 
             m_moving = false;
-            auto uiEntity = selectUIEntity(m_renderPanelId);
+            auto uiEntity = selectUIEntity(m_renderPanel);
 
             if (uiEntity) {
 
@@ -83,7 +83,7 @@ namespace gaunlet::Prefab::EditorTools {
                 m_handle = gaunlet::Editor::TranslationGizmo::convert(uiEntity.getName());
                 m_entityInitialPosition = getSelectedSceneEntity().getComponent<gaunlet::Scene::TransformComponent>().m_translation;
                 m_handleInitialPosition = getWorkspace()->mousePickPoint(
-                    m_renderPanelId,
+                    m_renderPanel,
                     getSelectedSceneEntity().getComponent<gaunlet::Scene::TransformComponent>().m_translation,
                     gaunlet::Editor::TranslationGizmo::getPlaneNormal(m_handle)
                 );
@@ -99,7 +99,7 @@ namespace gaunlet::Prefab::EditorTools {
 
             // If the cursor hasn't moved between press and release, it's a simple click, so try to select an entity
             if (!m_moving) {
-                selectSceneEntity(m_renderPanelId);
+                selectSceneEntity(m_renderPanel);
                 return true;
             }
 
@@ -125,7 +125,7 @@ namespace gaunlet::Prefab::EditorTools {
             }
 
             m_handlePosition = getWorkspace()->mousePickPoint(
-                m_renderPanelId,
+                m_renderPanel,
                 getSelectedSceneEntity().getComponent<gaunlet::Scene::TransformComponent>().m_translation,
                 gaunlet::Editor::TranslationGizmo::getPlaneNormal(m_handle)
             );

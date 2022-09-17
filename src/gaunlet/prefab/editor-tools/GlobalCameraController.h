@@ -22,7 +22,7 @@ namespace gaunlet::Prefab::EditorTools {
 
         float m_zoomSensitivity;
         float m_panSensitivity;
-        const char* m_renderPanelId = nullptr;
+        Editor::RenderPanel* m_renderPanel = nullptr;
         bool m_moving = false;
         glm::vec2 m_initialPosition = {};
         glm::vec2 m_finalPosition = {};
@@ -47,16 +47,16 @@ namespace gaunlet::Prefab::EditorTools {
 
         bool onMousePressEvent(gaunlet::Core::MouseButtonPress& event) {
 
-            m_renderPanelId = getWorkspace()->getHoveredRenderPanel();
-            if (!m_renderPanelId) {
+            m_renderPanel = getWorkspace()->getHoveredRenderPanel();
+            if (!m_renderPanel) {
                 return true;
             }
 
             m_moving = true;
 
             m_initialPosition = {
-                getWorkspace()->getRenderPanel(m_renderPanelId)->getMousePositionX(),
-                getWorkspace()->getRenderPanel(m_renderPanelId)->getMousePositionY()
+                m_renderPanel->getMousePositionX(),
+                m_renderPanel->getMousePositionY()
             };
 
             return true;
@@ -76,8 +76,8 @@ namespace gaunlet::Prefab::EditorTools {
             }
 
             glm::vec2 currentPosition = {
-                getWorkspace()->getRenderPanel(m_renderPanelId)->getMousePositionX(),
-                getWorkspace()->getRenderPanel(m_renderPanelId)->getMousePositionY()
+                m_renderPanel->getMousePositionX(),
+                m_renderPanel->getMousePositionY()
             };
 
             glm::vec2 delta = m_initialPosition - currentPosition;
@@ -85,7 +85,7 @@ namespace gaunlet::Prefab::EditorTools {
             // Alt (aka "option"): rotate
             if (gaunlet::Core::Input::isKeyPressed(GL_KEY_LEFT_ALT) || gaunlet::Core::Input::isKeyPressed(GL_KEY_RIGHT_ALT)) {
 
-                getWorkspace()->getCamera(m_renderPanelId)->addRotation(
+                getWorkspace()->getCamera(m_renderPanel->getCameraId())->addRotation(
                     delta.x / 10,
                     -delta.y / 10
                 );
@@ -94,13 +94,13 @@ namespace gaunlet::Prefab::EditorTools {
             } else if (gaunlet::Core::Input::isKeyPressed(GL_KEY_LEFT_SHIFT) || gaunlet::Core::Input::isKeyPressed(GL_KEY_RIGHT_SHIFT)) {
 
                 if (getWorkspace()->getSelectedSceneEntity()) {
-                    getWorkspace()->getCamera(m_renderPanelId)->orbit(
+                    getWorkspace()->getCamera(m_renderPanel->getCameraId())->orbit(
                         getWorkspace()->getSelectedSceneEntity().getComponent<gaunlet::Scene::TransformComponent>(),
                         -delta.y / 10, // Moving the mouse vertically, rotates around the X axis
                         -delta.x / 10 // Moving the mouse horizontally, rotates around the Y axis
                     );
                 } else {
-                    getWorkspace()->getCamera(m_renderPanelId)->orbit(
+                    getWorkspace()->getCamera(m_renderPanel->getCameraId())->orbit(
                         5.0f,
                         -delta.y / 10, // Moving the mouse vertically, rotates around the X axis
                         -delta.x / 10 // Moving the mouse horizontally, rotates around the Y axis
@@ -109,7 +109,7 @@ namespace gaunlet::Prefab::EditorTools {
 
                 // Drag: pan
             } else {
-                getWorkspace()->getCamera(m_renderPanelId)->moveRelative({
+                getWorkspace()->getCamera(m_renderPanel->getCameraId())->moveRelative({
                     delta.x * m_panSensitivity,
                     -delta.y * m_panSensitivity,
                     0
@@ -124,9 +124,9 @@ namespace gaunlet::Prefab::EditorTools {
 
         bool onScrollEvent(gaunlet::Core::ScrollEvent& event) {
 
-            m_renderPanelId = getWorkspace()->getHoveredRenderPanel();
+            m_renderPanel = getWorkspace()->getHoveredRenderPanel();
 
-            getWorkspace()->getCamera(m_renderPanelId)->addZoomLevel(
+            getWorkspace()->getCamera(m_renderPanel->getCameraId())->addZoomLevel(
                 -event.getYOffset() * m_zoomSensitivity
             );
 

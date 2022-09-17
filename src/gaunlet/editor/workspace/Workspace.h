@@ -47,7 +47,7 @@ namespace gaunlet::Editor {
         std::vector<RenderPanel*> getRenderPanels();
         GuiPanel* getGuiPanel(const char* id);
         RenderPanel* getRenderPanel(const char* id);
-        const char* getHoveredRenderPanel();
+        RenderPanel* getHoveredRenderPanel();
 
         const Core::Ref<Tool>& getTool(const char* id);
         const std::vector<Core::Ref<Tool>>& getTools();
@@ -58,11 +58,11 @@ namespace gaunlet::Editor {
         Scene::Entity getSelectedUIEntity();
 
         template<typename T>
-        Scene::Entity mousePickTaggedEntity(const char* renderPanelId, FramebufferLayer layer);
-        Scene::Entity mousePickSceneEntity(const char* renderPanelId);
-        Scene::Entity mousePickUIEntity(const char* renderPanelId);
+        Scene::Entity mousePickTaggedEntity(RenderPanel* renderPanel, FramebufferLayer layer);
+        Scene::Entity mousePickSceneEntity(RenderPanel* renderPanel);
+        Scene::Entity mousePickUIEntity(RenderPanel* renderPanel);
 
-        glm::vec3 mousePickPoint(const char* renderPanelId, glm::vec3 planePoint, glm::vec3 planeNormal);
+        glm::vec3 mousePickPoint(RenderPanel* renderPanel, glm::vec3 planePoint, glm::vec3 planeNormal);
 
     private:
         void updateNodeProperties(Panel* node);
@@ -103,9 +103,7 @@ namespace gaunlet::Editor {
     };
 
     template<typename T>
-    Scene::Entity Workspace::mousePickTaggedEntity(const char *renderPanelId, FramebufferLayer layer) {
-
-        auto renderPanel = getRenderPanel(renderPanelId);
+    Scene::Entity Workspace::mousePickTaggedEntity(RenderPanel* renderPanel, FramebufferLayer layer) {
 
         unsigned int pixelPositionX = renderPanel->getMousePositionX() * Core::Window::getCurrentInstance()->getDPI();
         unsigned int pixelPositionY = renderPanel->getMousePositionYInverted() * Core::Window::getCurrentInstance()->getDPI();

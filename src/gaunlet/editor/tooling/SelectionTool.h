@@ -17,10 +17,10 @@ namespace gaunlet::Editor {
         Scene::Entity getSelectedSceneEntity() {return getWorkspace()->getSelectedSceneEntity(); }
         Scene::Entity getSelectedUIEntity() {return getWorkspace()->getSelectedUIEntity(); }
 
-        Scene::Entity selectSceneEntity(const char* renderPanelId) {
+        Scene::Entity selectSceneEntity(RenderPanel* renderPanel) {
 
             auto previousSelectedSceneEntity = getWorkspace()->getSelectedSceneEntity();
-            auto newSelectedSceneEntity = getWorkspace()->mousePickSceneEntity(renderPanelId);
+            auto newSelectedSceneEntity = getWorkspace()->mousePickSceneEntity(renderPanel);
 
             if (previousSelectedSceneEntity) {
                 onSceneEntityUnselected(previousSelectedSceneEntity);
@@ -37,10 +37,10 @@ namespace gaunlet::Editor {
 
         }
 
-        Scene::Entity selectUIEntity(const char* renderPanelId) {
+        Scene::Entity selectUIEntity(RenderPanel* renderPanel) {
 
             auto previousSelectedUIEntity = getWorkspace()->getSelectedUIEntity();
-            auto newSelectedUIEntity = getWorkspace()->mousePickUIEntity(renderPanelId);
+            auto newSelectedUIEntity = getWorkspace()->mousePickUIEntity(renderPanel);
 
             if (previousSelectedUIEntity) {
                 onUIEntityUnselected(previousSelectedUIEntity);
