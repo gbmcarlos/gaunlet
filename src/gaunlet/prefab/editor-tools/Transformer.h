@@ -58,6 +58,7 @@ namespace gaunlet::Prefab::EditorTools {
 
     private:
 
+        const char* m_renderPanelId = nullptr;
         bool m_moving;
         glm::vec3 m_entityInitialPosition;
         glm::vec3 m_handleInitialPosition;
@@ -68,8 +69,13 @@ namespace gaunlet::Prefab::EditorTools {
 
         bool onMousePressEvent(gaunlet::Core::MouseButtonPress& event) {
 
+            m_renderPanelId = getWorkspace()->getHoveredRenderPanel();
+            if (!m_renderPanelId) {
+                return true;
+            }
+
             m_moving = false;
-            auto uiEntity = selectUIEntity("main");
+            auto uiEntity = selectUIEntity(m_renderPanelId);
 
             if (uiEntity) {
 
@@ -77,7 +83,7 @@ namespace gaunlet::Prefab::EditorTools {
                 m_handle = gaunlet::Editor::TranslationGizmo::convert(uiEntity.getName());
                 m_entityInitialPosition = getSelectedSceneEntity().getComponent<gaunlet::Scene::TransformComponent>().m_translation;
                 m_handleInitialPosition = getWorkspace()->mousePickPoint(
-                    "main",
+                    m_renderPanelId,
                     getSelectedSceneEntity().getComponent<gaunlet::Scene::TransformComponent>().m_translation,
                     gaunlet::Editor::TranslationGizmo::getPlaneNormal(m_handle)
                 );
@@ -93,7 +99,7 @@ namespace gaunlet::Prefab::EditorTools {
 
             // If the cursor hasn't moved between press and release, it's a simple click, so try to select an entity
             if (!m_moving) {
-                selectSceneEntity("main");
+                selectSceneEntity(m_renderPanelId);
                 return true;
             }
 
@@ -119,7 +125,7 @@ namespace gaunlet::Prefab::EditorTools {
             }
 
             m_handlePosition = getWorkspace()->mousePickPoint(
-                "main",
+                m_renderPanelId,
                 getSelectedSceneEntity().getComponent<gaunlet::Scene::TransformComponent>().m_translation,
                 gaunlet::Editor::TranslationGizmo::getPlaneNormal(m_handle)
             );
@@ -136,10 +142,10 @@ namespace gaunlet::Prefab::EditorTools {
 
         }
 
-        void createGizmo(gaunlet::Scene::Entity sceneEntity) {
+        void createGizmo(Scene::Entity sceneEntity) {
 
             m_gizmo = gaunlet::Editor::TranslationGizmo::create(
-                getWorkspace()->getScene("main"),
+                sceneEntity.getScene(),
                 1.5f, 0.1f,
                 0.5f, 0.5f
             );

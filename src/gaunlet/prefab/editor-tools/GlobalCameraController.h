@@ -22,6 +22,7 @@ namespace gaunlet::Prefab::EditorTools {
 
         float m_zoomSensitivity;
         float m_panSensitivity;
+        const char* m_renderPanelId = nullptr;
         bool m_moving = false;
         glm::vec2 m_initialPosition = {};
         glm::vec2 m_finalPosition = {};
@@ -46,11 +47,16 @@ namespace gaunlet::Prefab::EditorTools {
 
         bool onMousePressEvent(gaunlet::Core::MouseButtonPress& event) {
 
+            m_renderPanelId = getWorkspace()->getHoveredRenderPanel();
+            if (!m_renderPanelId) {
+                return true;
+            }
+
             m_moving = true;
 
             m_initialPosition = {
-                getWorkspace()->getRenderPanel("main")->getMousePositionX(),
-                getWorkspace()->getRenderPanel("main")->getMousePositionY()
+                getWorkspace()->getRenderPanel(m_renderPanelId)->getMousePositionX(),
+                getWorkspace()->getRenderPanel(m_renderPanelId)->getMousePositionY()
             };
 
             return true;
@@ -70,8 +76,8 @@ namespace gaunlet::Prefab::EditorTools {
             }
 
             glm::vec2 currentPosition = {
-                getWorkspace()->getRenderPanel("main")->getMousePositionX(),
-                getWorkspace()->getRenderPanel("main")->getMousePositionY()
+                getWorkspace()->getRenderPanel(m_renderPanelId)->getMousePositionX(),
+                getWorkspace()->getRenderPanel(m_renderPanelId)->getMousePositionY()
             };
 
             glm::vec2 delta = m_initialPosition - currentPosition;
@@ -79,7 +85,7 @@ namespace gaunlet::Prefab::EditorTools {
             // Alt (aka "option"): rotate
             if (gaunlet::Core::Input::isKeyPressed(GL_KEY_LEFT_ALT) || gaunlet::Core::Input::isKeyPressed(GL_KEY_RIGHT_ALT)) {
 
-                getWorkspace()->getCamera("main")->addRotation(
+                getWorkspace()->getCamera(m_renderPanelId)->addRotation(
                     delta.x / 10,
                     -delta.y / 10
                 );
@@ -88,13 +94,13 @@ namespace gaunlet::Prefab::EditorTools {
             } else if (gaunlet::Core::Input::isKeyPressed(GL_KEY_LEFT_SHIFT) || gaunlet::Core::Input::isKeyPressed(GL_KEY_RIGHT_SHIFT)) {
 
                 if (getWorkspace()->getSelectedSceneEntity()) {
-                    getWorkspace()->getCamera("main")->orbit(
+                    getWorkspace()->getCamera(m_renderPanelId)->orbit(
                         getWorkspace()->getSelectedSceneEntity().getComponent<gaunlet::Scene::TransformComponent>(),
                         -delta.y / 10, // Moving the mouse vertically, rotates around the X axis
                         -delta.x / 10 // Moving the mouse horizontally, rotates around the Y axis
                     );
                 } else {
-                    getWorkspace()->getCamera("main")->orbit(
+                    getWorkspace()->getCamera(m_renderPanelId)->orbit(
                         5.0f,
                         -delta.y / 10, // Moving the mouse vertically, rotates around the X axis
                         -delta.x / 10 // Moving the mouse horizontally, rotates around the Y axis
@@ -103,7 +109,7 @@ namespace gaunlet::Prefab::EditorTools {
 
                 // Drag: pan
             } else {
-                getWorkspace()->getCamera("main")->moveRelative({
+                getWorkspace()->getCamera(m_renderPanelId)->moveRelative({
                     delta.x * m_panSensitivity,
                     -delta.y * m_panSensitivity,
                     0
@@ -118,7 +124,9 @@ namespace gaunlet::Prefab::EditorTools {
 
         bool onScrollEvent(gaunlet::Core::ScrollEvent& event) {
 
-            getWorkspace()->getCamera("main")->addZoomLevel(
+            m_renderPanelId = getWorkspace()->getHoveredRenderPanel();
+
+            getWorkspace()->getCamera(m_renderPanelId)->addZoomLevel(
                 -event.getYOffset() * m_zoomSensitivity
             );
 
