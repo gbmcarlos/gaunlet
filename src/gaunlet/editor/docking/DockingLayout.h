@@ -4,6 +4,8 @@
 
 #include <imgui.h>
 
+#include <utility>
+
 namespace gaunlet::Editor {
 
     enum class DockSpacePosition {
@@ -15,12 +17,17 @@ namespace gaunlet::Editor {
     struct DockSpaceSpec {
 
         DockSpaceSpec(DockSpacePosition position, float sizeRatio, std::vector<const char*> windowIds, int dockNodeFalgs = 0)
-            : m_position(position), m_sizeRatio(sizeRatio), m_windowIds(std::move(windowIds)), m_dockNodeFlags(dockNodeFalgs) {}
+            : DockSpaceSpec(position, sizeRatio, -1, std::move(windowIds), dockNodeFalgs) {}
 
+        DockSpaceSpec(DockSpacePosition position, float sizeRatio, int originNodeIndex, std::vector<const char*> windowIds, int dockNodeFalgs = 0)
+            : m_position(position), m_sizeRatio(sizeRatio), m_originNodeIndex(originNodeIndex), m_windowIds(std::move(windowIds)), m_dockNodeFlags(dockNodeFalgs) {}
+
+        int m_originNodeIndex = -1;
         DockSpacePosition m_position;
         float m_sizeRatio = 0.0f;
         std::vector<const char*> m_windowIds = {};
         int m_dockNodeFlags = 0;
+        ImGuiID m_id;
 
     };
 
@@ -49,6 +56,7 @@ namespace gaunlet::Editor {
         DockingLayoutSpec m_dockingLayoutSpec;
 
         void generateDockSpaces(ImGuiID& mainDockSpaceId);
+        void createDockSpace(unsigned int index, ImGuiID& mainDockSpaceId, DockSpaceSpec& dockSpaceSpec);
         ImGuiDir convertDockSpacePosition(DockSpacePosition position);
 
     };

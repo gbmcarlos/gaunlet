@@ -18,8 +18,8 @@ public:
         m_workspace->setLayoutSpec({
             {
                 {gaunlet::Editor::DockSpacePosition::Left, 0.2f,  {"Workspace Properties"}},
-                {gaunlet::Editor::DockSpacePosition::Center, 0.0f,  {"Scene"}, ImGuiDockNodeFlags_NoTabBar},
-                {gaunlet::Editor::DockSpacePosition::Right, 0.25f,  {"Tools Manager"}},
+                {gaunlet::Editor::DockSpacePosition::Down, 0.4f,  0, {"Tools Manager"}},
+                {gaunlet::Editor::DockSpacePosition::Center, 0.0f,  {"Scene"}, ImGuiDockNodeFlags_NoTabBar}
             }, viewportWidth, viewportHeight
         });
 
