@@ -13,6 +13,11 @@ namespace gaunlet::Scene {
         OrthographicCamera::calculateProjectionMatrix();
     }
 
+    OrthographicCamera::OrthographicCamera(unsigned int viewportWidth, unsigned int viewportHeight, float viewportResolution, float near, float far, float maxZoomLevel)
+        : Camera(near, far, maxZoomLevel), m_viewportWidth(viewportWidth), m_viewportHeight(viewportHeight), m_viewportResolution(viewportResolution) {
+        OrthographicCamera::calculateProjectionMatrix();
+    }
+
     void OrthographicCamera::calculateProjectionMatrix() {
 
         m_projectionSize = {

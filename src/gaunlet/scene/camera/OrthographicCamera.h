@@ -10,6 +10,7 @@ namespace gaunlet::Scene {
         OrthographicCamera();
         OrthographicCamera(unsigned int viewportWidth, unsigned int viewportHeight, float viewportResolution);
         OrthographicCamera(unsigned int viewportWidth, unsigned int viewportHeight, float viewportResolution, float near, float far);
+        OrthographicCamera(unsigned int viewportWidth, unsigned int viewportHeight, float viewportResolution, float near, float far, float maxZoomLevel);
 
         inline Camera::ProjectionType getProjectionType() const override {return Camera::ProjectionType::Orthographic; }
         void resize(unsigned int viewportWidth, unsigned int viewportHeight) override;
