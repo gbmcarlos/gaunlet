@@ -281,6 +281,11 @@ namespace gaunlet::Editor {
 
     void Workspace::update(Core::TimeStep timeStep) {
 
+        if (m_activeToolId) {
+            auto& activeTool = getTool(m_activeToolId);
+            activeTool->onUpdate(timeStep);
+        }
+
         for (auto& renderPanelSpec : m_renderPanelSpecs) {
             renderPanelSpec.m_panel->onUpdate(timeStep);
         }
