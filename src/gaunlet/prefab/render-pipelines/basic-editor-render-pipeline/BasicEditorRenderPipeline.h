@@ -14,11 +14,12 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
 
     public:
 
-        BasicEditorRenderPipeline();
+        explicit BasicEditorRenderPipeline(unsigned int uniformBufferBindingPointOffset = 0);
         void run(const Core::Ref<Scene::Scene>& scene, const Core::Ref<Scene::Camera>& camera, const Core::Ref<Scene::DirectionalLightComponent>& directionalLight, const Core::Ref<Scene::SkyboxComponent>& skybox) override;
         void resize(unsigned int width, unsigned int height) override;
         const Core::Ref<Graphics::Texture>& getRenderedTexture() override;
         int readFramebuffer(Editor::FramebufferLayer layer, unsigned int x, unsigned int y) override;
+        inline static unsigned int getUniformBufferBindingPointOffset() {return 4;}
 
     protected:
 
@@ -54,7 +55,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
 
     private:
 
-        void prepareShaders();
+        void prepareShaders(unsigned int uniformBufferBindingPointOffset);
 
         gaunlet::Core::Ref<gaunlet::Graphics::Framebuffer> m_framebuffer = nullptr;
 

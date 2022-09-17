@@ -6,10 +6,10 @@
 
 namespace gaunlet::Prefab::BasicEditorRenderPipeline {
 
-    BasicEditorRenderPipeline::BasicEditorRenderPipeline()
-        : m_modelRenderer(1), m_circleRenderer(2), m_planeRenderer(3) {
+    BasicEditorRenderPipeline::BasicEditorRenderPipeline(unsigned int uniformBufferBindingPointOffset)
+        : m_modelRenderer(1 + uniformBufferBindingPointOffset), m_circleRenderer(2 + uniformBufferBindingPointOffset), m_planeRenderer(3 + uniformBufferBindingPointOffset) {
 
-        prepareShaders();
+        prepareShaders(uniformBufferBindingPointOffset);
 
         auto window = Core::Window::getCurrentInstance();
 
@@ -289,12 +289,12 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
 
     }
 
-    void BasicEditorRenderPipeline::prepareShaders() {
+    void BasicEditorRenderPipeline::prepareShaders(unsigned int uniformBufferBindingPointOffset) {
 
         // Create the Uniform Buffer for the Scene Properties, which will be linked to every shader
         m_scenePropertiesUniformBuffer = Core::CreateRef<Graphics::UniformBuffer>(
             "SceneProperties",
-            0,
+            0 + uniformBufferBindingPointOffset,
             sizeof (SceneProperties)
         );
 
