@@ -49,7 +49,7 @@ public:
             "main"
         );
 
-        m_workspace->addTool("camera-controller", gaunlet::Core::CreateRef<gaunlet::Prefab::EditorTools::GlobalCameraController>());
+        m_workspace->addTool("camera-controller", gaunlet::Core::CreateRef<gaunlet::Prefab::EditorTools::GlobalCameraController>(0.01f, 1.0f));
         m_workspace->addTool("transformer", gaunlet::Core::CreateRef<gaunlet::Prefab::EditorTools::TransformerTool>());
         m_workspace->activateTool("camera-controller");
 

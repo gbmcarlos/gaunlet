@@ -14,7 +14,15 @@ namespace gaunlet::Prefab::EditorTools {
 
     public:
 
-        bool m_moving;
+        GlobalCameraController()
+            : GlobalCameraController(0.01f, 0.02f) {}
+
+        GlobalCameraController(float zoomSensitivity, float panSensitivity)
+            : m_zoomSensitivity(zoomSensitivity), m_panSensitivity(panSensitivity) {}
+
+        float m_zoomSensitivity;
+        float m_panSensitivity;
+        bool m_moving = false;
         glm::vec2 m_initialPosition = {};
         glm::vec2 m_finalPosition = {};
 
@@ -96,10 +104,10 @@ namespace gaunlet::Prefab::EditorTools {
                 // Drag: pan
             } else {
                 getWorkspace()->getCamera("main")->moveRelative({
-                                                                    delta.x / 50,
-                                                                    -delta.y / 50,
-                                                                    0
-                                                                });
+                    delta.x * m_panSensitivity,
+                    -delta.y * m_panSensitivity,
+                    0
+                });
             }
 
             m_initialPosition = currentPosition;
@@ -111,7 +119,7 @@ namespace gaunlet::Prefab::EditorTools {
         bool onScrollEvent(gaunlet::Core::ScrollEvent& event) {
 
             getWorkspace()->getCamera("main")->addZoomLevel(
-                0.1f * -event.getYOffset()
+                -event.getYOffset() * m_zoomSensitivity
             );
 
             return true;
