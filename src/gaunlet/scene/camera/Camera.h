@@ -29,6 +29,7 @@ namespace gaunlet::Scene {
         void setPosition(const glm::vec3& position);
         void move(const glm::vec3& movement);
         void moveRelative(const glm::vec3& movement);
+        void moveSemiRelative(const glm::vec3& movement);
 
         inline const float& getYaw() const {return m_yaw; }
         inline const float& getPitch() const {return m_pitch; }

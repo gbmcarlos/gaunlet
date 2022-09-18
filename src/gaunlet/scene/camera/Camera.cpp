@@ -38,7 +38,24 @@ namespace gaunlet::Scene {
         glm::mat3 relativeTransform = glm::mat3(
             m_right,
             m_up,
-            m_forward
+            -m_forward // The camera's forward point in the direction the camera is looking at, but the Z axis should go backwards
+        );
+
+        glm::vec3 relativeMovement = relativeTransform * movement;
+
+        move(relativeMovement);
+
+    }
+
+    void Camera::moveSemiRelative(const glm::vec3 &movement) {
+
+        glm::vec3 up = {0, 1, 0};
+        glm::vec3 forward = glm::normalize(glm::cross(up, m_right));
+
+        glm::mat3 relativeTransform = glm::mat3(
+            m_right,
+            up,
+            -forward // The camera's forward point in the direction the camera is looking at, but the Z axis should go backwards
         );
 
         glm::vec3 relativeMovement = relativeTransform * movement;
