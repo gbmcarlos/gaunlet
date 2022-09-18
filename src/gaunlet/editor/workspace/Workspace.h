@@ -48,6 +48,7 @@ namespace gaunlet::Editor {
         GuiPanel* getGuiPanel(const char* id);
         RenderPanel* getRenderPanel(const char* id);
         RenderPanel* getHoveredRenderPanel();
+        RenderPanel* getFocusedRenderPanel();
 
         const Core::Ref<Tool>& getTool(const char* id);
         const std::vector<Core::Ref<Tool>>& getTools();

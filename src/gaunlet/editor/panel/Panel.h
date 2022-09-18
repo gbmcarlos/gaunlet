@@ -14,6 +14,7 @@ namespace gaunlet::Editor {
 
         inline const char* getId() {return m_id; }
         inline bool isHovered() const {return m_isHovered; }
+        inline bool isFocused() const {return m_isFocused; }
         inline unsigned int getMousePositionX() const {return m_mousePositionX; }
         inline unsigned int getMousePositionY() const {return m_mousePositionY; }
         inline unsigned int getMousePositionYInverted() const {return m_mousePositionYInverted; }
@@ -29,6 +30,7 @@ namespace gaunlet::Editor {
         Workspace* m_workspace = nullptr;
         unsigned int m_width = 0, m_height = 0;
         bool m_isHovered = false;
+        bool m_isFocused = false;
         unsigned int m_mousePositionX = 0, m_mousePositionY = 0, m_mousePositionYInverted = 0;
 
     };

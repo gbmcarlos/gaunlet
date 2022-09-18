@@ -191,6 +191,20 @@ namespace gaunlet::Editor {
 
     }
 
+    RenderPanel* Workspace::getFocusedRenderPanel() {
+
+        for (auto& renderPanelSpec : m_renderPanelSpecs) {
+
+            if (renderPanelSpec.m_panel->isHovered()) {
+                return renderPanelSpec.m_panel;
+            }
+
+        }
+
+        return nullptr;
+
+    }
+
     const Core::Ref<Tool>& Workspace::getTool(const char* id) {
 
         for (auto& tool : m_tools) {
@@ -430,6 +444,7 @@ namespace gaunlet::Editor {
         node->m_width = windowMax.x - windowMin.x;
         node->m_height = windowMax.y - windowMin.y;
         node->m_isHovered = ImGui::IsWindowHovered();
+        node->m_isFocused = ImGui::IsWindowFocused();
         node->m_mousePositionX = std::max(mousePosition.x - windowMin.x, 0.0f);
         node->m_mousePositionY = std::max(mousePosition.y - windowMin.y, 0.0f);
         node->m_mousePositionYInverted = windowMax.y - node->m_mousePositionY;
