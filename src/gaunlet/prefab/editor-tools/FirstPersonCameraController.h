@@ -39,7 +39,7 @@ namespace gaunlet::Prefab::EditorTools {
 
             // MOVEMENT
             if (Core::Input::isKeyPressed(GL_KEY_UP)) {
-                if (shiftPressed) {
+                if (!shiftPressed) {
                     camera->moveSemiRelative({0, movement, 0});
                 } else {
                     camera->moveRelative({0, movement, 0});
@@ -47,7 +47,7 @@ namespace gaunlet::Prefab::EditorTools {
             }
 
             if (Core::Input::isKeyPressed(GL_KEY_DOWN)) {
-                if (shiftPressed) {
+                if (!shiftPressed) {
                     camera->moveSemiRelative({0, -movement, 0});
                 } else {
                     camera->moveRelative({0, -movement, 0});
@@ -56,7 +56,7 @@ namespace gaunlet::Prefab::EditorTools {
 
             // MOVEMENT
             if (Core::Input::isKeyPressed(GL_KEY_W)) {
-                if (shiftPressed) {
+                if (!shiftPressed) {
                     camera->moveSemiRelative({0, 0, -movement});
                 } else {
                     camera->moveRelative({0, 0, -movement});
@@ -64,7 +64,7 @@ namespace gaunlet::Prefab::EditorTools {
             }
 
             if (Core::Input::isKeyPressed(GL_KEY_S)) {
-                if (shiftPressed) {
+                if (!shiftPressed) {
                     camera->moveSemiRelative({0, 0, movement});
                 } else {
                     camera->moveRelative({0, 0, movement});

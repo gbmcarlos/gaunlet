@@ -20,20 +20,49 @@ namespace gaunlet::Scene {
     }
 
     glm::mat4 Camera::getViewMatrix() {
+
+        if (m_following) {
+            calculateViewMatrix();
+        }
+
         return m_viewMatrix;
     }
 
+    const glm::vec3& Camera::getPosition() {
+
+        if (m_following) {
+            return *m_followTarget;
+        } else {
+            return m_position;
+        }
+
+    }
+
     void Camera::setPosition(const glm::vec3& position) {
+
+        if (m_following) {
+            return;
+        }
+
         m_position = position;
         calculateViewMatrix();
     }
 
     void Camera::move(const glm::vec3 &movement) {
+
+        if (m_following) {
+            return;
+        }
+
         m_position += movement;
         calculateViewMatrix();
     }
 
     void Camera::moveRelative(const glm::vec3 &movement) {
+
+        if (m_following) {
+            return;
+        }
 
         glm::mat3 relativeTransform = glm::mat3(
             m_right,
@@ -49,6 +78,10 @@ namespace gaunlet::Scene {
 
     void Camera::moveSemiRelative(const glm::vec3 &movement) {
 
+        if (m_following) {
+            return;
+        }
+
         glm::vec3 up = {0, 1, 0};
         glm::vec3 forward = glm::normalize(glm::cross(up, m_right));
 
@@ -62,6 +95,17 @@ namespace gaunlet::Scene {
 
         move(relativeMovement);
 
+    }
+
+    void Camera::follow(glm::vec3* target) {
+
+        m_following = true;
+        m_followTarget = target;
+
+    }
+
+    glm::vec3 *Camera::getFollowTarget() {
+        return (glm::vec3 *) glm::value_ptr(m_position);
     }
 
     void Camera::setRotation(float yaw, float pitch) {
@@ -101,7 +145,7 @@ namespace gaunlet::Scene {
 
     void Camera::orbit(float radius, float degreesX, float degreesY) {
 
-        glm::vec3 pivot = m_position + (m_forward * radius);
+        glm::vec3 pivot = getPosition() + (m_forward * radius);
         rotate(pivot, degreesX, degreesY);
         lookAt(pivot);
 
@@ -118,13 +162,13 @@ namespace gaunlet::Scene {
     void Camera::lookAt(glm::vec3 target) {
 
         // If we're trying to look straight up or straight down, move the target slight forward
-        glm::vec3 direction = glm::abs(glm::normalize(target - m_position));
+        glm::vec3 direction = glm::abs(glm::normalize(target - getPosition()));
         if (direction == glm::vec3(0, 1, 0)) {
             target.z += -0.5;
         }
 
         m_viewMatrix = glm::lookAt(
-            m_position,
+            getPosition(),
             target,
             {0, 1, 0}
         );
@@ -278,8 +322,8 @@ namespace gaunlet::Scene {
 
         // Look At
         m_viewMatrix = glm::lookAt(
-            m_position,
-            m_position + forward,
+            getPosition(),
+            getPosition() + forward,
             m_up
         );
 

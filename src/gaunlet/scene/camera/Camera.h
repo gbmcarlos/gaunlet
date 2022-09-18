@@ -25,11 +25,13 @@ namespace gaunlet::Scene {
         glm::mat4 getProjectionMatrix();
         glm::mat4 getViewMatrix();
 
-        inline const glm::vec3& getPosition() const {return m_position; }
+        const glm::vec3& getPosition();
         void setPosition(const glm::vec3& position);
         void move(const glm::vec3& movement);
         void moveRelative(const glm::vec3& movement);
         void moveSemiRelative(const glm::vec3& movement);
+        void follow(glm::vec3* target);
+        glm::vec3* getFollowTarget();
 
         inline const float& getYaw() const {return m_yaw; }
         inline const float& getPitch() const {return m_pitch; }
@@ -71,6 +73,8 @@ namespace gaunlet::Scene {
 
         glm::mat4 m_viewMatrix;
 
+        bool m_following = false;
+        glm::vec3* m_followTarget;
         glm::vec3 m_position = {0, 0, 1};
         float m_yaw = -90.0f;
         float m_pitch = 0.0f;
