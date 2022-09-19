@@ -61,18 +61,18 @@ namespace gaunlet::Graphics {
 
         auto[vertices, indices, textures] = m_batch.get();
 
-        if (vertices.empty()) {
-            return;
-        }
+        if (!vertices.empty()) {
 
-        // Bind all the textures
-        for (unsigned int i = 0; i < textures.size(); i++) {
-            textures[i]->activate(i);
-        }
+            // Bind all the textures
+            for (unsigned int i = 0; i < textures.size(); i++) {
+                textures[i]->activate(i);
+            }
 
-        DirectRenderer::renderIndexedVertices(
-            vertices, indices, shader, mode
-        );
+            DirectRenderer::renderIndexedVertices(
+                vertices, indices, shader, mode
+            );
+
+        }
 
         m_batch.clear();
         m_batch.addTexture(m_whiteTexture);
