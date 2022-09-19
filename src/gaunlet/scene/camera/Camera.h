@@ -1,6 +1,7 @@
 #pragma once
 
 #include "gaunlet/scene/components/GraphicsComponents.h"
+#include "gaunlet/scene/camera/Frustum.h"
 
 #include "gaunlet/pch.h"
 
@@ -33,6 +34,9 @@ namespace gaunlet::Scene {
         void follow(glm::vec3* target);
         glm::vec3* getFollowTarget();
 
+        inline const glm::vec3& getForward() {return m_forward; }
+        inline const glm::vec3& getRight() {return m_right; }
+        inline const glm::vec3& getUp() {return m_up; }
         inline const float& getYaw() const {return m_yaw; }
         inline const float& getPitch() const {return m_pitch; }
         void setRotation(float yaw, float pitch);
@@ -65,8 +69,10 @@ namespace gaunlet::Scene {
         float m_far;
 
         glm::mat4 m_projectionMatrix;
-
         virtual void calculateProjectionMatrix() = 0;
+
+        Frustum m_frustum;
+        virtual void calculateFrustum() = 0;
 
     private:
 

@@ -46,6 +46,7 @@ namespace gaunlet::Scene {
 
         m_position = position;
         calculateViewMatrix();
+        calculateFrustum();
     }
 
     void Camera::move(const glm::vec3 &movement) {
@@ -56,6 +57,7 @@ namespace gaunlet::Scene {
 
         m_position += movement;
         calculateViewMatrix();
+        calculateFrustum();
     }
 
     void Camera::moveRelative(const glm::vec3 &movement) {
@@ -104,7 +106,7 @@ namespace gaunlet::Scene {
 
     }
 
-    glm::vec3 *Camera::getFollowTarget() {
+    glm::vec3* Camera::getFollowTarget() {
         return (glm::vec3 *) glm::value_ptr(m_position);
     }
 
@@ -112,17 +114,20 @@ namespace gaunlet::Scene {
         m_yaw = yaw;
         m_pitch = constrainPitch(pitch);
         calculateViewMatrix();
+        calculateFrustum();
     }
 
     void Camera::setYaw(float yaw) {
         m_yaw = yaw;
         calculateViewMatrix();
+        calculateFrustum();
     }
 
     void Camera::setPitch(float pitch) {
 
         m_pitch = constrainPitch(pitch);
         calculateViewMatrix();
+        calculateFrustum();
 
     }
 
@@ -131,6 +136,7 @@ namespace gaunlet::Scene {
         m_yaw = m_yaw + yawDelta;
         m_pitch = constrainPitch(m_pitch + pitchDelta);
         calculateViewMatrix();
+        calculateFrustum();
 
     }
 
@@ -276,6 +282,7 @@ namespace gaunlet::Scene {
         m_forward = forward;
 
         calculateViewMatrix();
+        calculateFrustum();
 
     }
 

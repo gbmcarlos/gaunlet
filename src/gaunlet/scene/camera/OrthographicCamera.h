@@ -24,6 +24,7 @@ namespace gaunlet::Scene {
         glm::vec2 m_projectionSize;
 
         void calculateProjectionMatrix() override;
+        void calculateFrustum() override;
 
     };
 

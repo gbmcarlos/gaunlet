@@ -14,11 +14,14 @@ namespace gaunlet::Scene {
         inline Camera::ProjectionType getProjectionType() const override {return Camera::ProjectionType::Perspective; }
         void resize(unsigned int viewportWidth, unsigned int viewportHeight) override;
         inline float getAspectRatio() const override {return m_aspectRatio; }
+        inline Frustum& getFrustum() {return m_frustum; }
 
     private:
         float m_fieldOfView, m_aspectRatio = 0;
+        Frustum m_frustum;
 
         void calculateProjectionMatrix() override;
+        void calculateFrustum() override;
 
     };
 

@@ -37,4 +37,8 @@ namespace gaunlet::Scene {
         calculateProjectionMatrix();
     }
 
+    void OrthographicCamera::calculateFrustum() {
+        m_frustum = {};
+    }
+
 }
