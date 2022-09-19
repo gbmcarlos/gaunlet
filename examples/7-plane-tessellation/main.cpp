@@ -84,7 +84,7 @@ public:
         auto plane = mainScene->createTaggedEntity<gaunlet::Editor::SceneEntityTag>("plane");
         plane.addComponent<gaunlet::Scene::PlaneComponent>(
             100.0f, // Plane size
-            10.0f, 0.8f, // Quad subdivision
+            10.0f, 0.5f, // Quad subdivision
             10.0f, 1.1f, // Tessellation
             mainCamera
         );

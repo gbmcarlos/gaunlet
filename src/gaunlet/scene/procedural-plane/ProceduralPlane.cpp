@@ -52,33 +52,34 @@ namespace gaunlet::Scene {
 
     bool QuadTreePatch::requiresSubdivision(Context &context) const {
 
-        glm::vec3 projectedCameraPosition(context.m_cameraPosition.x, 0, context.m_cameraPosition.z + 1.0);
-
         // Calculate the position of the 4 corners of the quad
         glm::vec3 leftBottomCorner = {m_leftEdge, 0, m_bottomEdge};
         glm::vec3 rightBottomCorner = {m_rightEdge, 0, m_bottomEdge};
         glm::vec3 rightTopCorner = {m_rightEdge, 0, m_topEdge};
         glm::vec3 leftTopCorner = {m_leftEdge, 0, m_topEdge};
 
-        // A vector going from the camera to each corner of the quad
-        glm::vec3 cameraToLeftBottomCorner = leftBottomCorner - projectedCameraPosition;
-        glm::vec3 cameraToRightBottomCorner = rightBottomCorner - projectedCameraPosition;
-        glm::vec3 cameraToRightTopCorner = rightTopCorner - projectedCameraPosition;
-        glm::vec3 cameraToLeftTopCorner = leftTopCorner - projectedCameraPosition;
-
         // The distance between the camera and each corner of the quad
-        float distanceLeftBottom = glm::length(cameraToLeftBottomCorner);
-        float distanceRightBottom = glm::length(cameraToRightBottomCorner);
-        float distanceRightTop = glm::length(cameraToRightTopCorner);
-        float distanceLeftTop = glm::length(cameraToLeftTopCorner);
+        float distanceLeftBottom = glm::length(leftBottomCorner - context.m_cameraPosition);
+        float distanceRightBottom = glm::length(rightBottomCorner - context.m_cameraPosition);
+        float distanceRightTop = glm::length(rightTopCorner - context.m_cameraPosition);
+        float distanceLeftTop = glm::length(leftTopCorner - context.m_cameraPosition);
 
         // The distance to the closest corner
         float distance = std::min(std::min(distanceLeftBottom, distanceRightBottom), std::min(distanceRightTop, distanceLeftTop));
 
         // Calculate the required resolution based on the distance to the camera
-        float relativeResolution = context.m_targetResolution + (distance * context.m_resolutionSlope);
+        float relativeResolution = getRelativeResolution(context, distance);
 
         return m_size > relativeResolution;
+
+    }
+
+    float QuadTreePatch::getRelativeResolution(Context &context, float distance) const {
+
+        float relativeResolution = (distance * context.m_resolutionSlope) + 1;
+        relativeResolution = std::max(relativeResolution, context.m_targetResolution);
+
+        return relativeResolution;
 
     }
 

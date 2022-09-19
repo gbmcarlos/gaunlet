@@ -53,6 +53,8 @@ namespace gaunlet::Scene {
 
         void subdivide(Context& context);
 
+        float getRelativeResolution(Context &context, float distance) const;
+
         void createContent(Context& context);
 
     };
