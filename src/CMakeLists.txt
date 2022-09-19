@@ -31,6 +31,8 @@ add_library(gaunlet STATIC
         gaunlet/scene/camera/OrthographicCamera.cpp
         gaunlet/scene/camera/PerspectiveCamera.cpp
         gaunlet/scene/entity/Entity.cpp
+        gaunlet/scene/procedural-plane/ProceduralPlane.cpp
+        gaunlet/scene/raw-casting/RayCasting.cpp
 
 #        Layout
         gaunlet/editor/docking/DockingLayout.cpp

@@ -3,25 +3,27 @@
 #include "gaunlet/scene/renderer/ObjectRenderer.h"
 #include "gaunlet/prefab/object-renderers/model-renderer/ModelRenderer.h"
 #include "gaunlet/graphics/renderer/DirectRenderer.h"
+#include "gaunlet/scene/components/TerrainComponents.h"
 
 #include "gaunlet/pch.h"
 
 namespace gaunlet::Prefab::ObjectRenderers {
 
-    struct Vertex {
-
-    };
-
     struct PlaneEntityProperties {
 
-        PlaneEntityProperties(int entityId, const glm::mat4& transform, glm::vec4 color)
-            : m_entityId(entityId), m_transform(transform), m_color(color), m_textureIndex(0) {}
+        PlaneEntityProperties(int entityId, const glm::mat4& transform, glm::vec4 color, float tessellationLevel)
+            : m_entityId(entityId), m_transform(transform), m_color(color), m_textureIndex(0), m_tessellationLevel(tessellationLevel) {}
 
         // The order of these properties is optimized to minimize required padding when using this data in a uniform buffer
         glm::mat4 m_transform;
         glm::vec4 m_color;
         unsigned int m_textureIndex;
-        int m_entityId; glm::vec2 pad2 = {};
+        float m_tessellationLevel;
+        float m_minTessellationLevel = 0;
+        float m_maxTessellationLevel = 0;
+        float m_minCameraDistance = 0;
+        float m_maxCameraDistance = 0;
+        int m_entityId; float pad1 = {};
 
     };
 
@@ -30,7 +32,7 @@ namespace gaunlet::Prefab::ObjectRenderers {
     public:
 
         PlaneRenderer(unsigned int uniformBufferBindingPoint)
-            : Scene::ObjectRenderer<Scene::PlaneComponent, PlaneEntityProperties>("EntityPropertySets", uniformBufferBindingPoint, {100000, 600000, 10, 100}) {
+            : Scene::ObjectRenderer<Scene::PlaneComponent, PlaneEntityProperties>("EntityPropertySets", uniformBufferBindingPoint, {100000, 600000, 10, 1}) {
             loadShaders();
         }
 
@@ -40,12 +42,15 @@ namespace gaunlet::Prefab::ObjectRenderers {
 
         PlaneEntityProperties getEntityProperties(Scene::Entity entity) override {
 
+            auto& plane = entity.getComponent<Scene::PlaneComponent>();
+
             auto material = entity.hasComponent<Scene::MaterialComponent>() ? entity.getComponent<Scene::MaterialComponent>() : Scene::MaterialComponent();
 
             return {
                 entity.getId(),
                 getHierarchicalTransform(entity),
-                material.m_color
+                material.m_color,
+                plane.m_targetTessellationLevel
             };
 
         }

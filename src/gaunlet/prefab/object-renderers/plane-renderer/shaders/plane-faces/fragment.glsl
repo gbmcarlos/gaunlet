@@ -4,6 +4,11 @@ struct EntityPropertySet {
     mat4 transform;
     vec4 color;
     uint textureIndex;
+    float tessellationLevel;
+    float minTessellationLevel;
+    float maxTessellationLevel;
+    float minCameraDistance;
+    float maxCameraDistance;
     int entityId;
 };
 

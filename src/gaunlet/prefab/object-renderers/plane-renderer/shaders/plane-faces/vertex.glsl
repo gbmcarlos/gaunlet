@@ -4,6 +4,11 @@ struct EntityPropertySet {
     mat4 transform;
     vec4 color;
     uint textureIndex;
+    float tessellationLevel;
+    float minTessellationLevel;
+    float maxTessellationLevel;
+    float minCameraDistance;
+    float maxCameraDistance;
     int entityId;
 };
 
@@ -42,6 +47,6 @@ void main() {
     v_normal = a_normal;
     v_entityIndex = a_entityIndex;
 
-    gl_Position = projection * view * entityPropertySets[a_entityIndex].transform * a_position;
+    gl_Position = a_position;
 
 }

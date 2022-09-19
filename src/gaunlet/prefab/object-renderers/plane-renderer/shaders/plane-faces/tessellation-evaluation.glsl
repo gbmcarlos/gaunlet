@@ -2,6 +2,36 @@
 
 layout (quads, equal_spacing, ccw) in;
 
+struct EntityPropertySet {
+    mat4 transform;
+    vec4 color;
+    uint textureIndex;
+    float tessellationLevel;
+    float minTessellationLevel;
+    float maxTessellationLevel;
+    float minCameraDistance;
+    float maxCameraDistance;
+    int entityId;
+};
+
+struct DirectionalLight {
+    vec3 color;
+    float ambientIntensity;
+    vec3 direction;
+    float diffuseIntensity;
+};
+
+// Uniforms
+layout (std140) uniform EntityPropertySets {
+    EntityPropertySet entityPropertySets[100];
+};
+
+layout (std140) uniform SceneProperties {
+    mat4 view;
+    mat4 projection;
+    DirectionalLight directionalLight;
+};
+
 in vec2 tc_textureCoordinates[];
 in vec3 tc_normal[];
 flat in uint tc_entityIndex[];
@@ -20,7 +50,9 @@ void main() {
     te_normal = interpolate3(gl_TessCoord.xy, tc_normal[0], tc_normal[1], tc_normal[2], tc_normal[3]);
     te_entityIndex = tc_entityIndex[0];
 
-    gl_Position = interpolate4(gl_TessCoord.xy, gl_in[0].gl_Position, gl_in[1].gl_Position, gl_in[2].gl_Position, gl_in[3].gl_Position);
+    vec4 vertexPosition = interpolate4(gl_TessCoord.xy, gl_in[0].gl_Position, gl_in[1].gl_Position, gl_in[2].gl_Position, gl_in[3].gl_Position);
+
+    gl_Position = projection * view * entityPropertySets[te_entityIndex].transform * vertexPosition;
 
 }
 

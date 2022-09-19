@@ -12,3 +12,4 @@
 
 #include "gaunlet/scene/components/GraphicsComponents.h" // Depends on PolygonMesh and CircleMesh
 #include "gaunlet/scene/components/LightingComponents.h"
+#include "gaunlet/scene/components/TerrainComponents.h"
