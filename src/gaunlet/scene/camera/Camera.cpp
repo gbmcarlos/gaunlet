@@ -221,24 +221,6 @@ namespace gaunlet::Scene {
 
     }
 
-    glm::vec3 Camera::rayPlaneIntersection(glm::vec3 rayOrigin, glm::vec3 rayDirection, glm::vec3 planePoint, glm::vec3 planeNormal) {
-
-        float distance;
-
-        bool intersects = glm::intersectRayPlane(
-            rayOrigin, rayDirection,
-            planePoint, planeNormal,
-            distance
-        );
-
-        if (intersects) {
-            return rayOrigin + (rayDirection * distance);
-        } else {
-            return {NAN, NAN, NAN};
-        }
-
-    }
-
     float Camera::constrainPitch(float pitch) {
 
         if (pitch > m_maxPitch) {

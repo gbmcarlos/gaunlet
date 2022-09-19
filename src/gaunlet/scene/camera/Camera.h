@@ -52,7 +52,6 @@ namespace gaunlet::Scene {
         void addZoomLevel(float zoomLevelDelta);
 
         glm::vec3 ray(glm::vec2 viewportCoordinates, glm::vec2 viewportSize);
-        static glm::vec3 rayPlaneIntersection(glm::vec3 rayOrigin, glm::vec3 rayDirection, glm::vec3 planePoint, glm::vec3 planeNormal);
 
     protected:
 

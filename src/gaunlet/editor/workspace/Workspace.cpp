@@ -2,6 +2,7 @@
 
 #include "gaunlet/editor/Tags.h"
 #include "gaunlet/core/window/Window.h"
+#include "gaunlet/scene/raw-casting/RayCasting.h"
 
 namespace gaunlet::Editor {
 
@@ -258,14 +259,9 @@ namespace gaunlet::Editor {
             {renderPanel->getWidth(), renderPanel->getHeight()}
         );
 
-        auto intersection = camera->rayPlaneIntersection(
-            camera->getPosition(),
-            ray,
-            planePoint,
-            planeNormal
-        );
+        Scene::Plane plane(planeNormal, planePoint);
 
-        return intersection;
+        return plane.rayIntersection(camera->getPosition(), ray);
 
     }
 
