@@ -54,7 +54,7 @@ namespace gaunlet::Prefab::ObjectRenderers {
                 {Core::ShaderType::Fragment, PREFABS_PATH"/object-renderers/model-renderer/shaders/model-faces/fragment.glsl"}
             };
 
-            loadShader(facesSources, "model-faces", m_shaderLibrary, m_propertySetsUniformBuffer, m_renderer.getMaxTextures());
+            loadShader(facesSources, "model-faces", m_shaderLibrary, m_propertySetsUniformBuffer);
 
             // OUTLINE SHADER
             std::map<Core::ShaderType, std::string> outlineSources {
@@ -62,7 +62,7 @@ namespace gaunlet::Prefab::ObjectRenderers {
                 {Core::ShaderType::Fragment, PREFABS_PATH"/object-renderers/model-renderer/shaders/model-outline/fragment.glsl"}
             };
 
-            auto outlineShader = loadShader(outlineSources, "model-outline", m_shaderLibrary, m_propertySetsUniformBuffer, m_renderer.getMaxTextures());
+            auto outlineShader = loadShader(outlineSources, "model-outline", m_shaderLibrary, m_propertySetsUniformBuffer);
             outlineShader->setUniform1f("u_width", 0.015f);
             outlineShader->setUniform3f("u_color", {0.9f, 0.9f, 0.1f});
 
@@ -73,7 +73,7 @@ namespace gaunlet::Prefab::ObjectRenderers {
                 {Core::ShaderType::Fragment, PREFABS_PATH"/object-renderers/model-renderer/shaders/model-wireframe/fragment.glsl"}
             };
 
-            loadShader(wireframeSources, "model-wireframe", m_shaderLibrary, m_propertySetsUniformBuffer, m_renderer.getMaxTextures());
+            loadShader(wireframeSources, "model-wireframe", m_shaderLibrary, m_propertySetsUniformBuffer);
 
         }
 

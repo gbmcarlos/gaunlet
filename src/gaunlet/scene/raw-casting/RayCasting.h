@@ -4,9 +4,7 @@
 
 namespace gaunlet::Scene {
 
-    class Plane {
-
-    public:
+    struct Plane {
 
         Plane();
         Plane(glm::vec3 normal, glm::vec3 point);
@@ -19,8 +17,6 @@ namespace gaunlet::Scene {
 
         // Return the point of intersection with a ray
         glm::vec3 rayIntersection(const glm::vec3& rayOrigin, const glm::vec3& rayDirection);
-
-    private:
 
         glm::vec3 m_normal;
         glm::vec3 m_point;

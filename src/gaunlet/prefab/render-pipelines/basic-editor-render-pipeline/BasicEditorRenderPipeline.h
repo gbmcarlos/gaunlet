@@ -19,7 +19,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
         void resize(unsigned int width, unsigned int height) override;
         const Core::Ref<Graphics::Texture>& getRenderedTexture() override;
         int readFramebuffer(Editor::FramebufferLayer layer, unsigned int x, unsigned int y) override;
-        inline static unsigned int getUniformBufferBindingPointOffset() {return 4;}
+        static unsigned int getUniformBufferCount();
 
     protected:
 

@@ -3,15 +3,11 @@
 layout (vertices = 4) out;
 
 struct EntityPropertySet {
-    mat4 transform;
-    vec4 color;
     uint textureIndex;
-    float tessellationLevel;
-    float minTessellationLevel;
-    float maxTessellationLevel;
-    float minCameraDistance;
-    float maxCameraDistance;
-    int entityId;
+    float leftSizeFactor;
+    float rightSizeFactor;
+    float bottomSizeFactor;
+    float topSizeFactor;
 };
 
 struct DirectionalLight {
@@ -32,58 +28,72 @@ layout (std140) uniform SceneProperties {
     DirectionalLight directionalLight;
 };
 
+struct FrustumPlane {
+    vec3 normal;
+    float distance;
+};
+
+layout (std140) uniform CameraFrustum {
+    FrustumPlane nearPlane;
+    FrustumPlane farPlane;
+    FrustumPlane leftPlane;
+    FrustumPlane rightPlane;
+    FrustumPlane bottomPlane;
+    FrustumPlane topPlane;
+};
+
+uniform float u_targetTessellationLevel;
+uniform float u_tessellationLevelSlope;
+
 in vec2 v_textureCoordinates[];
 in vec3 v_normal[];
 flat in uint v_entityIndex[];
 
 out vec2 tc_textureCoordinates[];
 out vec3 tc_normal[];
-flat out uint tc_entityIndex[];
+
+bool withinFrustum(vec4 corner0, vec4 corner1, vec4 corner2, vec4 corner3);
+bool quadOver(FrustumPlane plane, vec4 corner0, vec4 corner1, vec4 corner2, vec4 corner3);
+bool pointOver(FrustumPlane plane, vec4 point);
 
 void main() {
 
     tc_textureCoordinates[gl_InvocationID] = v_textureCoordinates[gl_InvocationID];
-    tc_entityIndex[gl_InvocationID] = v_entityIndex[gl_InvocationID];
     tc_normal[gl_InvocationID] = v_normal[gl_InvocationID];
     gl_out[gl_InvocationID].gl_Position = gl_in[gl_InvocationID].gl_Position;
 
     if (gl_InvocationID == 0) {
 
-        uint entityIndex = v_entityIndex[gl_InvocationID];
+        vec4 vertexPosition0 = gl_in[0].gl_Position;
+        vec4 vertexPosition1 = gl_in[1].gl_Position;
+        vec4 vertexPosition2 = gl_in[2].gl_Position;
+        vec4 vertexPosition3 = gl_in[3].gl_Position;
 
-        if (entityPropertySets[entityIndex].tessellationLevel > 0) {
+        if (!withinFrustum(vertexPosition0, vertexPosition1, vertexPosition2, vertexPosition3)) {
+            gl_TessLevelOuter[0] = -1;
+            gl_TessLevelOuter[1] = -1;
+            gl_TessLevelOuter[2] = -1;
+            gl_TessLevelOuter[3] = -1;
 
-            gl_TessLevelOuter[0] = entityPropertySets[entityIndex].tessellationLevel;
-            gl_TessLevelOuter[1] = entityPropertySets[entityIndex].tessellationLevel;
-            gl_TessLevelOuter[2] = entityPropertySets[entityIndex].tessellationLevel;
-            gl_TessLevelOuter[3] = entityPropertySets[entityIndex].tessellationLevel;
-
-            gl_TessLevelInner[0] = entityPropertySets[entityIndex].tessellationLevel;
-            gl_TessLevelInner[1] = entityPropertySets[entityIndex].tessellationLevel;
+            gl_TessLevelInner[0] = -1;
+            gl_TessLevelInner[1] = -1;
 
         } else {
 
-            float minTessellationLevel = entityPropertySets[entityIndex].minTessellationLevel;
-            float maxTessellationLevel = entityPropertySets[entityIndex].maxTessellationLevel;
-            float minCameraDistance = entityPropertySets[entityIndex].minCameraDistance;
-            float maxCameraDistance = entityPropertySets[entityIndex].maxCameraDistance;
+            vertexPosition0 = view * vertexPosition0;
+            vertexPosition1 = view * vertexPosition1;
+            vertexPosition2 = view * vertexPosition2;
+            vertexPosition3 = view * vertexPosition3;
 
-            mat4 modelTransform = entityPropertySets[entityIndex].transform;
+            float distance0 = abs(vertexPosition0.z);
+            float distance1 = abs(vertexPosition1.z);
+            float distance2 = abs(vertexPosition2.z);
+            float distance3 = abs(vertexPosition3.z);
 
-            vec4 vertexPosition0 = view * modelTransform * gl_in[0].gl_Position;
-            vec4 vertexPosition1 = view * modelTransform * gl_in[1].gl_Position;
-            vec4 vertexPosition2 = view * modelTransform * gl_in[2].gl_Position;
-            vec4 vertexPosition3 = view * modelTransform * gl_in[3].gl_Position;
-
-            float distance0 = clamp( (abs(vertexPosition0.z) - minCameraDistance) / (maxCameraDistance - minCameraDistance), 0.0, 1.0 );
-            float distance1 = clamp( (abs(vertexPosition1.z) - minCameraDistance) / (maxCameraDistance - minCameraDistance), 0.0, 1.0 );
-            float distance2 = clamp( (abs(vertexPosition2.z) - minCameraDistance) / (maxCameraDistance - minCameraDistance), 0.0, 1.0 );
-            float distance3 = clamp( (abs(vertexPosition3.z) - minCameraDistance) / (maxCameraDistance - minCameraDistance), 0.0, 1.0 );
-
-            float tessellationLevel0 = mix(maxTessellationLevel, minTessellationLevel, min(distance2, distance0) );
-            float tessellationLevel1 = mix(maxTessellationLevel, minTessellationLevel, min(distance0, distance1) );
-            float tessellationLevel2 = mix(maxTessellationLevel, minTessellationLevel, min(distance1, distance3) );
-            float tessellationLevel3 = mix(maxTessellationLevel, minTessellationLevel, min(distance3, distance2) );
+            float tessellationLevel0 = max((distance0 * u_tessellationLevelSlope) + 1, u_targetTessellationLevel);
+            float tessellationLevel1 = max((distance1 * u_tessellationLevelSlope) + 1, u_targetTessellationLevel);
+            float tessellationLevel2 = max((distance2 * u_tessellationLevelSlope) + 1, u_targetTessellationLevel);
+            float tessellationLevel3 = max((distance3 * u_tessellationLevelSlope) + 1, u_targetTessellationLevel);
 
             gl_TessLevelOuter[0] = tessellationLevel0;
             gl_TessLevelOuter[1] = tessellationLevel1;
@@ -92,9 +102,67 @@ void main() {
 
             gl_TessLevelInner[0] = max(tessellationLevel1, tessellationLevel3);
             gl_TessLevelInner[1] = max(tessellationLevel0, tessellationLevel2);
-
         }
 
     }
+
+}
+
+bool withinFrustum(vec4 corner0, vec4 corner1, vec4 corner2, vec4 corner3) {
+
+    if (!quadOver(nearPlane, corner0, corner1, corner2, corner3)) {
+        return false;
+    }
+
+    if (!quadOver(farPlane, corner0, corner1, corner2, corner3)) {
+        return false;
+    }
+
+    if (!quadOver(leftPlane, corner0, corner1, corner2, corner3)) {
+        return false;
+    }
+
+    if (!quadOver(rightPlane, corner0, corner1, corner2, corner3)) {
+        return false;
+    }
+
+    if (!quadOver(bottomPlane, corner0, corner1, corner2, corner3)) {
+        return false;
+    }
+
+    if (!quadOver(topPlane, corner0, corner1, corner2, corner3)) {
+        return false;
+    }
+
+    return true;
+
+}
+
+bool quadOver(FrustumPlane plane, vec4 corner0, vec4 corner1, vec4 corner2, vec4 corner3) {
+
+    if (pointOver(plane, corner0)) {
+        return true;
+    }
+
+    if (pointOver(plane, corner1)) {
+        return true;
+    }
+
+    if (pointOver(plane, corner2)) {
+        return true;
+    }
+
+    if (pointOver(plane, corner3)) {
+        return true;
+    }
+
+    return false;
+
+}
+
+bool pointOver(FrustumPlane plane, vec4 point) {
+
+    float distance = dot(plane.normal, vec3(point)) - plane.distance;
+    return distance > 0;
 
 }

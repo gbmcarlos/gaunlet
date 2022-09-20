@@ -7,6 +7,13 @@
 
 namespace gaunlet::Scene {
 
+    struct PlaneQuad {
+
+        std::vector<Graphics::Vertex> m_vertices;
+        std::vector<unsigned int> m_indices;
+
+    };
+
     struct Context {
 
         Context(float planeSize, float targetResolution, float resolutionSlope, const glm::vec3& cameraPosition, const Frustum& cameraFrustum)
@@ -17,8 +24,7 @@ namespace gaunlet::Scene {
         float m_resolutionSlope;
         glm::vec3 m_cameraPosition;
         Frustum m_cameraFrustum;
-        std::vector<Graphics::Vertex> m_vertices = {};
-        std::vector<unsigned int> m_indices = {};
+        std::vector<PlaneQuad> m_quads;
 
     };
 
@@ -26,7 +32,7 @@ namespace gaunlet::Scene {
 
     public:
 
-        static std::tuple<std::vector<Graphics::Vertex>, std::vector<unsigned int>> compute(float planeSize, float targetResolution, float resolutionSlope, const glm::vec3& cameraPosition, const Frustum& cameraFrustum);
+        static std::vector<PlaneQuad> compute(float planeSize, float targetResolution, float resolutionSlope, const glm::vec3& cameraPosition, const Frustum& cameraFrustum);
 
     protected:
 

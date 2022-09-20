@@ -61,7 +61,7 @@ namespace gaunlet::Prefab::ObjectRenderers {
                 {Core::ShaderType::Fragment, PREFABS_PATH"/object-renderers/circle-renderer/shaders/circle-faces/fragment.glsl"}
             };
 
-            loadShader(facesSources, "circle-faces", m_shaderLibrary, m_propertySetsUniformBuffer, m_renderer.getMaxTextures());
+            loadShader(facesSources, "circle-faces", m_shaderLibrary, m_propertySetsUniformBuffer);
 
         }
 

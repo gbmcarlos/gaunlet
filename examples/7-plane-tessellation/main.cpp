@@ -49,13 +49,13 @@ public:
             "main"
         );
         // Prepare the main camera
-        auto mainCamera = gaunlet::Core::CreateRef<gaunlet::Scene::PerspectiveCamera>(45.0f, (float) viewportWidth / (float) viewportHeight, 1.0f, -100.0f);
+        auto mainCamera = gaunlet::Core::CreateRef<gaunlet::Scene::PerspectiveCamera>(45.0f, (float) viewportWidth / (float) viewportHeight, 1.0f, -5000.0f);
         m_workspace->addCamera("main", mainCamera);
-        mainCamera->setPosition({-5.0f, 5.0f, -5.0f});
-        mainCamera->setRotation(-90.0f, 0.0);
+        mainCamera->setPosition({-100.0f, 100.0f, 50.0f});
+        mainCamera->lookAt({0, 0, 0});
 
         // Preview Render Panel, with its own camera
-        m_workspace->addRenderPipeline("preview", gaunlet::Core::CreateRef<gaunlet::Prefab::BasicEditorRenderPipeline::BasicEditorRenderPipeline>(gaunlet::Prefab::BasicEditorRenderPipeline::BasicEditorRenderPipeline::getUniformBufferBindingPointOffset()));
+        m_workspace->addRenderPipeline("preview", gaunlet::Core::CreateRef<gaunlet::Prefab::BasicEditorRenderPipeline::BasicEditorRenderPipeline>(gaunlet::Prefab::BasicEditorRenderPipeline::BasicEditorRenderPipeline::getUniformBufferCount()));
         m_workspace->pushPanel(
             "preview",
             new gaunlet::Editor::RenderPanel(),
@@ -67,34 +67,34 @@ public:
             "preview"
         );
         // Prepare the preview camera
-        auto& previewCamera = m_workspace->addCamera("preview", gaunlet::Core::CreateRef<gaunlet::Scene::OrthographicCamera>(viewportWidth, viewportHeight, 5, 0, 1000));
+        auto& previewCamera = m_workspace->addCamera("preview", gaunlet::Core::CreateRef<gaunlet::Scene::OrthographicCamera>(viewportWidth, viewportHeight, 1, 0, 10000));
         previewCamera->setPosition({0, 100, 0});
         previewCamera->lookAt({0, 0, 0});
 
         // Tools
-        m_workspace->addTool("fp-camera-controller", gaunlet::Core::CreateRef<gaunlet::Prefab::EditorTools::FirstPersonCameraController>("main", 5.0f, 0.5f));
+        m_workspace->addTool("fp-camera-controller", gaunlet::Core::CreateRef<gaunlet::Prefab::EditorTools::FirstPersonCameraController>("main", 20.0f, 0.5f));
         m_workspace->addTool("transformer", gaunlet::Core::CreateRef<gaunlet::Prefab::EditorTools::TransformerTool>());
         m_workspace->activateTool("fp-camera-controller");
 
         // Prepare the scene
         auto& mainScene = m_workspace->getScene("main");
 
-        gaunlet::Core::Ref<gaunlet::Graphics::TextureImage2D> texture1 = gaunlet::Core::CreateRef<gaunlet::Graphics::TextureImage2D>("assets/texture-1.jpeg");
+        gaunlet::Core::Ref<gaunlet::Graphics::TextureImage2D> heightmap = gaunlet::Core::CreateRef<gaunlet::Graphics::TextureImage2D>("assets/heightmap.png");
 
         auto plane = mainScene->createTaggedEntity<gaunlet::Editor::SceneEntityTag>("plane");
         plane.addComponent<gaunlet::Scene::PlaneComponent>(
-            100.0f, // Plane size
-            10.0f, 0.5f, // Quad subdivision
-            10.0f, 1.1f, // Tessellation
-            mainCamera
+            1000.0f, // Plane size
+            1.0f, 0.5f, // Quad subdivision
+            2.0f, 0.0f, // Tessellation
+            50.0f, // Max height
+            mainCamera,
+            heightmap
         );
         plane.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f)
         );
-        plane.addComponent<gaunlet::Scene::MaterialComponent>(texture1);
-        m_workspace->selectSceneEntity(plane);
         m_plane = plane;
 
     }

@@ -19,7 +19,7 @@ namespace gaunlet::Graphics {
         bool submitIndexedTriangles(std::vector<gaunlet::Graphics::Vertex>& vertices, std::vector<unsigned int>& indices, const Core::Ref<Graphics::Texture>& texture, T& propertySet);
         void flush(const Core::Ref<Graphics::Shader>& shader, RenderMode mode);
 
-        inline unsigned int getMaxTextures() {return m_batch.getMaxTextures(); }
+        inline const BatchParameters& getBatchParameters() {return m_batch.getParameters(); }
         inline const std::vector<T>& getPropertySets() {return m_batch.getPropertySets(); }
 
     private:

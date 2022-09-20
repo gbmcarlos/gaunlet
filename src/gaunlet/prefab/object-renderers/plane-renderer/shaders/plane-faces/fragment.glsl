@@ -1,15 +1,11 @@
 #version 410 core
 
 struct EntityPropertySet {
-    mat4 transform;
-    vec4 color;
     uint textureIndex;
-    float tessellationLevel;
-    float minTessellationLevel;
-    float maxTessellationLevel;
-    float minCameraDistance;
-    float maxCameraDistance;
-    int entityId;
+    float leftSizeFactor;
+    float rightSizeFactor;
+    float bottomSizeFactor;
+    float topSizeFactor;
 };
 
 struct DirectionalLight {
@@ -30,6 +26,8 @@ layout (std140) uniform SceneProperties {
     DirectionalLight directionalLight;
 };
 
+uniform int u_entityId;
+
 // Inputs
 in vec2 te_textureCoordinates;
 in vec3 te_normal;
@@ -40,19 +38,8 @@ layout (location = 0) out vec4 o_color;
 layout (location = 1) out int o_entityId;
 
 // Textures
-uniform sampler2D texture0;
-uniform sampler2D texture1;
-uniform sampler2D texture2;
-uniform sampler2D texture3;
-uniform sampler2D texture4;
-uniform sampler2D texture5;
-uniform sampler2D texture6;
-uniform sampler2D texture7;
-uniform sampler2D texture8;
-uniform sampler2D texture9;
-uniform sampler2D texture10;
+uniform sampler2D heightmap;
 
-vec4 sampleTexture(uint textureIndex, vec2 textureCoordinates);
 vec4 getDirectionalLightColor(
     vec3 color, vec3 direction,
     float ambientIntensity, float diffuseIntensity,
@@ -61,12 +48,12 @@ vec4 getDirectionalLightColor(
 
 void main() {
 
-    vec4 textureColor = sampleTexture(entityPropertySets[te_entityIndex].textureIndex, te_textureCoordinates);
-    vec4 directionalLightColor = getDirectionalLightColor(directionalLight.color, directionalLight.direction, directionalLight.ambientIntensity, directionalLight.diffuseIntensity, te_normal);
+    vec4 textureColor = texture(heightmap, te_textureCoordinates);
+    //vec4 directionalLightColor = getDirectionalLightColor(directionalLight.color, directionalLight.direction, directionalLight.ambientIntensity, directionalLight.diffuseIntensity, te_normal);
 
-    o_color = textureColor * entityPropertySets[te_entityIndex].color;
+    o_color = textureColor;
 
-    o_entityId = entityPropertySets[te_entityIndex].entityId;
+    o_entityId = u_entityId;
 
 }
 
@@ -81,35 +68,5 @@ vec4 getDirectionalLightColor(vec3 color, vec3 direction, float ambientIntensity
     } else {
         return ambientColor;
     }
-
-}
-
-vec4 sampleTexture(uint textureIndex, vec2 textureCoordinates) {
-
-    if (textureIndex == 0) {
-        return texture(texture0, textureCoordinates);
-    } else if (textureIndex == 1) {
-        return texture(texture1, textureCoordinates);
-    } else if (textureIndex == 2) {
-        return texture(texture2, textureCoordinates);
-    } else if (textureIndex == 3) {
-        return texture(texture3, textureCoordinates);
-    } else if (textureIndex == 4) {
-        return texture(texture4, textureCoordinates);
-    } else if (textureIndex == 5) {
-        return texture(texture5, textureCoordinates);
-    } else if (textureIndex == 6) {
-        return texture(texture6, textureCoordinates);
-    } else if (textureIndex == 7) {
-        return texture(texture7, textureCoordinates);
-    } else if (textureIndex == 8) {
-        return texture(texture8, textureCoordinates);
-    } else if (textureIndex == 9) {
-        return texture(texture9, textureCoordinates);
-    } else if (textureIndex == 10) {
-        return texture(texture10, textureCoordinates);
-    }
-
-    return vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
 }

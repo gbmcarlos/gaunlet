@@ -41,6 +41,7 @@ namespace gaunlet::Graphics {
         }
 
         inline void addTexture(const Core::Ref<Graphics::Texture>& texture) {m_textureLibrary.add(texture); }
+        inline const BatchParameters& getParameters() {return m_parameters; }
         inline unsigned int getMaxTextures() {return m_parameters.m_maxTextures; }
         inline const std::vector<T>& getPropertySets() {return m_propertySets; }
 

@@ -29,6 +29,8 @@ namespace gaunlet::Prefab::ObjectRenderers {
 
         }
 
+        static unsigned int getUniformBufferCount() {return 0; }
+
         inline Graphics::ShaderLibrary& getShaders() {return m_shaderLibrary; }
 
     private:

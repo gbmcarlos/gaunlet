@@ -25,6 +25,7 @@ namespace gaunlet::Scene {
 
         glm::mat4 getProjectionMatrix();
         glm::mat4 getViewMatrix();
+        inline Frustum& getFrustum() {return m_frustum; }
 
         const glm::vec3& getPosition();
         void setPosition(const glm::vec3& position);

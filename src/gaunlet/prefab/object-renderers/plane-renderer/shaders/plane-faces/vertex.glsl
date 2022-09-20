@@ -1,15 +1,11 @@
 #version 410 core
 
 struct EntityPropertySet {
-    mat4 transform;
-    vec4 color;
     uint textureIndex;
-    float tessellationLevel;
-    float minTessellationLevel;
-    float maxTessellationLevel;
-    float minCameraDistance;
-    float maxCameraDistance;
-    int entityId;
+    float leftSizeFactor;
+    float rightSizeFactor;
+    float bottomSizeFactor;
+    float topSizeFactor;
 };
 
 struct DirectionalLight {
@@ -30,6 +26,9 @@ layout (std140) uniform SceneProperties {
     DirectionalLight directionalLight;
 };
 
+uniform mat4 u_modelTransform;
+uniform float u_maxHeight;
+
 // Vertex attributes
 layout (location = 0) in vec4 a_position;
 layout (location = 1) in vec3 a_normal;
@@ -41,12 +40,19 @@ out vec2 v_textureCoordinates;
 out vec3 v_normal;
 flat out uint v_entityIndex;
 
+// Textures
+uniform sampler2D heightmap;
+
 void main() {
 
     v_textureCoordinates = a_textureCoordinates;
     v_normal = a_normal;
     v_entityIndex = a_entityIndex;
 
-    gl_Position = a_position;
+    vec4 vertexPosition = u_modelTransform * a_position;
+    float height = texture(heightmap, v_textureCoordinates).y * u_maxHeight;
+    vertexPosition += vec4(vec3(0, 1, 0) * height, 0);
+
+    gl_Position = vertexPosition;
 
 }

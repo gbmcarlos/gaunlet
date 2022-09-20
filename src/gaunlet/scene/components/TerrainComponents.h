@@ -7,11 +7,11 @@ namespace gaunlet::Scene {
 
     struct PlaneComponent {
 
-        PlaneComponent(float size, float targetResolution, float resolutionSlope, float targetTessellationLevel, float tessellationLevelSlope, Core::Ref<PerspectiveCamera> camera)
-            : m_size(size), m_targetResolution(targetResolution), m_resolutionSlope(resolutionSlope), m_targetTessellationLevel(targetTessellationLevel), m_tessellationLevelSlope(tessellationLevelSlope), m_camera(std::move(camera)) {
+        PlaneComponent(float size, float targetResolution, float resolutionSlope, float targetTessellationLevel, float tessellationLevelSlope, float maxHeight, Core::Ref<PerspectiveCamera>  camera, Core::Ref<Graphics::Texture>  heightmap)
+            : m_size(size), m_targetResolution(targetResolution), m_resolutionSlope(resolutionSlope), m_targetTessellationLevel(targetTessellationLevel), m_tessellationLevelSlope(tessellationLevelSlope), m_maxHeight(maxHeight), m_camera(std::move(camera)), m_heightmap(std::move(heightmap)) {
         }
 
-        std::tuple<std::vector<Graphics::Vertex>, std::vector<unsigned int>> getContent() {
+        std::vector<PlaneQuad> getContent() {
             return QuadTreePatch::compute(
                 m_size,
                 m_targetResolution,
@@ -26,7 +26,9 @@ namespace gaunlet::Scene {
         float m_resolutionSlope;
         float m_targetTessellationLevel;
         float m_tessellationLevelSlope;
+        float m_maxHeight;
         Core::Ref<PerspectiveCamera> m_camera;
+        Core::Ref<Graphics::Texture> m_heightmap;
 
     };
 

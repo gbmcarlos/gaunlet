@@ -7,7 +7,7 @@
 namespace gaunlet::Prefab::BasicEditorRenderPipeline {
 
     BasicEditorRenderPipeline::BasicEditorRenderPipeline(unsigned int uniformBufferBindingPointOffset)
-        : m_modelRenderer(1 + uniformBufferBindingPointOffset), m_circleRenderer(2 + uniformBufferBindingPointOffset), m_planeRenderer(3 + uniformBufferBindingPointOffset) {
+        : m_modelRenderer(1 + uniformBufferBindingPointOffset), m_circleRenderer(2 + uniformBufferBindingPointOffset), m_planeRenderer(3 + uniformBufferBindingPointOffset, 4 + uniformBufferBindingPointOffset) {
 
         prepareShaders(uniformBufferBindingPointOffset);
 
@@ -75,6 +75,15 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
 
         return m_framebuffer->readPixel(attachmentIndex, x, y);
 
+    }
+
+    unsigned int BasicEditorRenderPipeline::getUniformBufferCount() {
+        return
+            ObjectRenderers::ModelRenderer::getUniformBufferCount() +
+            ObjectRenderers::CircleRenderer::getUniformBufferCount() +
+            ObjectRenderers::PlaneRenderer::getUniformBufferCount() +
+            ObjectRenderers::SkyboxRenderer::getUniformBufferCount() +
+            1; // The SceneProperties uniform buffer that this render pipeline manages itself
     }
 
     void BasicEditorRenderPipeline::startScene(const Core::Ref<Scene::Scene> &scene, const Core::Ref<Scene::Camera> &camera, const Core::Ref<Scene::DirectionalLightComponent> &directionalLight) {
@@ -217,23 +226,21 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
         // Model faces: those models that don't have the Wireframe tag
         auto facesView = scene->getRegistry().view<Scene::PlaneComponent, Scene::TransformComponent, Editor::SceneEntityTag>(entt::exclude<Editor::WireframeModelTag>);
         for (auto e : facesView) {
-            m_planeRenderer.submitObject(
+            m_planeRenderer.render(
                 {e, scene},
                 m_planeRenderer.getShaders().get("plane-faces")
             );
         }
-        m_planeRenderer.renderObjects(m_planeRenderer.getShaders().get("plane-faces"));
 
         // Model wireframes: those models that have the Wireframe tag
         Core::RenderCommand::setPolygonMode(Core::PolygonMode::Line);
         auto wireframesView = scene->getRegistry().view<Scene::PlaneComponent, Scene::TransformComponent, Editor::SceneEntityTag, Editor::WireframeModelTag>();
         for (auto e : wireframesView) {
-            m_planeRenderer.submitObject(
+            m_planeRenderer.render(
                 {e, scene},
                 m_planeRenderer.getShaders().get("plane-faces")
             );
         }
-        m_planeRenderer.renderObjects(m_planeRenderer.getShaders().get("plane-faces"));
         Core::RenderCommand::setPolygonMode(Core::PolygonMode::Fill);
 
     }

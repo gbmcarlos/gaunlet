@@ -124,6 +124,11 @@ namespace gaunlet::Prefab::EditorTools {
 
         bool onCursorMoveEvent(gaunlet::Core::CursorMoveEvent& event) {
 
+            selectRenderPanel();
+            if (m_renderPanel == nullptr) {
+                return true;
+            }
+
             if (!m_rotating) {
                 return true;
             }
