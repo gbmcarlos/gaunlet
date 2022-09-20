@@ -224,7 +224,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
     void BasicEditorRenderPipeline::submitScenePlanes(const Core::Ref<Scene::Scene> &scene) {
 
         // Model faces: those models that don't have the Wireframe tag
-        auto facesView = scene->getRegistry().view<Scene::PlaneComponent, Scene::TransformComponent, Editor::SceneEntityTag>(entt::exclude<Editor::WireframeModelTag>);
+        auto facesView = scene->getRegistry().view<Scene::PlaneComponent, Editor::SceneEntityTag>(entt::exclude<Editor::WireframeModelTag>);
         for (auto e : facesView) {
             m_planeRenderer.render(
                 {e, scene},
@@ -234,7 +234,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
 
         // Model wireframes: those models that have the Wireframe tag
         Core::RenderCommand::setPolygonMode(Core::PolygonMode::Line);
-        auto wireframesView = scene->getRegistry().view<Scene::PlaneComponent, Scene::TransformComponent, Editor::SceneEntityTag, Editor::WireframeModelTag>();
+        auto wireframesView = scene->getRegistry().view<Scene::PlaneComponent, Editor::SceneEntityTag, Editor::WireframeModelTag>();
         for (auto e : wireframesView) {
             m_planeRenderer.render(
                 {e, scene},

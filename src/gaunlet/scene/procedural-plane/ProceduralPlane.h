@@ -11,6 +11,10 @@ namespace gaunlet::Scene {
 
         std::vector<Graphics::Vertex> m_vertices;
         std::vector<unsigned int> m_indices;
+        float m_leftSizeRatio = 1.0f;
+        float m_bottomSizeRatio = 1.0f;
+        float m_rightSizeRatio = 1.0f;
+        float m_topSizeRatio = 1.0f;
 
     };
 
@@ -52,8 +56,6 @@ namespace gaunlet::Scene {
         void computeEdges();
 
         void process(Context& context);
-
-        bool withinFrustum(Context& context) const;
 
         bool requiresSubdivision(Context& context) const;
 

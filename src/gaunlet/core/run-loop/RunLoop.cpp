@@ -15,6 +15,8 @@ namespace gaunlet::Core {
 
     void RunLoop::run(Application& application) {
 
+        GL_PROFILE_BEGIN_SESSION("main", ASSETS_PATH"/main-profile.json");
+
         application.onReady();
 
         float lastFrameTime = 0;
@@ -40,6 +42,8 @@ namespace gaunlet::Core {
             m_window->swap();
 
         }
+
+        GL_PROFILE_END_SESSION();
 
         ImGuiRenderApi::shutdown();
         m_window->close();

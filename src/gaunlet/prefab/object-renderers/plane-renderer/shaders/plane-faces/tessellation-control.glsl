@@ -3,11 +3,11 @@
 layout (vertices = 4) out;
 
 struct EntityPropertySet {
-    uint textureIndex;
     float leftSizeFactor;
-    float rightSizeFactor;
     float bottomSizeFactor;
+    float rightSizeFactor;
     float topSizeFactor;
+    uint textureIndex;
 };
 
 struct DirectionalLight {
@@ -95,10 +95,12 @@ void main() {
             float tessellationLevel2 = max((distance2 * u_tessellationLevelSlope) + 1, u_targetTessellationLevel);
             float tessellationLevel3 = max((distance3 * u_tessellationLevelSlope) + 1, u_targetTessellationLevel);
 
-            gl_TessLevelOuter[0] = tessellationLevel0;
-            gl_TessLevelOuter[1] = tessellationLevel1;
-            gl_TessLevelOuter[2] = tessellationLevel2;
-            gl_TessLevelOuter[3] = tessellationLevel3;
+            uint entityIndex = v_entityIndex[gl_InvocationID];
+
+            gl_TessLevelOuter[0] = tessellationLevel0 * entityPropertySets[entityIndex].leftSizeFactor;
+            gl_TessLevelOuter[1] = tessellationLevel1 * entityPropertySets[entityIndex].bottomSizeFactor;
+            gl_TessLevelOuter[2] = tessellationLevel2 * entityPropertySets[entityIndex].rightSizeFactor;
+            gl_TessLevelOuter[3] = tessellationLevel3 * entityPropertySets[entityIndex].topSizeFactor;
 
             gl_TessLevelInner[0] = max(tessellationLevel1, tessellationLevel3);
             gl_TessLevelInner[1] = max(tessellationLevel0, tessellationLevel2);

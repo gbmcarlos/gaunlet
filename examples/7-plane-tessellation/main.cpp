@@ -51,8 +51,8 @@ public:
         // Prepare the main camera
         auto mainCamera = gaunlet::Core::CreateRef<gaunlet::Scene::PerspectiveCamera>(45.0f, (float) viewportWidth / (float) viewportHeight, 1.0f, -5000.0f);
         m_workspace->addCamera("main", mainCamera);
-        mainCamera->setPosition({-100.0f, 100.0f, 50.0f});
-        mainCamera->lookAt({0, 0, 0});
+        mainCamera->setPosition({-100.0f, 40.0f, 50.0f});
+        mainCamera->setRotation(-48.0f, -37.0f);
 
         // Preview Render Panel, with its own camera
         m_workspace->addRenderPipeline("preview", gaunlet::Core::CreateRef<gaunlet::Prefab::BasicEditorRenderPipeline::BasicEditorRenderPipeline>(gaunlet::Prefab::BasicEditorRenderPipeline::BasicEditorRenderPipeline::getUniformBufferCount()));
@@ -67,7 +67,7 @@ public:
             "preview"
         );
         // Prepare the preview camera
-        auto& previewCamera = m_workspace->addCamera("preview", gaunlet::Core::CreateRef<gaunlet::Scene::OrthographicCamera>(viewportWidth, viewportHeight, 1, 0, 10000));
+        auto& previewCamera = m_workspace->addCamera("preview", gaunlet::Core::CreateRef<gaunlet::Scene::OrthographicCamera>(viewportWidth, viewportHeight, 2, 0, 10000));
         previewCamera->setPosition({0, 100, 0});
         previewCamera->lookAt({0, 0, 0});
 
@@ -90,11 +90,7 @@ public:
             mainCamera,
             heightmap
         );
-        plane.addComponent<gaunlet::Scene::TransformComponent>(
-            glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec3(1.0f, 1.0f, 1.0f)
-        );
+        m_workspace->selectSceneEntity(plane);
         m_plane = plane;
 
     }

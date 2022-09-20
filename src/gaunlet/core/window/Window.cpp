@@ -74,7 +74,7 @@ namespace gaunlet::Core {
     }
 
     void Window::pollEvents() {
-        GL_PROFILE_FUNCTION
+        GL_PROFILE_FUNCTION;
         glfwPollEvents();
     }
 

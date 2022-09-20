@@ -1,11 +1,11 @@
 #version 410 core
 
 struct EntityPropertySet {
-    uint textureIndex;
     float leftSizeFactor;
-    float rightSizeFactor;
     float bottomSizeFactor;
+    float rightSizeFactor;
     float topSizeFactor;
+    uint textureIndex;
 };
 
 struct DirectionalLight {
@@ -26,7 +26,6 @@ layout (std140) uniform SceneProperties {
     DirectionalLight directionalLight;
 };
 
-uniform mat4 u_modelTransform;
 uniform float u_maxHeight;
 
 // Vertex attributes
@@ -49,9 +48,9 @@ void main() {
     v_normal = a_normal;
     v_entityIndex = a_entityIndex;
 
-    vec4 vertexPosition = u_modelTransform * a_position;
+    vec4 vertexPosition = a_position;
     float height = texture(heightmap, v_textureCoordinates).y * u_maxHeight;
-    vertexPosition += vec4(vec3(0, 1, 0) * height, 0);
+    vertexPosition.y = height;
 
     gl_Position = vertexPosition;
 

@@ -1,11 +1,11 @@
 #version 410 core
 
 struct EntityPropertySet {
-    uint textureIndex;
     float leftSizeFactor;
-    float rightSizeFactor;
     float bottomSizeFactor;
+    float rightSizeFactor;
     float topSizeFactor;
+    uint textureIndex;
 };
 
 struct DirectionalLight {
