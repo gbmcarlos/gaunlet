@@ -56,6 +56,9 @@ bool withinFrustum(vec4 corner0, vec4 corner1, vec4 corner2, vec4 corner3);
 bool quadOver(FrustumPlane plane, vec4 corner0, vec4 corner1, vec4 corner2, vec4 corner3);
 bool pointOver(FrustumPlane plane, vec4 point);
 
+int getTessellationLevel(vec4 edgeStart, vec4 edgeEnd, float sizeFactor, float triangleSize);
+float getEdgeProjectedLength(vec4 edgeStart, vec4 edgeEnd);
+
 void main() {
 
     tc_textureCoordinates[gl_InvocationID] = v_textureCoordinates[gl_InvocationID];
@@ -80,33 +83,64 @@ void main() {
 
         } else {
 
-            vertexPosition0 = view * vertexPosition0;
-            vertexPosition1 = view * vertexPosition1;
-            vertexPosition2 = view * vertexPosition2;
-            vertexPosition3 = view * vertexPosition3;
-
-            float distance0 = abs(vertexPosition0.z);
-            float distance1 = abs(vertexPosition1.z);
-            float distance2 = abs(vertexPosition2.z);
-            float distance3 = abs(vertexPosition3.z);
-
-            float tessellationLevel0 = max((distance0 * u_tessellationLevelSlope) + 1, u_targetTessellationLevel);
-            float tessellationLevel1 = max((distance1 * u_tessellationLevelSlope) + 1, u_targetTessellationLevel);
-            float tessellationLevel2 = max((distance2 * u_tessellationLevelSlope) + 1, u_targetTessellationLevel);
-            float tessellationLevel3 = max((distance3 * u_tessellationLevelSlope) + 1, u_targetTessellationLevel);
-
+            float triangleSize = 5.0f;
             uint entityIndex = v_entityIndex[gl_InvocationID];
 
-            gl_TessLevelOuter[0] = tessellationLevel0 * entityPropertySets[entityIndex].leftSizeFactor;
-            gl_TessLevelOuter[1] = tessellationLevel1 * entityPropertySets[entityIndex].bottomSizeFactor;
-            gl_TessLevelOuter[2] = tessellationLevel2 * entityPropertySets[entityIndex].rightSizeFactor;
-            gl_TessLevelOuter[3] = tessellationLevel3 * entityPropertySets[entityIndex].topSizeFactor;
+            float tessellationLevelLeft = getTessellationLevel(vertexPosition0, vertexPosition3, entityPropertySets[entityIndex].leftSizeFactor, triangleSize);
+            float tessellationLevelBottom = getTessellationLevel(vertexPosition0, vertexPosition1, entityPropertySets[entityIndex].bottomSizeFactor, triangleSize);
+            float tessellationLevelRight = getTessellationLevel(vertexPosition1, vertexPosition2, entityPropertySets[entityIndex].rightSizeFactor, triangleSize);
+            float tessellationLevelTop = getTessellationLevel(vertexPosition2, vertexPosition3, entityPropertySets[entityIndex].topSizeFactor, triangleSize);
 
-            gl_TessLevelInner[0] = max(tessellationLevel1, tessellationLevel3);
-            gl_TessLevelInner[1] = max(tessellationLevel0, tessellationLevel2);
+            float tessellationLevelVertical = max(tessellationLevelBottom, tessellationLevelTop);
+            float tessellationLevelHorizontal = max(tessellationLevelLeft, tessellationLevelRight);
+
+            gl_TessLevelOuter[0] = tessellationLevelLeft;
+            gl_TessLevelOuter[1] = tessellationLevelBottom;
+            gl_TessLevelOuter[2] = tessellationLevelRight;
+            gl_TessLevelOuter[3] = tessellationLevelTop;
+
+            gl_TessLevelInner[0] = tessellationLevelVertical;
+            gl_TessLevelInner[1] = tessellationLevelHorizontal;
+
         }
 
     }
+
+}
+
+int getTessellationLevel(vec4 edgeStart, vec4 edgeEnd, float sizeFactor, float triangleSize) {
+
+    float tessellationFactor = getEdgeProjectedLength(edgeStart, edgeEnd);
+    tessellationFactor = tessellationFactor / triangleSize;
+
+    // A size factor of 0 means that there is no neighbour
+    if (sizeFactor == 0.0f) {
+        return 4;
+    }
+
+    // A size factor of 0.5f means that the neighbour is smaller, and this quad is bigger
+    if (sizeFactor == 0.5f) {
+        return 8;
+    }
+
+    // A size factor of 1.0f means that this quad and the neighbour are the same size;
+    if (sizeFactor == 1.0f) {
+        return 4;
+    }
+
+    // A size factor of 2.0f means that the neigbour is bigger, and this quad is smaller
+    if (sizeFactor == 2.0f) {
+        return 2;
+    }
+
+}
+
+float getEdgeProjectedLength(vec4 edgeStart, vec4 edgeEnd) {
+
+    vec4 p0 = projection * view * edgeStart;
+    vec4 p1 = projection * view * edgeEnd;
+    float edgeLength = distance(p0.xy / p0.w, p1.xy / p1.w);
+    return edgeLength;
 
 }
 
