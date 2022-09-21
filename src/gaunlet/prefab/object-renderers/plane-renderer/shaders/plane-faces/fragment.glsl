@@ -31,6 +31,7 @@ uniform int u_entityId;
 // Inputs
 in vec2 te_textureCoordinates;
 in vec3 te_normal;
+in vec3 tc_vertexColor;
 flat in uint te_entityIndex;
 
 // Outputs
@@ -51,7 +52,7 @@ void main() {
     vec4 textureColor = texture(heightmap, te_textureCoordinates);
     //vec4 directionalLightColor = getDirectionalLightColor(directionalLight.color, directionalLight.direction, directionalLight.ambientIntensity, directionalLight.diffuseIntensity, te_normal);
 
-    o_color = textureColor;
+    o_color = vec4(tc_vertexColor, 1);
 
     o_entityId = u_entityId;
 

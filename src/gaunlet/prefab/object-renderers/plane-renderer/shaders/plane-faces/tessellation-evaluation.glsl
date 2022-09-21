@@ -35,12 +35,14 @@ in vec3 tc_normal[];
 
 out vec2 te_textureCoordinates;
 out vec3 te_normal;
+out vec3 tc_vertexColor;
 
 // Textures
 uniform sampler2D heightmap;
 
 vec2 interpolateTextureCoordinates();
 vec3 interpolateNormal();
+vec3 getVertexColor();
 vec4 interpolateVertexPosition();
 vec2 interpolate2(vec2 point, vec2 vector1, vec2 vector2, vec2 vector3, vec2 vector4);
 vec3 interpolate3(vec2 point, vec3 vector1, vec3 vector2, vec3 vector3, vec3 vector4);
@@ -50,6 +52,7 @@ void main() {
 
     te_textureCoordinates = interpolateTextureCoordinates();
     te_normal = interpolateNormal();
+    tc_vertexColor = getVertexColor();
 
     vec4 vertexPosition = interpolateVertexPosition();
     float height = texture(heightmap, te_textureCoordinates).y * u_maxHeight;
@@ -65,6 +68,18 @@ vec2 interpolateTextureCoordinates() {
 
 vec3 interpolateNormal() {
     return interpolate3(gl_TessCoord.xy, tc_normal[0], tc_normal[1], tc_normal[2], tc_normal[3]);
+}
+
+vec3 getVertexColor() {
+
+    float edgeThreshold = 0.001f;
+
+    if (gl_TessCoord.x < edgeThreshold || gl_TessCoord.x > 1-edgeThreshold || gl_TessCoord.y < edgeThreshold || gl_TessCoord.y > 1-edgeThreshold) {
+        return vec3(1, 0, 0);
+    } else {
+        return vec3(0, 1, 0);
+    }
+
 }
 
 vec4 interpolateVertexPosition() {
