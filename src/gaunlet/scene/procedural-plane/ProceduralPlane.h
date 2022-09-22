@@ -98,11 +98,11 @@ namespace gaunlet::Scene {
 
         Core::Ref<QuadTreePatch> findVerticalNeighbour(VerticalSide side);
 
-        Core::Ref<QuadTreePatch> findFirstHorizontalSideAncestor(HorizontalSide side);
+        std::tuple<Core::Ref<QuadTreePatch>, std::vector<PatchPosition>> findFirstHorizontalSideAncestor(HorizontalSide side);
 
-        Core::Ref<QuadTreePatch> findFirstVerticalSideAncestor(VerticalSide side);
+        std::tuple<Core::Ref<QuadTreePatch>, std::vector<PatchPosition>> findFirstVerticalSideAncestor(VerticalSide side);
 
-        Core::Ref<QuadTreePatch> findLastDescendant(PatchPosition position);
+        Core::Ref<QuadTreePatch> findDescendant(const std::vector<PatchPosition>& steps, bool horizontal);
 
         Core::Ref<QuadTreePatch> getSibling(PatchPosition position);
 
