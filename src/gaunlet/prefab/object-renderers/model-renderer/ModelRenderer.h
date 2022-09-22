@@ -50,7 +50,7 @@ namespace gaunlet::Prefab::ObjectRenderers {
 
             // FACES SHADER
             std::map<Core::ShaderType, std::string> facesSources {
-                {Core::ShaderType::Vertex, PREFABS_PATH"/object-renderers/model-renderer/shaders/model-faces/vertex.glsl"},
+                {Core::ShaderType::Vertex, PREFABS_PATH"/object-renderers/model-renderer/shaders/vertex.glsl"},
                 {Core::ShaderType::Fragment, PREFABS_PATH"/object-renderers/model-renderer/shaders/model-faces/fragment.glsl"}
             };
 
@@ -68,7 +68,7 @@ namespace gaunlet::Prefab::ObjectRenderers {
 
             // WIREFRAME SHADER
             std::map<Core::ShaderType, std::string> wireframeSources {
-                {Core::ShaderType::Vertex, PREFABS_PATH"/object-renderers/model-renderer/shaders/model-wireframe/vertex.glsl"},
+                {Core::ShaderType::Vertex, PREFABS_PATH"/object-renderers/model-renderer/shaders/vertex.glsl"},
                 {Core::ShaderType::Geometry, PREFABS_PATH"/object-renderers/model-renderer/shaders/model-wireframe/geometry.glsl"},
                 {Core::ShaderType::Fragment, PREFABS_PATH"/object-renderers/model-renderer/shaders/model-wireframe/fragment.glsl"}
             };
