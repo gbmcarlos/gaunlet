@@ -53,7 +53,7 @@ void main() {
     vec4 textureColor = texture(heightmap, te_textureCoordinates);
     //vec4 directionalLightColor = getDirectionalLightColor(directionalLight.color, directionalLight.direction, directionalLight.ambientIntensity, directionalLight.diffuseIntensity, te_normal);
 
-    o_color = vec4(tc_vertexColor, 1);
+    o_color = textureColor;
 
     o_entityId = u_entityId;
 

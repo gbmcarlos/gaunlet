@@ -51,8 +51,8 @@ public:
         // Prepare the main camera
         auto mainCamera = gaunlet::Core::CreateRef<gaunlet::Scene::PerspectiveCamera>(45.0f, (float) viewportWidth / (float) viewportHeight, 1.0f, -5000.0f);
         m_workspace->addCamera("main", mainCamera);
-        mainCamera->setPosition({-100.0f, 40.0f, 50.0f});
-        mainCamera->setRotation(-48.0f, -37.0f);
+        mainCamera->setPosition({-41.0f, 90.0f, 113.0f});
+        mainCamera->setRotation(-57.0f, -48.0f);
 
         // Preview Render Panel, with its own camera
         m_workspace->addRenderPipeline("preview", gaunlet::Core::CreateRef<gaunlet::Prefab::BasicEditorRenderPipeline::BasicEditorRenderPipeline>(gaunlet::Prefab::BasicEditorRenderPipeline::BasicEditorRenderPipeline::getUniformBufferCount()));
@@ -83,9 +83,9 @@ public:
 
         auto plane = mainScene->createTaggedEntity<gaunlet::Editor::SceneEntityTag>("plane");
         plane.addComponent<gaunlet::Scene::PlaneComponent>(
-            1000.0f, // Plane size
+            10000.0f, // Plane size
             50.0f, 0.5f, // Quad subdivision
-            10.0f, // Triangle size
+            0.001f, // Triangle size
             50.0f, // Max height
             mainCamera,
             heightmap
@@ -102,13 +102,11 @@ public:
     void onGuiRender() override {
         m_workspace->render();
 
+        ImGui::ShowMetricsWindow();
+
         auto& planeComponent = m_plane.getComponent<gaunlet::Scene::PlaneComponent>();
 
-//        ImGui::SliderFloat("Min Camera Distance", &planeComponent.m_minCameraDistance, 0, 1000);
-//        ImGui::SliderFloat("Max Camera Distance", &planeComponent.m_maxCameraDistance, 0, 10000);
-//        ImGui::SliderFloat("Min Tessellation Level", &planeComponent.m_minTessellationLevel, 1, 100);
-//        ImGui::SliderFloat("Max Tessellation Level", &planeComponent.m_maxTessellationLevel, 1, 64);
-//        ImGui::SliderFloat("Constant Tessellation Level", &planeComponent.m_tessellationLevel, 0, 64);
+        ImGui::SliderFloat("Triangle Size", &planeComponent.m_triangleSize, 0.001f, 0.4f);
 
     }
 

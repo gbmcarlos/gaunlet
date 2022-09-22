@@ -141,7 +141,7 @@ int getTessellationLevel(uint edgeIndex, uint position, float sizeFactor, float 
     vec4 edgeEnd = gl_in[int(edgeVertexIndices.y)].gl_Position;
 
     float tessellationFactor = getEdgeProjectedLength(edgeStart, edgeEnd);
-    float tessellationLevel = tessellationFactor / (1/triangleSize);
+    float tessellationLevel = tessellationFactor / triangleSize;
 
     // A size factor of 0 means that there is no neighbour
     // So we can leave it as is
@@ -200,7 +200,7 @@ int getLargerEdgeTessellationLevel(uint edgeIndex, uint position, float triangle
         tessellationFactor = getEdgeProjectedLength(extendedEdgeStart, edgeEnd);
     }
 
-    float tessellationLevel = tessellationFactor / (1/triangleSize);
+    float tessellationLevel = tessellationFactor / triangleSize;
     int roundedTessellationLevel = int(roundUpEven(tessellationLevel));
 
     // Make sure that we don't go below 4 (so a smaller neighbour won't go below 2), or above 64 (hard limit)
