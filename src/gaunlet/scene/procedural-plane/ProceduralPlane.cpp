@@ -146,11 +146,10 @@ namespace gaunlet::Scene {
     }
 
     /*
-     * To find a neighbour, we first ascend the ancestry tree until we find the common ancestor
+     * To find a neighbour, we first ascend the ancestry tree until we find the common ancestor, recording the position of each node we visit (except the ancestor itself)
      * The common ancestor will be that node that is not on the same side as the edge we're looking for
      * In the case where we are on the left, and we're looking for the right neighbour, this would mean that we are the common ancestor
-     * Once we've reached the common ancestor, we descend back down, keeping on the same side
-     * WARNING This last part (descending keeping on the same side) only works because of the way we subdivide based on the distance to the camera
+     * Once we've reached the common ancestor, we descend back down, retracing the steps backward and mirrored (either horizontally or vertically)
      */
     Core::Ref<QuadTreePatch> QuadTreePatch::findHorizontalNeighbour(HorizontalSide side) {
 
@@ -161,7 +160,7 @@ namespace gaunlet::Scene {
 
         // Look for the common ancestor
         HorizontalSide oppositeSide = side == HorizontalSide::Left ? HorizontalSide::Right : HorizontalSide::Left;
-        auto commonAncestor = findFirstHorizontalSideAncestor(oppositeSide);
+        auto [commonAncestor, steps] = findFirstHorizontalSideAncestor(oppositeSide);
 
         // If we haven't found such an ancestor, it means that we are on the edge of the plane
         if (commonAncestor == nullptr) {
@@ -174,7 +173,7 @@ namespace gaunlet::Scene {
         );
 
         // Now go back down the ancestry tree
-        auto neighbour = neighbourAncestor->findLastDescendant(m_position);
+        auto neighbour = neighbourAncestor->findDescendant(steps, true);
 
         return neighbour;
 
@@ -190,7 +189,7 @@ namespace gaunlet::Scene {
 
         // Look for the common ancestor
         VerticalSide oppositeSide = side == VerticalSide::Bottom ? VerticalSide::Top : VerticalSide::Bottom;
-        auto commonAncestor = findFirstVerticalSideAncestor(oppositeSide);
+        auto [commonAncestor, steps] = findFirstVerticalSideAncestor(oppositeSide);
 
         // If we haven't found such an ancestor, it means that we are on the edge of the plane
         if (commonAncestor == nullptr) {
@@ -203,14 +202,16 @@ namespace gaunlet::Scene {
         );
 
         // Now go back down the ancestry tree
-        auto neighbour = neighbourAncestor->findLastDescendant(m_position);
+        auto neighbour = neighbourAncestor->findDescendant(steps, false);
 
         return neighbour;
 
     }
 
-    // Find the first ancestor that is on the left/right
-    Core::Ref<QuadTreePatch> QuadTreePatch::findFirstHorizontalSideAncestor(HorizontalSide side) {
+    // Find the first ancestor that is on the left/right, and return the steps taken (the position of each patch, up until the ancestor, excluded)
+    std::tuple<Core::Ref<QuadTreePatch>, std::vector<PatchPosition>> QuadTreePatch::findFirstHorizontalSideAncestor(HorizontalSide side) {
+
+        std::vector<PatchPosition> steps;
 
         auto current = shared_from_this();
         Core::Ref<QuadTreePatch> ancestor = nullptr;
@@ -222,8 +223,9 @@ namespace gaunlet::Scene {
                 break;
             }
 
-            // If we're still on the wrong side, move on to the next generation
+            // If we're still on the wrong side, record the step and move on to the next generation
             if (current->getHorizontalSide() != side) {
+                steps.push_back(current->m_position);
                 current = current->m_parent;
                 continue;
             }
@@ -236,11 +238,13 @@ namespace gaunlet::Scene {
 
         }
 
-        return ancestor;
+        return {ancestor, steps};
 
     }
 
-    Core::Ref<QuadTreePatch> QuadTreePatch::findFirstVerticalSideAncestor(VerticalSide side) {
+    std::tuple<Core::Ref<QuadTreePatch>, std::vector<PatchPosition>> QuadTreePatch::findFirstVerticalSideAncestor(VerticalSide side) {
+
+        std::vector<PatchPosition> steps;
 
         auto current = shared_from_this();
         Core::Ref<QuadTreePatch> ancestor = nullptr;
@@ -252,8 +256,9 @@ namespace gaunlet::Scene {
                 break;
             }
 
-            // If we're still on the wrong side, move on to the next generation
+            // If we're still on the wrong side, record the step and move on to the next generation
             if (current->getVerticalSide() != side) {
+                steps.push_back(current->m_position);
                 current = current->m_parent;
                 continue;
             }
@@ -266,25 +271,32 @@ namespace gaunlet::Scene {
 
         }
 
-        return ancestor;
+        return {ancestor, steps};
 
     }
 
-    Core::Ref<QuadTreePatch> QuadTreePatch::findLastDescendant(PatchPosition position) {
+    // Find a descendant by retracing the steps taken to find the common ancestor, but backwards and mirrored
+    Core::Ref<QuadTreePatch> QuadTreePatch::findDescendant(const std::vector<PatchPosition>& steps, bool horizontal) {
 
-        auto current = shared_from_this();
-        Core::Ref<QuadTreePatch> descendant = nullptr;
+        Core::Ref<QuadTreePatch> descendant = shared_from_this();
 
-        while (descendant == nullptr) {
+        for (unsigned int i = steps.size(); i-- > 0;) {
 
-            if (!current->m_children.empty()) {
-                current = current->getChild(position);
-                continue;
-            } else {
-                descendant = current;
-                continue;
+            auto& step = steps[i];
+
+            // If we've run out of levels, stop here, and we return a bigger quad
+            if (descendant->m_children.empty()) {
+                break;
             }
 
+            auto oppositeStep = horizontal ? getHorizontalNeighbourPosition(step) : getVerticalNeighbourPosition(step);
+            descendant = descendant->getChild(oppositeStep);
+
+        }
+
+        // If there are more levels to go, return the whatever child. They are all the same size
+        if (!descendant->m_children.empty()) {
+            descendant = descendant->m_children[0];
         }
 
         return descendant;
