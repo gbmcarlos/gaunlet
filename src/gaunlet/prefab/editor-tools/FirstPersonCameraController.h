@@ -23,6 +23,12 @@ namespace gaunlet::Prefab::EditorTools {
             return "First Person Camera Controller";
         }
 
+        void onGuiRender() override {
+
+            ImGui::SliderFloat("Movement Sensitivity: ", &m_movementSensitivity, 1.0f, 1000.0f);
+
+        }
+
         void onUpdate(Core::TimeStep timeStep) override {
 
             selectRenderPanel();
