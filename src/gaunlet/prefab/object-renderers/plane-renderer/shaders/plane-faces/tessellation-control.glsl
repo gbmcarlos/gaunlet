@@ -75,7 +75,7 @@ int getTessellationLevel(uint edgeIndex, uint position, float sizeFactor, float 
 
 int getLargerEdgeTessellationLevel(uint edgeIndex, uint position, float triangleSize);
 vec4 getExtendedEdgeVertex(vec4 fixedVertex, vec4 vertexToExtend, vec2 fixedTextureCoordinates, vec2 textureCoordinatesToExtend);
-float getEdgeProjectedLength(vec4 edgeStart, vec4 edgeEnd);
+float getEdgeTessellationFactor(vec4 edgeStart, vec4 edgeEnd, float triangleSize);
 
 int roundUp(float value);
 int roundUpEven(float value);
@@ -141,25 +141,24 @@ int getTessellationLevel(uint edgeIndex, uint position, float sizeFactor, float 
     vec4 edgeStart = gl_in[int(edgeVertexIndices.x)].gl_Position;
     vec4 edgeEnd = gl_in[int(edgeVertexIndices.y)].gl_Position;
 
-    float edgeLength = getEdgeProjectedLength(edgeStart, edgeEnd);
-    float tessellationLevel = edgeLength / triangleSize;
+    float edgeTessellationFactor = getEdgeTessellationFactor(edgeStart, edgeEnd, triangleSize);
 
     // A size factor of 0 means that there is no neighbour
     // So we can leave it as is
     if (sizeFactor == 0.0f) {
-        return int(roundUpEven(tessellationLevel));
+        return int(roundUpEven(edgeTessellationFactor));
     }
 
     // A size factor of 1.0f means that this quad and the neighbour are the same size;
     // So we can leave it as is
     if (sizeFactor == 1.0f) {
-        return int(roundUpEven(tessellationLevel));
+        return int(roundUpEven(edgeTessellationFactor));
     }
 
     // A size factor of 0.5f means that the neighbour is smaller, and this quad is bigger
     // The smaller quad will be adapted to the big one, so we need to make sure the bgi one's is even
     if (sizeFactor == 0.5f) {
-        int roundedTessellationLevel = roundUpEven(tessellationLevel);
+        int roundedTessellationLevel = roundUpEven(edgeTessellationFactor);
         return roundedTessellationLevel;
     }
 
@@ -186,7 +185,7 @@ int getLargerEdgeTessellationLevel(uint edgeIndex, uint position, float triangle
     }
 
     // Now we extend our edge, either forward or backward, to simulate the larger neighbour's edge
-    float edgeLength;
+    float edgeTessellationFactor;
     vec2 edgeVertexIndices = getVertexIndices(edgeIndex);
     vec4 edgeStart = gl_in[int(edgeVertexIndices.x)].gl_Position;
     vec4 edgeEnd = gl_in[int(edgeVertexIndices.y)].gl_Position;
@@ -195,14 +194,13 @@ int getLargerEdgeTessellationLevel(uint edgeIndex, uint position, float triangle
 
     if (extendForward) {
         vec4 extendedEdgeEnd = getExtendedEdgeVertex(edgeStart, edgeEnd, edgeStartTextureCoordinates, edgeEndTextureCoordinates);
-        edgeLength = getEdgeProjectedLength(edgeStart, extendedEdgeEnd);
+        edgeTessellationFactor = getEdgeTessellationFactor(edgeStart, extendedEdgeEnd, triangleSize);
     } else {
         vec4 extendedEdgeStart = getExtendedEdgeVertex(edgeEnd, edgeStart, edgeEndTextureCoordinates, edgeStartTextureCoordinates);
-        edgeLength = getEdgeProjectedLength(extendedEdgeStart, edgeEnd);
+        edgeTessellationFactor = getEdgeTessellationFactor(extendedEdgeStart, edgeEnd, triangleSize);
     }
 
-    float tessellationLevel = edgeLength / triangleSize;
-    int roundedTessellationLevel = int(roundUpEven(tessellationLevel));
+    int roundedTessellationLevel = int(roundUpEven(edgeTessellationFactor));
 
     // Make sure that we don't go below 4 (so a smaller neighbour won't go below 2), or above 64 (hard limit)
     int clampedTessellationLevel = int(max(roundedTessellationLevel, 4));
@@ -225,23 +223,15 @@ vec4 getExtendedEdgeVertex(vec4 fixedVertex, vec4 vertexToExtend, vec2 fixedText
 
 }
 
-float getEdgeProjectedLength(vec4 edgeStart, vec4 edgeEnd) {
+float getEdgeTessellationFactor(vec4 edgeStart, vec4 edgeEnd, float triangleSize) {
 
-    float viewportWidth = viewport.z - viewport.x;
     float viewportHeight = viewport.w - viewport.y;
+    float sphereDiameter = distance(edgeStart, edgeEnd);
+    vec4 sphereCenter = (edgeStart + edgeEnd) / 2;
+    vec4 clipCenter = projection * view * sphereCenter;
+    float clipDiameter = abs((sphereDiameter * float(projection[0, 0])) / clipCenter.w);
 
-    vec4 p0 = projection * view * edgeStart;
-    p0 /= p0.w;
-    float p0PixelX = (1 + p0.x) * viewportWidth/2;
-    float p0PixelY = (1 - p0.y) * viewportHeight/2;
-
-    vec4 p1 = projection * view * edgeEnd;
-    p1 /= p1.w;
-    float p1PixelX = (1 + p1.x) * viewportWidth/2;
-    float p1PixelY = (1 - p1.y) * viewportHeight/2;
-
-    float edgeLength = distance(vec2(p0PixelX, p0PixelY), vec2(p1PixelX, p1PixelY));
-    return edgeLength;
+    return max(clipDiameter * (viewportHeight / triangleSize), 1.0f);
 
 }
 
