@@ -26,6 +26,7 @@ layout (std140) uniform EntityPropertySets {
 layout (std140) uniform SceneProperties {
     mat4 view;
     mat4 projection;
+    vec4 viewport;
     DirectionalLight directionalLight;
 };
 
@@ -140,8 +141,8 @@ int getTessellationLevel(uint edgeIndex, uint position, float sizeFactor, float 
     vec4 edgeStart = gl_in[int(edgeVertexIndices.x)].gl_Position;
     vec4 edgeEnd = gl_in[int(edgeVertexIndices.y)].gl_Position;
 
-    float tessellationFactor = getEdgeProjectedLength(edgeStart, edgeEnd);
-    float tessellationLevel = tessellationFactor / triangleSize;
+    float edgeLength = getEdgeProjectedLength(edgeStart, edgeEnd);
+    float tessellationLevel = edgeLength / triangleSize;
 
     // A size factor of 0 means that there is no neighbour
     // So we can leave it as is
@@ -185,7 +186,7 @@ int getLargerEdgeTessellationLevel(uint edgeIndex, uint position, float triangle
     }
 
     // Now we extend our edge, either forward or backward, to simulate the larger neighbour's edge
-    float tessellationFactor;
+    float edgeLength;
     vec2 edgeVertexIndices = getVertexIndices(edgeIndex);
     vec4 edgeStart = gl_in[int(edgeVertexIndices.x)].gl_Position;
     vec4 edgeEnd = gl_in[int(edgeVertexIndices.y)].gl_Position;
@@ -194,13 +195,13 @@ int getLargerEdgeTessellationLevel(uint edgeIndex, uint position, float triangle
 
     if (extendForward) {
         vec4 extendedEdgeEnd = getExtendedEdgeVertex(edgeStart, edgeEnd, edgeStartTextureCoordinates, edgeEndTextureCoordinates);
-        tessellationFactor = getEdgeProjectedLength(edgeStart, extendedEdgeEnd);
+        edgeLength = getEdgeProjectedLength(edgeStart, extendedEdgeEnd);
     } else {
         vec4 extendedEdgeStart = getExtendedEdgeVertex(edgeEnd, edgeStart, edgeEndTextureCoordinates, edgeStartTextureCoordinates);
-        tessellationFactor = getEdgeProjectedLength(extendedEdgeStart, edgeEnd);
+        edgeLength = getEdgeProjectedLength(extendedEdgeStart, edgeEnd);
     }
 
-    float tessellationLevel = tessellationFactor / triangleSize;
+    float tessellationLevel = edgeLength / triangleSize;
     int roundedTessellationLevel = int(roundUpEven(tessellationLevel));
 
     // Make sure that we don't go below 4 (so a smaller neighbour won't go below 2), or above 64 (hard limit)
@@ -226,9 +227,20 @@ vec4 getExtendedEdgeVertex(vec4 fixedVertex, vec4 vertexToExtend, vec2 fixedText
 
 float getEdgeProjectedLength(vec4 edgeStart, vec4 edgeEnd) {
 
+    float viewportWidth = viewport.z - viewport.x;
+    float viewportHeight = viewport.w - viewport.y;
+
     vec4 p0 = projection * view * edgeStart;
+    p0 /= p0.w;
+    float p0PixelX = (1 + p0.x) * viewportWidth/2;
+    float p0PixelY = (1 - p0.y) * viewportHeight/2;
+
     vec4 p1 = projection * view * edgeEnd;
-    float edgeLength = distance(p0.xy / p0.w, p1.xy / p1.w);
+    p1 /= p1.w;
+    float p1PixelX = (1 + p1.x) * viewportWidth/2;
+    float p1PixelY = (1 - p1.y) * viewportHeight/2;
+
+    float edgeLength = distance(vec2(p0PixelX, p0PixelY), vec2(p1PixelX, p1PixelY));
     return edgeLength;
 
 }

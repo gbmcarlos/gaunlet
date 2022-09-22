@@ -94,6 +94,13 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
             directionalLight->m_ambientIntensity, directionalLight->m_diffuseIntensity
         );
 
+        unsigned int viewportX0, viewportY0, viewportX1, viewportY1;
+        Core::RenderCommand::getViewport(
+            viewportX0, viewportY0, viewportX1, viewportY1
+        );
+
+        sceneProperties.m_viewport = {viewportX0, viewportY0, viewportX1, viewportY1};
+
         m_scenePropertiesUniformBuffer->setData(
             (const void*) &sceneProperties,
             sizeof(SceneProperties)

@@ -11,7 +11,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
 
         glm::mat4 m_viewMatrix;
         glm::mat4 m_projectionMatrix;
-
+        glm::vec4 m_viewport;
         // The order of these properties is optimized to minimize required padding when using this data in a uniform buffer
         glm::vec3 m_directionalLightColor;
         float m_directionalLightAmbientIntensity;

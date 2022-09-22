@@ -22,6 +22,7 @@ layout (std140) uniform EntityPropertySets {
 layout (std140) uniform SceneProperties {
     mat4 view;
     mat4 projection;
+    vec4 viewport;
     DirectionalLight directionalLight;
 };
 
