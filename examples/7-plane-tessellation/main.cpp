@@ -49,10 +49,9 @@ public:
             "main"
         );
         // Prepare the main camera
-        auto mainCamera = gaunlet::Core::CreateRef<gaunlet::Scene::PerspectiveCamera>(45.0f, (float) viewportWidth / (float) viewportHeight, 1.0f, -5000.0f);
+        auto mainCamera = gaunlet::Core::CreateRef<gaunlet::Scene::PerspectiveCamera>(45.0f, (float) viewportWidth / (float) viewportHeight, 1.0f, -100000.0f);
         m_workspace->addCamera("main", mainCamera);
-        mainCamera->setPosition({-41.0f, 90.0f, 113.0f});
-        mainCamera->setRotation(-57.0f, -48.0f);
+        mainCamera->setPosition({0.0f, 500.0f, 0.0f});
 
         // Preview Render Panel, with its own camera
         m_workspace->addRenderPipeline("preview", gaunlet::Core::CreateRef<gaunlet::Prefab::BasicEditorRenderPipeline::BasicEditorRenderPipeline>(gaunlet::Prefab::BasicEditorRenderPipeline::BasicEditorRenderPipeline::getUniformBufferCount()));
@@ -72,7 +71,7 @@ public:
         previewCamera->lookAt({0, 0, 0});
 
         // Tools
-        m_workspace->addTool("fp-camera-controller", gaunlet::Core::CreateRef<gaunlet::Prefab::EditorTools::FirstPersonCameraController>("main", 20.0f, 0.5f));
+        m_workspace->addTool("fp-camera-controller", gaunlet::Core::CreateRef<gaunlet::Prefab::EditorTools::FirstPersonCameraController>("main", 1000.0f, 0.5f));
         m_workspace->addTool("transformer", gaunlet::Core::CreateRef<gaunlet::Prefab::EditorTools::TransformerTool>());
         m_workspace->activateTool("fp-camera-controller");
 
@@ -83,14 +82,14 @@ public:
 
         auto plane = mainScene->createTaggedEntity<gaunlet::Editor::SceneEntityTag>("plane");
         plane.addComponent<gaunlet::Scene::PlaneComponent>(
-            10000.0f, // Plane size
-            50.0f, 0.5f, // Quad subdivision
+            100000.0f, // Plane size
+            100.0f, 0.5f, // Quad subdivision
             0.001f, // Triangle size
-            50.0f, // Max height
+            1000.0f, // Max height
             mainCamera,
             heightmap
         );
-        m_workspace->selectSceneEntity(plane);
+//        m_workspace->selectSceneEntity(plane);
         m_plane = plane;
 
     }
@@ -106,7 +105,7 @@ public:
 
         auto& planeComponent = m_plane.getComponent<gaunlet::Scene::PlaneComponent>();
 
-        ImGui::SliderFloat("Triangle Size", &planeComponent.m_triangleSize, 0.001f, 0.4f);
+//        ImGui::SliderFloat("Triangle Size", &planeComponent.m_triangleSize, 0.001f, 0.4f);
 
     }
 
