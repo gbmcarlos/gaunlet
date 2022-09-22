@@ -116,7 +116,8 @@ namespace gaunlet::Scene {
                 {{m_leftEdge, 0, m_topEdge, 1}, {0, 1, 0}, {patchUVLeft, patchUVTop}}
             },
             {0, 1, 2, 3},
-            this
+            this,
+            static_cast<unsigned int>(m_position)
         });
 
     }

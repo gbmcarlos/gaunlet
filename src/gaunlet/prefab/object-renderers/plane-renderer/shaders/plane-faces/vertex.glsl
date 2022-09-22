@@ -1,6 +1,7 @@
 #version 410 core
 
 struct EntityPropertySet {
+    uint position;
     float leftSizeFactor;
     float bottomSizeFactor;
     float rightSizeFactor;

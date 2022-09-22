@@ -15,6 +15,7 @@ namespace gaunlet::Scene {
         std::vector<Graphics::Vertex> m_vertices;
         std::vector<unsigned int> m_indices;
         QuadTreePatch* m_patch;
+        unsigned int m_position;
         float m_leftSizeRatio = 0.0f;
         float m_bottomSizeRatio = 0.0f;
         float m_rightSizeRatio = 0.0f;

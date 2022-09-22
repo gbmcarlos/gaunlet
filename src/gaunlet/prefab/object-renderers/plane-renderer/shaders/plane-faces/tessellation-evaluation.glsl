@@ -3,6 +3,7 @@
 layout (quads, equal_spacing, ccw) in;
 
 struct EntityPropertySet {
+    uint position;
     float leftSizeFactor;
     float bottomSizeFactor;
     float rightSizeFactor;

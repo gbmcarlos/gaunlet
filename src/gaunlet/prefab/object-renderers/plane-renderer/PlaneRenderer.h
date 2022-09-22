@@ -14,12 +14,13 @@ namespace gaunlet::Prefab::ObjectRenderers {
 
         PlaneQuadEntityProperties() = default;
 
+        unsigned int m_quadPosition;
         float m_leftSizeFactor;
         float m_bottomSizeFactor;
         float m_rightSizeFactor;
         float m_topSizeFactor;
         unsigned int m_textureIndex; // For compatibility with the batch renderer
-        glm::vec3 m_pad3;
+        glm::vec2 m_pad2;
 
     };
 
@@ -69,8 +70,7 @@ namespace gaunlet::Prefab::ObjectRenderers {
 
             // Global variables for the whole plane
             m_shaderLibrary.get("plane-faces")
-                ->setUniform1f("u_targetTessellationLevel", planeComponent.m_targetTessellationLevel)
-                ->setUniform1f("u_tessellationLevelSlope", planeComponent.m_tessellationLevelSlope)
+                ->setUniform1f("u_triangleSize", planeComponent.m_triangleSize)
                 ->setUniform1f("u_maxHeight", planeComponent.m_maxHeight)
                 ->setUniform1i("u_entityId", entity.getId());
 
@@ -94,6 +94,7 @@ namespace gaunlet::Prefab::ObjectRenderers {
 
                 // Per-quad data
                 PlaneQuadEntityProperties planeQuadEntityProperties{
+                    quad.m_position,
                     quad.m_leftSizeRatio,
                     quad.m_bottomSizeRatio,
                     quad.m_rightSizeRatio,
