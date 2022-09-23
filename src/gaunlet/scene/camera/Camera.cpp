@@ -157,14 +157,6 @@ namespace gaunlet::Scene {
 
     }
 
-    void Camera::orbit(TransformComponent origin, float degreesX, float degreesY) {
-
-        glm::vec3 pivot = origin.m_translation;
-        rotate(pivot, degreesX, degreesY);
-        lookAt(pivot);
-
-    }
-
     void Camera::lookAt(glm::vec3 target) {
 
         // If we're trying to look straight up or straight down, move the target slight forward
@@ -181,10 +173,6 @@ namespace gaunlet::Scene {
 
         reverseViewMatrix();
 
-    }
-
-    void Camera::lookAt(const TransformComponent &transform) {
-        lookAt(transform.m_translation);
     }
 
     void Camera::setZoomLevel(float zoomLevel) {

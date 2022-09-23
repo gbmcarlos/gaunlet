@@ -23,7 +23,7 @@ add_library(gaunlet STATIC
         gaunlet/graphics/texture/TextureCubeMap.cpp
         gaunlet/graphics/texture/TextureLibrary.cpp
         gaunlet/graphics/framebuffer/Framebuffer.cpp
-        gaunlet/graphics/renderer/DirectRenderer.cpp
+        gaunlet/graphics/render-pass/SimplerRenderPass.cpp
 
 #        Scene
         gaunlet/scene/model/Model.cpp
@@ -32,7 +32,7 @@ add_library(gaunlet STATIC
         gaunlet/scene/camera/PerspectiveCamera.cpp
         gaunlet/scene/entity/Entity.cpp
         gaunlet/scene/procedural-plane/ProceduralPlane.cpp
-        gaunlet/scene/raw-casting/RayCasting.cpp
+        gaunlet/scene/ray-casting/RayCasting.cpp
 
 #        Layout
         gaunlet/editor/docking/DockingLayout.cpp

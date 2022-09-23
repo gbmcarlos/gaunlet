@@ -10,7 +10,7 @@ namespace gaunlet::Graphics {
         Triangle, Quad
     };
 
-    class DirectRenderer {
+    class SimpleRenderPass {
 
     public:
 

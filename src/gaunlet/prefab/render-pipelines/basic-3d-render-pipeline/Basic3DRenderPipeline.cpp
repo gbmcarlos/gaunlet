@@ -84,7 +84,7 @@ namespace gaunlet::Prefab::Basic3DRenderPipeline {
 
     void Basic3DRenderPipeline::renderModels(const Core::Ref<Scene::Scene> &scene) {
 
-        auto group = scene->getRegistry().group<Scene::ModelComponent>(entt::get<Scene::TransformComponent>);
+        auto group = scene->getRegistry().group<Prefab::Components::ModelComponent>(entt::get<Scene::TransformComponent>);
         for (auto e : group) {
             m_modelRenderer.submitObject(
                 {e, scene},
@@ -97,7 +97,7 @@ namespace gaunlet::Prefab::Basic3DRenderPipeline {
 
     void Basic3DRenderPipeline::renderCircles(const Core::Ref<Scene::Scene> &scene) {
 
-        auto group = scene->getRegistry().group<Scene::CircleComponent>(entt::get<Scene::TransformComponent>);
+        auto group = scene->getRegistry().group<Prefab::Components::CircleComponent>(entt::get<Scene::TransformComponent>);
         for (auto e : group) {
             m_circleRenderer.submitObject(
                 {e, scene},

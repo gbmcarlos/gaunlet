@@ -24,8 +24,8 @@ public:
             }, viewportWidth, viewportHeight
         });
 
-        m_workspace->pushPanel("settings", new gaunlet::Editor::WorkspacePropertiesPanel, "Workspace Properties");
-        m_workspace->pushPanel("tools", new gaunlet::Editor::ToolsManagerPanel, "Tools Manager");
+        m_workspace->pushPanel("settings", new gaunlet::Prefab::GuiPanels::WorkspacePropertiesPanel, "Workspace Properties");
+        m_workspace->pushPanel("tools", new gaunlet::Prefab::GuiPanels::ToolsManagerPanel, "Tools Manager");
 
         // Common components
         m_workspace->addScene("main", gaunlet::Core::CreateRef<gaunlet::Scene::Scene>());
@@ -51,7 +51,7 @@ public:
         // Prepare the main camera
         auto mainCamera = gaunlet::Core::CreateRef<gaunlet::Scene::PerspectiveCamera>(45.0f, (float) viewportWidth / (float) viewportHeight, 1.0f, -100000.0f);
         m_workspace->addCamera("main", mainCamera);
-        mainCamera->setPosition({0.0f, 500.0f, 0.0f});
+        mainCamera->setPosition({1.0f, 800.0f, 1.0f});
 
         // Preview Render Panel, with its own camera
         m_workspace->addRenderPipeline("preview", gaunlet::Core::CreateRef<gaunlet::Prefab::BasicEditorRenderPipeline::BasicEditorRenderPipeline>(gaunlet::Prefab::BasicEditorRenderPipeline::BasicEditorRenderPipeline::getUniformBufferCount()));
@@ -71,7 +71,7 @@ public:
         previewCamera->lookAt({0, 0, 0});
 
         // Tools
-        m_workspace->addTool("fp-camera-controller", gaunlet::Core::CreateRef<gaunlet::Prefab::EditorTools::FirstPersonCameraController>("main", 1000.0f, 0.5f));
+        m_workspace->addTool("fp-camera-controller", gaunlet::Core::CreateRef<gaunlet::Prefab::EditorTools::FirstPersonCameraController>("main", 300.0f, 0.5f));
         m_workspace->addTool("transformer", gaunlet::Core::CreateRef<gaunlet::Prefab::EditorTools::TransformerTool>());
         m_workspace->activateTool("fp-camera-controller");
 
@@ -81,15 +81,15 @@ public:
         gaunlet::Core::Ref<gaunlet::Graphics::TextureImage2D> heightmap = gaunlet::Core::CreateRef<gaunlet::Graphics::TextureImage2D>("assets/heightmap.png");
 
         auto plane = mainScene->createTaggedEntity<gaunlet::Editor::SceneEntityTag>("plane");
-        plane.addComponent<gaunlet::Scene::PlaneComponent>(
+        plane.addComponent<gaunlet::Scene::TerrainComponent>(
             100000.0f, // Plane size
-            100.0f, 0.5f, // Quad subdivision
-            0.001f, // Triangle size
+            150.0f, 0.5f, // Quad subdivision
+            25.0f, // Triangle size
             1000.0f, // Max height
             mainCamera,
             heightmap
         );
-//        m_workspace->selectSceneEntity(plane);
+        m_workspace->selectSceneEntity(plane);
         m_plane = plane;
 
     }
@@ -103,9 +103,9 @@ public:
 
         ImGui::ShowMetricsWindow();
 
-        auto& planeComponent = m_plane.getComponent<gaunlet::Scene::PlaneComponent>();
+        auto& planeComponent = m_plane.getComponent<gaunlet::Scene::TerrainComponent>();
 
-//        ImGui::SliderFloat("Triangle Size", &planeComponent.m_triangleSize, 0.001f, 0.4f);
+        ImGui::SliderFloat("Triangle Size", &planeComponent.m_triangleSize, 1.0, 500.0f);
 
     }
 
@@ -126,7 +126,6 @@ int main() {
     BasicEditorApplication app;
 
     runLoop.run(app);
-
 
     return 0;
 

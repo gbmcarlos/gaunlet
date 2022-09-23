@@ -250,19 +250,11 @@ protected:
         // Shift: orbit
         } else if (gaunlet::Core::Input::isKeyPressed(GL_KEY_LEFT_SHIFT) || gaunlet::Core::Input::isKeyPressed(GL_KEY_RIGHT_SHIFT)) {
 
-            if (getWorkspace()->getSelectedSceneEntity()) {
-                getWorkspace()->getCamera("main")->orbit(
-                    getWorkspace()->getSelectedSceneEntity().getComponent<gaunlet::Scene::TransformComponent>(),
-                    -delta.y / 10, // Moving the mouse vertically, rotates around the X axis
-                    -delta.x / 10 // Moving the mouse horizontally, rotates around the Y axis
-                );
-            } else {
-                getWorkspace()->getCamera("main")->orbit(
-                    5.0f,
-                    -delta.y / 10, // Moving the mouse vertically, rotates around the X axis
-                    -delta.x / 10 // Moving the mouse horizontally, rotates around the Y axis
-                );
-            }
+            getWorkspace()->getCamera("main")->orbit(
+                5.0f,
+                -delta.y / 10, // Moving the mouse vertically, rotates around the X axis
+                -delta.x / 10 // Moving the mouse horizontally, rotates around the Y axis
+            );
 
         // Drag: pan
         } else {
@@ -314,8 +306,8 @@ public:
         });
 
         // Create and push the GUI panels
-        m_workspace->pushPanel("settings", new gaunlet::Editor::WorkspacePropertiesPanel, "Workspace Properties");
-        m_workspace->pushPanel("tools", new gaunlet::Editor::ToolsManagerPanel, "Tools Manager");
+        m_workspace->pushPanel("settings", new gaunlet::Prefab::GuiPanels::WorkspacePropertiesPanel, "Workspace Properties");
+        m_workspace->pushPanel("tools", new gaunlet::Prefab::GuiPanels::ToolsManagerPanel, "Tools Manager");
 
         // Prepare the components of the main render panel
         m_workspace->addCamera("main", gaunlet::Core::CreateRef<gaunlet::Scene::PerspectiveCamera>(45.0f, (float) viewportWidth / (float) viewportHeight, 1.0f, 100.0f));
@@ -354,7 +346,7 @@ public:
         mainCamera->lookAt({0, 2, 0});
 
         auto cup1 = mainScene->createTaggedEntity<gaunlet::Editor::SceneEntityTag>("Cup1");
-        cup1.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Model("assets/cup/cup.obj"));
+        cup1.addComponent<gaunlet::Prefab::Components::ModelComponent>(gaunlet::Scene::Model("assets/cup/cup.obj"));
         cup1.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(-2.0f, 0.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
@@ -363,7 +355,7 @@ public:
         cup1.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(0.8f, 0.2f, 0.2f, 1.0f));
 
         auto cup2 = mainScene->createTaggedEntity<gaunlet::Editor::SceneEntityTag>("Cup2");
-        cup2.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Model("assets/cup/cup.obj"));
+        cup2.addComponent<gaunlet::Prefab::Components::ModelComponent>(gaunlet::Scene::Model("assets/cup/cup.obj"));
         cup2.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(2.0f, 0.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),

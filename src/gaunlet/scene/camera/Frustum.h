@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gaunlet/scene/raw-casting/RayCasting.h"
+#include "gaunlet/scene/ray-casting/RayCasting.h"
 
 #include "gaunlet/pch.h"
 

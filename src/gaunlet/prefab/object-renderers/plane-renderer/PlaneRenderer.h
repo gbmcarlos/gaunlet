@@ -2,8 +2,8 @@
 
 #include "gaunlet/scene/renderer/ObjectRenderer.h"
 #include "gaunlet/prefab/object-renderers/model-renderer/ModelRenderer.h"
-#include "gaunlet/graphics/renderer/DirectRenderer.h"
-#include "gaunlet/scene/components/TerrainComponents.h"
+#include "gaunlet/graphics/render-pass/SimpleRenderPass.h"
+#include "gaunlet/prefab/components/TerrainComponents.h"
 #include "gaunlet/scene/camera/Camera.h"
 
 #include "gaunlet/pch.h"
@@ -66,7 +66,7 @@ namespace gaunlet::Prefab::ObjectRenderers {
 
         void render(Scene::Entity entity, const Core::Ref<Graphics::Shader>& shader) {
 
-            auto& planeComponent = entity.getComponent<Scene::PlaneComponent>();
+            auto& planeComponent = entity.getComponent<Scene::TerrainComponent>();
 
             // Global variables for the whole plane
             m_shaderLibrary.get("plane-faces")
@@ -144,7 +144,7 @@ namespace gaunlet::Prefab::ObjectRenderers {
 
         }
 
-        Graphics::BatchedRenderer<PlaneQuadEntityProperties> m_renderer;
+        Graphics::BatchedRenderPass<PlaneQuadEntityProperties> m_renderer;
         Core::Ref<Graphics::UniformBuffer> m_propertySetsUniformBuffer = nullptr;
         Core::Ref<Graphics::UniformBuffer> m_frustumUniformBuffer = nullptr;
 

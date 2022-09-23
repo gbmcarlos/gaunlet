@@ -23,7 +23,7 @@ public:
 
         // TRIANGLE 1
         auto triangle1 = m_scene->createEntity();
-        triangle1.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Prefab::Sprites::Triangle2DModel());
+        triangle1.addComponent<gaunlet::Prefab::Components::ModelComponent>(gaunlet::Prefab::Sprites::Triangle2DModel());
         triangle1.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(-5.0f, 3.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
@@ -33,7 +33,7 @@ public:
 
         // TRIANGLE 2
         auto triangle2 = m_scene->createEntity();
-        triangle2.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Prefab::Sprites::Triangle2DModel());
+        triangle2.addComponent<gaunlet::Prefab::Components::ModelComponent>(gaunlet::Prefab::Sprites::Triangle2DModel());
         triangle2.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(-5.0f, 0.5f, 0.0f),
             glm::vec3(0.0f, 0.0f, -20.0f),
@@ -43,7 +43,7 @@ public:
 
         // TRIANGLE 3
         auto triangle3 = m_scene->createEntity();
-        triangle3.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Prefab::Sprites::Triangle2DModel());
+        triangle3.addComponent<gaunlet::Prefab::Components::ModelComponent>(gaunlet::Prefab::Sprites::Triangle2DModel());
         triangle3.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(-5.0f, -2.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, -40.0f),
@@ -53,7 +53,7 @@ public:
 
         // SQUARE 1
         auto square1 = m_scene->createEntity();
-        square1.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Prefab::Sprites::Square2DModel());
+        square1.addComponent<gaunlet::Prefab::Components::ModelComponent>(gaunlet::Prefab::Sprites::Square2DModel());
         square1.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(0.0f, 3.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
@@ -63,7 +63,7 @@ public:
 
         // SQUARE 2
         auto square2 = m_scene->createEntity();
-        square2.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Prefab::Sprites::Square2DModel());
+        square2.addComponent<gaunlet::Prefab::Components::ModelComponent>(gaunlet::Prefab::Sprites::Square2DModel());
         square2.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(0.0f, 0.5f, 0.0f),
             glm::vec3(0.0f, 0.0f, -20.0f),
@@ -73,7 +73,7 @@ public:
 
         // SQUARE 3
         auto square3 = m_scene->createEntity();
-        square3.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Prefab::Sprites::Square2DModel());
+        square3.addComponent<gaunlet::Prefab::Components::ModelComponent>(gaunlet::Prefab::Sprites::Square2DModel());
         square3.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(0.0f, -2.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, -40.0f),
@@ -83,7 +83,7 @@ public:
 
         // CIRCLE 1
         auto circle1 = m_scene->createEntity();
-        circle1.addComponent<gaunlet::Scene::CircleComponent>(0.1f, 0.01f);
+        circle1.addComponent<gaunlet::Prefab::Components::CircleComponent>(0.1f, 0.01f);
         circle1.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(5.0f, 3.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
@@ -93,7 +93,7 @@ public:
 
         // CIRCLE 2
         auto circle2 = m_scene->createEntity();
-        circle2.addComponent<gaunlet::Scene::CircleComponent>(0.5f, 0.1f);
+        circle2.addComponent<gaunlet::Prefab::Components::CircleComponent>(0.5f, 0.1f);
         circle2.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(5.0f, 0.5f, 0.0f),
             glm::vec3(0.0f, 0.0f, -20.0f),
@@ -103,7 +103,7 @@ public:
 
         // CIRCLE 3
         auto circle3 = m_scene->createEntity();
-        circle3.addComponent<gaunlet::Scene::CircleComponent>(1.0f, 0.3f);
+        circle3.addComponent<gaunlet::Prefab::Components::CircleComponent>(1.0f, 0.3f);
         circle3.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(5.0f, -2.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, -40.0f),

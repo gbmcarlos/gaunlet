@@ -1,7 +1,6 @@
 #pragma once
 
 #include "gaunlet/scene/camera/Camera.h"
-#include "gaunlet/scene/components/LightingComponents.h"
 #include "gaunlet/prefab/object-renderers/model-renderer/ModelRenderer.h"
 #include "gaunlet/prefab/object-renderers/circle-renderer/CircleRenderer.h"
 #include "gaunlet/prefab/object-renderers/skybox-renderer/SkyboxRenderer.h"

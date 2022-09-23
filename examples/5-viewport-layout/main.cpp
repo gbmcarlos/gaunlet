@@ -95,7 +95,7 @@ public:
         mainCamera->setZoomLevel(1.5f);
 
         auto triangle = mainScene->createTaggedEntity<gaunlet::Editor::SceneEntityTag>();
-        triangle.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Prefab::Sprites::Triangle2DModel());
+        triangle.addComponent<gaunlet::Prefab::Components::ModelComponent>(gaunlet::Prefab::Sprites::Triangle2DModel());
         triangle.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(-1.5f, 0.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
@@ -104,7 +104,7 @@ public:
         triangle.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
         auto circle = mainScene->createTaggedEntity<gaunlet::Editor::SceneEntityTag>();
-        circle.addComponent<gaunlet::Scene::CircleComponent>(0.3f, 0.01f);
+        circle.addComponent<gaunlet::Prefab::Components::CircleComponent>(0.3f, 0.01f);
         circle.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(1.5f, 0.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),

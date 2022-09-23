@@ -1,13 +1,15 @@
 #pragma once
 
-#include "gaunlet/scene/model/Model.h"
-#include "gaunlet/prefab/sprites//Sprites.h"
-#include "gaunlet/graphics/texture/Texture.h"
+#include "gaunlet/graphics/Vertex.h"
 #include "gaunlet/graphics/texture/TextureCubeMap.h"
 
-#include "gaunlet/pch.h"
-
 namespace gaunlet::Scene {
+
+    class ContentComponent {
+
+        virtual std::tuple<std::vector<Graphics::Vertex>, std::vector<unsigned int>> getContent() = 0;
+
+    };
 
     struct TransformComponent {
 
@@ -34,56 +36,6 @@ namespace gaunlet::Scene {
 
     };
 
-    struct ModelComponent {
-
-        ModelComponent(const ModelComponent&) = default;
-        explicit ModelComponent(Model model) : m_model(std::move(model)) {}
-
-        std::tuple<std::vector<Graphics::Vertex>, std::vector<unsigned int>> getContent() {
-
-            std::vector<Graphics::Vertex> vertices = {};
-            std::vector<unsigned int> indices = {};
-
-            // Get the vertices and indices of all the meshes of the model
-            for (auto& mesh : m_model.getMeshes()) {
-                vertices.insert(vertices.end(), mesh.getVertices().begin(), mesh.getVertices().end());
-                indices.insert(indices.end(), mesh.getIndices().begin(), mesh.getIndices().end());
-            }
-
-            return {vertices, indices};
-
-        }
-
-        Model m_model;
-
-    };
-
-    struct CircleComponent {
-
-        CircleComponent(const CircleComponent&) = default;
-
-        // A circle is drawn as a square (a single mesh), with a different shader
-        CircleComponent() :
-            CircleComponent(0.5, 0.01f) {}
-
-        CircleComponent(float thickness) :
-            CircleComponent(thickness, 0.01f) {}
-
-        CircleComponent(float thickness, float fade) :
-            m_mesh(Prefab::Sprites::Square2DModel().getMeshes()[0]),
-            m_thickness(thickness),
-            m_fade(fade) {}
-
-        std::tuple<std::vector<Graphics::Vertex>, std::vector<unsigned int>> getContent() {
-            return {m_mesh.getVertices(), m_mesh.getIndices()};
-        }
-
-        Mesh m_mesh;
-        float m_thickness;
-        float m_fade;
-
-    };
-
     struct MaterialComponent {
 
         MaterialComponent(const MaterialComponent&) = default;
@@ -94,6 +46,21 @@ namespace gaunlet::Scene {
 
         glm::vec4 m_color;
         Core::Ref<Graphics::Texture> m_texture;
+
+    };
+
+    struct DirectionalLightComponent {
+
+        DirectionalLightComponent()
+            : m_color(glm::vec3(1.0f, 1.0f, 1.0f)), m_direction(glm::vec3(0.0f, 0.0f, 0.0f)), m_ambientIntensity(1.0f), m_diffuseIntensity(1.0f) {}
+
+        DirectionalLightComponent(glm::vec3 color, glm::vec3 direction, float ambientIntensity, float diffuseIntensity)
+            : m_color(color), m_ambientIntensity(ambientIntensity), m_direction(direction), m_diffuseIntensity(diffuseIntensity) {}
+
+        glm::vec3 m_color;
+        glm::vec3 m_direction;
+        float m_ambientIntensity;
+        float m_diffuseIntensity;
 
     };
 

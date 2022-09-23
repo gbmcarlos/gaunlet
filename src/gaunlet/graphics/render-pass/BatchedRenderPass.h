@@ -1,20 +1,20 @@
 #pragma once
 
-#include "gaunlet/graphics/renderer/Batch.h"
+#include "gaunlet/graphics/render-pass/Batch.h"
 #include "gaunlet/graphics/shader/Shader.h"
 
 #include "gaunlet/core/render/RenderCommand.h"
 #include "gaunlet/graphics/texture/TextureImage2D.h"
-#include "gaunlet/graphics/renderer/DirectRenderer.h"
+#include "gaunlet/graphics/render-pass/SimpleRenderPass.h"
 
 namespace gaunlet::Graphics {
 
     template<typename T>
-    class BatchedRenderer {
+    class BatchedRenderPass {
 
     public:
 
-        explicit BatchedRenderer(const BatchParameters& batchParameters);
+        explicit BatchedRenderPass(const BatchParameters& batchParameters);
 
         bool submitIndexedTriangles(std::vector<gaunlet::Graphics::Vertex>& vertices, std::vector<unsigned int>& indices, const Core::Ref<Graphics::Texture>& texture, T& propertySet);
         void flush(const Core::Ref<Graphics::Shader>& shader, RenderMode mode);
@@ -32,12 +32,12 @@ namespace gaunlet::Graphics {
     };
 
     template<typename T>
-    BatchedRenderer<T>::BatchedRenderer(const BatchParameters& batchParameters) : m_batch(batchParameters) {
+    BatchedRenderPass<T>::BatchedRenderPass(const BatchParameters& batchParameters) : m_batch(batchParameters) {
         loadWhiteTexture();
     }
 
     template<typename T>
-    bool BatchedRenderer<T>::submitIndexedTriangles(std::vector<gaunlet::Graphics::Vertex>& vertices, std::vector<unsigned int>& indices, const Core::Ref<Graphics::Texture>& texture, T& propertySet) {
+    bool BatchedRenderPass<T>::submitIndexedTriangles(std::vector<gaunlet::Graphics::Vertex>& vertices, std::vector<unsigned int>& indices, const Core::Ref<Graphics::Texture>& texture, T& propertySet) {
 
         // Check if we need to flush before rendering the current model
         if (m_batch.shouldFlush(vertices, indices, texture)) {
@@ -57,7 +57,7 @@ namespace gaunlet::Graphics {
     }
 
     template<typename T>
-    void BatchedRenderer<T>::flush(const Core::Ref<Graphics::Shader> &shader, RenderMode mode) {
+    void BatchedRenderPass<T>::flush(const Core::Ref<Graphics::Shader> &shader, RenderMode mode) {
 
         auto[vertices, indices, textures] = m_batch.get();
 
@@ -68,7 +68,7 @@ namespace gaunlet::Graphics {
                 textures[i]->activate(i);
             }
 
-            DirectRenderer::renderIndexedVertices(
+            SimpleRenderPass::renderIndexedVertices(
                 vertices, indices, shader, mode
             );
 
@@ -80,7 +80,7 @@ namespace gaunlet::Graphics {
     }
 
     template<typename T>
-    void BatchedRenderer<T>::loadWhiteTexture() {
+    void BatchedRenderPass<T>::loadWhiteTexture() {
 
         // Create a 1x1 white texture, to be used as default
         unsigned int whiteTextureData = 0xffffffff;

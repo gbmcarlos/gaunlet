@@ -1,7 +1,7 @@
 #pragma once
 
 #include "gaunlet/graphics/texture/Texture.h"
-#include "gaunlet/scene/components/LightingComponents.h"
+#include "gaunlet/scene/components/BasicComponents.h"
 
 namespace gaunlet::Editor {
 

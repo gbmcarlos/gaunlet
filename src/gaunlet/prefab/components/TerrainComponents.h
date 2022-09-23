@@ -5,9 +5,9 @@
 
 namespace gaunlet::Scene {
 
-    struct PlaneComponent {
+    struct TerrainComponent {
 
-        PlaneComponent(float size, float targetResolution, float resolutionSlope, float triangleSize, float maxHeight, Core::Ref<PerspectiveCamera>  camera, Core::Ref<Graphics::Texture>  heightmap)
+        TerrainComponent(float size, float targetResolution, float resolutionSlope, float triangleSize, float maxHeight, Core::Ref<PerspectiveCamera>  camera, Core::Ref<Graphics::Texture>  heightmap)
             : m_size(size), m_targetResolution(targetResolution), m_resolutionSlope(resolutionSlope), m_triangleSize(triangleSize), m_maxHeight(maxHeight), m_camera(std::move(camera)), m_heightmap(std::move(heightmap)) {
         }
 

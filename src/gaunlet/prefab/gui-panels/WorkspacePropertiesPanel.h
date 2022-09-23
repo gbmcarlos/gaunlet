@@ -2,11 +2,13 @@
 
 #include "gaunlet/editor/panel/Panel.h"
 #include "gaunlet/editor/workspace/Workspace.h"
+#include "gaunlet/editor/Tags.h"
+
 #include "gaunlet/pch.h"
 
-namespace gaunlet::Editor {
+namespace gaunlet::Prefab::GuiPanels {
 
-    class WorkspacePropertiesPanel : public GuiPanel {
+    class WorkspacePropertiesPanel : public Editor::GuiPanel {
 
     public:
 
@@ -91,7 +93,7 @@ namespace gaunlet::Editor {
 
         }
 
-        void renderPanelProperties(RenderPanel* renderPanel) {
+        void renderPanelProperties(Editor::RenderPanel* renderPanel) {
 
             ImGui::Text("Pixel position: ");
             if (renderPanel->isHovered()) {
@@ -138,8 +140,8 @@ namespace gaunlet::Editor {
 
         void sceneProperties(const Core::Ref<Scene::Scene>& scene) {
 
-            ImGui::Text("Scene Entities: %d", scene->countTaggedEntities<SceneEntityTag>());
-            ImGui::Text("UI Entities: %d", scene->countTaggedEntities<UIEntityTag>());
+            ImGui::Text("Scene Entities: %d", scene->countTaggedEntities<Editor::SceneEntityTag>());
+            ImGui::Text("UI Entities: %d", scene->countTaggedEntities<Editor::UIEntityTag>());
 
         }
 

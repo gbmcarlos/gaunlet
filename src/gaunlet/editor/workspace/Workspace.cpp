@@ -2,7 +2,7 @@
 
 #include "gaunlet/editor/Tags.h"
 #include "gaunlet/core/window/Window.h"
-#include "gaunlet/scene/raw-casting/RayCasting.h"
+#include "gaunlet/scene/ray-casting/RayCasting.h"
 
 namespace gaunlet::Editor {
 

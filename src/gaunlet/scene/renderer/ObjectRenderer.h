@@ -1,14 +1,16 @@
 #pragma once
 
-#include "gaunlet/graphics/renderer/BatchedRenderer.h"
+#include "gaunlet/graphics/render-pass/BatchedRenderPass.h"
 #include "gaunlet/graphics/shader/ShaderLibrary.h"
 #include "gaunlet/scene/entity/Entity.h"
-#include "gaunlet/scene/components/GraphicsComponents.h"
+#include "gaunlet/scene/components/BasicComponents.h"
 
 namespace gaunlet::Scene {
 
     template<typename T, typename Y>
     class ObjectRenderer {
+
+        static_assert(std::is_base_of<ContentComponent, T>::value, "T must derive from Base");
 
     public:
 
@@ -26,13 +28,13 @@ namespace gaunlet::Scene {
         const Core::Ref<Graphics::Shader>& loadShader(const std::map<Core::ShaderType, std::string>& sources, const char *name, Graphics::ShaderLibrary &library, const Core::Ref<Graphics::UniformBuffer>& uniformBuffer);
         glm::mat4 getHierarchicalTransform(Entity entity);
 
-        Graphics::BatchedRenderer<Y> m_renderer;
+        Graphics::BatchedRenderPass<Y> m_renderPass;
         Core::Ref<Graphics::UniformBuffer> m_propertySetsUniformBuffer = nullptr;
 
     };
 
     template<typename T, typename Y>
-    ObjectRenderer<T, Y>::ObjectRenderer(const char *uniformBufferName, unsigned int uniformBufferBindingPoint, const Graphics::BatchParameters& batchParameters) : m_renderer(batchParameters) {
+    ObjectRenderer<T, Y>::ObjectRenderer(const char *uniformBufferName, unsigned int uniformBufferBindingPoint, const Graphics::BatchParameters& batchParameters) : m_renderPass(batchParameters) {
 
         // Create a uniform buffer that will contain the properties of every object, and will be linked to the shader
         m_propertySetsUniformBuffer = Core::CreateRef<Graphics::UniformBuffer>(
@@ -66,7 +68,7 @@ namespace gaunlet::Scene {
 
         auto entityProperties = getEntityProperties(entity);
 
-        bool batched = m_renderer.submitIndexedTriangles(
+        bool batched = m_renderPass.submitIndexedTriangles(
             vertices,
             indices,
             material.m_texture,
@@ -76,7 +78,7 @@ namespace gaunlet::Scene {
         // If this submission was the one that crossed the batch limit, flush, and submit again
         if (!batched) {
             renderObjects(shader);
-            m_renderer.submitIndexedTriangles(
+            m_renderPass.submitIndexedTriangles(
                 vertices,
                 indices,
                 material.m_texture,
@@ -89,7 +91,7 @@ namespace gaunlet::Scene {
     template<typename T, typename Y>
     void ObjectRenderer<T, Y>::renderObjects(const Core::Ref<Graphics::Shader>& shader) {
 
-        auto& entityPropertySets = m_renderer.getPropertySets();
+        auto& entityPropertySets = m_renderPass.getPropertySets();
 
         // Submit the entity properties to the uniform buffer
         m_propertySetsUniformBuffer->setData(
@@ -97,7 +99,7 @@ namespace gaunlet::Scene {
             sizeof(Y) * entityPropertySets.size()
         );
 
-        m_renderer.flush(shader, getRenderMode());
+        m_renderPass.flush(shader, getRenderMode());
 
     }
 
@@ -106,7 +108,7 @@ namespace gaunlet::Scene {
 
         auto shader = library.load(name, sources);
 
-        for (int i = 0; i < m_renderer.getBatchParameters().m_maxTextures; i++) {
+        for (int i = 0; i < m_renderPass.getBatchParameters().m_maxTextures; i++) {
             auto textureName = std::string("texture") + std::to_string(i);
             shader->setUniform1i(textureName, i);
         }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "gaunlet/scene/renderer/ObjectRenderer.h"
+#include "gaunlet/prefab/components/ModelComponent.h"
 
 #include "gaunlet/pch.h"
 
@@ -19,12 +20,12 @@ namespace gaunlet::Prefab::ObjectRenderers {
 
     };
 
-    class ModelRenderer : public Scene::ObjectRenderer<Scene::ModelComponent, ModelEntityProperties> {
+    class ModelRenderer : public Scene::ObjectRenderer<Prefab::Components::ModelComponent, ModelEntityProperties> {
 
     public:
 
         ModelRenderer(unsigned int uniformBufferBindingPoint)
-            : Scene::ObjectRenderer<Scene::ModelComponent, ModelEntityProperties>("EntityPropertySets", uniformBufferBindingPoint, {100000, 600000, 10, 100}) {
+            : Scene::ObjectRenderer<Prefab::Components::ModelComponent, ModelEntityProperties>("EntityPropertySets", uniformBufferBindingPoint, {100000, 600000, 10, 100}) {
             loadShaders();
         }
 

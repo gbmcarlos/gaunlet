@@ -2,9 +2,9 @@
 
 #include "gaunlet/editor/panel/Panel.h"
 
-namespace gaunlet::Editor {
+namespace gaunlet::Prefab::GuiPanels {
 
-    class ToolsManagerPanel : public GuiPanel {
+    class ToolsManagerPanel : public Editor::GuiPanel {
 
     public:
 

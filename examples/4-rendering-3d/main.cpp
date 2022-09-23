@@ -34,7 +34,7 @@ public:
         });
 
         auto cup = m_scene->createEntity();
-        cup.addComponent<gaunlet::Scene::ModelComponent>(gaunlet::Scene::Model("assets/cup/cup.obj"));
+        cup.addComponent<gaunlet::Prefab::Components::ModelComponent>(gaunlet::Scene::Model("assets/cup/cup.obj"));
         cup.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(0.0f, 30.0f, 0.0f),

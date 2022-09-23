@@ -194,7 +194,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
     void BasicEditorRenderPipeline::renderSceneModels(const Core::Ref<Scene::Scene>& scene) {
 
         // Model faces: those models that don't have the Wireframe tag
-        auto facesView = scene->getRegistry().view<Scene::ModelComponent, Scene::TransformComponent, Editor::SceneEntityTag>(entt::exclude<Editor::WireframeModelTag>);
+        auto facesView = scene->getRegistry().view<Prefab::Components::ModelComponent, Scene::TransformComponent, Editor::SceneEntityTag>(entt::exclude<Editor::WireframeModelTag>);
         for (auto e : facesView) {
             m_modelRenderer.submitObject(
                 {e, scene},
@@ -204,7 +204,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
         m_modelRenderer.renderObjects(m_modelRenderer.getShaders().get("model-faces"));
 
         // Model wireframes: those models that have the Wireframe tag
-        auto wireframesView = scene->getRegistry().view<Scene::ModelComponent, Scene::TransformComponent, Editor::SceneEntityTag, Editor::WireframeModelTag>();
+        auto wireframesView = scene->getRegistry().view<Prefab::Components::ModelComponent, Scene::TransformComponent, Editor::SceneEntityTag, Editor::WireframeModelTag>();
         for (auto e : wireframesView) {
             m_modelRenderer.submitObject(
                 {e, scene},
@@ -217,7 +217,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
 
     void BasicEditorRenderPipeline::renderSceneCircles(const Core::Ref<Scene::Scene>& scene) {
 
-        auto view = scene->getRegistry().view<Scene::CircleComponent, Scene::TransformComponent, Editor::SceneEntityTag>();
+        auto view = scene->getRegistry().view<Prefab::Components::CircleComponent, Scene::TransformComponent, Editor::SceneEntityTag>();
         for (auto e : view) {
             m_circleRenderer.submitObject(
                 {e, scene},
@@ -231,7 +231,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
     void BasicEditorRenderPipeline::submitScenePlanes(const Core::Ref<Scene::Scene> &scene) {
 
         // Model faces: those models that don't have the Wireframe tag
-        auto facesView = scene->getRegistry().view<Scene::PlaneComponent, Editor::SceneEntityTag>(entt::exclude<Editor::WireframeModelTag>);
+        auto facesView = scene->getRegistry().view<Scene::TerrainComponent, Editor::SceneEntityTag>(entt::exclude<Editor::WireframeModelTag>);
         for (auto e : facesView) {
             m_planeRenderer.render(
                 {e, scene},
@@ -241,7 +241,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
 
         // Model wireframes: those models that have the Wireframe tag
         Core::RenderCommand::setPolygonMode(Core::PolygonMode::Line);
-        auto wireframesView = scene->getRegistry().view<Scene::PlaneComponent, Editor::SceneEntityTag, Editor::WireframeModelTag>();
+        auto wireframesView = scene->getRegistry().view<Scene::TerrainComponent, Editor::SceneEntityTag, Editor::WireframeModelTag>();
         for (auto e : wireframesView) {
             m_planeRenderer.render(
                 {e, scene},
@@ -255,7 +255,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
     void BasicEditorRenderPipeline::renderOutlines(const Core::Ref<Scene::Scene> &scene) {
 
         // Model wireframes: those models that have the Wireframe tag
-        auto view = scene->getRegistry().view<Scene::ModelComponent, Scene::TransformComponent, Editor::SceneEntityTag, Editor::ModelOutlineTag>();
+        auto view = scene->getRegistry().view<Prefab::Components::ModelComponent, Scene::TransformComponent, Editor::SceneEntityTag, Editor::ModelOutlineTag>();
         for (auto e : view) {
             m_modelRenderer.submitObject(
                 {e, scene},
@@ -268,7 +268,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
 
     void BasicEditorRenderPipeline::renderUIModels(const Core::Ref<Scene::Scene>& scene) {
 
-        auto group = scene->getRegistry().group<Scene::ModelComponent>(entt::get<Scene::TransformComponent, Editor::UIEntityTag>);
+        auto group = scene->getRegistry().group<Prefab::Components::ModelComponent>(entt::get<Scene::TransformComponent, Editor::UIEntityTag>);
         for (auto e : group) {
             m_modelRenderer.submitObject(
                 {e, scene},
@@ -281,7 +281,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
 
     void BasicEditorRenderPipeline::renderUICircles(const Core::Ref<Scene::Scene>& scene) {
 
-        auto group = scene->getRegistry().group<Scene::CircleComponent>(entt::get<Scene::TransformComponent, Editor::UIEntityTag>);
+        auto group = scene->getRegistry().group<Prefab::Components::CircleComponent>(entt::get<Scene::TransformComponent, Editor::UIEntityTag>);
         for (auto e : group) {
             m_circleRenderer.submitObject(
                 {e, scene},

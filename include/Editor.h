@@ -8,5 +8,3 @@
 #include "gaunlet/editor/workspace/Workspace.h"
 #include "gaunlet/editor/tooling/Tool.h"
 #include "gaunlet/editor/tooling/SelectionTool.h"
-#include "gaunlet/editor/prefab/WorkspacePropertiesPanel.h"
-#include "gaunlet/editor/prefab/ToolsManagerPanel.h"

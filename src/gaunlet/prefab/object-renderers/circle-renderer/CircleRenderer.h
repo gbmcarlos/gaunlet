@@ -1,6 +1,7 @@
 #pragma once
 
 #include "gaunlet/scene/renderer/ObjectRenderer.h"
+#include "gaunlet/prefab/components/CircleComponent.h"
 
 #include "gaunlet/pch.h"
 
@@ -21,12 +22,12 @@ namespace gaunlet::Prefab::ObjectRenderers {
 
     };
 
-    class CircleRenderer: public Scene::ObjectRenderer<Scene::CircleComponent, CircleEntityProperties> {
+    class CircleRenderer: public Scene::ObjectRenderer<Prefab::Components::CircleComponent, CircleEntityProperties> {
 
     public:
 
         CircleRenderer(unsigned int uniformBufferBindingPoint)
-            : Scene::ObjectRenderer<Scene::CircleComponent, CircleEntityProperties>("EntityPropertySets", uniformBufferBindingPoint, {100000, 600000, 10, 100}) {
+            : Scene::ObjectRenderer<Prefab::Components::CircleComponent, CircleEntityProperties>("EntityPropertySets", uniformBufferBindingPoint, {100000, 600000, 10, 100}) {
             loadShaders();
         }
 
@@ -36,7 +37,7 @@ namespace gaunlet::Prefab::ObjectRenderers {
 
         CircleEntityProperties getEntityProperties(Scene::Entity entity) override {
 
-            auto circle = entity.getComponent<Scene::CircleComponent>();
+            auto circle = entity.getComponent<Prefab::Components::CircleComponent>();
 
             // MaterialComponent is optional
             auto material = entity.hasComponent<Scene::MaterialComponent>() ? entity.getComponent<Scene::MaterialComponent>() : Scene::MaterialComponent();

@@ -3,7 +3,7 @@
 #include "gaunlet/graphics/shader/ShaderLibrary.h"
 #include "gaunlet/prefab/sprites/Sprites.h"
 #include "gaunlet/graphics/texture/TextureCubeMap.h"
-#include "gaunlet/graphics/renderer/DirectRenderer.h"
+#include "gaunlet/graphics/render-pass/SimpleRenderPass.h"
 
 namespace gaunlet::Prefab::ObjectRenderers {
 
@@ -20,7 +20,7 @@ namespace gaunlet::Prefab::ObjectRenderers {
             // Activate the cubeMap texture
             cubeMap->activate(0);
 
-            Graphics::DirectRenderer::renderIndexedVertices(
+            Graphics::SimpleRenderPass::renderIndexedVertices(
                 m_cube.getMeshes()[0].getVertices(),
                 m_cube.getMeshes()[0].getIndices(),
                 shader,

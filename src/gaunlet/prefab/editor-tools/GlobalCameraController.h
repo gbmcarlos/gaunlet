@@ -93,19 +93,11 @@ namespace gaunlet::Prefab::EditorTools {
                 // Shift: orbit
             } else if (gaunlet::Core::Input::isKeyPressed(GL_KEY_LEFT_SHIFT) || gaunlet::Core::Input::isKeyPressed(GL_KEY_RIGHT_SHIFT)) {
 
-                if (getWorkspace()->getSelectedSceneEntity()) {
-                    getWorkspace()->getCamera(m_renderPanel->getCameraId())->orbit(
-                        getWorkspace()->getSelectedSceneEntity().getComponent<gaunlet::Scene::TransformComponent>(),
-                        -delta.y / 10, // Moving the mouse vertically, rotates around the X axis
-                        -delta.x / 10 // Moving the mouse horizontally, rotates around the Y axis
-                    );
-                } else {
-                    getWorkspace()->getCamera(m_renderPanel->getCameraId())->orbit(
-                        5.0f,
-                        -delta.y / 10, // Moving the mouse vertically, rotates around the X axis
-                        -delta.x / 10 // Moving the mouse horizontally, rotates around the Y axis
-                    );
-                }
+                getWorkspace()->getCamera(m_renderPanel->getCameraId())->orbit(
+                    5.0f,
+                    -delta.y / 10, // Moving the mouse vertically, rotates around the X axis
+                    -delta.x / 10 // Moving the mouse horizontally, rotates around the Y axis
+                );
 
                 // Drag: pan
             } else {
