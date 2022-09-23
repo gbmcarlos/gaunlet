@@ -80,19 +80,19 @@ namespace gaunlet::Prefab::Terrain {
         float halfSize = m_size/2;
         float quarterSize = m_size/4;
 
-        auto leftBottomPatch = Core::CreateRef<QuadTreePatch>(shared_from_this(), PatchPosition::LeftBottom, m_context, glm::vec3(m_origin.x - quarterSize, 0, m_origin.z + quarterSize), halfSize);
+        auto leftBottomPatch = Core::CreateRef<QuadTreePatch>(this, PatchPosition::LeftBottom, m_context, glm::vec3(m_origin.x - quarterSize, 0, m_origin.z + quarterSize), halfSize);
         m_children.emplace_back(leftBottomPatch);
         leftBottomPatch->process();
 
-        auto rightBottomPatch = Core::CreateRef<QuadTreePatch>(shared_from_this(), PatchPosition::RightBottom, m_context, glm::vec3(m_origin.x + quarterSize, 0, m_origin.z + quarterSize), halfSize);
+        auto rightBottomPatch = Core::CreateRef<QuadTreePatch>(this, PatchPosition::RightBottom, m_context, glm::vec3(m_origin.x + quarterSize, 0, m_origin.z + quarterSize), halfSize);
         m_children.emplace_back(rightBottomPatch);
         rightBottomPatch->process();
 
-        auto rightTopPatch = Core::CreateRef<QuadTreePatch>(shared_from_this(), PatchPosition::RightTop, m_context, glm::vec3(m_origin.x + quarterSize, 0, m_origin.z - quarterSize), halfSize);
+        auto rightTopPatch = Core::CreateRef<QuadTreePatch>(this, PatchPosition::RightTop, m_context, glm::vec3(m_origin.x + quarterSize, 0, m_origin.z - quarterSize), halfSize);
         m_children.emplace_back(rightTopPatch);
         rightTopPatch->process();
 
-        auto leftTopPatch = Core::CreateRef<QuadTreePatch>(shared_from_this(), PatchPosition::LeftTop, m_context, glm::vec3(m_origin.x - quarterSize, 0, m_origin.z - quarterSize), halfSize);
+        auto leftTopPatch = Core::CreateRef<QuadTreePatch>(this, PatchPosition::LeftTop, m_context, glm::vec3(m_origin.x - quarterSize, 0, m_origin.z - quarterSize), halfSize);
         m_children.emplace_back(leftTopPatch);
         leftTopPatch->process();
 
@@ -161,7 +161,8 @@ namespace gaunlet::Prefab::Terrain {
 
         // Look for the common ancestor
         HorizontalSide oppositeSide = side == HorizontalSide::Left ? HorizontalSide::Right : HorizontalSide::Left;
-        auto [commonAncestor, steps] = findFirstHorizontalSideAncestor(oppositeSide);
+        std::vector<PatchPosition> steps;
+        auto commonAncestor = findFirstHorizontalSideAncestor(oppositeSide, steps);
 
         // If we haven't found such an ancestor, it means that we are on the edge of the plane
         if (commonAncestor == nullptr) {
@@ -190,7 +191,8 @@ namespace gaunlet::Prefab::Terrain {
 
         // Look for the common ancestor
         VerticalSide oppositeSide = side == VerticalSide::Bottom ? VerticalSide::Top : VerticalSide::Bottom;
-        auto [commonAncestor, steps] = findFirstVerticalSideAncestor(oppositeSide);
+        std::vector<PatchPosition> steps;
+        auto commonAncestor = findFirstVerticalSideAncestor(oppositeSide, steps);
 
         // If we haven't found such an ancestor, it means that we are on the edge of the plane
         if (commonAncestor == nullptr) {
@@ -210,69 +212,37 @@ namespace gaunlet::Prefab::Terrain {
     }
 
     // Find the first ancestor that is on the left/right, and return the steps taken (the position of each patch, up until the ancestor, excluded)
-    std::tuple<Core::Ref<QuadTreePatch>, std::vector<PatchPosition>> QuadTreePatch::findFirstHorizontalSideAncestor(HorizontalSide side) {
+    Core::Ref<QuadTreePatch> QuadTreePatch::findFirstHorizontalSideAncestor(HorizontalSide side, std::vector<PatchPosition>& steps) {
 
-        std::vector<PatchPosition> steps;
-
-        auto current = shared_from_this();
-        Core::Ref<QuadTreePatch> ancestor = nullptr;
-
-        while (ancestor == nullptr) {
-
-            // We've reached the root node, stop here
-            if (current->m_parent == nullptr) {
-                break;
-            }
-
-            // If we're still on the wrong side, record the step and move on to the next generation
-            if (current->getHorizontalSide() != side) {
-                steps.push_back(current->m_position);
-                current = current->m_parent;
-                continue;
-            }
-
-            // We've found an ancestor that is on the correct side
-            if (current->getHorizontalSide() == side) {
-                ancestor = current;
-                continue;
-            }
-
+        // The root node isn't a valid side-ancestor, because it has no siblings
+        if (m_parent == nullptr) {
+            return nullptr;
         }
 
-        return {ancestor, steps};
+        // If we are on the requested side, we're the ancestor
+        if (getHorizontalSide() == side) {
+            return shared_from_this();
+        } else {
+            steps.push_back(m_position);
+            return m_parent->findFirstHorizontalSideAncestor(side, steps);
+        }
 
     }
 
-    std::tuple<Core::Ref<QuadTreePatch>, std::vector<PatchPosition>> QuadTreePatch::findFirstVerticalSideAncestor(VerticalSide side) {
+    Core::Ref<QuadTreePatch> QuadTreePatch::findFirstVerticalSideAncestor(VerticalSide side, std::vector<PatchPosition>& steps) {
 
-        std::vector<PatchPosition> steps;
-
-        auto current = shared_from_this();
-        Core::Ref<QuadTreePatch> ancestor = nullptr;
-
-        while (ancestor == nullptr) {
-
-            // We've reached the root node, stop here
-            if (current->m_parent == nullptr) {
-                break;
-            }
-
-            // If we're still on the wrong side, record the step and move on to the next generation
-            if (current->getVerticalSide() != side) {
-                steps.push_back(current->m_position);
-                current = current->m_parent;
-                continue;
-            }
-
-            // We've found an ancestor that is on the correct side
-            if (current->getVerticalSide() == side) {
-                ancestor = current;
-                continue;
-            }
-
+        // The root node isn't a valid side-ancestor, because it has no siblings
+        if (m_parent == nullptr) {
+            return nullptr;
         }
 
-        return {ancestor, steps};
+        // If we are on the requested side, we're the ancestor
+        if (getVerticalSide() == side) {
+            return shared_from_this();
+        } else { // Otherwise, record out position in the steps and ask our parent
+            steps.push_back(m_position);
+            return m_parent->findFirstVerticalSideAncestor(side, steps);
+        }
 
     }
 

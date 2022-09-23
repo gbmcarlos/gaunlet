@@ -59,14 +59,14 @@ namespace gaunlet::Prefab::Terrain {
 
         static std::vector<PlaneQuad> compute(float planeSize, float targetResolution, float resolutionSlope, const glm::vec3& cameraPosition, const Scene::Frustum& cameraFrustum);
 
-        QuadTreePatch(Core::Ref<QuadTreePatch>   parent, PatchPosition position, Context& context, glm::vec3 origin, float size)
-            : m_parent(std::move(parent)), m_position(position), m_context(context), m_origin(origin), m_size(size) {
+        QuadTreePatch(QuadTreePatch* parent, PatchPosition position, Context& context, glm::vec3 origin, float size)
+            : m_parent(parent), m_position(position), m_context(context), m_origin(origin), m_size(size) {
             computeDimensions();
         }
 
     protected:
 
-        Core::Ref<QuadTreePatch> m_parent = nullptr;
+        QuadTreePatch* m_parent = nullptr;
         PatchPosition m_position;
         Context& m_context;
         std::vector<Core::Ref<QuadTreePatch>> m_children = {};
@@ -99,9 +99,9 @@ namespace gaunlet::Prefab::Terrain {
 
         Core::Ref<QuadTreePatch> findVerticalNeighbour(VerticalSide side);
 
-        std::tuple<Core::Ref<QuadTreePatch>, std::vector<PatchPosition>> findFirstHorizontalSideAncestor(HorizontalSide side);
+        Core::Ref<QuadTreePatch> findFirstHorizontalSideAncestor(HorizontalSide side, std::vector<PatchPosition>& steps);
 
-        std::tuple<Core::Ref<QuadTreePatch>, std::vector<PatchPosition>> findFirstVerticalSideAncestor(VerticalSide side);
+        Core::Ref<QuadTreePatch> findFirstVerticalSideAncestor(VerticalSide side, std::vector<PatchPosition>& steps);
 
         Core::Ref<QuadTreePatch> findDescendant(const std::vector<PatchPosition>& steps, bool horizontal);
 
