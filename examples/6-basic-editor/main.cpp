@@ -300,6 +300,7 @@ public:
         m_workspace->setLayoutSpec({
             {
                 {gaunlet::Editor::DockSpacePosition::Left, 0.2f,  {"Workspace Properties"}},
+                {gaunlet::Editor::DockSpacePosition::Down, 0.4, 0, {"Entity Components"}},
                 {gaunlet::Editor::DockSpacePosition::Center, 0.0f,  {"Scene"}, ImGuiDockNodeFlags_NoTabBar},
                 {gaunlet::Editor::DockSpacePosition::Right, 0.25f,  {"Tools Manager"}},
             }, viewportWidth, viewportHeight
@@ -307,6 +308,7 @@ public:
 
         // Create and push the GUI panels
         m_workspace->pushPanel("settings", new gaunlet::Prefab::GuiPanels::WorkspacePropertiesPanel, "Workspace Properties");
+        m_workspace->pushPanel("components", new gaunlet::Prefab::GuiPanels::EntityComponentsPanel, "Entity Components");
         m_workspace->pushPanel("tools", new gaunlet::Prefab::GuiPanels::ToolsManagerPanel, "Tools Manager");
 
         // Prepare the components of the main render panel

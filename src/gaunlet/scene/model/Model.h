@@ -16,8 +16,8 @@ namespace gaunlet::Scene {
 
         inline const std::vector<Mesh>& getMeshes() const {return m_meshes; }
 
-    private:
         std::vector<Mesh> m_meshes;
+    private:
 
         void loadModel(const char* filePath);
         void processModelNode(aiNode* node, const aiScene* scene);

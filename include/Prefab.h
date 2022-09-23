@@ -10,6 +10,7 @@
 
 #include "gaunlet/prefab/gui-panels/WorkspacePropertiesPanel.h"
 #include "gaunlet/prefab/gui-panels/ToolsManagerPanel.h"
+#include "gaunlet/prefab/gui-panels/EntityComponentsPanel.h"
 
 #include "gaunlet/prefab/editor-tools/GlobalCameraController.h"
 #include "gaunlet/prefab/editor-tools/FirstPersonCameraController.h"
