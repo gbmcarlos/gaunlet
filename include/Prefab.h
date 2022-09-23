@@ -9,9 +9,12 @@
 #include "gaunlet/prefab/render-pipelines/basic-editor-render-pipeline/BasicEditorRenderPipeline.h"
 
 #include "gaunlet/prefab/gui-panels/WorkspacePropertiesPanel.h"
+#include "gaunlet/prefab/gui-panels/RenderPanelComponentsPanel.h"
 #include "gaunlet/prefab/gui-panels/ToolsManagerPanel.h"
 #include "gaunlet/prefab/gui-panels/EntityComponentsPanel.h"
 
 #include "gaunlet/prefab/editor-tools/GlobalCameraController.h"
 #include "gaunlet/prefab/editor-tools/FirstPersonCameraController.h"
 #include "gaunlet/prefab/editor-tools/Transformer.h"
+
+#include "gaunlet/prefab/terrain/procedural-plane/ProceduralPlane.h"

@@ -16,19 +16,21 @@ namespace gaunlet::Scene {
     }
 
     glm::mat4 Camera::getProjectionMatrix() {
+        calculateProjectionMatrix();
         return m_projectionMatrix;
     }
 
     glm::mat4 Camera::getViewMatrix() {
-
-        if (m_following) {
-            calculateViewMatrix();
-        }
-
+        calculateViewMatrix();
         return m_viewMatrix;
     }
 
-    const glm::vec3& Camera::getPosition() {
+    const Frustum& Camera::getFrustum() {
+        calculateFrustum();
+        return m_frustum;
+    }
+
+    glm::vec3& Camera::getPosition() {
 
         if (m_following) {
             return *m_followTarget;
@@ -45,7 +47,6 @@ namespace gaunlet::Scene {
         }
 
         m_position = position;
-        calculateViewMatrix();
         calculateFrustum();
     }
 
@@ -56,7 +57,6 @@ namespace gaunlet::Scene {
         }
 
         m_position += movement;
-        calculateViewMatrix();
         calculateFrustum();
     }
 
@@ -113,20 +113,17 @@ namespace gaunlet::Scene {
     void Camera::setRotation(float yaw, float pitch) {
         m_yaw = yaw;
         m_pitch = constrainPitch(pitch);
-        calculateViewMatrix();
         calculateFrustum();
     }
 
     void Camera::setYaw(float yaw) {
         m_yaw = yaw;
-        calculateViewMatrix();
         calculateFrustum();
     }
 
     void Camera::setPitch(float pitch) {
 
         m_pitch = constrainPitch(pitch);
-        calculateViewMatrix();
         calculateFrustum();
 
     }
@@ -135,7 +132,6 @@ namespace gaunlet::Scene {
 
         m_yaw = m_yaw + yawDelta;
         m_pitch = constrainPitch(m_pitch + pitchDelta);
-        calculateViewMatrix();
         calculateFrustum();
 
     }
@@ -176,17 +172,11 @@ namespace gaunlet::Scene {
     }
 
     void Camera::setZoomLevel(float zoomLevel) {
-
         m_zoomLevel = constrainZoomLevel(zoomLevel);
-        calculateProjectionMatrix();
-
     }
 
     void Camera::addZoomLevel(float zoomLevelDelta) {
-
         m_zoomLevel = constrainZoomLevel(m_zoomLevel + zoomLevelDelta);
-        calculateProjectionMatrix();
-
     }
 
     glm::vec3 Camera::ray(glm::vec2 viewportCoordinates, glm::vec2 viewportSize) {
@@ -269,7 +259,6 @@ namespace gaunlet::Scene {
         m_up = up;
         m_forward = forward;
 
-        calculateViewMatrix();
         calculateFrustum();
 
     }

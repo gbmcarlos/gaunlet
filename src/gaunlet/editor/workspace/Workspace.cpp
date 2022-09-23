@@ -196,7 +196,7 @@ namespace gaunlet::Editor {
 
         for (auto& renderPanelSpec : m_renderPanelSpecs) {
 
-            if (renderPanelSpec.m_panel->isHovered()) {
+            if (renderPanelSpec.m_panel->isFocused()) {
                 return renderPanelSpec.m_panel;
             }
 

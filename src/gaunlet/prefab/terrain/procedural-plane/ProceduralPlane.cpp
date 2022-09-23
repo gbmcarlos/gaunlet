@@ -1,8 +1,8 @@
-#include "gaunlet/scene/procedural-plane/ProceduralPlane.h"
+#include "ProceduralPlane.h"
 
-namespace gaunlet::Scene {
+namespace gaunlet::Prefab::Terrain {
 
-    std::vector<PlaneQuad> QuadTreePatch::compute(float planeSize, float targetResolution, float resolutionSlope, const glm::vec3& cameraPosition, const Frustum& cameraFrustum) {
+    std::vector<PlaneQuad> QuadTreePatch::compute(float planeSize, float targetResolution, float resolutionSlope, const glm::vec3& cameraPosition, const Scene::Frustum& cameraFrustum) {
 
         Context context(planeSize, targetResolution, resolutionSlope, cameraPosition, cameraFrustum);
 

@@ -53,6 +53,10 @@ namespace gaunlet::Prefab::GuiPanels {
                 materialComponentProperties(entity.getComponent<Scene::MaterialComponent>());
             }
 
+            if (entity.hasComponent<Terrain::TerrainComponent>()) {
+                terrainComponentProperties(entity.getComponent<Terrain::TerrainComponent>());
+            }
+
         }
 
         void tagComponents(Scene::Entity entity) {
@@ -111,6 +115,18 @@ namespace gaunlet::Prefab::GuiPanels {
             if (ImGui::CollapsingHeader("Material Component")) {
                 ImGui::ColorPicker4("Color: ", &material.m_color.x);
                 ImGui::Text("Has Texture: %s", material.m_texture != nullptr ? "Yes" : "No");
+            }
+
+        }
+
+        void terrainComponentProperties(Terrain::TerrainComponent& terrain) {
+
+            if (ImGui::CollapsingHeader("Terrain Component")) {
+                ImGui::DragFloat("Plane Size: ", &terrain.m_size, m_sliderSpeed);
+                ImGui::DragFloat("Target Resolution: ", &terrain.m_targetResolution, m_sliderSpeed);
+                ImGui::DragFloat("Resolution Slope: ", &terrain.m_resolutionSlope, m_sliderSpeed);
+                ImGui::DragFloat("Triangle Size: ", &terrain.m_triangleSize, m_sliderSpeed);
+                ImGui::DragFloat("Max Height: ", &terrain.m_maxHeight, m_sliderSpeed);
             }
 
         }

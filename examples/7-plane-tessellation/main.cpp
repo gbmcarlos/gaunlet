@@ -18,13 +18,17 @@ public:
         m_workspace->setLayoutSpec({
             {
                 {gaunlet::Editor::DockSpacePosition::Left, 0.25f,  {"Workspace Properties"}},
-                {gaunlet::Editor::DockSpacePosition::Down, 0.4f,  0, {"Tools Manager"}},
+                {gaunlet::Editor::DockSpacePosition::Down, 0.2f,  0, {"Tools Manager"}},
+                {gaunlet::Editor::DockSpacePosition::Down, 0.4f,  0, {"Entity Components"}},
+                {gaunlet::Editor::DockSpacePosition::Down, 0.5f,  0, {"Render Panel"}},
                 {gaunlet::Editor::DockSpacePosition::Center, 0.0f,  {"Scene"}, ImGuiDockNodeFlags_NoTabBar},
                 {gaunlet::Editor::DockSpacePosition::Right, 0.3f, {"Preview"}},
             }, viewportWidth, viewportHeight
         });
 
         m_workspace->pushPanel("settings", new gaunlet::Prefab::GuiPanels::WorkspacePropertiesPanel, "Workspace Properties");
+        m_workspace->pushPanel("components", new gaunlet::Prefab::GuiPanels::EntityComponentsPanel, "Entity Components");
+        m_workspace->pushPanel("render-panel", new gaunlet::Prefab::GuiPanels::RenderPanelComponentsPanel, "Render Panel");
         m_workspace->pushPanel("tools", new gaunlet::Prefab::GuiPanels::ToolsManagerPanel, "Tools Manager");
 
         // Common components
@@ -81,7 +85,7 @@ public:
         gaunlet::Core::Ref<gaunlet::Graphics::TextureImage2D> heightmap = gaunlet::Core::CreateRef<gaunlet::Graphics::TextureImage2D>("assets/heightmap.png");
 
         auto plane = mainScene->createTaggedEntity<gaunlet::Editor::SceneEntityTag>("plane");
-        plane.addComponent<gaunlet::Scene::TerrainComponent>(
+        plane.addComponent<gaunlet::Prefab::Terrain::TerrainComponent>(
             100000.0f, // Plane size
             150.0f, 0.5f, // Quad subdivision
             25.0f, // Triangle size
@@ -90,7 +94,6 @@ public:
             heightmap
         );
         m_workspace->selectSceneEntity(plane);
-        m_plane = plane;
 
     }
 
@@ -101,11 +104,7 @@ public:
     void onGuiRender() override {
         m_workspace->render();
 
-        ImGui::ShowMetricsWindow();
-
-        auto& planeComponent = m_plane.getComponent<gaunlet::Scene::TerrainComponent>();
-
-        ImGui::SliderFloat("Triangle Size", &planeComponent.m_triangleSize, 1.0, 500.0f);
+//        ImGui::ShowMetricsWindow();
 
     }
 
@@ -115,7 +114,6 @@ public:
 
 private:
     gaunlet::Editor::Workspace* m_workspace = nullptr;
-    gaunlet::Scene::Entity m_plane = {};
 
 };
 

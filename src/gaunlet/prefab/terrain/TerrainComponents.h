@@ -1,13 +1,13 @@
 #pragma once
 
 #include "gaunlet/scene/camera/PerspectiveCamera.h"
-#include "gaunlet/scene/procedural-plane/ProceduralPlane.h"
+#include "gaunlet/prefab/terrain/procedural-plane/ProceduralPlane.h"
 
-namespace gaunlet::Scene {
+namespace gaunlet::Prefab::Terrain {
 
     struct TerrainComponent {
 
-        TerrainComponent(float size, float targetResolution, float resolutionSlope, float triangleSize, float maxHeight, Core::Ref<PerspectiveCamera>  camera, Core::Ref<Graphics::Texture>  heightmap)
+        TerrainComponent(float size, float targetResolution, float resolutionSlope, float triangleSize, float maxHeight, Core::Ref<Scene::PerspectiveCamera>  camera, Core::Ref<Graphics::Texture>  heightmap)
             : m_size(size), m_targetResolution(targetResolution), m_resolutionSlope(resolutionSlope), m_triangleSize(triangleSize), m_maxHeight(maxHeight), m_camera(std::move(camera)), m_heightmap(std::move(heightmap)) {
         }
 
@@ -26,7 +26,7 @@ namespace gaunlet::Scene {
         float m_resolutionSlope;
         float m_triangleSize;
         float m_maxHeight;
-        Core::Ref<PerspectiveCamera> m_camera;
+        Core::Ref<Scene::PerspectiveCamera> m_camera;
         Core::Ref<Graphics::Texture> m_heightmap;
 
     };

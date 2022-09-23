@@ -24,9 +24,16 @@ namespace gaunlet::Scene {
 
         glm::mat4 getProjectionMatrix();
         glm::mat4 getViewMatrix();
-        inline Frustum& getFrustum() {return m_frustum; }
+        const Frustum& getFrustum();
 
-        const glm::vec3& getPosition();
+        inline const float& getMinZoomLevel() const {return m_minZoomLevel; }
+        inline const float& getMaxZoomLevel() const {return m_maxZoomLevel; }
+
+        glm::vec3& getPosition();
+        inline float& getYaw() {return m_yaw; }
+        inline float& getPitch() {return m_pitch; }
+        inline float& getZoomLevel() {return m_zoomLevel;}
+
         void setPosition(const glm::vec3& position);
         void move(const glm::vec3& movement);
         void moveRelative(const glm::vec3& movement);
@@ -37,19 +44,14 @@ namespace gaunlet::Scene {
         inline const glm::vec3& getForward() {return m_forward; }
         inline const glm::vec3& getRight() {return m_right; }
         inline const glm::vec3& getUp() {return m_up; }
-        inline const float& getYaw() const {return m_yaw; }
-        inline const float& getPitch() const {return m_pitch; }
         void setRotation(float yaw, float pitch);
         void setYaw(float yaw);
         void setPitch(float pitch);
         void addRotation(float yawDelta, float pitchDelta);
-
         void orbit(float degreesX, float degreesY);
         void orbit(float radius, float degreesX, float degreesY);
-
         void lookAt(glm::vec3 target);
 
-        inline float getZoomLevel() const {return m_zoomLevel;}
         void setZoomLevel(float zoomLevel);
         void addZoomLevel(float zoomLevelDelta);
 
@@ -79,7 +81,7 @@ namespace gaunlet::Scene {
         bool m_following = false;
         glm::vec3* m_followTarget;
         glm::vec3 m_position = {0, 0, 1};
-        float m_yaw = -90.0f;
+        float m_yaw = 0.0f;
         float m_pitch = 0.0f;
 
         glm::vec3 m_right = {1, 0, 0};

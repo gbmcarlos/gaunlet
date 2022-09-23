@@ -5,7 +5,7 @@
 
 #include "gaunlet/pch.h"
 
-namespace gaunlet::Scene {
+namespace gaunlet::Prefab::Terrain {
 
     class QuadTreePatch;
 
@@ -26,14 +26,14 @@ namespace gaunlet::Scene {
     // This is just a collection of data that is passed around
     struct Context {
 
-        Context(float planeSize, float targetResolution, float resolutionSlope, const glm::vec3& cameraPosition, const Frustum& cameraFrustum)
+        Context(float planeSize, float targetResolution, float resolutionSlope, const glm::vec3& cameraPosition, const Scene::Frustum& cameraFrustum)
             : m_planeSize(planeSize), m_targetResolution(targetResolution), m_resolutionSlope(resolutionSlope), m_cameraPosition(cameraPosition), m_cameraFrustum(cameraFrustum) {}
 
         float m_planeSize;
         float m_targetResolution;
         float m_resolutionSlope;
         glm::vec3 m_cameraPosition;
-        Frustum m_cameraFrustum;
+        Scene::Frustum m_cameraFrustum;
         std::vector<PlaneQuad> m_quads;
 
     };
@@ -57,7 +57,7 @@ namespace gaunlet::Scene {
 
     public:
 
-        static std::vector<PlaneQuad> compute(float planeSize, float targetResolution, float resolutionSlope, const glm::vec3& cameraPosition, const Frustum& cameraFrustum);
+        static std::vector<PlaneQuad> compute(float planeSize, float targetResolution, float resolutionSlope, const glm::vec3& cameraPosition, const Scene::Frustum& cameraFrustum);
 
         QuadTreePatch(Core::Ref<QuadTreePatch>   parent, PatchPosition position, Context& context, glm::vec3 origin, float size)
             : m_parent(std::move(parent)), m_position(position), m_context(context), m_origin(origin), m_size(size) {

@@ -3,7 +3,7 @@
 #include "gaunlet/scene/renderer/ObjectRenderer.h"
 #include "gaunlet/prefab/object-renderers/model-renderer/ModelRenderer.h"
 #include "gaunlet/graphics/render-pass/SimpleRenderPass.h"
-#include "gaunlet/prefab/components/TerrainComponents.h"
+#include "gaunlet/prefab/terrain/TerrainComponents.h"
 #include "gaunlet/scene/camera/Camera.h"
 
 #include "gaunlet/pch.h"
@@ -66,7 +66,7 @@ namespace gaunlet::Prefab::ObjectRenderers {
 
         void render(Scene::Entity entity, const Core::Ref<Graphics::Shader>& shader) {
 
-            auto& planeComponent = entity.getComponent<Scene::TerrainComponent>();
+            auto& planeComponent = entity.getComponent<Prefab::Terrain::TerrainComponent>();
 
             // Global variables for the whole plane
             m_shaderLibrary.get("plane-faces")
