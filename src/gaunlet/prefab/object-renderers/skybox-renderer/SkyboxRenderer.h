@@ -40,8 +40,8 @@ namespace gaunlet::Prefab::ObjectRenderers {
         void loadShaders() {
 
             std::map<Core::ShaderType, std::string> sources {
-                {Core::ShaderType::Vertex, PREFABS_PATH"/object-renderers/skybox-renderer/shaders/vertex.glsl"},
-                {Core::ShaderType::Fragment, PREFABS_PATH"/object-renderers/skybox-renderer/shaders/fragment.glsl"}
+                {Core::ShaderType::Vertex, GL_PREFABS_PATH"/object-renderers/skybox-renderer/shaders/vertex.glsl"},
+                {Core::ShaderType::Fragment, GL_PREFABS_PATH"/object-renderers/skybox-renderer/shaders/fragment.glsl"}
             };
 
             auto shader = m_shaderLibrary.load("skybox", sources);

@@ -51,16 +51,16 @@ namespace gaunlet::Prefab::ObjectRenderers {
 
             // FACES SHADER
             std::map<Core::ShaderType, std::string> facesSources {
-                {Core::ShaderType::Vertex, PREFABS_PATH"/object-renderers/model-renderer/shaders/vertex.glsl"},
-                {Core::ShaderType::Fragment, PREFABS_PATH"/object-renderers/model-renderer/shaders/model-faces/fragment.glsl"}
+                {Core::ShaderType::Vertex, GL_PREFABS_PATH"/object-renderers/model-renderer/shaders/vertex.glsl"},
+                {Core::ShaderType::Fragment, GL_PREFABS_PATH"/object-renderers/model-renderer/shaders/model-faces/fragment.glsl"}
             };
 
             loadShader(facesSources, "model-faces", m_shaderLibrary, m_propertySetsUniformBuffer);
 
             // OUTLINE SHADER
             std::map<Core::ShaderType, std::string> outlineSources {
-                {Core::ShaderType::Vertex, PREFABS_PATH"/object-renderers/model-renderer/shaders/model-outline/vertex.glsl"},
-                {Core::ShaderType::Fragment, PREFABS_PATH"/object-renderers/model-renderer/shaders/model-outline/fragment.glsl"}
+                {Core::ShaderType::Vertex, GL_PREFABS_PATH"/object-renderers/model-renderer/shaders/model-outline/vertex.glsl"},
+                {Core::ShaderType::Fragment, GL_PREFABS_PATH"/object-renderers/model-renderer/shaders/model-outline/fragment.glsl"}
             };
 
             auto outlineShader = loadShader(outlineSources, "model-outline", m_shaderLibrary, m_propertySetsUniformBuffer);
@@ -69,9 +69,9 @@ namespace gaunlet::Prefab::ObjectRenderers {
 
             // WIREFRAME SHADER
             std::map<Core::ShaderType, std::string> wireframeSources {
-                {Core::ShaderType::Vertex, PREFABS_PATH"/object-renderers/model-renderer/shaders/vertex.glsl"},
-                {Core::ShaderType::Geometry, PREFABS_PATH"/object-renderers/model-renderer/shaders/model-wireframe/geometry.glsl"},
-                {Core::ShaderType::Fragment, PREFABS_PATH"/object-renderers/model-renderer/shaders/model-wireframe/fragment.glsl"}
+                {Core::ShaderType::Vertex, GL_PREFABS_PATH"/object-renderers/model-renderer/shaders/vertex.glsl"},
+                {Core::ShaderType::Geometry, GL_PREFABS_PATH"/object-renderers/model-renderer/shaders/model-wireframe/geometry.glsl"},
+                {Core::ShaderType::Fragment, GL_PREFABS_PATH"/object-renderers/model-renderer/shaders/model-wireframe/fragment.glsl"}
             };
 
             loadShader(wireframeSources, "model-wireframe", m_shaderLibrary, m_propertySetsUniformBuffer);

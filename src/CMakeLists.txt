@@ -59,8 +59,7 @@ target_precompile_headers(gaunlet
 
 target_compile_definitions(gaunlet
         PUBLIC
-            ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/gaunlet/assets"
-            PREFABS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/gaunlet/prefab"
+            GL_PREFABS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/gaunlet/prefab"
 )
 
 target_include_directories(gaunlet

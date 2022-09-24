@@ -153,10 +153,10 @@ namespace gaunlet::Prefab::ObjectRenderers {
         void loadShaders() {
 
             std::map<Core::ShaderType, std::string> facesSources {
-                {Core::ShaderType::Vertex, PREFABS_PATH"/object-renderers/terrain-renderer/shaders/vertex.glsl"},
-                {Core::ShaderType::TessellationControl, PREFABS_PATH"/object-renderers/terrain-renderer/shaders/tessellation-control.glsl"},
-                {Core::ShaderType::TessellationEvaluation, PREFABS_PATH"/object-renderers/terrain-renderer/shaders/tessellation-evaluation.glsl"},
-                {Core::ShaderType::Fragment, PREFABS_PATH"/object-renderers/terrain-renderer/shaders/fragment.glsl"}
+                {Core::ShaderType::Vertex, GL_PREFABS_PATH"/object-renderers/terrain-renderer/shaders/vertex.glsl"},
+                {Core::ShaderType::TessellationControl, GL_PREFABS_PATH"/object-renderers/terrain-renderer/shaders/tessellation-control.glsl"},
+                {Core::ShaderType::TessellationEvaluation, GL_PREFABS_PATH"/object-renderers/terrain-renderer/shaders/tessellation-evaluation.glsl"},
+                {Core::ShaderType::Fragment, GL_PREFABS_PATH"/object-renderers/terrain-renderer/shaders/fragment.glsl"}
             };
 
             auto facesShader = m_shaderLibrary.load("plane-faces", facesSources);
