@@ -4,9 +4,8 @@
 #include "gaunlet/prefab/object-renderers/model-renderer/ModelRenderer.h"
 #include "gaunlet/prefab/object-renderers/circle-renderer/CircleRenderer.h"
 #include "gaunlet/prefab/object-renderers/skybox-renderer/SkyboxRenderer.h"
-#include "gaunlet/prefab/render-pipelines/basic-3d-render-pipeline/PropertySets.h"
 
-namespace gaunlet::Prefab::Basic3DRenderPipeline {
+namespace gaunlet::Prefab::RenderPipelines {
 
     class Basic3DRenderPipeline {
 

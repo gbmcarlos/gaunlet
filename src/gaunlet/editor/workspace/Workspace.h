@@ -58,11 +58,6 @@ namespace gaunlet::Editor {
         Scene::Entity getSelectedSceneEntity();
         Scene::Entity getSelectedUIEntity();
 
-        template<typename T>
-        Scene::Entity mousePickTaggedEntity(RenderPanel* renderPanel, FramebufferLayer layer);
-        Scene::Entity mousePickSceneEntity(RenderPanel* renderPanel);
-        Scene::Entity mousePickUIEntity(RenderPanel* renderPanel);
-
         glm::vec3 mousePickPoint(RenderPanel* renderPanel, glm::vec3 planePoint, glm::vec3 planeNormal);
 
     private:
@@ -102,29 +97,5 @@ namespace gaunlet::Editor {
         Core::Ref<Scene::SkyboxComponent> m_nullSkybox = nullptr;
 
     };
-
-    template<typename T>
-    Scene::Entity Workspace::mousePickTaggedEntity(RenderPanel* renderPanel, FramebufferLayer layer) {
-
-        unsigned int pixelPositionX = renderPanel->getMousePositionX() * Core::Window::getCurrentInstance()->getDPI();
-        unsigned int pixelPositionY = renderPanel->getMousePositionYInverted() * Core::Window::getCurrentInstance()->getDPI();
-
-        int selectedEntityId = getRenderPipeline(renderPanel->m_renderPipelineId)->readFramebuffer(
-            layer,
-            pixelPositionX,
-            pixelPositionY
-        );
-
-        auto& scene = getScene(renderPanel->getSceneId());
-
-        Scene::Entity selectedEntity = Scene::Entity(selectedEntityId, scene);
-
-        if (selectedEntity && selectedEntity.hasComponent<T>()) {
-            return selectedEntity;
-        } else {
-            return {};
-        }
-
-    }
 
 }

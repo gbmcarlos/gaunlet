@@ -1,6 +1,8 @@
 #include "gaunlet/prefab/render-pipelines/basic-3d-render-pipeline/Basic3DRenderPipeline.h"
 
-namespace gaunlet::Prefab::Basic3DRenderPipeline {
+#include "gaunlet/prefab/render-pipelines/SceneProperties.h"
+
+namespace gaunlet::Prefab::RenderPipelines {
 
     Basic3DRenderPipeline::Basic3DRenderPipeline()
         : m_modelRenderer(1), m_circleRenderer(2) {

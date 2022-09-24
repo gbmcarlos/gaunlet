@@ -7,4 +7,4 @@
 #include "gaunlet/editor/gizmos/TranslationGizmo.h"
 #include "gaunlet/editor/workspace/Workspace.h"
 #include "gaunlet/editor/tooling/Tool.h"
-#include "gaunlet/editor/tooling/SelectionTool.h"
+#include "gaunlet/prefab/editor-tools/EntitySelectionTool.h"

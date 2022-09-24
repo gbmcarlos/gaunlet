@@ -2,6 +2,8 @@
 
 #include "gaunlet/graphics/texture/Texture.h"
 #include "gaunlet/scene/components/BasicComponents.h"
+#include "gaunlet/scene/entity/Entity.h"
+#include "gaunlet/scene/camera/Camera.h"
 
 namespace gaunlet::Editor {
 
@@ -17,7 +19,8 @@ namespace gaunlet::Editor {
         virtual void resize(unsigned int width, unsigned int height) = 0;
 
         virtual const Core::Ref<Graphics::Texture>& getRenderedTexture() = 0;
-        virtual int readFramebuffer(FramebufferLayer layer, unsigned int x, unsigned int y) = 0;
+
+        virtual int readFramebuffer(unsigned int attachmentIndex, unsigned int x, unsigned int y) = 0;
 
     };
 

@@ -238,14 +238,6 @@ namespace gaunlet::Editor {
         return m_selectedUIEntity;
     }
 
-    Scene::Entity Workspace::mousePickSceneEntity(RenderPanel* renderPanel) {
-        return mousePickTaggedEntity<SceneEntityTag>(renderPanel, FramebufferLayer::SceneEntity);
-    }
-
-    Scene::Entity Workspace::mousePickUIEntity(RenderPanel* renderPanel) {
-        return mousePickTaggedEntity<UIEntityTag>(renderPanel, FramebufferLayer::UIEntity);
-    }
-
     glm::vec3 Workspace::mousePickPoint(RenderPanel* renderPanel, glm::vec3 planePoint, glm::vec3 planeNormal) {
 
         auto window = gaunlet::Core::Window::getCurrentInstance();

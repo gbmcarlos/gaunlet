@@ -8,18 +8,20 @@
 namespace gaunlet::Graphics {
 
     enum class FramebufferDataFormat {
-        RGBA, Integer, DepthStencil
+        RGB, RGBA, Integer, DepthStencil
     };
 
     struct FramebufferAttachmentSpec {
 
-        FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, const glm::vec4& clearColorValue);
         FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, int clearColorValue);
+        FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, const glm::vec3& clearColorValue);
+        FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, const glm::vec4& clearColorValue);
         FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat);
 
         Core::FramebufferAttachmentType m_attachmentType;
         FramebufferDataFormat m_dataFormat;
         int m_clearColorIntValue = 0;
+        glm::vec3 m_clearColorVec3Value = {};
         glm::vec4 m_clearColorVec4Value = {};
 
     };

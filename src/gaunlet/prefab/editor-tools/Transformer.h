@@ -1,12 +1,12 @@
 #pragma once
 
-#include "gaunlet/editor/tooling/SelectionTool.h"
+#include "gaunlet/prefab/editor-tools/EntitySelectionTool.h"
 #include "gaunlet/editor/gizmos/TranslationGizmo.h"
 #include "gaunlet/core/event/events/CursorEvent.h"
 
 namespace gaunlet::Prefab::EditorTools {
 
-    class TransformerTool : public Editor::SelectionTool {
+    class TransformerTool : public EntitySelectionTool {
 
     public:
 

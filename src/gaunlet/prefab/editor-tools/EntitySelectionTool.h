@@ -2,10 +2,11 @@
 
 #include "gaunlet/editor/workspace/Workspace.h"
 #include "gaunlet/scene/entity/Entity.h"
+#include "gaunlet/editor/Tags.h"
 
-namespace gaunlet::Editor {
+namespace gaunlet::Prefab::EditorTools {
 
-    class SelectionTool : public Tool {
+    class EntitySelectionTool : public Editor::Tool {
 
     protected:
 
@@ -17,10 +18,10 @@ namespace gaunlet::Editor {
         Scene::Entity getSelectedSceneEntity() {return getWorkspace()->getSelectedSceneEntity(); }
         Scene::Entity getSelectedUIEntity() {return getWorkspace()->getSelectedUIEntity(); }
 
-        Scene::Entity selectSceneEntity(RenderPanel* renderPanel) {
+        Scene::Entity selectSceneEntity(Editor::RenderPanel* renderPanel) {
 
             auto previousSelectedSceneEntity = getWorkspace()->getSelectedSceneEntity();
-            auto newSelectedSceneEntity = getWorkspace()->mousePickSceneEntity(renderPanel);
+            auto newSelectedSceneEntity = mousePickTaggedEntity<Editor::SceneEntityTag>(renderPanel, 1);
 
             if (previousSelectedSceneEntity) {
                 onSceneEntityUnselected(previousSelectedSceneEntity);
@@ -37,10 +38,10 @@ namespace gaunlet::Editor {
 
         }
 
-        Scene::Entity selectUIEntity(RenderPanel* renderPanel) {
+        Scene::Entity selectUIEntity(Editor::RenderPanel* renderPanel) {
 
             auto previousSelectedUIEntity = getWorkspace()->getSelectedUIEntity();
-            auto newSelectedUIEntity = getWorkspace()->mousePickUIEntity(renderPanel);
+            auto newSelectedUIEntity = mousePickTaggedEntity<Editor::UIEntityTag>(renderPanel, 2);
 
             if (previousSelectedUIEntity) {
                 onUIEntityUnselected(previousSelectedUIEntity);
@@ -54,6 +55,30 @@ namespace gaunlet::Editor {
             }
 
             return newSelectedUIEntity ? newSelectedUIEntity : Scene::Entity();
+
+        }
+
+        template<typename T>
+        Scene::Entity mousePickTaggedEntity(Editor::RenderPanel* renderPanel, unsigned int framebufferAttachmentIndex) {
+
+            unsigned int pixelPositionX = renderPanel->getMousePositionX() * Core::Window::getCurrentInstance()->getDPI();
+            unsigned int pixelPositionY = renderPanel->getMousePositionYInverted() * Core::Window::getCurrentInstance()->getDPI();
+
+            int selectedEntityId = getWorkspace()->getRenderPipeline(renderPanel->getRenderPipelineId())->readFramebuffer(
+                framebufferAttachmentIndex,
+                pixelPositionX,
+                pixelPositionY
+            );
+
+            auto& scene = getWorkspace()->getScene(renderPanel->getSceneId());
+
+            Scene::Entity selectedEntity = Scene::Entity(selectedEntityId, scene);
+
+            if (selectedEntity && selectedEntity.hasComponent<T>()) {
+                return selectedEntity;
+            } else {
+                return {};
+            }
 
         }
 

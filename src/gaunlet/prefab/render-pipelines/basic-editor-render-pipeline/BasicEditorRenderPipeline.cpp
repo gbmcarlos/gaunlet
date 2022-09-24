@@ -1,13 +1,13 @@
 #include "gaunlet/prefab/render-pipelines/basic-editor-render-pipeline/BasicEditorRenderPipeline.h"
 
-#include "gaunlet/prefab/render-pipelines/basic-editor-render-pipeline/PropertySets.h"
+#include "gaunlet/prefab/render-pipelines/SceneProperties.h"
 #include "gaunlet/core/window/Window.h"
 #include "gaunlet/editor/Tags.h"
 
-namespace gaunlet::Prefab::BasicEditorRenderPipeline {
+namespace gaunlet::Prefab::RenderPipelines {
 
     BasicEditorRenderPipeline::BasicEditorRenderPipeline(unsigned int uniformBufferBindingPointOffset)
-        : m_modelRenderer(1 + uniformBufferBindingPointOffset), m_circleRenderer(2 + uniformBufferBindingPointOffset), m_terrainRenderer(3 + uniformBufferBindingPointOffset, 4 + uniformBufferBindingPointOffset) {
+        : m_modelRenderer(1 + uniformBufferBindingPointOffset), m_circleRenderer(2 + uniformBufferBindingPointOffset) {
 
         prepareShaders(uniformBufferBindingPointOffset);
 
@@ -62,26 +62,14 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
         return m_framebuffer->getColorAttachment(SceneFramebufferAttachmentIndex);
     }
 
-    int BasicEditorRenderPipeline::readFramebuffer(Editor::FramebufferLayer layer, unsigned int x, unsigned int y) {
-
-        unsigned int attachmentIndex;
-
-        switch (layer) {
-            case Editor::FramebufferLayer::SceneEntity:
-                attachmentIndex = SceneEntityIdFramebufferAttachmentIndex; break;
-            case Editor::FramebufferLayer::UIEntity:
-                attachmentIndex = UIEntityIdFramebufferAttachmentIndex; break;
-        }
-
+    int BasicEditorRenderPipeline::readFramebuffer(unsigned int attachmentIndex, unsigned int x, unsigned int y) {
         return m_framebuffer->readPixel(attachmentIndex, x, y);
-
     }
 
     unsigned int BasicEditorRenderPipeline::getUniformBufferCount() {
         return
             ObjectRenderers::ModelRenderer::getUniformBufferCount() +
             ObjectRenderers::CircleRenderer::getUniformBufferCount() +
-            ObjectRenderers::TerrainRenderer::getUniformBufferCount() +
             ObjectRenderers::SkyboxRenderer::getUniformBufferCount() +
             1; // The SceneProperties uniform buffer that this render pipeline manages itself
     }
@@ -129,7 +117,6 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
         // Then draw the objects
         renderSceneModels(scene);
         renderSceneCircles(scene);
-        submitScenePlanes(scene);
 
     }
 
@@ -228,30 +215,6 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
 
     }
 
-    void BasicEditorRenderPipeline::submitScenePlanes(const Core::Ref<Scene::Scene> &scene) {
-
-        // Model faces: those models that don't have the Wireframe tag
-        auto facesView = scene->getRegistry().view<Prefab::Terrain::TerrainComponent, Editor::SceneEntityTag>(entt::exclude<Editor::WireframeModelTag>);
-        for (auto e : facesView) {
-            m_terrainRenderer.render(
-                {e, scene},
-                m_terrainRenderer.getShaders().get("plane-faces")
-            );
-        }
-
-        // Model wireframes: those models that have the Wireframe tag
-        Core::RenderCommand::setPolygonMode(Core::PolygonMode::Line);
-        auto wireframesView = scene->getRegistry().view<Prefab::Terrain::TerrainComponent, Editor::SceneEntityTag, Editor::WireframeModelTag>();
-        for (auto e : wireframesView) {
-            m_terrainRenderer.render(
-                {e, scene},
-                m_terrainRenderer.getShaders().get("plane-faces")
-            );
-        }
-        Core::RenderCommand::setPolygonMode(Core::PolygonMode::Fill);
-
-    }
-
     void BasicEditorRenderPipeline::renderOutlines(const Core::Ref<Scene::Scene> &scene) {
 
         // Model wireframes: those models that have the Wireframe tag
@@ -322,7 +285,6 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
 
         m_circleRenderer.getShaders().get("circle-faces")->linkUniformBuffer(m_scenePropertiesUniformBuffer);
         m_skyboxRenderer.getShaders().get("skybox")->linkUniformBuffer(m_scenePropertiesUniformBuffer);
-        m_terrainRenderer.getShaders().get("plane-faces")->linkUniformBuffer(m_scenePropertiesUniformBuffer);
 
     }
 

@@ -5,6 +5,7 @@
 #include "gaunlet/prefab/components/CircleComponent.h"
 #include "gaunlet/prefab/skyboxes/Skyboxes.h"
 
+#include "gaunlet/prefab/render-pipelines/SceneProperties.h"
 #include "gaunlet/prefab/render-pipelines/basic-3d-render-pipeline/Basic3DRenderPipeline.h"
 #include "gaunlet/prefab/render-pipelines/basic-editor-render-pipeline/BasicEditorRenderPipeline.h"
 
@@ -16,5 +17,3 @@
 #include "gaunlet/prefab/editor-tools/GlobalCameraController.h"
 #include "gaunlet/prefab/editor-tools/FirstPersonCameraController.h"
 #include "gaunlet/prefab/editor-tools/Transformer.h"
-
-#include "gaunlet/prefab/terrain/procedural-plane/ProceduralPlane.h"

@@ -10,7 +10,7 @@ public:
     void onReady() override {
 
         m_scene = gaunlet::Core::CreateRef<gaunlet::Scene::Scene>();
-        m_renderPipeline = gaunlet::Core::CreateRef<gaunlet::Prefab::Basic3DRenderPipeline::Basic3DRenderPipeline>();
+        m_renderPipeline = gaunlet::Core::CreateRef<gaunlet::Prefab::RenderPipelines::Basic3DRenderPipeline>();
 
         float viewportWidth = (float) gaunlet::Core::Window::getCurrentInstance()->getViewportWidth();
         float viewportHeight = (float) gaunlet::Core::Window::getCurrentInstance()->getViewportHeight();
@@ -125,7 +125,7 @@ public:
 private:
     gaunlet::Core::Ref<gaunlet::Scene::Scene> m_scene;
     gaunlet::Core::Ref<gaunlet::Scene::OrthographicCamera> m_camera;
-    gaunlet::Core::Ref<gaunlet::Prefab::Basic3DRenderPipeline::Basic3DRenderPipeline> m_renderPipeline;
+    gaunlet::Core::Ref<gaunlet::Prefab::RenderPipelines::Basic3DRenderPipeline> m_renderPipeline;
 
 };
 

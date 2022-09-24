@@ -2,7 +2,7 @@
 
 #include "gaunlet/pch.h"
 
-namespace gaunlet::Prefab::BasicEditorRenderPipeline {
+namespace gaunlet::Prefab::RenderPipelines {
 
     struct SceneProperties {
 

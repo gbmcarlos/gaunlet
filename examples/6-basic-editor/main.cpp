@@ -1,7 +1,7 @@
 #include "../include/Editor.h"
 #include "../include/Prefab.h"
 
-class TransformerTool : public gaunlet::Editor::SelectionTool {
+class TransformerTool : public gaunlet::Prefab::EditorTools::EntitySelectionTool {
 
 public:
 
@@ -153,7 +153,7 @@ private:
 
 };
 
-class SelectorTool : public gaunlet::Editor::SelectionTool {
+class SelectorTool : public gaunlet::Prefab::EditorTools::EntitySelectionTool {
 
     const char* getName() override {
         return "Selector";
@@ -320,7 +320,7 @@ public:
             0.5f, 0.7f
         ));
         m_workspace->addSkybox("main", gaunlet::Core::CreateRef<gaunlet::Scene::SkyboxComponent>(gaunlet::Core::CreateRef<gaunlet::Prefab::Skyboxes::SimpleSkyboxCubeMap>()));
-        m_workspace->addRenderPipeline("main", gaunlet::Core::CreateRef<gaunlet::Prefab::BasicEditorRenderPipeline::BasicEditorRenderPipeline>());
+        m_workspace->addRenderPipeline("main", gaunlet::Core::CreateRef<gaunlet::Prefab::RenderPipelines::BasicEditorRenderPipeline>());
 
         // Create and push the main render panel, referencing the main components
         m_workspace->pushPanel(

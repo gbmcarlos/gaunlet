@@ -24,7 +24,7 @@ namespace gaunlet::Prefab::ObjectRenderers {
 
     public:
 
-        ModelRenderer(unsigned int uniformBufferBindingPoint)
+        explicit ModelRenderer(unsigned int uniformBufferBindingPoint)
             : Scene::ObjectRenderer<Prefab::Components::ModelComponent, ModelEntityProperties>("EntityPropertySets", uniformBufferBindingPoint, {100000, 600000, 10, 100}) {
             loadShaders();
         }

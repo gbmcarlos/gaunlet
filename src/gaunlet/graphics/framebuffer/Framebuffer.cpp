@@ -5,19 +5,28 @@
 
 namespace gaunlet::Graphics {
 
-    FramebufferAttachmentSpec::FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, const glm::vec4& clearColorValue)
-        : m_attachmentType(attachmentType), m_dataFormat(framebufferDataFormat), m_clearColorVec4Value(clearColorValue) {
+    FramebufferAttachmentSpec::FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, int clearColorValue)
+        : m_attachmentType(attachmentType), m_dataFormat(framebufferDataFormat), m_clearColorIntValue(clearColorValue) {
 
-        if (framebufferDataFormat != FramebufferDataFormat::RGBA) {
+        if (framebufferDataFormat != FramebufferDataFormat::Integer) {
             throw std::runtime_error("Clear color type doesn't match the data type");
         }
 
     }
 
-    FramebufferAttachmentSpec::FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, int clearColorValue)
-        : m_attachmentType(attachmentType), m_dataFormat(framebufferDataFormat), m_clearColorIntValue(clearColorValue) {
+    FramebufferAttachmentSpec::FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, const glm::vec3& clearColorValue)
+        : m_attachmentType(attachmentType), m_dataFormat(framebufferDataFormat), m_clearColorVec3Value(clearColorValue) {
 
-        if (framebufferDataFormat != FramebufferDataFormat::Integer) {
+        if (framebufferDataFormat != FramebufferDataFormat::RGB) {
+            throw std::runtime_error("Clear color type doesn't match the data type");
+        }
+
+    }
+
+    FramebufferAttachmentSpec::FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, const glm::vec4& clearColorValue)
+        : m_attachmentType(attachmentType), m_dataFormat(framebufferDataFormat), m_clearColorVec4Value(clearColorValue) {
+
+        if (framebufferDataFormat != FramebufferDataFormat::RGBA) {
             throw std::runtime_error("Clear color type doesn't match the data type");
         }
 
@@ -78,6 +87,9 @@ namespace gaunlet::Graphics {
         auto& colorAttachmentSpec = m_colorAttachmentSpecs[index];
 
         switch (colorAttachmentSpec.m_dataFormat) {
+            case FramebufferDataFormat::RGB:
+                Core::RenderCommand::clearColorAttachment(m_rendererId, index, Core::PrimitiveDataType::Float, glm::value_ptr(colorAttachmentSpec.m_clearColorVec4Value));
+                break;
             case FramebufferDataFormat::RGBA:
                 Core::RenderCommand::clearColorAttachment(m_rendererId, index, Core::PrimitiveDataType::Float, glm::value_ptr(colorAttachmentSpec.m_clearColorVec4Value));
                 break;
@@ -178,6 +190,10 @@ namespace gaunlet::Graphics {
         Core::TextureDataFormat format;
 
         switch (colorAttachmentSpec.m_dataFormat) {
+            case FramebufferDataFormat::RGB:
+                internalFormat = Core::TextureDataFormat::RGB;
+                format = Core::TextureDataFormat::RGB;
+                break;
             case FramebufferDataFormat::RGBA:
                 internalFormat = Core::TextureDataFormat::RGBA;
                 format = Core::TextureDataFormat::RGBA;
