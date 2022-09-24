@@ -81,7 +81,7 @@ namespace gaunlet::Scene {
         bool m_following = false;
         glm::vec3* m_followTarget;
         glm::vec3 m_position = {0, 0, 1};
-        float m_yaw = 0.0f;
+        float m_yaw = -90.0f;
         float m_pitch = 0.0f;
 
         glm::vec3 m_right = {1, 0, 0};
