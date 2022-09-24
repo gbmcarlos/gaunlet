@@ -90,17 +90,11 @@ install(
 # Install all the public headers (exclude the opengl implementation)
 install(
         DIRECTORY gaunlet/ DESTINATION include/gaunlet
-        FILES_MATCHING PATTERN "*.h"
+        FILES_MATCHING
+            PATTERN "*.h"
+            PATTERN "*.glsl"
+            PATTERN "*.obj"
         PATTERN "opengl" EXCLUDE
-)
-
-# Install the assets
-install(
-        DIRECTORY gaunlet/assets DESTINATION include/gaunlet
-        DIRECTORY_PERMISSIONS
-            OWNER_READ OWNER_EXECUTE OWNER_WRITE
-            GROUP_READ GROUP_EXECUTE GROUP_WRITE
-            WORLD_READ WORLD_EXECUTE
 )
 
 # Install the composite headers
