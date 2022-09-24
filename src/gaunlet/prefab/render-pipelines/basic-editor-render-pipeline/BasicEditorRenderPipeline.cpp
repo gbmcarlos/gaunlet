@@ -7,7 +7,7 @@
 namespace gaunlet::Prefab::BasicEditorRenderPipeline {
 
     BasicEditorRenderPipeline::BasicEditorRenderPipeline(unsigned int uniformBufferBindingPointOffset)
-        : m_modelRenderer(1 + uniformBufferBindingPointOffset), m_circleRenderer(2 + uniformBufferBindingPointOffset), m_planeRenderer(3 + uniformBufferBindingPointOffset, 4 + uniformBufferBindingPointOffset) {
+        : m_modelRenderer(1 + uniformBufferBindingPointOffset), m_circleRenderer(2 + uniformBufferBindingPointOffset), m_terrainRenderer(3 + uniformBufferBindingPointOffset, 4 + uniformBufferBindingPointOffset) {
 
         prepareShaders(uniformBufferBindingPointOffset);
 
@@ -81,7 +81,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
         return
             ObjectRenderers::ModelRenderer::getUniformBufferCount() +
             ObjectRenderers::CircleRenderer::getUniformBufferCount() +
-            ObjectRenderers::PlaneRenderer::getUniformBufferCount() +
+            ObjectRenderers::TerrainRenderer::getUniformBufferCount() +
             ObjectRenderers::SkyboxRenderer::getUniformBufferCount() +
             1; // The SceneProperties uniform buffer that this render pipeline manages itself
     }
@@ -233,9 +233,9 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
         // Model faces: those models that don't have the Wireframe tag
         auto facesView = scene->getRegistry().view<Prefab::Terrain::TerrainComponent, Editor::SceneEntityTag>(entt::exclude<Editor::WireframeModelTag>);
         for (auto e : facesView) {
-            m_planeRenderer.render(
+            m_terrainRenderer.render(
                 {e, scene},
-                m_planeRenderer.getShaders().get("plane-faces")
+                m_terrainRenderer.getShaders().get("plane-faces")
             );
         }
 
@@ -243,9 +243,9 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
         Core::RenderCommand::setPolygonMode(Core::PolygonMode::Line);
         auto wireframesView = scene->getRegistry().view<Prefab::Terrain::TerrainComponent, Editor::SceneEntityTag, Editor::WireframeModelTag>();
         for (auto e : wireframesView) {
-            m_planeRenderer.render(
+            m_terrainRenderer.render(
                 {e, scene},
-                m_planeRenderer.getShaders().get("plane-faces")
+                m_terrainRenderer.getShaders().get("plane-faces")
             );
         }
         Core::RenderCommand::setPolygonMode(Core::PolygonMode::Fill);
@@ -322,7 +322,7 @@ namespace gaunlet::Prefab::BasicEditorRenderPipeline {
 
         m_circleRenderer.getShaders().get("circle-faces")->linkUniformBuffer(m_scenePropertiesUniformBuffer);
         m_skyboxRenderer.getShaders().get("skybox")->linkUniformBuffer(m_scenePropertiesUniformBuffer);
-        m_planeRenderer.getShaders().get("plane-faces")->linkUniformBuffer(m_scenePropertiesUniformBuffer);
+        m_terrainRenderer.getShaders().get("plane-faces")->linkUniformBuffer(m_scenePropertiesUniformBuffer);
 
     }
 

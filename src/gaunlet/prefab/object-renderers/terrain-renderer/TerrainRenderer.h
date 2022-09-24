@@ -40,11 +40,11 @@ namespace gaunlet::Prefab::ObjectRenderers {
 
     };
 
-    class PlaneRenderer {
+    class TerrainRenderer {
 
     public:
 
-        PlaneRenderer(unsigned int propertySetsUniformBufferBindingPoint, unsigned int cameraFrustumUniformBufferBindingPoint)
+        TerrainRenderer(unsigned int propertySetsUniformBufferBindingPoint, unsigned int cameraFrustumUniformBufferBindingPoint)
             : m_renderer({100000, 600000, 10, 1000}) {
 
             // Create a uniform buffer that will contain the properties of every object, and will be linked to the shader
@@ -153,10 +153,10 @@ namespace gaunlet::Prefab::ObjectRenderers {
         void loadShaders() {
 
             std::map<Core::ShaderType, std::string> facesSources {
-                {Core::ShaderType::Vertex, PREFABS_PATH"/object-renderers/plane-renderer/shaders/plane-faces/vertex.glsl"},
-                {Core::ShaderType::TessellationControl, PREFABS_PATH"/object-renderers/plane-renderer/shaders/plane-faces/tessellation-control.glsl"},
-                {Core::ShaderType::TessellationEvaluation, PREFABS_PATH"/object-renderers/plane-renderer/shaders/plane-faces/tessellation-evaluation.glsl"},
-                {Core::ShaderType::Fragment, PREFABS_PATH"/object-renderers/plane-renderer/shaders/plane-faces/fragment.glsl"}
+                {Core::ShaderType::Vertex, PREFABS_PATH"/object-renderers/terrain-renderer/shaders/vertex.glsl"},
+                {Core::ShaderType::TessellationControl, PREFABS_PATH"/object-renderers/terrain-renderer/shaders/tessellation-control.glsl"},
+                {Core::ShaderType::TessellationEvaluation, PREFABS_PATH"/object-renderers/terrain-renderer/shaders/tessellation-evaluation.glsl"},
+                {Core::ShaderType::Fragment, PREFABS_PATH"/object-renderers/terrain-renderer/shaders/fragment.glsl"}
             };
 
             auto facesShader = m_shaderLibrary.load("plane-faces", facesSources);
