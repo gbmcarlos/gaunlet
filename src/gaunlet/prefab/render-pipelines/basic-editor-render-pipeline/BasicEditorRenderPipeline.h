@@ -16,7 +16,7 @@ namespace gaunlet::Prefab::RenderPipelines {
         void run(const Core::Ref<Scene::Scene>& scene, const Core::Ref<Scene::Camera>& camera, const Core::Ref<Scene::DirectionalLightComponent>& directionalLight, const Core::Ref<Scene::SkyboxComponent>& skybox) override;
         void resize(unsigned int width, unsigned int height) override;
         const Core::Ref<Graphics::Texture>& getRenderedTexture() override;
-        int readFramebuffer(unsigned int attachmentIndex, unsigned int x, unsigned int y) override;
+        inline const Core::Ref<Graphics::Framebuffer>& getFramebuffer() override {return m_framebuffer; }
         static unsigned int getUniformBufferCount();
 
     protected:

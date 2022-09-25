@@ -8,20 +8,18 @@
 namespace gaunlet::Graphics {
 
     enum class FramebufferDataFormat {
-        RGB, RGBA, Integer, DepthStencil
+        RGBA, RGBAFloat, Integer, DepthStencil
     };
 
     struct FramebufferAttachmentSpec {
 
         FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, int clearColorValue);
-        FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, const glm::vec3& clearColorValue);
         FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, const glm::vec4& clearColorValue);
         FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat);
 
         Core::FramebufferAttachmentType m_attachmentType;
         FramebufferDataFormat m_dataFormat;
         int m_clearColorIntValue = 0;
-        glm::vec3 m_clearColorVec3Value = {};
         glm::vec4 m_clearColorVec4Value = {};
 
     };
@@ -45,7 +43,8 @@ namespace gaunlet::Graphics {
         inline unsigned int getHeight() {return m_height; }
         inline Core::Ref<Texture>& getColorAttachment(unsigned int index) {return m_textures[index]; }
 
-        int readPixel(unsigned int colorAttachmentIndex, unsigned int x, unsigned int y);
+        template<typename T>
+        T readPixel(unsigned int colorAttachmentIndex, unsigned int x, unsigned int y);
 
     private:
         unsigned int m_width, m_height;

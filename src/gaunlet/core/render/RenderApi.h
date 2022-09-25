@@ -36,7 +36,7 @@ namespace gaunlet::Core {
     };
 
     enum class TextureDataFormat {
-        RGB, RGBA,
+        RGB, RGBA, RGBA32Float,
         RedInteger32, RedInteger,
         Depth24Stencil8, DepthStencil
     };

@@ -561,6 +561,7 @@ namespace gaunlet::Core {
         switch (format) {
             case TextureDataFormat::RGB:                return GL_RGB;
             case TextureDataFormat::RGBA:               return GL_RGBA;
+            case TextureDataFormat::RGBA32Float:        return GL_RGBA32F;
             case TextureDataFormat::RedInteger32:       return GL_R32I;
             case TextureDataFormat::RedInteger:         return GL_RED_INTEGER;
             case TextureDataFormat::DepthStencil:       return GL_DEPTH_STENCIL;

@@ -14,19 +14,10 @@ namespace gaunlet::Graphics {
 
     }
 
-    FramebufferAttachmentSpec::FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, const glm::vec3& clearColorValue)
-        : m_attachmentType(attachmentType), m_dataFormat(framebufferDataFormat), m_clearColorVec3Value(clearColorValue) {
-
-        if (framebufferDataFormat != FramebufferDataFormat::RGB) {
-            throw std::runtime_error("Clear color type doesn't match the data type");
-        }
-
-    }
-
     FramebufferAttachmentSpec::FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, const glm::vec4& clearColorValue)
         : m_attachmentType(attachmentType), m_dataFormat(framebufferDataFormat), m_clearColorVec4Value(clearColorValue) {
 
-        if (framebufferDataFormat != FramebufferDataFormat::RGBA) {
+        if (framebufferDataFormat != FramebufferDataFormat::RGBA && framebufferDataFormat != FramebufferDataFormat::RGBAFloat) {
             throw std::runtime_error("Clear color type doesn't match the data type");
         }
 
@@ -87,10 +78,10 @@ namespace gaunlet::Graphics {
         auto& colorAttachmentSpec = m_colorAttachmentSpecs[index];
 
         switch (colorAttachmentSpec.m_dataFormat) {
-            case FramebufferDataFormat::RGB:
+            case FramebufferDataFormat::RGBA:
                 Core::RenderCommand::clearColorAttachment(m_rendererId, index, Core::PrimitiveDataType::Float, glm::value_ptr(colorAttachmentSpec.m_clearColorVec4Value));
                 break;
-            case FramebufferDataFormat::RGBA:
+            case FramebufferDataFormat::RGBAFloat:
                 Core::RenderCommand::clearColorAttachment(m_rendererId, index, Core::PrimitiveDataType::Float, glm::value_ptr(colorAttachmentSpec.m_clearColorVec4Value));
                 break;
             case FramebufferDataFormat::Integer:
@@ -120,27 +111,6 @@ namespace gaunlet::Graphics {
     void Framebuffer::setDrawBuffers(const std::vector<int>& drawBuffers) {
 
         Core::RenderCommand::setDrawBuffers(m_rendererId, drawBuffers);
-
-    }
-
-    int Framebuffer::readPixel(unsigned int colorAttachmentIndex, unsigned int x, unsigned int y) {
-
-        auto& colorAttachmentSpec = m_colorAttachmentSpecs[colorAttachmentIndex];
-
-        if (colorAttachmentSpec.m_dataFormat != FramebufferDataFormat::Integer) {
-            throw std::runtime_error("Color attachment doesn't have INT data");
-        }
-
-        int data;
-        Core::RenderCommand::readFramebuffer(
-            m_rendererId,
-            Core::FramebufferAttachmentType::Color, colorAttachmentIndex,
-            Core::TextureDataFormat::RedInteger, Core::PrimitiveDataType::Int,
-            x, y, 1, 1,
-            &data
-        );
-
-        return data;
 
     }
 
@@ -190,12 +160,12 @@ namespace gaunlet::Graphics {
         Core::TextureDataFormat format;
 
         switch (colorAttachmentSpec.m_dataFormat) {
-            case FramebufferDataFormat::RGB:
-                internalFormat = Core::TextureDataFormat::RGB;
-                format = Core::TextureDataFormat::RGB;
-                break;
             case FramebufferDataFormat::RGBA:
                 internalFormat = Core::TextureDataFormat::RGBA;
+                format = Core::TextureDataFormat::RGBA;
+                break;
+            case FramebufferDataFormat::RGBAFloat:
+                internalFormat = Core::TextureDataFormat::RGBA32Float;
                 format = Core::TextureDataFormat::RGBA;
                 break;
             case FramebufferDataFormat::Integer:
@@ -242,6 +212,50 @@ namespace gaunlet::Graphics {
             0,
             texture->getRendererId()
         );
+
+    }
+
+    template<>
+    int Framebuffer::readPixel<int>(unsigned int colorAttachmentIndex, unsigned int x, unsigned int y) {
+
+        auto& colorAttachmentSpec = m_colorAttachmentSpecs[colorAttachmentIndex];
+
+        if (colorAttachmentSpec.m_dataFormat != FramebufferDataFormat::Integer) {
+            throw std::runtime_error("Color attachment doesn't have INT data");
+        }
+
+        int data;
+        Core::RenderCommand::readFramebuffer(
+            m_rendererId,
+            Core::FramebufferAttachmentType::Color, colorAttachmentIndex,
+            Core::TextureDataFormat::RedInteger, Core::PrimitiveDataType::Int,
+            x, y, 1, 1,
+            &data
+        );
+
+        return data;
+
+    }
+
+    template<>
+    glm::vec4 Framebuffer::readPixel<glm::vec4>(unsigned int colorAttachmentIndex, unsigned int x, unsigned int y) {
+
+        auto& colorAttachmentSpec = m_colorAttachmentSpecs[colorAttachmentIndex];
+
+        if (colorAttachmentSpec.m_dataFormat != FramebufferDataFormat::RGBA && colorAttachmentSpec.m_dataFormat != FramebufferDataFormat::RGBAFloat) {
+            throw std::runtime_error("Color attachment doesn't have vec4 data");
+        }
+
+        glm::vec4 data;
+        Core::RenderCommand::readFramebuffer(
+            m_rendererId,
+            Core::FramebufferAttachmentType::Color, colorAttachmentIndex,
+            Core::TextureDataFormat::RGB, Core::PrimitiveDataType::Float,
+            x, y, 1, 1,
+            &data
+        );
+
+        return data;
 
     }
 

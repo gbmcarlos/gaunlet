@@ -62,10 +62,6 @@ namespace gaunlet::Prefab::RenderPipelines {
         return m_framebuffer->getColorAttachment(SceneFramebufferAttachmentIndex);
     }
 
-    int BasicEditorRenderPipeline::readFramebuffer(unsigned int attachmentIndex, unsigned int x, unsigned int y) {
-        return m_framebuffer->readPixel(attachmentIndex, x, y);
-    }
-
     unsigned int BasicEditorRenderPipeline::getUniformBufferCount() {
         return
             ObjectRenderers::ModelRenderer::getUniformBufferCount() +

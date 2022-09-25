@@ -64,7 +64,7 @@ namespace gaunlet::Prefab::EditorTools {
             unsigned int pixelPositionX = renderPanel->getMousePositionX() * Core::Window::getCurrentInstance()->getDPI();
             unsigned int pixelPositionY = renderPanel->getMousePositionYInverted() * Core::Window::getCurrentInstance()->getDPI();
 
-            int selectedEntityId = getWorkspace()->getRenderPipeline(renderPanel->getRenderPipelineId())->readFramebuffer(
+            auto selectedEntityId = getWorkspace()->getRenderPipeline(renderPanel->getRenderPipelineId())->getFramebuffer()->readPixel<int>(
                 framebufferAttachmentIndex,
                 pixelPositionX,
                 pixelPositionY
