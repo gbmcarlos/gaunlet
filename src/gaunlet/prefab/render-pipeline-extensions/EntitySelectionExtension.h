@@ -31,6 +31,7 @@ namespace gaunlet::Prefab::RenderPipelineExtensions {
             if (!m_framebuffer) {
                 return -1;
             }
+
             return m_framebuffer->readPixel<int>(attachmentIndex, pixelX, pixelY);
         }
 

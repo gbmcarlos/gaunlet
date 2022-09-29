@@ -22,11 +22,6 @@ namespace gaunlet::Prefab::EditorTools {
 
         Scene::Entity selectSceneEntity(Editor::RenderPanel* renderPanel) {
 
-            // Make sure the render panel's render pipeline has entity selection
-            if (!renderPanel->getRenderPipeline()->hasExtension<RenderPipelineExtensions::EntitySelectionExtension>()) {
-                return {};
-            }
-
             auto previousSelectedSceneEntity = getWorkspace()->getSelectedSceneEntity();
             auto newSelectedSceneEntity = mousePickTaggedEntity<Editor::SceneEntityTag>(renderPanel, RenderPipelineExtensions::EntitySelectionExtension::EntityLayer::SceneLayer);
 
@@ -72,6 +67,11 @@ namespace gaunlet::Prefab::EditorTools {
 
         template<typename T>
         Scene::Entity mousePickTaggedEntity(Editor::RenderPanel* renderPanel, RenderPipelineExtensions::EntitySelectionExtension::EntityLayer entityLayer) {
+
+            // Make sure the render panel's render pipeline has entity selection
+            if (!renderPanel->getRenderPipeline()->hasExtension<RenderPipelineExtensions::EntitySelectionExtension>()) {
+                return {};
+            }
 
             unsigned int pixelPositionX = renderPanel->getMousePositionX() * Core::Window::getCurrentInstance()->getDPI();
             unsigned int pixelPositionY = renderPanel->getMousePositionYInverted() * Core::Window::getCurrentInstance()->getDPI();
