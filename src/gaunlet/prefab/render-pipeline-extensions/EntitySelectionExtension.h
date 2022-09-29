@@ -1,11 +1,11 @@
 #pragma once
 
-#include "gaunlet/editor/render-pipeline/RenderPipeline.h"
+#include "gaunlet/editor/render-pipeline/RenderPipelineExtension.h"
 #include "gaunlet/graphics/framebuffer/Framebuffer.h"
 
 namespace gaunlet::Prefab::RenderPipelineExtensions {
 
-    class EntitySelectionExtension : public Editor::Extension {
+    class EntitySelectionExtension : public Editor::RenderPipelineExtension {
 
     public:
 

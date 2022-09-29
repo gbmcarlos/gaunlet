@@ -3,18 +3,11 @@
 #include "gaunlet/scene/entity/Entity.h"
 #include "gaunlet/graphics/texture/Texture.h"
 #include "gaunlet/scene/camera/Camera.h"
+#include "gaunlet/editor/render-pipeline/RenderPipelineExtension.h"
 
 #include "gaunlet/pch.h"
 
 namespace gaunlet::Editor {
-
-    class Extension {
-
-    public:
-
-        virtual const char* getName() = 0;
-
-    };
 
     class RenderPipeline {
 
@@ -31,7 +24,7 @@ namespace gaunlet::Editor {
 
         template<typename T>
         Core::Ref<T> getExtension() {
-            static_assert(std::is_base_of<Extension, T>::value, "T must derive from Extension");
+            static_assert(std::is_base_of<RenderPipelineExtension, T>::value, "T must derive from Extension");
             auto& extension = m_extensions[typeid(T)];
             return std::dynamic_pointer_cast<T>(extension);
         }
@@ -40,14 +33,14 @@ namespace gaunlet::Editor {
 
         template<typename T>
         Core::Ref<T> addExtension(const Core::Ref<T>& extension) {
-            static_assert(std::is_base_of<Extension, T>::value, "T must derive from Extension");
+            static_assert(std::is_base_of<RenderPipelineExtension, T>::value, "T must derive from Extension");
             m_extensions[typeid(T)] = extension;
             return extension;
         }
 
     private:
 
-        std::unordered_map<std::type_index, Core::Ref<Extension>> m_extensions;
+        std::unordered_map<std::type_index, Core::Ref<RenderPipelineExtension>> m_extensions;
 
     };
 
