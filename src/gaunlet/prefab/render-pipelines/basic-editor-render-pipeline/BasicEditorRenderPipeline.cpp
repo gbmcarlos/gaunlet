@@ -3,11 +3,12 @@
 #include "gaunlet/prefab/render-pipelines/SceneProperties.h"
 #include "gaunlet/core/window/Window.h"
 #include "gaunlet/editor/Tags.h"
+#include "gaunlet/prefab/render-pipeline-extensions/EntitySelectionExtension.h"
 
 namespace gaunlet::Prefab::RenderPipelines {
 
-    BasicEditorRenderPipeline::BasicEditorRenderPipeline(unsigned int uniformBufferBindingPointOffset)
-        : m_modelRenderer(1 + uniformBufferBindingPointOffset), m_circleRenderer(2 + uniformBufferBindingPointOffset) {
+    BasicEditorRenderPipeline::BasicEditorRenderPipeline(Core::Ref<Scene::DirectionalLightComponent> directionalLight, Core::Ref<Scene::SkyboxComponent> skybox, unsigned int uniformBufferBindingPointOffset)
+        : m_directionalLight(std::move(directionalLight)), m_skybox(std::move(skybox)), m_modelRenderer(1 + uniformBufferBindingPointOffset), m_circleRenderer(2 + uniformBufferBindingPointOffset) {
 
         prepareShaders(uniformBufferBindingPointOffset);
 
@@ -20,9 +21,14 @@ namespace gaunlet::Prefab::RenderPipelines {
             {gaunlet::Core::FramebufferAttachmentType::DepthStencil, gaunlet::Graphics::FramebufferDataFormat::DepthStencil}
         }, window->getViewportWidth() * window->getDPI(), window->getViewportHeight() * window->getDPI());
 
+        addExtension<RenderPipelineExtensions::EntitySelectionExtension>(Core::CreateRef<RenderPipelineExtensions::EntitySelectionExtension>(
+            m_framebuffer,
+            1, 2
+        ));
+
     }
 
-    void BasicEditorRenderPipeline::run(const Core::Ref<Scene::Scene> &scene, const Core::Ref<Scene::Camera> &camera, const Core::Ref<Scene::DirectionalLightComponent> &directionalLight, const Core::Ref<Scene::SkyboxComponent> &skybox) {
+    void BasicEditorRenderPipeline::run(const Core::Ref<Scene::Scene>& scene, const Core::Ref<Scene::Camera>& camera) {
 
         // Set the draw buffers in the right order
         m_framebuffer->setDrawBuffers({
@@ -35,7 +41,7 @@ namespace gaunlet::Prefab::RenderPipelines {
         m_framebuffer->clear();
 
         // Start scene doesn't do any drawing, it just sets the SceneProperties uniform buffer
-        startScene(scene, camera, directionalLight ? directionalLight : Core::CreateRef<Scene::DirectionalLightComponent>());
+        startScene(scene, camera, m_directionalLight ? m_directionalLight : Core::CreateRef<Scene::DirectionalLightComponent>());
 
         // The framebuffer needs to be bound before we start drawing anything
         m_framebuffer->bind();
@@ -43,7 +49,7 @@ namespace gaunlet::Prefab::RenderPipelines {
         drawScene(scene);
         drawOutlines(scene);
         drawUI(scene);
-        drawSkybox(skybox);
+        drawSkybox(m_skybox);
 
         m_framebuffer->unbind();
 
@@ -58,7 +64,7 @@ namespace gaunlet::Prefab::RenderPipelines {
 
     }
 
-    const Core::Ref<Graphics::Texture>& BasicEditorRenderPipeline::getRenderedTexture() {
+    const Core::Ref<Graphics::Texture>& BasicEditorRenderPipeline::getRenderTarget() {
         return m_framebuffer->getColorAttachment(SceneFramebufferAttachmentIndex);
     }
 

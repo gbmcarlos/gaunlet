@@ -36,7 +36,7 @@ namespace gaunlet::Prefab::EditorTools {
                 return;
             }
 
-            auto& camera = getWorkspace()->getCamera(m_renderPanel->getCameraId());
+            auto& camera = m_renderPanel->getCamera();
 
             float movement = timeStep * m_movementSensitivity;
             float rotation = timeStep * m_rotationSensitivity;

@@ -11,8 +11,8 @@ namespace gaunlet::Prefab::RenderPipelines {
 
     public:
 
-        Basic3DRenderPipeline();
-        virtual void run(const Core::Ref<Scene::Scene>& scene, const Core::Ref<Scene::Camera>& camera, const Core::Ref<Scene::DirectionalLightComponent>& directionalLight, const Core::Ref<Scene::SkyboxComponent>& skybox);
+        explicit Basic3DRenderPipeline(Core::Ref<Scene::DirectionalLightComponent> directionalLight = nullptr, Core::Ref<Scene::SkyboxComponent> skybox = nullptr);
+        virtual void run(const Core::Ref<Scene::Scene>& scene, const Core::Ref<Scene::Camera>& camera);
 
     protected:
 
@@ -33,7 +33,8 @@ namespace gaunlet::Prefab::RenderPipelines {
     private:
 
         void prepareShaders();
-
+        Core::Ref<Scene::DirectionalLightComponent> m_directionalLight = nullptr;
+        Core::Ref<Scene::SkyboxComponent> m_skybox = nullptr;
 
     };
 

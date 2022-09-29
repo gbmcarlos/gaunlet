@@ -7,11 +7,9 @@ namespace gaunlet::Editor {
 
     void RenderPanel::onUpdate(Core::TimeStep timeStep) {
 
-        getWorkspace()->getRenderPipeline(m_renderPipelineId)->run(
-            getWorkspace()->getScene(m_sceneId),
-            getWorkspace()->getCamera(m_cameraId),
-            getWorkspace()->getDirectionalLight(m_directionalLightId),
-            getWorkspace()->getSkybox(m_skyboxId)
+        getRenderPipeline()->run(
+            getScene(),
+            getCamera()
         );
 
     }
@@ -30,8 +28,20 @@ namespace gaunlet::Editor {
 
     }
 
-    const Core::Ref<Graphics::Texture>& RenderPanel::getRenderedTexture() {
-        return getWorkspace()->getRenderPipeline(m_renderPipelineId)->getRenderedTexture();
+    const Core::Ref<Graphics::Texture>& RenderPanel::getRenderTarget() {
+        return getWorkspace()->getRenderPipeline(m_renderPipelineId)->getRenderTarget();
+    }
+
+    const Core::Ref<Scene::Scene>& RenderPanel::getScene() {
+        return getWorkspace()->getScene(m_sceneId);
+    }
+
+    const Core::Ref<Scene::Camera>& RenderPanel::getCamera() {
+        return getWorkspace()->getCamera(m_cameraId);
+    }
+
+    const Core::Ref<Editor::RenderPipeline>& RenderPanel::getRenderPipeline() {
+        return getWorkspace()->getRenderPipeline(m_renderPipelineId);
     }
 
 }

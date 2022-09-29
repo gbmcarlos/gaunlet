@@ -9,7 +9,6 @@ public:
     void onReady() override {
 
         m_scene = gaunlet::Core::CreateRef<gaunlet::Scene::Scene>();
-        m_renderPipeline = gaunlet::Core::CreateRef<gaunlet::Prefab::RenderPipelines::Basic3DRenderPipeline>();
 
         auto viewportWidth = (float) gaunlet::Core::Window::getCurrentInstance()->getViewportWidth();
         auto viewportHeight = (float) gaunlet::Core::Window::getCurrentInstance()->getViewportHeight();
@@ -33,6 +32,8 @@ public:
             "assets/skybox/back.jpg"
         });
 
+        m_renderPipeline = gaunlet::Core::CreateRef<gaunlet::Prefab::RenderPipelines::Basic3DRenderPipeline>(m_directionalLight, m_skybox);
+
         auto cup = m_scene->createEntity();
         cup.addComponent<gaunlet::Prefab::Components::ModelComponent>(gaunlet::Scene::Model("assets/cup/cup.obj"));
         cup.addComponent<gaunlet::Scene::TransformComponent>(
@@ -45,7 +46,7 @@ public:
     }
 
     void onUpdate(gaunlet::Core::TimeStep timeStep) override {
-        m_renderPipeline->run(m_scene, m_camera, m_directionalLight, m_skybox);
+        m_renderPipeline->run(m_scene, m_camera);
     }
 
 private:

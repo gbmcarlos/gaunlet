@@ -21,13 +21,11 @@ namespace gaunlet::Editor {
         return panel;
     }
 
-    RenderPanel* Workspace::pushPanel(const char* panelId, RenderPanel* panel, const char* windowId, const char* cameraId, const char* sceneId, const char* directionalLightId, const char* skyboxId, const char* renderPipelineId) {
+    RenderPanel* Workspace::pushPanel(const char* panelId, RenderPanel* panel, const char* windowId, const char* cameraId, const char* sceneId, const char* renderPipelineId) {
         panel->m_id = panelId;
         panel->m_workspace = this;
         panel->m_cameraId = cameraId;
         panel->m_sceneId = sceneId;
-        panel->m_directionalLightId = directionalLightId;
-        panel->m_skyboxId = skyboxId;
         panel->m_renderPipelineId = renderPipelineId;
         m_renderPanelSpecs.push_back({
             panel,
@@ -37,41 +35,19 @@ namespace gaunlet::Editor {
         return panel;
     }
 
-    const Core::Ref<Scene::Camera>& Workspace::addCamera(const char* id, const Core::Ref<Scene::Camera>& camera) {
-        m_cameras[id] = camera;
-        return camera;
-    }
-
     const Core::Ref<Scene::Scene>& Workspace::addScene(const char* id, const Core::Ref<Scene::Scene>& scene) {
         m_scenes[id] = scene;
         return scene;
     }
 
-    const Core::Ref<Scene::DirectionalLightComponent>& Workspace::addDirectionalLight(const char* id, const Core::Ref<Scene::DirectionalLightComponent>& directionalLight) {
-        m_directionalLights[id] = directionalLight;
-        return directionalLight;
+    const Core::Ref<Scene::Camera>& Workspace::addCamera(const char* id, const Core::Ref<Scene::Camera>& camera) {
+        m_cameras[id] = camera;
+        return camera;
     }
 
-    const Core::Ref<Scene::SkyboxComponent>& Workspace::addSkybox(const char *id, const Core::Ref<Scene::SkyboxComponent>& skybox) {
-        m_skyboxes[id] = skybox;
-        return skybox;
-    }
-
-    const Core::Ref<FramebufferRenderPipeline>& Workspace::addRenderPipeline(const char *id, const Core::Ref<FramebufferRenderPipeline>& renderPipeline) {
+    const Core::Ref<RenderPipeline>& Workspace::addRenderPipeline(const char *id, const Core::Ref<RenderPipeline>& renderPipeline) {
         m_renderPipelines[id] = renderPipeline;
         return renderPipeline;
-    }
-
-    const Core::Ref<Scene::Camera>& Workspace::getCamera(const char* id) {
-
-        auto iterator = m_cameras.find(id);
-
-        if (iterator == m_cameras.end()) {
-            throw std::runtime_error("Camera not found");
-        }
-
-        return iterator->second;
-
     }
 
     const Core::Ref<Scene::Scene>& Workspace::getScene(const char* id) {
@@ -86,39 +62,19 @@ namespace gaunlet::Editor {
 
     }
 
-    const Core::Ref<Scene::DirectionalLightComponent>& Workspace::getDirectionalLight(const char* id) {
+    const Core::Ref<Scene::Camera>& Workspace::getCamera(const char* id) {
 
-        if (id == nullptr) {
-            return m_nullDirectionalLight;
-        }
+        auto iterator = m_cameras.find(id);
 
-        auto iterator = m_directionalLights.find(id);
-
-        if (iterator == m_directionalLights.end()) {
-            throw std::runtime_error("DirectionalLight not found");
+        if (iterator == m_cameras.end()) {
+            throw std::runtime_error("Camera not found");
         }
 
         return iterator->second;
 
     }
 
-    const Core::Ref<Scene::SkyboxComponent>& Workspace::getSkybox(const char *id) {
-
-        if (id == nullptr) {
-            return m_nullSkybox;
-        }
-
-        auto iterator = m_skyboxes.find(id);
-
-        if (iterator == m_skyboxes.end()) {
-            throw std::runtime_error("Skybox not found");
-        }
-
-        return iterator->second;
-
-    }
-
-    const Core::Ref<FramebufferRenderPipeline>& Workspace::getRenderPipeline(const char *id) {
+    const Core::Ref<RenderPipeline>& Workspace::getRenderPipeline(const char *id) {
 
         auto iterator = m_renderPipelines.find(id);
 
@@ -241,7 +197,7 @@ namespace gaunlet::Editor {
     glm::vec3 Workspace::mousePickPoint(RenderPanel* renderPanel, glm::vec3 planePoint, glm::vec3 planeNormal) {
 
         auto window = gaunlet::Core::Window::getCurrentInstance();
-        auto camera = getCamera(renderPanel->getCameraId());
+        auto camera = renderPanel->getCamera();
 
         glm::mat4 projection = camera->getProjectionMatrix();
         glm::mat4 view = camera->getViewMatrix();
@@ -329,7 +285,7 @@ namespace gaunlet::Editor {
 
             updateNodeProperties(renderPanelSpec.m_panel);
 
-            auto panelCamera = getCamera(renderPanelSpec.m_panel->m_cameraId);
+            auto panelCamera = renderPanelSpec.m_panel->getCamera();
 
             // If the aspect ratio has changed, the panel needs to be resized
             if (panelCamera->getAspectRatio() != renderPanelSpec.m_panel->getNodeAspectRatio()) {
@@ -337,7 +293,7 @@ namespace gaunlet::Editor {
             }
 
             // Render the framebuffer's color attachment texture as an ImGui image
-            auto& colorAttachmentTexture = renderPanelSpec.m_panel->getRenderedTexture();
+            auto& colorAttachmentTexture = renderPanelSpec.m_panel->getRenderTarget();
             ImGui::Image(
                 (void *)(intptr_t)colorAttachmentTexture->getRendererId(),
                 ImVec2(renderPanelSpec.m_panel->getWidth(), renderPanelSpec.m_panel->getHeight()),

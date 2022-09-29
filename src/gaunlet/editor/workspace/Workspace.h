@@ -7,7 +7,7 @@
 #include "gaunlet/editor/panel/RenderPanel.h"
 #include "gaunlet/editor/tooling/Tool.h"
 #include "gaunlet/core/window/Window.h"
-#include "gaunlet/editor/workspace/FramebufferRenderPipeline.h"
+#include "gaunlet/editor/render-pipeline/RenderPipeline.h"
 #include "gaunlet/pch.h"
 
 namespace gaunlet::Editor {
@@ -19,13 +19,11 @@ namespace gaunlet::Editor {
         void setLayoutSpec(const DockingLayoutSpec& layoutSpec);
 
         GuiPanel* pushPanel(const char* panelId, GuiPanel* panel, const char* windowId);
-        RenderPanel* pushPanel(const char* panelId, RenderPanel* panel, const char* windowId, const char* cameraId, const char* sceneId, const char* directionalLightId, const char* skyboxId, const char* renderPipelineId);
+        RenderPanel* pushPanel(const char* panelId, RenderPanel* panel, const char* windowId, const char* cameraId, const char* sceneId, const char* renderPipelineId);
 
-        const Core::Ref<Scene::Camera>& addCamera(const char* id, const Core::Ref<Scene::Camera>& camera);
         const Core::Ref<Scene::Scene>& addScene(const char* id, const Core::Ref<Scene::Scene>& scene);
-        const Core::Ref<Scene::DirectionalLightComponent>& addDirectionalLight(const char* id, const Core::Ref<Scene::DirectionalLightComponent>& directionalLight);
-        const Core::Ref<Scene::SkyboxComponent>& addSkybox(const char* id, const Core::Ref<Scene::SkyboxComponent>& skybox);
-        const Core::Ref<FramebufferRenderPipeline>& addRenderPipeline(const char* id, const Core::Ref<FramebufferRenderPipeline>& renderPipeline);
+        const Core::Ref<Scene::Camera>& addCamera(const char* id, const Core::Ref<Scene::Camera>& camera);
+        const Core::Ref<RenderPipeline>& addRenderPipeline(const char* id, const Core::Ref<RenderPipeline>& renderPipeline);
 
         void onEvent(Core::Event& event);
         void update(Core::TimeStep timeStep);
@@ -37,11 +35,9 @@ namespace gaunlet::Editor {
         void selectSceneEntity(Scene::Entity entity);
         void selectUiEntity(Scene::Entity entity);
 
-        const Core::Ref<Scene::Camera>& getCamera(const char* id);
         const Core::Ref<Scene::Scene>& getScene(const char* id);
-        const Core::Ref<Scene::DirectionalLightComponent>& getDirectionalLight(const char* id);
-        const Core::Ref<Scene::SkyboxComponent>& getSkybox(const char* id);
-        const Core::Ref<FramebufferRenderPipeline>& getRenderPipeline(const char* id);
+        const Core::Ref<Scene::Camera>& getCamera(const char* id);
+        const Core::Ref<RenderPipeline>& getRenderPipeline(const char* id);
 
         std::vector<GuiPanel*> getGuiPanels();
         std::vector<RenderPanel*> getRenderPanels();
@@ -66,11 +62,9 @@ namespace gaunlet::Editor {
     private:
         DockingLayoutSpec m_layoutSpec;
 
-        std::unordered_map<const char*, Core::Ref<Scene::Camera>> m_cameras = {};
         std::unordered_map<const char*, Core::Ref<Scene::Scene>> m_scenes = {};
-        std::unordered_map<const char*, Core::Ref<Scene::DirectionalLightComponent>> m_directionalLights = {};
-        std::unordered_map<const char*, Core::Ref<Scene::SkyboxComponent>> m_skyboxes = {};
-        std::unordered_map<const char*, Core::Ref<FramebufferRenderPipeline>> m_renderPipelines;
+        std::unordered_map<const char*, Core::Ref<Scene::Camera>> m_cameras = {};
+        std::unordered_map<const char*, Core::Ref<RenderPipeline>> m_renderPipelines;
 
         struct GuiPanelSpec {
             GuiPanel* m_panel;
@@ -92,9 +86,6 @@ namespace gaunlet::Editor {
 
         Scene::Entity m_selectedSceneEntity = {};
         Scene::Entity m_selectedUIEntity = {};
-
-        Core::Ref<Scene::DirectionalLightComponent> m_nullDirectionalLight = nullptr;
-        Core::Ref<Scene::SkyboxComponent> m_nullSkybox = nullptr;
 
     };
 

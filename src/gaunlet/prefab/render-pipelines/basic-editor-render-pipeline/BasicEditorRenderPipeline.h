@@ -3,20 +3,19 @@
 #include "gaunlet/prefab/object-renderers/model-renderer/ModelRenderer.h"
 #include "gaunlet/prefab/object-renderers/circle-renderer/CircleRenderer.h"
 #include "gaunlet/prefab/object-renderers/skybox-renderer/SkyboxRenderer.h"
-#include "gaunlet/editor/workspace/FramebufferRenderPipeline.h"
+#include "gaunlet/editor/render-pipeline/RenderPipeline.h"
 #include "gaunlet/graphics/framebuffer/Framebuffer.h"
 
 namespace gaunlet::Prefab::RenderPipelines {
 
-    class BasicEditorRenderPipeline : public Editor::FramebufferRenderPipeline {
+    class BasicEditorRenderPipeline : public Editor::RenderPipeline {
 
     public:
 
-        explicit BasicEditorRenderPipeline(unsigned int uniformBufferBindingPointOffset = 0);
-        void run(const Core::Ref<Scene::Scene>& scene, const Core::Ref<Scene::Camera>& camera, const Core::Ref<Scene::DirectionalLightComponent>& directionalLight, const Core::Ref<Scene::SkyboxComponent>& skybox) override;
+        explicit BasicEditorRenderPipeline(Core::Ref<Scene::DirectionalLightComponent> directionalLight, Core::Ref<Scene::SkyboxComponent> skybox, unsigned int uniformBufferBindingPointOffset = 0);
+        void run(const Core::Ref<Scene::Scene>& scene, const Core::Ref<Scene::Camera>& camera) override;
         void resize(unsigned int width, unsigned int height) override;
-        const Core::Ref<Graphics::Texture>& getRenderedTexture() override;
-        inline const Core::Ref<Graphics::Framebuffer>& getFramebuffer() override {return m_framebuffer; }
+        const Core::Ref<Graphics::Texture>& getRenderTarget() override;
         static unsigned int getUniformBufferCount();
 
     protected:
@@ -52,6 +51,8 @@ namespace gaunlet::Prefab::RenderPipelines {
     private:
 
         void prepareShaders(unsigned int uniformBufferBindingPointOffset);
+        Core::Ref<Scene::DirectionalLightComponent> m_directionalLight = nullptr;
+        Core::Ref<Scene::SkyboxComponent> m_skybox = nullptr;
 
         gaunlet::Core::Ref<gaunlet::Graphics::Framebuffer> m_framebuffer = nullptr;
 

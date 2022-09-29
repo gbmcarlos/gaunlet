@@ -6,6 +6,7 @@
 #include "gaunlet/graphics/framebuffer/Framebuffer.h"
 #include "gaunlet/core/event/events/MouseEvent.h"
 #include "gaunlet/core/application/TimeStep.h"
+#include "gaunlet/editor/render-pipeline/RenderPipeline.h"
 
 #include "gaunlet/pch.h"
 
@@ -17,26 +18,22 @@ namespace gaunlet::Editor {
 
     public:
 
-        inline const char* getCameraId() {return m_cameraId; }
-        inline const char* getSceneId() {return m_sceneId; }
-        inline const char* getDirectionalLightId() {return m_directionalLightId; }
-        inline const char* getSkyboxId() {return m_skyboxId; }
-        inline const char* getRenderPipelineId() {return m_renderPipelineId; }
+        const Core::Ref<Scene::Scene>& getScene();
+        const Core::Ref<Scene::Camera>& getCamera();
+        const Core::Ref<Editor::RenderPipeline>& getRenderPipeline();
 
     protected:
 
-        // To be called by the LayoutLayer (friend), or overriden
+        // To be called by the LayoutLayer (friend), or overloaded
         virtual bool onEvent(Core::Event& event) {return true; }
         virtual void onUpdate(Core::TimeStep timeStep);
         virtual void resize();
-        virtual const Core::Ref<Graphics::Texture>& getRenderedTexture();
+        virtual const Core::Ref<Graphics::Texture>& getRenderTarget();
 
     private:
 
-        const char* m_cameraId;
         const char* m_sceneId;
-        const char* m_directionalLightId;
-        const char* m_skyboxId;
+        const char* m_cameraId;
         const char* m_renderPipelineId;
 
     };

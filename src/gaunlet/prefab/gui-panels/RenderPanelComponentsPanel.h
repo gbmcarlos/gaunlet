@@ -38,9 +38,9 @@ namespace gaunlet::Prefab::GuiPanels {
         void sections(Editor::RenderPanel* renderPanel) {
 
             panelProperties(renderPanel);
-            sceneProperties(getWorkspace()->getScene(renderPanel->getSceneId()));
-            cameraProperties(getWorkspace()->getCamera(renderPanel->getCameraId()));
-            directionalLightProperties(getWorkspace()->getDirectionalLight(renderPanel->getDirectionalLightId()));
+            sceneProperties(renderPanel->getScene());
+            cameraProperties(renderPanel->getCamera());
+//            directionalLightProperties(getWorkspace()->getDirectionalLight(renderPanel->getDirectionalLightId()));
 
         }
 

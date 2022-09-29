@@ -4,15 +4,15 @@
 
 namespace gaunlet::Prefab::RenderPipelines {
 
-    Basic3DRenderPipeline::Basic3DRenderPipeline()
-        : m_modelRenderer(1), m_circleRenderer(2) {
+    Basic3DRenderPipeline::Basic3DRenderPipeline(Core::Ref<Scene::DirectionalLightComponent> directionalLight, Core::Ref<Scene::SkyboxComponent> skybox)
+        : m_directionalLight(std::move(directionalLight)), m_skybox(std::move(skybox)), m_modelRenderer(1), m_circleRenderer(2) {
         prepareShaders();
     }
 
-    void Basic3DRenderPipeline::run(const Core::Ref<Scene::Scene>& scene, const Core::Ref<Scene::Camera>& camera, const Core::Ref<Scene::DirectionalLightComponent>& directionalLight, const Core::Ref<Scene::SkyboxComponent>& skybox) {
+    void Basic3DRenderPipeline::run(const Core::Ref<Scene::Scene>& scene, const Core::Ref<Scene::Camera>& camera) {
 
         clearBuffers();
-        startScene(scene, camera, directionalLight ? directionalLight : Core::CreateRef<Scene::DirectionalLightComponent>());
+        startScene(scene, camera, m_directionalLight ? m_directionalLight : Core::CreateRef<Scene::DirectionalLightComponent>());
 
         Core::RenderCommand::setDepthFunction(Core::DepthStencilFunction::Less);
 
@@ -32,7 +32,7 @@ namespace gaunlet::Prefab::RenderPipelines {
         renderCircles(scene);
         renderModels(scene);
 
-        if (skybox->m_cubeMap) {
+        if (m_skybox && m_skybox->m_cubeMap) {
 
             Core::RenderCommand::setDepthFunction(Core::DepthStencilFunction::Always);
 
@@ -49,7 +49,7 @@ namespace gaunlet::Prefab::RenderPipelines {
                 Core::StencilOperation::Keep
             );
 
-            renderSkybox(skybox);
+            renderSkybox(m_skybox);
 
         }
 

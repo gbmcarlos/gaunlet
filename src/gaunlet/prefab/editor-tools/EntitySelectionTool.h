@@ -3,6 +3,8 @@
 #include "gaunlet/editor/workspace/Workspace.h"
 #include "gaunlet/scene/entity/Entity.h"
 #include "gaunlet/editor/Tags.h"
+#include "gaunlet/editor/render-pipeline/RenderPipeline.h"
+#include "gaunlet/prefab/render-pipeline-extensions/EntitySelectionExtension.h"
 
 namespace gaunlet::Prefab::EditorTools {
 
@@ -20,8 +22,13 @@ namespace gaunlet::Prefab::EditorTools {
 
         Scene::Entity selectSceneEntity(Editor::RenderPanel* renderPanel) {
 
+            // Make sure the render panel's render pipeline has entity selection
+            if (!renderPanel->getRenderPipeline()->hasExtension<RenderPipelineExtensions::EntitySelectionExtension>()) {
+                return {};
+            }
+
             auto previousSelectedSceneEntity = getWorkspace()->getSelectedSceneEntity();
-            auto newSelectedSceneEntity = mousePickTaggedEntity<Editor::SceneEntityTag>(renderPanel, 1);
+            auto newSelectedSceneEntity = mousePickTaggedEntity<Editor::SceneEntityTag>(renderPanel, RenderPipelineExtensions::EntitySelectionExtension::EntityLayer::SceneLayer);
 
             if (previousSelectedSceneEntity) {
                 onSceneEntityUnselected(previousSelectedSceneEntity);
@@ -40,8 +47,13 @@ namespace gaunlet::Prefab::EditorTools {
 
         Scene::Entity selectUIEntity(Editor::RenderPanel* renderPanel) {
 
+            // Make sure the render panel's render pipeline has entity selection
+            if (!renderPanel->getRenderPipeline()->hasExtension<RenderPipelineExtensions::EntitySelectionExtension>()) {
+                return {};
+            }
+
             auto previousSelectedUIEntity = getWorkspace()->getSelectedUIEntity();
-            auto newSelectedUIEntity = mousePickTaggedEntity<Editor::UIEntityTag>(renderPanel, 2);
+            auto newSelectedUIEntity = mousePickTaggedEntity<Editor::UIEntityTag>(renderPanel, RenderPipelineExtensions::EntitySelectionExtension::EntityLayer::UILayer);
 
             if (previousSelectedUIEntity) {
                 onUIEntityUnselected(previousSelectedUIEntity);
@@ -59,18 +71,19 @@ namespace gaunlet::Prefab::EditorTools {
         }
 
         template<typename T>
-        Scene::Entity mousePickTaggedEntity(Editor::RenderPanel* renderPanel, unsigned int framebufferAttachmentIndex) {
+        Scene::Entity mousePickTaggedEntity(Editor::RenderPanel* renderPanel, RenderPipelineExtensions::EntitySelectionExtension::EntityLayer entityLayer) {
 
             unsigned int pixelPositionX = renderPanel->getMousePositionX() * Core::Window::getCurrentInstance()->getDPI();
             unsigned int pixelPositionY = renderPanel->getMousePositionYInverted() * Core::Window::getCurrentInstance()->getDPI();
 
-            auto selectedEntityId = getWorkspace()->getRenderPipeline(renderPanel->getRenderPipelineId())->getFramebuffer()->readPixel<int>(
-                framebufferAttachmentIndex,
+            auto entitySelectionExtension = renderPanel->getRenderPipeline()->getExtension<RenderPipelineExtensions::EntitySelectionExtension>();
+            auto selectedEntityId = entitySelectionExtension->getEntityId(
+                entityLayer,
                 pixelPositionX,
                 pixelPositionY
             );
 
-            auto& scene = getWorkspace()->getScene(renderPanel->getSceneId());
+            auto& scene = renderPanel->getScene();
 
             Scene::Entity selectedEntity = Scene::Entity(selectedEntityId, scene);
 

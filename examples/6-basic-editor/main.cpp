@@ -314,21 +314,20 @@ public:
         // Prepare the components of the main render panel
         m_workspace->addCamera("main", gaunlet::Core::CreateRef<gaunlet::Scene::PerspectiveCamera>(45.0f, (float) viewportWidth / (float) viewportHeight, 1.0f, 100.0f));
         m_workspace->addScene("main", gaunlet::Core::CreateRef<gaunlet::Scene::Scene>());
-        m_workspace->addDirectionalLight("main", gaunlet::Core::CreateRef<gaunlet::Scene::DirectionalLightComponent>(
-            glm::vec3(0.8f, 0.8f, 0.8f),
-            glm::vec3(-0.2f, -1.0f, -0.3f),
-            0.5f, 0.7f
+        m_workspace->addRenderPipeline("main", gaunlet::Core::CreateRef<gaunlet::Prefab::RenderPipelines::BasicEditorRenderPipeline>(
+            gaunlet::Core::CreateRef<gaunlet::Scene::DirectionalLightComponent>(
+                glm::vec3(0.8f, 0.8f, 0.8f),
+                glm::vec3(-0.2f, -1.0f, -0.3f),
+                0.5f, 0.7f
+            ),
+            gaunlet::Core::CreateRef<gaunlet::Scene::SkyboxComponent>(gaunlet::Core::CreateRef<gaunlet::Prefab::Skyboxes::SimpleSkyboxCubeMap>())
         ));
-        m_workspace->addSkybox("main", gaunlet::Core::CreateRef<gaunlet::Scene::SkyboxComponent>(gaunlet::Core::CreateRef<gaunlet::Prefab::Skyboxes::SimpleSkyboxCubeMap>()));
-        m_workspace->addRenderPipeline("main", gaunlet::Core::CreateRef<gaunlet::Prefab::RenderPipelines::BasicEditorRenderPipeline>());
 
         // Create and push the main render panel, referencing the main components
         m_workspace->pushPanel(
             "main",
             new gaunlet::Editor::RenderPanel(),
             "Scene",
-            "main",
-            "main",
             "main",
             "main",
             "main"
@@ -338,7 +337,7 @@ public:
         m_workspace->addTool("selector", gaunlet::Core::CreateRef<SelectorTool>());
         m_workspace->addTool("camera-controller", gaunlet::Core::CreateRef<CameraControllerTool>());
         m_workspace->addTool("transformer", gaunlet::Core::CreateRef<TransformerTool>());
-        m_workspace->activateTool("transformer");
+        m_workspace->activateTool("selector");
 
         // Prepare the scene
         auto& mainScene = m_workspace->getScene("main");

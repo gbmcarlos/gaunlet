@@ -6,6 +6,7 @@
 #include <chrono>
 #include <stdexcept>
 #include <algorithm>
+#include <typeindex>
 
 // Containers
 #include <array>

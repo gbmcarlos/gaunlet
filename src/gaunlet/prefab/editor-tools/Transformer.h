@@ -69,6 +69,7 @@ namespace gaunlet::Prefab::EditorTools {
 
         bool onMousePressEvent(gaunlet::Core::MouseButtonPress& event) {
 
+            // Get the render panel that is currently hovered
             m_renderPanel = getWorkspace()->getHoveredRenderPanel();
             if (!m_renderPanel) {
                 return true;

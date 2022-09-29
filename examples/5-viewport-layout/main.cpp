@@ -72,17 +72,16 @@ public:
         // Prepare the components of the main render panel
         m_workspace->addCamera("main", gaunlet::Core::CreateRef<gaunlet::Scene::PerspectiveCamera>(45.0f, (float) viewportWidth / (float) viewportHeight, 1.0f, 100.0f));
         m_workspace->addScene("main", gaunlet::Core::CreateRef<gaunlet::Scene::Scene>());
-        m_workspace->addDirectionalLight("main", gaunlet::Core::CreateRef<gaunlet::Scene::DirectionalLightComponent>());
-        m_workspace->addSkybox("main", gaunlet::Core::CreateRef<gaunlet::Scene::SkyboxComponent>());
-        m_workspace->addRenderPipeline("main", gaunlet::Core::CreateRef<gaunlet::Prefab::RenderPipelines::BasicEditorRenderPipeline>());
+        m_workspace->addRenderPipeline("main", gaunlet::Core::CreateRef<gaunlet::Prefab::RenderPipelines::BasicEditorRenderPipeline>(
+            gaunlet::Core::CreateRef<gaunlet::Scene::DirectionalLightComponent>(),
+            gaunlet::Core::CreateRef<gaunlet::Scene::SkyboxComponent>()
+        ));
 
         // Create and push the main render panel, referencing the main components
         m_workspace->pushPanel(
             "main",
             new gaunlet::Editor::RenderPanel(),
             "Scene",
-            "main",
-            "main",
             "main",
             "main",
             "main"

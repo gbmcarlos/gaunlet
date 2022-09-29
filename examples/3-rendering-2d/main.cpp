@@ -10,13 +10,14 @@ public:
     void onReady() override {
 
         m_scene = gaunlet::Core::CreateRef<gaunlet::Scene::Scene>();
-        m_renderPipeline = gaunlet::Core::CreateRef<gaunlet::Prefab::RenderPipelines::Basic3DRenderPipeline>();
 
         float viewportWidth = (float) gaunlet::Core::Window::getCurrentInstance()->getViewportWidth();
         float viewportHeight = (float) gaunlet::Core::Window::getCurrentInstance()->getViewportHeight();
 
         m_camera = gaunlet::Core::CreateRef<gaunlet::Scene::OrthographicCamera>(viewportWidth, viewportHeight, 100);
         m_camera->setPosition({0, 0, 1});
+
+        m_renderPipeline = gaunlet::Core::CreateRef<gaunlet::Prefab::RenderPipelines::Basic3DRenderPipeline>();
 
         gaunlet::Core::Ref<gaunlet::Graphics::TextureImage2D> texture1 = gaunlet::Core::CreateRef<gaunlet::Graphics::TextureImage2D>("assets/texture-1.jpeg");
         gaunlet::Core::Ref<gaunlet::Graphics::TextureImage2D> texture2 = gaunlet::Core::CreateRef<gaunlet::Graphics::TextureImage2D>("assets/texture-2.jpeg");
@@ -114,12 +115,7 @@ public:
     }
 
     void onUpdate(gaunlet::Core::TimeStep timeStep) override {
-        m_renderPipeline->run(
-            m_scene,
-            m_camera,
-            gaunlet::Core::CreateRef<gaunlet::Scene::DirectionalLightComponent>(),
-            gaunlet::Core::CreateRef<gaunlet::Scene::SkyboxComponent>()
-        );
+        m_renderPipeline->run(m_scene, m_camera);
     }
 
 private:
