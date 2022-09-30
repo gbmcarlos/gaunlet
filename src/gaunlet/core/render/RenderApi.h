@@ -121,6 +121,7 @@ namespace gaunlet::Core {
         virtual void clearDepthStencilAttachment(unsigned int id, float depthValue, int stencilValue) = 0;
 
         virtual void readFramebuffer(unsigned int id, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, TextureDataFormat internalFormat, PrimitiveDataType dataType, unsigned int x, unsigned int y, unsigned int width, unsigned int height, void* data) = 0;
+        virtual void copyColorAttachment(unsigned int id, unsigned int attachmentIndex, unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned int textureId) = 0;
 
         virtual void setPolygonMode(PolygonMode mode, float polygonOffsetFactor, float polygonOffsetUnits) = 0;
         virtual void drawIndexedTriangles(unsigned int vertexBufferId, unsigned int indexBufferId, unsigned int vertexArrayId, unsigned int shaderId, unsigned int indexCount) = 0;

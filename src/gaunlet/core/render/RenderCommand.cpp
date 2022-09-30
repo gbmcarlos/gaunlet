@@ -216,6 +216,10 @@ namespace gaunlet::Core {
         getApi().readFramebuffer(id, attachmentType, attachmentIndex, internalFormat, dataType, x, y, width, height, data);
     }
 
+    void RenderCommand::copyColorAttachment(unsigned int id, unsigned int attachmentIndex, unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned int textureId) {
+        getApi().copyColorAttachment(id, attachmentIndex, x, y, width, height, textureId);
+    }
+
     void RenderCommand::setPolygonMode(PolygonMode mode, float polygonOffsetFactor, float polygonOffsetUnits) {
         getApi().setPolygonMode(mode, polygonOffsetFactor, polygonOffsetUnits);
     }

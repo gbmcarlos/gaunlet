@@ -20,6 +20,10 @@ namespace gaunlet::Core {
             return Window::getCurrentInstance()->getMousePositionY();
         }
 
+        static bool isMouseButtonPressed(int buttonCode) {
+            return Window::getCurrentInstance()->isMouseButtonPressed(buttonCode);
+        }
+
     };
 
 }

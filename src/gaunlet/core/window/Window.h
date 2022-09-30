@@ -39,6 +39,7 @@ namespace gaunlet::Core {
         void close();
 
         bool isKeyPressed(int keyCode);
+        bool isMouseButtonPressed(int buttonCode);
         unsigned int getMousePositionX();
         unsigned int getMousePositionY();
 

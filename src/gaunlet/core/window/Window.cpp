@@ -103,6 +103,13 @@ namespace gaunlet::Core {
 
     }
 
+    bool Window::isMouseButtonPressed(int buttonCode) {
+
+        auto state = glfwGetMouseButton(m_windowContext, buttonCode);
+        return state == GLFW_PRESS || state == GLFW_REPEAT;
+
+    }
+
     unsigned int Window::getMousePositionX() {
 
         double x, y;

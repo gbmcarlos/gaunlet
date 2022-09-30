@@ -463,6 +463,21 @@ namespace gaunlet::Core {
 
     }
 
+    void OpenGLRenderApi::copyColorAttachment(unsigned int id, unsigned int attachmentIndex, unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned int textureId) {
+
+        GLenum glBufferMode = convertFramebufferAttachmentType(FramebufferAttachmentType::Color) + attachmentIndex;
+
+        glCall(glReadBuffer(glBufferMode));
+        glCall(glBindTexture(GL_TEXTURE_2D, textureId));
+        glCall(glCopyTexSubImage2D(
+            GL_TEXTURE_2D, 0,
+            0, 0,
+            x, y,
+            width, height
+        ));
+
+    }
+
     void OpenGLRenderApi::setPolygonMode(PolygonMode mode, float polygonOffsetFactor, float polygonOffsetUnits) {
 
         glCall(glPolygonOffset(polygonOffsetFactor,polygonOffsetUnits));

@@ -83,6 +83,7 @@ namespace gaunlet::Core {
         static void clearDepthStencilAttachment(unsigned int id, float depthValue, int stencilValue);
 
         static void readFramebuffer(unsigned int id, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, TextureDataFormat internalFormat, PrimitiveDataType type, unsigned int x, unsigned int y, unsigned int width, unsigned int height, void* data);
+        static void copyColorAttachment(unsigned int id, unsigned int attachmentIndex, unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned int textureId);
 
         static void setPolygonMode(PolygonMode mode, float polygonOffsetFactor = 0.0f, float polygonOffsetUnits = 0.0f);
         static void drawIndexedTriangles(unsigned int vertexBufferId, unsigned int indexBufferId, unsigned int vertexArrayId, unsigned int shaderId, unsigned int indexCount);

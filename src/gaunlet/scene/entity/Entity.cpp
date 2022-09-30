@@ -152,7 +152,23 @@ namespace gaunlet::Scene {
         entity.addComponent<RelationshipComponent>();
         entity.addComponent<NameComponent>(name);
 
+        if (name != nullptr) {
+            m_entitiesByName[name] = entityHandle;
+        }
+
         return entity;
+    }
+
+    Entity Scene::getEntity(const char *name) {
+
+        auto iterator = m_entitiesByName.find(name);
+
+        if (iterator == m_entitiesByName.end()) {
+            return {};
+        }
+
+        return {iterator->second, shared_from_this()};
+
     }
 
     int Scene::countEntities() {

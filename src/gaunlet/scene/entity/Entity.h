@@ -84,6 +84,7 @@ namespace gaunlet::Scene {
         template<typename T>
         Entity createTaggedEntity(const char* name = nullptr);
 
+        Entity getEntity(const char* name);
         int countEntities();
 
         template<typename T>
@@ -93,6 +94,7 @@ namespace gaunlet::Scene {
 
     private:
         entt::registry m_registry;
+        std::unordered_map<const char*, entt::entity> m_entitiesByName;
 
     };
 
