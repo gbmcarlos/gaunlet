@@ -58,6 +58,7 @@ namespace gaunlet::Core {
         unsigned int getUniformLocation(unsigned int id, const std::string& name);
         void setUniform1i(unsigned int id, int location, int value);
         void setUniform1f(unsigned int id, int location, float value);
+        void setUniform2f(unsigned int id, int location, const glm::vec2& value);
         void setUniform3f(unsigned int id, int location, const glm::vec3& value);
         void setUniform4f(unsigned int id, int location, const glm::vec4& value);
         void setUniformMat3f(unsigned int id, int location, const glm::mat3& value);

@@ -112,6 +112,10 @@ namespace gaunlet::Core {
         getApi().setUniform1f(id, location, value);
     }
 
+    void RenderCommand::setUniform2f(unsigned int id, int location, const glm::vec2& value) {
+        getApi().setUniform2f(id, location, value);
+    }
+
     void RenderCommand::setUniform3f(unsigned int id, int location, const glm::vec3& value) {
         getApi().setUniform3f(id, location, value);
     }

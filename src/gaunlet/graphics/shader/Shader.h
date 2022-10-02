@@ -26,6 +26,7 @@ namespace gaunlet::Graphics {
 
         Shader* setUniform1i(const std::string& name, int value);
         Shader* setUniform1f(const std::string& name, float value);
+        Shader* setUniform2f(const std::string& name, const glm::vec2& value);
         Shader* setUniform3f(const std::string& name, const glm::vec3& value);
         Shader* setUniform4f(const std::string& name, const glm::vec4& value);
         Shader* setUniformMat3f(const std::string& name, const glm::mat3& value);
