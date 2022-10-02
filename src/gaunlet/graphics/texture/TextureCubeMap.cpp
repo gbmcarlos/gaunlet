@@ -14,6 +14,8 @@ namespace gaunlet::Graphics {
             images.emplace_back(Core::CreateScope<Image>(path, false));
         }
 
+        m_format = convertFormat(images[0]->getChannels());
+
         // Prepare the properties
         std::vector<void*> imagesData;
         for (auto& image : images) {
@@ -22,8 +24,8 @@ namespace gaunlet::Graphics {
 
         int width = images[0]->getWidth();
         int height = images[0]->getHeight();
-        Core::TextureDataFormat internalFormat = getFormat(images[0]->getChannels());
-        Core::TextureDataFormat dataFormat = getFormat(images[0]->getChannels());
+        Core::TextureDataFormat internalFormat = convertFormat(images[0]->getChannels());
+        Core::TextureDataFormat dataFormat = convertFormat(images[0]->getChannels());
 
         Core::RenderCommand::loadTextureCubeMap(
             m_rendererId,

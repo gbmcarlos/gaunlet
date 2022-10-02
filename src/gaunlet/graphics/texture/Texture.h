@@ -14,10 +14,18 @@ namespace gaunlet::Graphics {
         virtual void activate(unsigned int slot) = 0;
 
         inline unsigned int getRendererId() {return m_rendererId; }
+        inline Core::TextureDataFormat getFormat() {return m_format; }
         inline unsigned int getWidth() {return m_width; }
         inline unsigned int getHeight() {return m_height; }
 
-        Core::TextureDataFormat getFormat(int channels) {
+    protected:
+
+        unsigned int m_rendererId = 0;
+        Core::TextureDataFormat m_format = Core::TextureDataFormat::RGBA;
+        unsigned int m_width = 0;
+        unsigned int m_height = 0;
+
+        Core::TextureDataFormat convertFormat(int channels) {
 
             if (channels == 3) {
                 return Core::TextureDataFormat::RGB;
@@ -28,11 +36,6 @@ namespace gaunlet::Graphics {
             throw std::runtime_error("Unknown texture data format");
 
         }
-
-    protected:
-        unsigned int m_rendererId = 0;
-        unsigned int m_width = 0;
-        unsigned int m_height = 0;
 
     };
 

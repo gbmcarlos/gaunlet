@@ -10,11 +10,12 @@ namespace gaunlet::Graphics {
 
         Core::RenderCommand::loadTextureImage2d(
             m_rendererId,
-            getFormat(image.getChannels()), getFormat(image.getChannels()), Core::PrimitiveDataType::UByte,
+            convertFormat(image.getChannels()), convertFormat(image.getChannels()), Core::PrimitiveDataType::UByte,
             (unsigned int) image.getWidth(), (unsigned int) image.getHeight(),
             image.getData()
         );
 
+        m_format = convertFormat(image.getChannels());
         m_width = image.getWidth();
         m_height = image.getHeight();
 
@@ -28,6 +29,7 @@ namespace gaunlet::Graphics {
             (unsigned int) width, (unsigned int) height, data
         );
 
+        m_format = internalFormat;
         m_width = width;
         m_height = height;
 
