@@ -12,6 +12,8 @@ namespace gaunlet::Prefab::EditorTools {
 
     protected:
 
+        Editor::RenderPanel* m_renderPanel = nullptr;
+
         virtual void onSceneEntitySelected(Scene::Entity sceneEntity) {}
         virtual void onSceneEntityUnselected(Scene::Entity sceneEntity) {}
         virtual void onUIEntitySelected(Scene::Entity uiEntity) {}
@@ -19,6 +21,34 @@ namespace gaunlet::Prefab::EditorTools {
 
         Scene::Entity getSelectedSceneEntity() {return getWorkspace()->getSelectedSceneEntity(); }
         Scene::Entity getSelectedUIEntity() {return getWorkspace()->getSelectedUIEntity(); }
+
+        void selectFocusedRenderPanel() {
+            m_renderPanel = getWorkspace()->getFocusedRenderPanel();
+        }
+
+        void selectHoveredRenderPanel() {
+            m_renderPanel = getWorkspace()->getHoveredRenderPanel();
+        }
+
+        template<typename T>
+        void selectFocusedRenderPanelWithExtension() {
+
+            auto renderPanel = getWorkspace()->getFocusedRenderPanel();
+            if (renderPanel && renderPanel->getRenderPipeline()->hasExtension<T>()) {
+                m_renderPanel = renderPanel;
+            }
+
+        }
+
+        template<typename T>
+        void selectHoveredRenderPanelWithExtension() {
+
+            auto renderPanel = getWorkspace()->getHoveredRenderPanel();
+            if (renderPanel && renderPanel->getRenderPipeline()->hasExtension<T>()) {
+                m_renderPanel = renderPanel;
+            }
+
+        }
 
         Scene::Entity selectSceneEntity(Editor::RenderPanel* renderPanel) {
 
