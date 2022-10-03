@@ -8,18 +8,33 @@
 namespace gaunlet::Graphics {
 
     enum class FramebufferDataFormat {
-        RGBA, RGBAFloat, Integer, DepthStencil
+        // Color
+            R_Color, RG_Color, RGB_Color, RGBA_Color,
+        // HDR
+            R_HDR, RG_HDR, RGB_HDR, RGBA_HDR,
+        // Signed Integer
+            R_Integer, RG_Integer, RGB_Integer, RGBA_Integer,
+        // Float
+            R_Float, RG_Float, RGB_Float, RGBA_Float,
+        // Depth & Stencil
+            DepthStencil
     };
 
     struct FramebufferAttachmentSpec {
 
         FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, int clearColorValue);
+        FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, float clearColorValue);
+        FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, const glm::vec2& clearColorValue);
+        FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, const glm::vec3& clearColorValue);
         FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat, const glm::vec4& clearColorValue);
         FramebufferAttachmentSpec(Core::FramebufferAttachmentType attachmentType, FramebufferDataFormat framebufferDataFormat);
 
         Core::FramebufferAttachmentType m_attachmentType;
         FramebufferDataFormat m_dataFormat;
         int m_clearColorIntValue = 0;
+        float m_clearColorFloatValue = 0;
+        glm::vec2 m_clearColorVec2Value = {};
+        glm::vec3 m_clearColorVec3Value = {};
         glm::vec4 m_clearColorVec4Value = {};
 
     };
@@ -37,6 +52,7 @@ namespace gaunlet::Graphics {
         void clearDepthStencilAttachment();
         void resize(unsigned int width, unsigned int height);
         void setDrawBuffers(const std::vector<int>& drawBuffers);
+        void deAttachColor(unsigned int colorAttachmentIndex);
 
         inline unsigned int getRendererId() const {return m_rendererId; }
         inline unsigned int getWidth() {return m_width; }
@@ -54,11 +70,12 @@ namespace gaunlet::Graphics {
         std::vector<FramebufferAttachmentSpec> m_colorAttachmentSpecs = {};
         FramebufferAttachmentSpec m_depthStencilAttachmentSpec = {Core::FramebufferAttachmentType::None, FramebufferDataFormat::DepthStencil};
 
-        std::vector<Core::Ref<Texture> > m_textures;
+        std::vector<Core::Ref<Texture>> m_textures;
 
         void recreate();
         void attachColor(FramebufferAttachmentSpec colorAttachmentSpec, unsigned int index);
         void attachDepthStencil(FramebufferAttachmentSpec depthStencilAttachmentSpec);
+        std::tuple<Core::TextureInternalFormat, Core::TextureExternalFormat> convertFramebufferFormat(FramebufferDataFormat format);
 
     };
 

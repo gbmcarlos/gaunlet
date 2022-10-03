@@ -73,8 +73,8 @@ namespace gaunlet::Core {
         void bindUniformBufferToBindingPoint(unsigned int bufferId, unsigned int bindingPoint, unsigned int size);
         void bindUniformBufferFromBindingPoint(unsigned int shaderId, int location, unsigned int bindingPoint);
 
-        void loadTextureImage2d(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, PrimitiveDataType dataType, unsigned int width, unsigned int height, void* data);
-        void loadTextureCubeMap(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, std::vector<void *> imagesData);
+        void loadTextureImage2d(unsigned int& id, TextureInternalFormat internalFormat, TextureExternalFormat dataFormat, PrimitiveDataType dataType, unsigned int width, unsigned int height, void* data);
+        void loadTextureCubeMap(unsigned int& id, TextureInternalFormat internalFormat, TextureExternalFormat dataFormat, unsigned int width, unsigned int height, std::vector<void *> imagesData);
         void activateTexture(unsigned int id, TextureType type, unsigned int slot);
         void deleteTexture(unsigned int& id);
 
@@ -88,8 +88,8 @@ namespace gaunlet::Core {
         void clearColorAttachment(unsigned int id, unsigned int colorAttachmentIndex, PrimitiveDataType dataType, void* value);
         void clearDepthStencilAttachment(unsigned int id, float depthValue, int stencilValue);
 
-        void readFramebuffer(unsigned int id, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, TextureDataFormat internalFormat, PrimitiveDataType dataType, unsigned int x, unsigned int y, unsigned int width, unsigned int height, void* data);
-        void copyColorAttachment(unsigned int id, unsigned int attachmentIndex, unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned int textureId);
+        void readFramebuffer(unsigned int id, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, TextureExternalFormat dataFormat, PrimitiveDataType dataType, unsigned int x, unsigned int y, unsigned int width, unsigned int height, void* data);
+        void copyColorAttachment(unsigned int id, unsigned int attachmentIndex, unsigned int attachmentPixelX, unsigned int attachmentPixelY, unsigned int texturePixelX, unsigned int texturePixelY, unsigned int width, unsigned int height, unsigned int textureId);
 
         void setPolygonMode(PolygonMode mode, float polygonOffsetFactor, float polygonOffsetUnits);
         void drawIndexedTriangles(unsigned int vertexBufferId, unsigned int indexBufferId, unsigned int vertexArrayId, unsigned int shaderId, unsigned int indexCount);
@@ -115,7 +115,8 @@ namespace gaunlet::Core {
         GLenum convertShaderType(ShaderType type);
         GLenum convertDepthStencilFunction(DepthStencilFunction function);
         GLenum convertStencilOperation(StencilOperation operation);
-        GLenum convertTextureDataFormat(TextureDataFormat format);
+        GLenum convertTextureInternalFormat(TextureInternalFormat format);
+        GLenum convertTextureExternalFormat(TextureExternalFormat format);
         GLenum convertTextureType(TextureType type);
         GLenum convertFramebufferAttachmentType(FramebufferAttachmentType type);
         GLenum convertPolygonMode(PolygonMode mode);

@@ -68,8 +68,8 @@ namespace gaunlet::Core {
         static void bindUniformBufferToBindingPoint(unsigned int bufferId, unsigned int bindingPoint, unsigned int size);
         static void bindUniformBufferFromBindingPoint(unsigned int shaderId, int location, unsigned int bindingPoint);
 
-        static void loadTextureImage2d(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, PrimitiveDataType dataType, unsigned int width, unsigned int height, void* data);
-        static void loadTextureCubeMap(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, std::vector<void *> imagesData);
+        static void loadTextureImage2d(unsigned int& id, TextureInternalFormat internalFormat, TextureExternalFormat dataFormat, PrimitiveDataType dataType, unsigned int width, unsigned int height, void* data);
+        static void loadTextureCubeMap(unsigned int& id, TextureInternalFormat internalFormat, TextureExternalFormat dataFormat, unsigned int width, unsigned int height, std::vector<void *> imagesData);
         static void activateTexture(unsigned int id, TextureType type, unsigned int slot);
         static void deleteTexture(unsigned int& id);
 
@@ -83,8 +83,8 @@ namespace gaunlet::Core {
         static void clearColorAttachment(unsigned int id, unsigned int colorAttachmentIndex, PrimitiveDataType dataType, void* value);
         static void clearDepthStencilAttachment(unsigned int id, float depthValue, int stencilValue);
 
-        static void readFramebuffer(unsigned int id, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, TextureDataFormat internalFormat, PrimitiveDataType type, unsigned int x, unsigned int y, unsigned int width, unsigned int height, void* data);
-        static void copyColorAttachment(unsigned int id, unsigned int attachmentIndex, unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned int textureId);
+        static void readFramebuffer(unsigned int id, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, TextureExternalFormat dataFormat, PrimitiveDataType type, unsigned int x, unsigned int y, unsigned int width, unsigned int height, void* data);
+        static void copyColorAttachment(unsigned int id, unsigned int attachmentIndex, unsigned int attachmentPixelX, unsigned int attachmentPixelY, unsigned int texturePixelX, unsigned int texturePixelY, unsigned int width, unsigned int height, unsigned int textureId);
 
         static void setPolygonMode(PolygonMode mode, float polygonOffsetFactor = 0.0f, float polygonOffsetUnits = 0.0f);
         static void drawIndexedTriangles(unsigned int vertexBufferId, unsigned int indexBufferId, unsigned int vertexArrayId, unsigned int shaderId, unsigned int indexCount);

@@ -164,11 +164,11 @@ namespace gaunlet::Core {
     }
 
 
-    void RenderCommand::loadTextureImage2d(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, PrimitiveDataType dataType, unsigned int width, unsigned int height, void* data) {
+    void RenderCommand::loadTextureImage2d(unsigned int& id, TextureInternalFormat internalFormat, TextureExternalFormat dataFormat, PrimitiveDataType dataType, unsigned int width, unsigned int height, void* data) {
         getApi().loadTextureImage2d(id, internalFormat, dataFormat, dataType, width, height, data);
     }
 
-    void RenderCommand::loadTextureCubeMap(unsigned int &id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, std::vector<void *> imagesData) {
+    void RenderCommand::loadTextureCubeMap(unsigned int &id, TextureInternalFormat internalFormat, TextureExternalFormat dataFormat, unsigned int width, unsigned int height, std::vector<void *> imagesData) {
         getApi().loadTextureCubeMap(id, internalFormat, dataFormat, width, height, std::move(imagesData));
     }
 
@@ -216,12 +216,12 @@ namespace gaunlet::Core {
         getApi().clearDepthStencilAttachment(id, depthValue, stencilValue);
     }
 
-    void RenderCommand::readFramebuffer(unsigned int id, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, TextureDataFormat internalFormat, PrimitiveDataType dataType, unsigned int x, unsigned int y, unsigned int width, unsigned int height, void *data) {
-        getApi().readFramebuffer(id, attachmentType, attachmentIndex, internalFormat, dataType, x, y, width, height, data);
+    void RenderCommand::readFramebuffer(unsigned int id, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, TextureExternalFormat dataFormat, PrimitiveDataType dataType, unsigned int x, unsigned int y, unsigned int width, unsigned int height, void *data) {
+        getApi().readFramebuffer(id, attachmentType, attachmentIndex, dataFormat, dataType, x, y, width, height, data);
     }
 
-    void RenderCommand::copyColorAttachment(unsigned int id, unsigned int attachmentIndex, unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned int textureId) {
-        getApi().copyColorAttachment(id, attachmentIndex, x, y, width, height, textureId);
+    void RenderCommand::copyColorAttachment(unsigned int id, unsigned int attachmentIndex, unsigned int attachmentPixelX, unsigned int attachmentPixelY, unsigned int texturePixelX, unsigned int texturePixelY, unsigned int width, unsigned int height, unsigned int textureId) {
+        getApi().copyColorAttachment(id, attachmentIndex, attachmentPixelX, attachmentPixelY, texturePixelX, texturePixelY, width, height, textureId);
     }
 
     void RenderCommand::setPolygonMode(PolygonMode mode, float polygonOffsetFactor, float polygonOffsetUnits) {

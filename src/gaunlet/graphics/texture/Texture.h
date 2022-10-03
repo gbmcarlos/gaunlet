@@ -14,23 +14,35 @@ namespace gaunlet::Graphics {
         virtual void activate(unsigned int slot) = 0;
 
         inline unsigned int getRendererId() {return m_rendererId; }
-        inline Core::TextureDataFormat getFormat() {return m_format; }
+        inline Core::TextureExternalFormat getFormat() {return m_format; }
         inline unsigned int getWidth() {return m_width; }
         inline unsigned int getHeight() {return m_height; }
 
     protected:
 
         unsigned int m_rendererId = 0;
-        Core::TextureDataFormat m_format = Core::TextureDataFormat::RGBA;
+        Core::TextureExternalFormat m_format = Core::TextureExternalFormat::RGBA;
         unsigned int m_width = 0;
         unsigned int m_height = 0;
 
-        Core::TextureDataFormat convertFormat(int channels) {
+        Core::TextureInternalFormat convertToInternalFormat(int channels) {
 
             if (channels == 3) {
-                return Core::TextureDataFormat::RGB;
+                return Core::TextureInternalFormat::RGB_8_UNI;
             } else if (channels == 4) {
-                return Core::TextureDataFormat::RGBA;
+                return Core::TextureInternalFormat::RGBA_8_UNI;
+            }
+
+            throw std::runtime_error("Unknown texture data format");
+
+        }
+
+        Core::TextureExternalFormat convertToExternalFormat(int channels) {
+
+            if (channels == 3) {
+                return Core::TextureExternalFormat::RGB;
+            } else if (channels == 4) {
+                return Core::TextureExternalFormat::RGBA;
             }
 
             throw std::runtime_error("Unknown texture data format");

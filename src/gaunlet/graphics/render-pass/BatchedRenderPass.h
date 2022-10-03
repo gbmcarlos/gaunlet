@@ -84,7 +84,13 @@ namespace gaunlet::Graphics {
 
         // Create a 1x1 white texture, to be used as default
         unsigned int whiteTextureData = 0xffffffff;
-        Core::Ref<Graphics::Texture> whiteTexture = Core::CreateRef<Graphics::TextureImage2D>(Core::TextureDataFormat::RGBA, Core::TextureDataFormat::RGBA, Core::PrimitiveDataType::UByte, 1, 1, &whiteTextureData);
+        Core::Ref<Graphics::Texture> whiteTexture = Core::CreateRef<Graphics::TextureImage2D>(
+            Core::TextureInternalFormat::RGBA_8_UNI,
+            Core::TextureExternalFormat::RGBA,
+            Core::PrimitiveDataType::UByte,
+            1, 1,
+            &whiteTextureData
+        );
         m_whiteTexture = whiteTexture;
 
         // Add it to the batch

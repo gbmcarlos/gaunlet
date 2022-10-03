@@ -35,10 +35,60 @@ namespace gaunlet::Core {
         Keep, Replace
     };
 
-    enum class TextureDataFormat {
-        RGB, RGBA, RGBA32Float,
-        RedInteger32, RedInteger,
-        Depth24Stencil8, DepthStencil
+    enum class TextureInternalFormat {
+        // Unsigned Normalized Integers
+            // Red
+            Red_8_UNI, Red_16_UNI,
+            // RG
+            RG_8_UNI, RG_16_UNI,
+            // RGB
+            RGB_4_UNI, RGB_5_UNI, RGB_8_UNI, RGB_10_UNI, RGB_12_UNI, RGB_16_UNI,
+            // RGBA
+            RGBA_2_UNI, RGBA_4_UNI, RGBA_8_UNI, RGBA_12_UNI, RGBA_16_UNI,
+        // Singed Normalized Integers
+            // Red
+            Red_8_SNI, Red_16_SNI,
+            // RG
+            RG_8_SNI, RG_16_SNI,
+            // RGB
+            RGB_8_SNI, RGB_16_SNI,
+            // RGBA
+            RGBA_8_SNI, RGBA_16_SNI,
+        // Unsigned Integral
+            // Red
+            Red_8_UI, Red_16_UI, Red_32_UI,
+            // RG
+            RG_8_UI, RG_16_UI, RG_32_UI,
+            // RGB
+            RGB_8_UI, RGB_16_UI, RGB_32_UI,
+            // RGBA
+            RGBA_8_UI, RGBA_16_UI, RGBA_32_UI,
+        // Signed Integral
+            // Red
+            Red_8_SI, Red_16_SI, Red_32_SI,
+            // RG
+            RG_8_SI, RG_16_SI, RG_32_SI,
+            // RGB
+            RGB_8_SI, RGB_16_SI, RGB_32_SI,
+            // RGBA
+            RGBA_8_SI, RGBA_16_SI, RGBA_32_SI,
+        // Float
+            // Red
+            Red_16_F, Red_32_F,
+            // RG
+            RG_16_F, RG_32_F,
+            // RGB
+            RGB_16_F, RGB_32_F,
+            // RGBA
+            RGBA_16_F, RGBA_32_F,
+        // Depth & Stencil
+            Depth_24_Stencil_8
+    };
+
+    enum class TextureExternalFormat {
+        Red, RG, RGB, RGBA,
+        RedInteger, RGInteger, RGBInteger, RGBAInteger,
+        DepthStencil
     };
 
     enum class TextureType {
@@ -106,8 +156,8 @@ namespace gaunlet::Core {
         virtual unsigned int sizeOfPrimitiveDataType(PrimitiveDataType type) = 0;
         virtual void addVertexArrayAttribute(unsigned int vertexArrayId, unsigned int index, int count, PrimitiveDataType type, bool normalized, int stride, int offset) = 0;
 
-        virtual void loadTextureImage2d(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, PrimitiveDataType dataType, unsigned int width, unsigned int height, void* data) = 0;
-        virtual void loadTextureCubeMap(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, std::vector<void *> imagesData) = 0;
+        virtual void loadTextureImage2d(unsigned int& id, TextureInternalFormat internalFormat, TextureExternalFormat dataFormat, PrimitiveDataType dataType, unsigned int width, unsigned int height, void* data) = 0;
+        virtual void loadTextureCubeMap(unsigned int& id, TextureInternalFormat internalFormat, TextureExternalFormat dataFormat, unsigned int width, unsigned int height, std::vector<void *> imagesData) = 0;
         virtual void activateTexture(unsigned int id, TextureType type, unsigned int slot) = 0;
         virtual void deleteTexture(unsigned int& id) = 0;
 
@@ -121,8 +171,8 @@ namespace gaunlet::Core {
         virtual void clearColorAttachment(unsigned int id, unsigned int colorAttachmentIndex, PrimitiveDataType dataType, void* value) = 0;
         virtual void clearDepthStencilAttachment(unsigned int id, float depthValue, int stencilValue) = 0;
 
-        virtual void readFramebuffer(unsigned int id, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, TextureDataFormat internalFormat, PrimitiveDataType dataType, unsigned int x, unsigned int y, unsigned int width, unsigned int height, void* data) = 0;
-        virtual void copyColorAttachment(unsigned int id, unsigned int attachmentIndex, unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned int textureId) = 0;
+        virtual void readFramebuffer(unsigned int id, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, TextureExternalFormat dataFormat, PrimitiveDataType dataType, unsigned int x, unsigned int y, unsigned int width, unsigned int height, void* data) = 0;
+        virtual void copyColorAttachment(unsigned int id, unsigned int attachmentIndex, unsigned int attachmentPixelX, unsigned int attachmentPixelY, unsigned int texturePixelX, unsigned int texturePixelY, unsigned int width, unsigned int height, unsigned int textureId) = 0;
 
         virtual void setPolygonMode(PolygonMode mode, float polygonOffsetFactor, float polygonOffsetUnits) = 0;
         virtual void drawIndexedTriangles(unsigned int vertexBufferId, unsigned int indexBufferId, unsigned int vertexArrayId, unsigned int shaderId, unsigned int indexCount) = 0;

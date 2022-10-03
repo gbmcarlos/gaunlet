@@ -315,13 +315,13 @@ namespace gaunlet::Core {
     }
 
 
-    void OpenGLRenderApi::loadTextureImage2d(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, PrimitiveDataType dataType, unsigned int width, unsigned int height, void* data) {
+    void OpenGLRenderApi::loadTextureImage2d(unsigned int& id, TextureInternalFormat internalFormat, TextureExternalFormat dataFormat, PrimitiveDataType dataType, unsigned int width, unsigned int height, void* data) {
 
         glCall(glGenTextures(1, &id));
         glCall(glBindTexture(GL_TEXTURE_2D, id));
 
-        GLenum glInternalFormat = convertTextureDataFormat(internalFormat);
-        GLenum glDataFormat = convertTextureDataFormat(dataFormat);
+        GLenum glInternalFormat = convertTextureInternalFormat(internalFormat);
+        GLenum glDataFormat = convertTextureExternalFormat(dataFormat);
         GLenum glDataType = convertPrimitiveDataType(dataType);
 
         glCall(glTexImage2D(GL_TEXTURE_2D, 0, glInternalFormat, width, height, 0, glDataFormat, glDataType, data));
@@ -331,13 +331,13 @@ namespace gaunlet::Core {
 
     }
 
-    void OpenGLRenderApi::loadTextureCubeMap(unsigned int& id, TextureDataFormat internalFormat, TextureDataFormat dataFormat, unsigned int width, unsigned int height, std::vector<void *> imagesData) {
+    void OpenGLRenderApi::loadTextureCubeMap(unsigned int& id, TextureInternalFormat internalFormat, TextureExternalFormat dataFormat, unsigned int width, unsigned int height, std::vector<void *> imagesData) {
 
         glCall(glGenTextures(1, &id));
         glCall(glBindTexture(GL_TEXTURE_CUBE_MAP, id));
 
-        GLenum glInternalFormat = convertTextureDataFormat(internalFormat);
-        GLenum glDataFormat = convertTextureDataFormat(dataFormat);
+        GLenum glInternalFormat = convertTextureInternalFormat(internalFormat);
+        GLenum glDataFormat = convertTextureExternalFormat(dataFormat);
 
         for (unsigned int index = 0; index < imagesData.size(); index++) {
             void* imageData = imagesData[index];
@@ -448,7 +448,7 @@ namespace gaunlet::Core {
 
     }
 
-    void OpenGLRenderApi::readFramebuffer(unsigned int id, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, TextureDataFormat internalFormat, PrimitiveDataType dataType, unsigned int x, unsigned int y, unsigned int width, unsigned int height, void* data) {
+    void OpenGLRenderApi::readFramebuffer(unsigned int id, FramebufferAttachmentType attachmentType, unsigned int attachmentIndex, TextureExternalFormat dataFormat, PrimitiveDataType dataType, unsigned int x, unsigned int y, unsigned int width, unsigned int height, void* data) {
 
         bindFramebuffer(id);
 
@@ -461,14 +461,14 @@ namespace gaunlet::Core {
         glCall(glReadPixels(
             x, y,
             width, height,
-            convertTextureDataFormat(internalFormat),
+            convertTextureExternalFormat(dataFormat),
             convertPrimitiveDataType(dataType),
             data
         ));
 
     }
 
-    void OpenGLRenderApi::copyColorAttachment(unsigned int id, unsigned int attachmentIndex, unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned int textureId) {
+    void OpenGLRenderApi::copyColorAttachment(unsigned int id, unsigned int attachmentIndex, unsigned int attachmentPixelX, unsigned int attachmentPixelY, unsigned int texturePixelX, unsigned int texturePixelY, unsigned int width, unsigned int height, unsigned int textureId) {
 
         GLenum glBufferMode = convertFramebufferAttachmentType(FramebufferAttachmentType::Color) + attachmentIndex;
 
@@ -476,8 +476,8 @@ namespace gaunlet::Core {
         glCall(glBindTexture(GL_TEXTURE_2D, textureId));
         glCall(glCopyTexSubImage2D(
             GL_TEXTURE_2D, 0,
-            0, 0,
-            x, y,
+            texturePixelX, texturePixelY,
+            attachmentPixelX, attachmentPixelY,
             width, height
         ));
 
@@ -576,19 +576,110 @@ namespace gaunlet::Core {
 
     }
 
-    GLenum OpenGLRenderApi::convertTextureDataFormat(TextureDataFormat format) {
+    GLenum OpenGLRenderApi::convertTextureInternalFormat(TextureInternalFormat format) {
 
         switch (format) {
-            case TextureDataFormat::RGB:                return GL_RGB;
-            case TextureDataFormat::RGBA:               return GL_RGBA;
-            case TextureDataFormat::RGBA32Float:        return GL_RGBA32F;
-            case TextureDataFormat::RedInteger32:       return GL_R32I;
-            case TextureDataFormat::RedInteger:         return GL_RED_INTEGER;
-            case TextureDataFormat::DepthStencil:       return GL_DEPTH_STENCIL;
-            case TextureDataFormat::Depth24Stencil8:    return GL_DEPTH24_STENCIL8;
+            // Unsigned Normalized Integers
+                // Red
+                case TextureInternalFormat::Red_8_UNI:              return GL_R8;
+                case TextureInternalFormat::Red_16_UNI:             return GL_R16;
+                // RG
+                case TextureInternalFormat::RG_8_UNI:               return GL_RG8;
+                case TextureInternalFormat::RG_16_UNI:              return GL_RG16;
+                // RGB
+                case TextureInternalFormat::RGB_4_UNI:              return GL_RGB4;
+                case TextureInternalFormat::RGB_5_UNI:              return GL_RGB5;
+                case TextureInternalFormat::RGB_8_UNI:              return GL_RGB8;
+                case TextureInternalFormat::RGB_10_UNI:             return GL_RGB10;
+                case TextureInternalFormat::RGB_12_UNI:             return GL_RGB12;
+                case TextureInternalFormat::RGB_16_UNI:             return GL_RGB16;
+                // RGBA
+                case TextureInternalFormat::RGBA_2_UNI:             return GL_RGBA2;
+                case TextureInternalFormat::RGBA_4_UNI:             return GL_RGBA4;
+                case TextureInternalFormat::RGBA_8_UNI:             return GL_RGBA8;
+                case TextureInternalFormat::RGBA_12_UNI:            return GL_RGBA12;
+                case TextureInternalFormat::RGBA_16_UNI:            return GL_RGBA16;
+            // Singed Normalized Integers
+                // Red
+                case TextureInternalFormat::Red_8_SNI:              return GL_R8_SNORM;
+                case TextureInternalFormat::Red_16_SNI:             return GL_R16_SNORM;
+                // RG
+                case TextureInternalFormat::RG_8_SNI:               return GL_RG8_SNORM;
+                case TextureInternalFormat::RG_16_SNI:              return GL_RG16_SNORM;
+                // RGB
+                case TextureInternalFormat::RGB_8_SNI:              return GL_RGB8_SNORM;
+                case TextureInternalFormat::RGB_16_SNI:             return GL_RGB16_SNORM;
+                // RGBA
+                case TextureInternalFormat::RGBA_8_SNI:             return GL_RGBA8_SNORM;
+                case TextureInternalFormat::RGBA_16_SNI:            return GL_RGBA16_SNORM;
+            // Unsigned Integral
+                // Red
+                case TextureInternalFormat::Red_8_UI:               return GL_R8UI;
+                case TextureInternalFormat::Red_16_UI:              return GL_R16UI;
+                case TextureInternalFormat::Red_32_UI:              return GL_R32UI;
+                // RG
+                case TextureInternalFormat::RG_8_UI:                return GL_RG8UI;
+                case TextureInternalFormat::RG_16_UI:               return GL_RG16UI;
+                case TextureInternalFormat::RG_32_UI:               return GL_RG32UI;
+                // RGB
+                case TextureInternalFormat::RGB_8_UI:               return GL_RGB8UI;
+                case TextureInternalFormat::RGB_16_UI:              return GL_RGB16UI;
+                case TextureInternalFormat::RGB_32_UI:              return GL_RGB32UI;
+                // RGBA
+                case TextureInternalFormat::RGBA_8_UI:              return GL_RGBA8UI;
+                case TextureInternalFormat::RGBA_16_UI:             return GL_RGBA16UI;
+                case TextureInternalFormat::RGBA_32_UI:             return GL_RGBA32UI;
+            // Signed Integral
+                // Red
+                case TextureInternalFormat::Red_8_SI:               return GL_R8I;
+                case TextureInternalFormat::Red_16_SI:              return GL_R16I;
+                case TextureInternalFormat::Red_32_SI:              return GL_R32I;
+                // RG
+                case TextureInternalFormat::RG_8_SI:                return GL_RG8I;
+                case TextureInternalFormat::RG_16_SI:               return GL_RG16I;
+                case TextureInternalFormat::RG_32_SI:               return GL_RG32I;
+                // RGB
+                case TextureInternalFormat::RGB_8_SI:               return GL_RGB8I;
+                case TextureInternalFormat::RGB_16_SI:              return GL_RGB16I;
+                case TextureInternalFormat::RGB_32_SI:              return GL_RGB32I;
+                // RGBA
+                case TextureInternalFormat::RGBA_8_SI:              return GL_RGBA8I;
+                case TextureInternalFormat::RGBA_16_SI:             return GL_RGBA16I;
+                case TextureInternalFormat::RGBA_32_SI:             return GL_RGBA32I;
+            // Float
+                // Red
+                case TextureInternalFormat::Red_16_F:               return GL_R16F;
+                case TextureInternalFormat::Red_32_F:               return GL_R32F;
+                // RG
+                case TextureInternalFormat::RG_16_F:                return GL_RG16F;
+                case TextureInternalFormat::RG_32_F:                return GL_RG32F;
+                // RGB
+                case TextureInternalFormat::RGB_16_F:               return GL_RGB16F;
+                case TextureInternalFormat::RGB_32_F:               return GL_RGB32F;
+                // RGBA
+                case TextureInternalFormat::RGBA_16_F:              return GL_RGBA16F;
+                case TextureInternalFormat::RGBA_32_F:              return GL_RGBA32F;
+            // Depth & Stencil
+                case TextureInternalFormat::Depth_24_Stencil_8:     return GL_DEPTH24_STENCIL8;
         }
 
         throw std::runtime_error("Unknown texture format");
+
+    }
+
+    GLenum OpenGLRenderApi::convertTextureExternalFormat(TextureExternalFormat format) {
+
+        switch (format) {
+            case TextureExternalFormat::Red:                return GL_RED;
+            case TextureExternalFormat::RG:                 return GL_RG;
+            case TextureExternalFormat::RGB:                return GL_RGB;
+            case TextureExternalFormat::RGBA:               return GL_RGBA;
+            case TextureExternalFormat::RedInteger:         return GL_RED_INTEGER;
+            case TextureExternalFormat::RGInteger:          return GL_RG_INTEGER;
+            case TextureExternalFormat::RGBInteger:         return GL_RGB_INTEGER;
+            case TextureExternalFormat::RGBAInteger:        return GL_RGBA_INTEGER;
+            case TextureExternalFormat::DepthStencil:       return GL_DEPTH_STENCIL;
+        }
 
     }
 
