@@ -4,6 +4,7 @@
 
 // Application
 #include "gaunlet/core/application/Application.h"
+#include "gaunlet/core/application/TimeStep.h"
 
 // Events
 #include "gaunlet/core/event/Event.h" // Doesn't depend on anything
@@ -18,6 +19,7 @@
 #include "gaunlet/core/window/MouseButtonCodes.h" // Defines
 #include "gaunlet/core/window/Window.h" // Depends on GLFW and Events
 #include "gaunlet/core/window/Input.h" // Depends on Window
+#include "gaunlet/core/window/CoordinatesUtils.h"
 
 #include "gaunlet/core/render/RenderCommand.h" // Depends on RenderApi
 #include "gaunlet/core/run-loop/RunLoop.h" // Depends on Window, Application, ImGuiRenderApi, and RenderCommand

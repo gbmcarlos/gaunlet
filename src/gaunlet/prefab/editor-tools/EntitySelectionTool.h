@@ -36,6 +36,8 @@ namespace gaunlet::Prefab::EditorTools {
             auto renderPanel = getWorkspace()->getFocusedRenderPanel();
             if (renderPanel && renderPanel->getRenderPipeline()->hasExtension<T>()) {
                 m_renderPanel = renderPanel;
+            } else {
+                m_renderPanel = nullptr;
             }
 
         }
@@ -46,6 +48,8 @@ namespace gaunlet::Prefab::EditorTools {
             auto renderPanel = getWorkspace()->getHoveredRenderPanel();
             if (renderPanel && renderPanel->getRenderPipeline()->hasExtension<T>()) {
                 m_renderPanel = renderPanel;
+            } else {
+                m_renderPanel = nullptr;
             }
 
         }
