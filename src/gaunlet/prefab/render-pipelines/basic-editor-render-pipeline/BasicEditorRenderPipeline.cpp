@@ -1,5 +1,7 @@
 #include "gaunlet/prefab/render-pipelines/basic-editor-render-pipeline/BasicEditorRenderPipeline.h"
 
+#include "gaunlet/graphics/framebuffer/attachment-specs/ColorAttachmentSpecFactory.h"
+#include "gaunlet/graphics/framebuffer/attachment-specs/BaseDepthStencilAttachmentSpec.h"
 #include "gaunlet/prefab/render-pipelines/SceneProperties.h"
 #include "gaunlet/core/window/Window.h"
 #include "gaunlet/editor/Tags.h"
@@ -11,15 +13,7 @@ namespace gaunlet::Prefab::RenderPipelines {
         : m_directionalLight(std::move(directionalLight)), m_skybox(std::move(skybox)), m_modelRenderer(1 + uniformBufferBindingPointOffset), m_circleRenderer(2 + uniformBufferBindingPointOffset) {
 
         prepareShaders(uniformBufferBindingPointOffset);
-
-        auto window = Core::Window::getCurrentInstance();
-
-        m_framebuffer = gaunlet::Core::CreateRef<gaunlet::Graphics::Framebuffer>(std::initializer_list<gaunlet::Graphics::FramebufferAttachmentSpec>{
-            {gaunlet::Core::FramebufferAttachmentType::Color, gaunlet::Graphics::FramebufferDataFormat::RGBA_Color, glm::vec4(0.1f, 0.1f, 0.1f, 1)},
-            {gaunlet::Core::FramebufferAttachmentType::Color, gaunlet::Graphics::FramebufferDataFormat::R_Integer,  -1},
-            {gaunlet::Core::FramebufferAttachmentType::Color, gaunlet::Graphics::FramebufferDataFormat::R_Integer,  -1},
-            {gaunlet::Core::FramebufferAttachmentType::DepthStencil, gaunlet::Graphics::FramebufferDataFormat::DepthStencil}
-        }, window->getViewportWidth() * window->getDPI(), window->getViewportHeight() * window->getDPI());
+        prepareFramebuffer();
 
         addExtension<RenderPipelineExtensions::EntitySelectionExtension>(Core::CreateRef<RenderPipelineExtensions::EntitySelectionExtension>(
             m_framebuffer,
@@ -287,6 +281,45 @@ namespace gaunlet::Prefab::RenderPipelines {
 
         m_circleRenderer.getShaders().get("circle-faces")->linkUniformBuffer(m_scenePropertiesUniformBuffer);
         m_skyboxRenderer.getShaders().get("skybox")->linkUniformBuffer(m_scenePropertiesUniformBuffer);
+
+    }
+
+    void BasicEditorRenderPipeline::prepareFramebuffer() {
+
+        auto window = Core::Window::getCurrentInstance();
+
+        m_framebuffer = gaunlet::Core::CreateRef<gaunlet::Graphics::Framebuffer>(
+            window->getViewportWidth() * window->getDPI(),
+            window->getViewportHeight() * window->getDPI()
+        );
+
+        // The render target
+        m_framebuffer->addColorAttachment<glm::vec4>(
+            gaunlet::Graphics::BaseColorAttachmentSpec::Channels::CHANNELS_4,
+            gaunlet::Graphics::BaseColorAttachmentSpec::Type::TYPE_UNI,
+            gaunlet::Graphics::BaseColorAttachmentSpec::Size::SIZE_8,
+            glm::vec4(0.1f, 0.1f, 0.1f, 1)
+        );
+
+        // For scene entity ids
+        m_framebuffer->addColorAttachment<int>(
+            gaunlet::Graphics::BaseColorAttachmentSpec::Channels::CHANNELS_1,
+            gaunlet::Graphics::BaseColorAttachmentSpec::Type::TYPE_SI,
+            gaunlet::Graphics::BaseColorAttachmentSpec::Size::SIZE_32,
+            -1
+        );
+
+        // For UI entity ids
+        m_framebuffer->addColorAttachment<int>(
+            gaunlet::Graphics::BaseColorAttachmentSpec::Channels::CHANNELS_1,
+            gaunlet::Graphics::BaseColorAttachmentSpec::Type::TYPE_SI,
+            gaunlet::Graphics::BaseColorAttachmentSpec::Size::SIZE_32,
+            -1
+        );
+
+        m_framebuffer->setDepthStencilAttachment(1.0f, 0);
+
+        m_framebuffer->recreate();
 
     }
 

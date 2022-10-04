@@ -51,6 +51,7 @@ namespace gaunlet::Prefab::RenderPipelines {
     private:
 
         void prepareShaders(unsigned int uniformBufferBindingPointOffset);
+        void prepareFramebuffer();
         Core::Ref<Scene::DirectionalLightComponent> m_directionalLight = nullptr;
         Core::Ref<Scene::SkyboxComponent> m_skybox = nullptr;
 
