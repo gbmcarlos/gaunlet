@@ -199,9 +199,6 @@ namespace gaunlet::Editor {
         auto window = gaunlet::Core::Window::getCurrentInstance();
         auto camera = renderPanel->getCamera();
 
-        glm::mat4 projection = camera->getProjectionMatrix();
-        glm::mat4 view = camera->getViewMatrix();
-
         auto ray = camera->ray(
             {renderPanel->getMousePositionX(), window->getMousePositionY()},
             {renderPanel->getWidth(), renderPanel->getHeight()}
