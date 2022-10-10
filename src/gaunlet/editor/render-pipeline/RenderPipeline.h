@@ -15,7 +15,7 @@ namespace gaunlet::Editor {
 
         virtual void run(const Core::Ref<Scene::Scene>& scene, const Core::Ref<Scene::Camera>& camera) = 0;
         virtual void resize(unsigned int width, unsigned int height) = 0;
-        virtual const Core::Ref<Graphics::Texture>& getRenderTarget() = 0;
+        virtual const Core::Ref<Graphics::TextureImage2D>& getRenderTarget() = 0;
 
         template<typename T>
         bool hasExtension() {

@@ -28,7 +28,7 @@ namespace gaunlet::Editor {
 
     }
 
-    const Core::Ref<Graphics::Texture>& RenderPanel::getRenderTarget() {
+    const Core::Ref<Graphics::TextureImage2D>& RenderPanel::getRenderTarget() {
         return getWorkspace()->getRenderPipeline(m_renderPipelineId)->getRenderTarget();
     }
 

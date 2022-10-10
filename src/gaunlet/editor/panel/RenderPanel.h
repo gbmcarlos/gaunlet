@@ -28,7 +28,7 @@ namespace gaunlet::Editor {
         virtual bool onEvent(Core::Event& event) {return true; }
         virtual void onUpdate(Core::TimeStep timeStep);
         virtual void resize();
-        virtual const Core::Ref<Graphics::Texture>& getRenderTarget();
+        virtual const Core::Ref<Graphics::TextureImage2D>& getRenderTarget();
 
     private:
 

@@ -58,7 +58,7 @@ namespace gaunlet::Prefab::RenderPipelines {
 
     }
 
-    const Core::Ref<Graphics::Texture>& BasicEditorRenderPipeline::getRenderTarget() {
+    const Core::Ref<Graphics::TextureImage2D>& BasicEditorRenderPipeline::getRenderTarget() {
         return m_framebuffer->getColorAttachment(SceneFramebufferAttachmentIndex);
     }
 

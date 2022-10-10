@@ -8,21 +8,26 @@ namespace gaunlet::Graphics {
 
     Framebuffer::Framebuffer(unsigned int width, unsigned int height)
         : m_width(width), m_height(height) {
+        Core::RenderCommand::createFramebuffer(m_rendererId);
     }
 
     Framebuffer::~Framebuffer() {
-        if (m_rendererId) {
-            Core::RenderCommand::deleteFramebuffer(m_rendererId);
-            for (auto& texture : m_textures) {
-                unsigned int textureRendererId = texture->getRendererId();
-                Core::RenderCommand::deleteTexture(textureRendererId);
-            }
-            m_textures.clear();
-        }
+        destroyFramebuffer();
     }
 
-    void Framebuffer::setDepthStencilAttachment(float depthClearValue, int stencilClearValue) {
+    const Core::Ref<TextureImage2D>& Framebuffer::addColorAttachment(const Core::Ref<ColorAttachmentSpec>& colorAttachmentSpec) {
+
+        unsigned int attachmentIndex = m_colorAttachmentSpecs.size();
+        m_colorAttachmentSpecs.emplace_back(colorAttachmentSpec);
+        return createColorAttachment(colorAttachmentSpec, attachmentIndex);
+
+    }
+
+    const Core::Ref<TextureImage2D>& Framebuffer::setDepthStencilAttachment(float depthClearValue, int stencilClearValue) {
+
         m_depthStencilAttachmentSpec = BaseDepthStencilAttachmentSpec::create(depthClearValue, stencilClearValue);
+        return createDepthStencilAttachment(m_depthStencilAttachmentSpec);
+
     }
 
     void Framebuffer::bind() {
@@ -106,17 +111,9 @@ namespace gaunlet::Graphics {
     void Framebuffer::recreate() {
 
         if (m_rendererId) {
-            Core::RenderCommand::deleteFramebuffer(m_rendererId);
-            for (auto& texture : m_textures) {
-                unsigned int textureRendererId = texture->getRendererId();
-                Core::RenderCommand::deleteTexture(textureRendererId);
-            }
-            m_textures.clear();
+            destroyFramebuffer();
+            Core::RenderCommand::createFramebuffer(m_rendererId);
         }
-
-        // Create the framebuffer and bind it
-        Core::RenderCommand::createFramebuffer(m_rendererId);
-        Core::RenderCommand::bindFramebuffer(m_rendererId);
 
         std::vector<int> drawBuffers = {};
 
@@ -124,14 +121,14 @@ namespace gaunlet::Graphics {
         for (unsigned int i = 0; i < m_colorAttachmentSpecs.size(); i++) {
 
             auto& colorAttachmentSpec = m_colorAttachmentSpecs[i];
-            attachColor(colorAttachmentSpec, i);
+            createColorAttachment(colorAttachmentSpec, i);
             drawBuffers.emplace_back(i);
 
         }
 
         // Create and attach the depth-stencil texture, if any
         if (m_depthStencilAttachmentSpec) {
-            attachDepthStencil(m_depthStencilAttachmentSpec);
+            createDepthStencilAttachment(m_depthStencilAttachmentSpec);
             drawBuffers.emplace_back(-1);
         }
 
@@ -143,11 +140,20 @@ namespace gaunlet::Graphics {
 
     }
 
-    void Framebuffer::attachColor(const Core::Ref<ColorAttachmentSpec>& colorAttachmentSpec, unsigned int index) {
+    void Framebuffer::destroyFramebuffer() {
+
+        // Delete the framebuffer
+        Core::RenderCommand::deleteFramebuffer(m_rendererId);
+        // Clear the list of attachment textures (each texture will delete itself)
+        m_textures.clear();
+
+    }
+
+    const Core::Ref<TextureImage2D>& Framebuffer::createColorAttachment(const Core::Ref<ColorAttachmentSpec>& colorAttachmentSpec, unsigned int index) {
 
         auto [internalFormat, externalFormat, dataType] = colorAttachmentSpec->getTextureParameters();
 
-        Core::Ref<Texture> texture = Core::CreateRef<TextureImage2D>(
+        Core::Ref<TextureImage2D> texture = Core::CreateRef<TextureImage2D>(
             internalFormat, externalFormat, dataType,
             m_width, m_height,
             nullptr
@@ -163,14 +169,16 @@ namespace gaunlet::Graphics {
             texture->getRendererId()
         );
 
+        return m_textures.back();
+
     }
 
-    void Framebuffer::attachDepthStencil(const Core::Ref<DepthStencilAttachmentSpec>& depthStencilAttachmentSpec) {
+    const Core::Ref<TextureImage2D>& Framebuffer::createDepthStencilAttachment(const Core::Ref<DepthStencilAttachmentSpec>& depthStencilAttachmentSpec) {
 
         auto [internalFormat, externalFormat, dataType] = depthStencilAttachmentSpec->getTextureParameters();
 
         // Create the buffer texture
-        Core::Ref<Texture> texture = Core::CreateRef<TextureImage2D>(
+        Core::Ref<TextureImage2D> texture = Core::CreateRef<TextureImage2D>(
             internalFormat, externalFormat, dataType,
             m_width, m_height,
             nullptr
@@ -185,6 +193,8 @@ namespace gaunlet::Graphics {
             0,
             texture->getRendererId()
         );
+
+        return m_textures.back();
 
     }
 

@@ -15,7 +15,7 @@ namespace gaunlet::Prefab::RenderPipelines {
         explicit BasicEditorRenderPipeline(Core::Ref<Scene::DirectionalLightComponent> directionalLight, Core::Ref<Scene::SkyboxComponent> skybox, unsigned int uniformBufferBindingPointOffset = 0);
         void run(const Core::Ref<Scene::Scene>& scene, const Core::Ref<Scene::Camera>& camera) override;
         void resize(unsigned int width, unsigned int height) override;
-        const Core::Ref<Graphics::Texture>& getRenderTarget() override;
+        const Core::Ref<Graphics::TextureImage2D>& getRenderTarget() override;
         static unsigned int getUniformBufferCount();
 
     protected:

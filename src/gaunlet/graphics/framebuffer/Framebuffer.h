@@ -1,7 +1,7 @@
 #pragma once
 
 #include "gaunlet/core/render/RenderApi.h"
-#include "gaunlet/graphics/texture/Texture.h"
+#include "gaunlet/graphics/texture/TextureImage2D.h"
 #include "gaunlet/graphics/framebuffer/attachment-specs/ColorAttachmentSpecFactory.h"
 #include "gaunlet/graphics/framebuffer/ColorAttachmentSpec.h"
 #include "gaunlet/graphics/framebuffer/DepthStencilAttachmentSpec.h"
@@ -17,8 +17,9 @@ namespace gaunlet::Graphics {
         ~Framebuffer();
 
         template<typename T>
-        void addColorAttachment(ColorAttachmentSpec::Channels channels, ColorAttachmentSpec::Type type, ColorAttachmentSpec::Size size, T clearColor);
-        void setDepthStencilAttachment(float depthClearValue, int stencilClearValue);
+        const Core::Ref<TextureImage2D>& addColorAttachment(ColorAttachmentSpec::Channels channels, ColorAttachmentSpec::Type type, ColorAttachmentSpec::Size size, T clearColor);
+        const Core::Ref<TextureImage2D>& addColorAttachment(const Core::Ref<ColorAttachmentSpec>& colorAttachmentSpec);
+        const Core::Ref<TextureImage2D>& setDepthStencilAttachment(float depthClearValue, int stencilClearValue);
         void resize(unsigned int width, unsigned int height);
         void recreate();
 
@@ -33,7 +34,7 @@ namespace gaunlet::Graphics {
         inline unsigned int getRendererId() const {return m_rendererId; }
         inline unsigned int getWidth() {return m_width; }
         inline unsigned int getHeight() {return m_height; }
-        inline Core::Ref<Texture>& getColorAttachment(unsigned int index) {return m_textures[index]; }
+        const Core::Ref<TextureImage2D>& getColorAttachment(unsigned int index) {return m_textures.at(index); }
 
         template<typename T>
         T readPixel(unsigned int colorAttachmentIndex, unsigned int x, unsigned int y);
@@ -46,19 +47,19 @@ namespace gaunlet::Graphics {
         std::vector<Core::Ref<ColorAttachmentSpec>> m_colorAttachmentSpecs = {};
         Core::Ref<DepthStencilAttachmentSpec> m_depthStencilAttachmentSpec = nullptr;
 
-        std::vector<Core::Ref<Texture>> m_textures;
+        std::vector<Core::Ref<TextureImage2D>> m_textures;
 
-        void attachColor(const Core::Ref<ColorAttachmentSpec>& colorAttachmentSpec, unsigned int index);
-        void attachDepthStencil(const Core::Ref<DepthStencilAttachmentSpec>& depthStencilAttachmentSpec);
+        void destroyFramebuffer();
+        const Core::Ref<TextureImage2D>& createColorAttachment(const Core::Ref<ColorAttachmentSpec>& colorAttachmentSpec, unsigned int index);
+        const Core::Ref<TextureImage2D>& createDepthStencilAttachment(const Core::Ref<DepthStencilAttachmentSpec>& depthStencilAttachmentSpec);
 
     };
 
     template<typename T>
-    void Framebuffer::addColorAttachment(ColorAttachmentSpec::Channels channels, ColorAttachmentSpec::Type type, ColorAttachmentSpec::Size size, T clearColor) {
+    const Core::Ref<TextureImage2D>& Framebuffer::addColorAttachment(ColorAttachmentSpec::Channels channels, ColorAttachmentSpec::Type type, ColorAttachmentSpec::Size size, T clearColor) {
 
-        m_colorAttachmentSpecs.emplace_back(
-            ColorAttachmentSpecFactory::create<T>(channels, type, size, clearColor)
-        );
+        auto colorAttachmentSpec = ColorAttachmentSpecFactory::create<T>(channels, type, size, clearColor);
+        return addColorAttachment(colorAttachmentSpec);
 
     }
 
