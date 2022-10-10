@@ -319,8 +319,6 @@ namespace gaunlet::Prefab::RenderPipelines {
 
         m_framebuffer->setDepthStencilAttachment(1.0f, 0);
 
-        m_framebuffer->recreate();
-
     }
 
 }

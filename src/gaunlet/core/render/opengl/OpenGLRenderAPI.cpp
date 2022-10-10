@@ -326,9 +326,6 @@ namespace gaunlet::Core {
 
         glCall(glTexImage2D(GL_TEXTURE_2D, 0, glInternalFormat, width, height, 0, glDataFormat, glDataType, data));
 
-        glCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-        glCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-
     }
 
     void OpenGLRenderApi::loadTextureCubeMap(unsigned int& id, TextureInternalFormat internalFormat, TextureExternalFormat dataFormat, unsigned int width, unsigned int height, std::vector<void *> imagesData) {
@@ -344,11 +341,29 @@ namespace gaunlet::Core {
             glCall(glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + index, 0, glInternalFormat, width, height, 0, glDataFormat, GL_UNSIGNED_BYTE, imageData));
         }
 
-        glCall(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-        glCall(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-        glCall(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
-        glCall(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
-        glCall(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE));
+    }
+
+    void OpenGLRenderApi::setTexturedFilteringParameter(unsigned int id, TextureType textureType, TextureFilteringParameter parameter, TextureFilteringParameterValue value) {
+
+        glCall(glBindTexture(convertTextureType(textureType), id));
+
+        glCall(glTexParameteri(
+            convertTextureType(textureType),
+            convertTextureFilteringParameter(parameter),
+            convertTextureFilteringParameterValue(value)
+        ));
+
+    }
+
+    void OpenGLRenderApi::setTexturedWrappingParameter(unsigned int id, TextureType textureType, TextureWrappingParameter parameter, TextureWrappingParameterValue value) {
+
+        glCall(glBindTexture(convertTextureType(textureType), id));
+
+        glCall(glTexParameteri(
+            convertTextureType(textureType),
+            convertTextureWrappingParameter(parameter),
+            convertTextureWrappingParameterValue(value)
+        ));
 
     }
 
@@ -691,6 +706,50 @@ namespace gaunlet::Core {
         }
 
         throw std::runtime_error("Unknown texture format");
+
+    }
+
+    GLenum OpenGLRenderApi::convertTextureFilteringParameter(TextureFilteringParameter parameter) {
+
+        switch (parameter) {
+            case TextureFilteringParameter::Minifying:     return GL_TEXTURE_MIN_FILTER;
+            case TextureFilteringParameter::Magnifying:    return GL_TEXTURE_MAG_FILTER;
+        }
+
+        throw std::runtime_error("Unknown texture filtering parameter");
+
+    }
+
+    GLenum OpenGLRenderApi::convertTextureFilteringParameterValue(TextureFilteringParameterValue value) {
+
+        switch (value) {
+            case TextureFilteringParameterValue::Linear:    return GL_LINEAR;
+            case TextureFilteringParameterValue::Nearest:   return GL_NEAREST;
+        }
+
+        throw std::runtime_error("Unknown texture filtering parameter value");
+
+    }
+
+    GLenum OpenGLRenderApi::convertTextureWrappingParameter(TextureWrappingParameter parameter) {
+
+        switch (parameter) {
+            case TextureWrappingParameter::S:   return GL_TEXTURE_WRAP_S;
+            case TextureWrappingParameter::T:   return GL_TEXTURE_WRAP_T;
+            case TextureWrappingParameter::R:   return GL_TEXTURE_WRAP_R;
+        }
+
+        throw std::runtime_error("Unknown texture wrapping parameter");
+
+    }
+
+    GLenum OpenGLRenderApi::convertTextureWrappingParameterValue(TextureWrappingParameterValue value) {
+
+        switch (value) {
+            case TextureWrappingParameterValue::Repeat:             return GL_REPEAT;
+            case TextureWrappingParameterValue::MirroredRepeat:     return GL_MIRRORED_REPEAT;
+            case TextureWrappingParameterValue::ClampToEdge:        return GL_CLAMP_TO_EDGE;
+        }
 
     }
 

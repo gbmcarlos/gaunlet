@@ -172,6 +172,14 @@ namespace gaunlet::Core {
         getApi().loadTextureCubeMap(id, internalFormat, dataFormat, width, height, std::move(imagesData));
     }
 
+    void RenderCommand::setTexturedFilteringParameter(unsigned int id, TextureType textureType, TextureFilteringParameter parameter, TextureFilteringParameterValue value) {
+        getApi().setTexturedFilteringParameter(id, textureType, parameter, value);
+    }
+
+    void RenderCommand::setTexturedWrappingParameter(unsigned int id, TextureType textureType, TextureWrappingParameter parameter, TextureWrappingParameterValue value) {
+        getApi().setTexturedWrappingParameter(id, textureType, parameter, value);
+    }
+
     void RenderCommand::activateTexture(unsigned int id, TextureType type, unsigned int slot) {
         getApi().activateTexture(id, type, slot);
     }

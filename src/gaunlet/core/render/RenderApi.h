@@ -102,6 +102,22 @@ namespace gaunlet::Core {
         DepthStencil
     };
 
+    enum class TextureFilteringParameter {
+        Minifying, Magnifying
+    };
+
+    enum class TextureFilteringParameterValue {
+        Linear, Nearest
+    };
+
+    enum class TextureWrappingParameter {
+        S, T, R
+    };
+
+    enum class TextureWrappingParameterValue {
+        Repeat, MirroredRepeat, ClampToEdge
+    };
+
     class RenderApi {
 
     public:
@@ -158,6 +174,8 @@ namespace gaunlet::Core {
 
         virtual void loadTextureImage2d(unsigned int& id, TextureInternalFormat internalFormat, TextureExternalFormat dataFormat, PrimitiveDataType dataType, unsigned int width, unsigned int height, void* data) = 0;
         virtual void loadTextureCubeMap(unsigned int& id, TextureInternalFormat internalFormat, TextureExternalFormat dataFormat, unsigned int width, unsigned int height, std::vector<void *> imagesData) = 0;
+        virtual void setTexturedFilteringParameter(unsigned int id, TextureType textureType, TextureFilteringParameter parameter, TextureFilteringParameterValue value) = 0;
+        virtual void setTexturedWrappingParameter(unsigned int id, TextureType textureType, TextureWrappingParameter parameter, TextureWrappingParameterValue value) = 0;
         virtual void activateTexture(unsigned int id, TextureType type, unsigned int slot) = 0;
         virtual void deleteTexture(unsigned int& id) = 0;
 

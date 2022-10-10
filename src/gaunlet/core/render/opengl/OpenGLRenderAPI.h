@@ -75,6 +75,8 @@ namespace gaunlet::Core {
 
         void loadTextureImage2d(unsigned int& id, TextureInternalFormat internalFormat, TextureExternalFormat dataFormat, PrimitiveDataType dataType, unsigned int width, unsigned int height, void* data);
         void loadTextureCubeMap(unsigned int& id, TextureInternalFormat internalFormat, TextureExternalFormat dataFormat, unsigned int width, unsigned int height, std::vector<void *> imagesData);
+        void setTexturedFilteringParameter(unsigned int id, TextureType textureType, TextureFilteringParameter parameter, TextureFilteringParameterValue value);
+        void setTexturedWrappingParameter(unsigned int id, TextureType textureType, TextureWrappingParameter parameter, TextureWrappingParameterValue value);
         void activateTexture(unsigned int id, TextureType type, unsigned int slot);
         void deleteTexture(unsigned int& id);
 
@@ -118,6 +120,10 @@ namespace gaunlet::Core {
         GLenum convertTextureInternalFormat(TextureInternalFormat format);
         GLenum convertTextureExternalFormat(TextureExternalFormat format);
         GLenum convertTextureType(TextureType type);
+        GLenum convertTextureFilteringParameter(TextureFilteringParameter parameter);
+        GLenum convertTextureFilteringParameterValue(TextureFilteringParameterValue value);
+        GLenum convertTextureWrappingParameter(TextureWrappingParameter parameter);
+        GLenum convertTextureWrappingParameterValue(TextureWrappingParameterValue value);
         GLenum convertFramebufferAttachmentType(FramebufferAttachmentType type);
         GLenum convertPolygonMode(PolygonMode mode);
 

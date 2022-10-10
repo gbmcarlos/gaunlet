@@ -34,6 +34,31 @@ namespace gaunlet::Graphics {
             imagesData
         );
 
+        Core::RenderCommand::setTexturedFilteringParameter(
+            m_rendererId, Core::TextureType::CubeMap,
+            Core::TextureFilteringParameter::Minifying, Core::TextureFilteringParameterValue::Linear
+        );
+
+        Core::RenderCommand::setTexturedFilteringParameter(
+            m_rendererId, Core::TextureType::CubeMap,
+            Core::TextureFilteringParameter::Magnifying, Core::TextureFilteringParameterValue::Linear
+        );
+
+        Core::RenderCommand::setTexturedWrappingParameter(
+            m_rendererId, Core::TextureType::CubeMap,
+            Core::TextureWrappingParameter::S, Core::TextureWrappingParameterValue::ClampToEdge
+        );
+
+        Core::RenderCommand::setTexturedWrappingParameter(
+            m_rendererId, Core::TextureType::CubeMap,
+            Core::TextureWrappingParameter::T, Core::TextureWrappingParameterValue::ClampToEdge
+        );
+
+        Core::RenderCommand::setTexturedWrappingParameter(
+            m_rendererId, Core::TextureType::CubeMap,
+            Core::TextureWrappingParameter::R, Core::TextureWrappingParameterValue::ClampToEdge
+        );
+
     }
 
     TextureCubeMap::~TextureCubeMap() {

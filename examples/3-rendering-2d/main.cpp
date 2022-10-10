@@ -19,8 +19,16 @@ public:
 
         m_renderPipeline = gaunlet::Core::CreateRef<gaunlet::Prefab::RenderPipelines::Basic3DRenderPipeline>();
 
-        gaunlet::Core::Ref<gaunlet::Graphics::TextureImage2D> texture1 = gaunlet::Core::CreateRef<gaunlet::Graphics::TextureImage2D>("assets/texture-1.jpeg");
-        gaunlet::Core::Ref<gaunlet::Graphics::TextureImage2D> texture2 = gaunlet::Core::CreateRef<gaunlet::Graphics::TextureImage2D>("assets/texture-2.jpeg");
+        gaunlet::Core::Ref<gaunlet::Graphics::TextureImage2D> texture1 = gaunlet::Core::CreateRef<gaunlet::Graphics::TextureImage2D>(
+            "assets/texture-1.jpeg",
+            gaunlet::Core::TextureFilteringParameterValue::Linear,
+            gaunlet::Core::TextureWrappingParameterValue::ClampToEdge
+        );
+        gaunlet::Core::Ref<gaunlet::Graphics::TextureImage2D> texture2 = gaunlet::Core::CreateRef<gaunlet::Graphics::TextureImage2D>(
+            "assets/texture-2.jpeg",
+            gaunlet::Core::TextureFilteringParameterValue::Linear,
+            gaunlet::Core::TextureWrappingParameterValue::ClampToEdge
+        );
 
         // TRIANGLE 1
         auto triangle1 = m_scene->createEntity();
