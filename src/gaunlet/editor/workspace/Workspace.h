@@ -12,9 +12,19 @@
 
 namespace gaunlet::Editor {
 
+    struct WorkspaceConfiguration {
+
+        bool addModelOutlineTagOnSelect;
+        bool addWireframeModelTagOnSelect;
+
+    };
+
     class Workspace {
 
     public:
+
+        Workspace();
+        Workspace(const WorkspaceConfiguration& configuration);
 
         void setLayoutSpec(const DockingLayoutSpec& layoutSpec);
 
@@ -55,6 +65,8 @@ namespace gaunlet::Editor {
         Scene::Entity getSelectedUIEntity();
 
         glm::vec3 mousePickPoint(RenderPanel* renderPanel, glm::vec3 planePoint, glm::vec3 planeNormal);
+
+        WorkspaceConfiguration m_configuration;
 
     private:
         void updateNodeProperties(Panel* node);

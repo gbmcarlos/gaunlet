@@ -6,6 +6,12 @@
 
 namespace gaunlet::Editor {
 
+    Workspace::Workspace()
+        : Workspace({true, true}) {}
+
+    Workspace::Workspace(const WorkspaceConfiguration& configuration)
+        : m_configuration(configuration) {}
+
     void Workspace::setLayoutSpec(const DockingLayoutSpec& layoutSpec) {
         m_layoutSpec = layoutSpec;
     }
@@ -341,14 +347,22 @@ namespace gaunlet::Editor {
 
         // If we have newly selected an entity
         if (changed && m_selectedSceneEntity) {
-            m_selectedSceneEntity.addEmptyComponent<ModelOutlineTag>();
-            m_selectedSceneEntity.addEmptyComponent<WireframeModelTag>();
+            if (m_configuration.addModelOutlineTagOnSelect) {
+                m_selectedSceneEntity.addEmptyComponent<ModelOutlineTag>();
+            }
+            if (m_configuration.addWireframeModelTagOnSelect) {
+                m_selectedSceneEntity.addEmptyComponent<WireframeModelTag>();
+            }
         }
 
         // If an entity has been unselected
         if (changed && previousEntity) {
-            previousEntity.removeComponent<ModelOutlineTag>();
-            previousEntity.removeComponent<WireframeModelTag>();
+            if (m_configuration.addModelOutlineTagOnSelect) {
+                previousEntity.removeComponent<ModelOutlineTag>();
+            }
+            if (m_configuration.addWireframeModelTagOnSelect) {
+                previousEntity.removeComponent<WireframeModelTag>();
+            }
         }
 
         // Event callback
