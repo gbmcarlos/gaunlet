@@ -9,6 +9,10 @@ namespace gaunlet::Scene {
         loadModel(filePath);
     }
 
+    Model::Model(const Mesh &mesh) {
+        m_meshes.emplace_back(mesh);
+    }
+
     void Model::loadModel(const char *filePath) {
 
         Assimp::Importer importer;

@@ -93,8 +93,14 @@ namespace gaunlet::Prefab::GuiPanels {
         void modelComponentProperties(Components::ModelComponent& model) {
 
             if (ImGui::CollapsingHeader("Model Component")) {
-                ImGui::Text("Vertices: %lu", model.m_model.m_meshes[0].getVertices().size());
-                ImGui::Text("Indices: %lu", model.m_model.m_meshes[0].getIndices().size());
+
+                if (model.getMeshGenerator()) {
+                    model.getMeshGenerator()->onGuiRender();
+                } else {
+                    ImGui::Text("Vertices: %lu", model.m_model.m_meshes[0].getVertices().size());
+                    ImGui::Text("Indices: %lu", model.m_model.m_meshes[0].getIndices().size());
+                }
+
             }
 
         }

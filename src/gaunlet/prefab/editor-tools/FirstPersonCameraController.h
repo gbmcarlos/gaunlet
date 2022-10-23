@@ -25,7 +25,7 @@ namespace gaunlet::Prefab::EditorTools {
 
         void onGuiRender() override {
 
-            ImGui::SliderFloat("Movement Sensitivity: ", &m_movementSensitivity, 1.0f, 1000.0f);
+            ImGui::SliderFloat("Movement Sensitivity: ", &m_movementSensitivity, 0.1f, 1000.0f);
 
         }
 

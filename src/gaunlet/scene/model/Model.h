@@ -12,6 +12,7 @@ namespace gaunlet::Scene {
 
     public:
         Model() = default;
+        Model(const Mesh& mesh);
         explicit Model(const char* filePath);
 
         inline const std::vector<Mesh>& getMeshes() const {return m_meshes; }
