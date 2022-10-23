@@ -43,7 +43,7 @@ add_library(gaunlet STATIC
         gaunlet/prefab/render-pipelines/basic-3d-render-pipeline/Basic3DRenderPipeline.cpp
         gaunlet/prefab/render-pipelines/basic-editor-render-pipeline/BasicEditorRenderPipeline.cpp
 
-#        Dear ImGui
+        #        Dear ImGui
         ${PROJECT_SOURCE_DIR}/vendor/imgui/imgui_impl_glfw.cpp ${PROJECT_SOURCE_DIR}/vendor/imgui/imgui_impl_opengl3.cpp
 )
 

@@ -9,5 +9,6 @@
 #include "gaunlet/scene/camera/OrthographicCamera.h" // Doesn't depend on anything
 
 #include "gaunlet/scene/model/Model.h"
+#include "gaunlet/scene/model/MeshGenerator.h"
 
 #include "gaunlet/scene/components/BasicComponents.h"

@@ -4,6 +4,8 @@
 #include "gaunlet/prefab/components/ModelComponent.h"
 #include "gaunlet/prefab/components/CircleComponent.h"
 #include "gaunlet/prefab/skyboxes/Skyboxes.h"
+#include "gaunlet/prefab/mesh-generators/plane/PlaneGenerator.h"
+#include "gaunlet/prefab/mesh-generators/sphere/PlaneSphereGenerator.h"
 
 #include "gaunlet/prefab/render-pipelines/SceneProperties.h"
 #include "gaunlet/prefab/render-pipelines/basic-3d-render-pipeline/Basic3DRenderPipeline.h"
