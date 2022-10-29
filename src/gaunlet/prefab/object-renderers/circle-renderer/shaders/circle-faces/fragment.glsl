@@ -1,32 +1,7 @@
 #version 410 core
 
-struct EntityPropertySet {
-    mat4 transform;
-    vec4 color;
-    uint textureIndex;
-    int entityId;
-    float thickness;
-    float fade;
-};
-
-struct DirectionalLight {
-    vec3 color;
-    float ambientIntensity;
-    vec3 direction;
-    float diffuseIntensity;
-};
-
-// Uniforms
-layout (std140) uniform EntityPropertySets {
-    EntityPropertySet entityPropertySet[100];
-};
-
-layout (std140) uniform SceneProperties {
-    mat4 view;
-    mat4 projection;
-    vec4 viewport;
-    DirectionalLight directionalLight;
-};
+#include "GL_PREFABS_PATH/shaders/includes/scene-properties.glsl"
+#include "entity-properties.glsl"
 
 // Inputs
 in vec2 v_textureCoordinates;

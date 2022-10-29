@@ -7,6 +7,8 @@
 #include <stdexcept>
 #include <algorithm>
 #include <typeindex>
+#include <regex>
+#include <filesystem>
 
 // Containers
 #include <array>

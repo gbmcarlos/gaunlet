@@ -1,16 +1,6 @@
 #version 410 core
 
-struct EntityPropertySet {
-    mat4 transform;
-    vec4 color;
-    uint textureIndex;
-    int entityId;
-};
-
-// Uniforms
-layout (std140) uniform EntityPropertySets {
-    EntityPropertySet entityPropertySets[100];
-};
+#include "./../entity-properties.glsl"
 
 uniform vec3 u_color;
 

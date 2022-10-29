@@ -197,7 +197,7 @@ namespace gaunlet::Core {
             glCall(glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length));
             char* message = (char*)alloca(length * sizeof(char));
             glCall(glGetShaderInfoLog(id, length, &length, message));
-            std::cout << "Failed to compile " << (type == ShaderType::Vertex ? "vertex" : "fragment") << " m_shader. Error:" << std::endl;
+            std::cout << "Failed to compile " << (type == ShaderType::Vertex ? "vertex" : "fragment") << " shader. Error:" << std::endl;
             std::cout << message << std::endl;
             glCall(glDeleteShader(id));
             return 0;

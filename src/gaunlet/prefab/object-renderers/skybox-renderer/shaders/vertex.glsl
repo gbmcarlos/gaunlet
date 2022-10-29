@@ -1,18 +1,6 @@
 #version 410 core
 
-struct DirectionalLight {
-    vec3 color;
-    float ambientIntensity;
-    vec3 position;
-    float diffuseIntensity;
-};
-
-layout (std140) uniform SceneProperties {
-    mat4 view;
-    mat4 projection;
-    vec4 viewport;
-    DirectionalLight directionalLight;
-};
+#include "GL_PREFABS_PATH/shaders/includes/scene-properties.glsl"
 
 // Vertex attributes
 layout (location = 0) in vec4 a_position;

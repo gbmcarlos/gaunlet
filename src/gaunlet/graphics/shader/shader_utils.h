@@ -4,25 +4,45 @@
 
 namespace gaunlet::Graphics {
 
-    std::string readFromFile(const std::string& filePath) {
+    std::string parseInclude(const std::string& line, const std::filesystem::path& folder);
 
-        std::string fileContent;
-        std::ifstream file;
+    std::string parseShaderFile(const std::string& filePath) {
 
-        // Make sure to throw exception if anything fails
-        file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+        std::filesystem::path path(filePath);
+        auto folder = path.parent_path();
 
-        try {
-            file.open(filePath.c_str());
-            std::stringstream fileStream;
-            fileStream << file.rdbuf();
-            file.close();
-            fileContent = fileStream.str();
-        } catch (std::ifstream::failure& e) {
-            std::cout << "Error while reading from file '" << filePath.c_str() << "': " << e.what() << std::endl;
+        std::stringstream shaderSource;
+        std::ifstream file(path.c_str());
+
+        std::string line;
+        while (std::getline(file, line)) {
+
+            std::string lineContent = line;
+
+            if (line.find("#include") != std::string::npos) {
+                lineContent = parseInclude(line, folder);
+            }
+
+            shaderSource << lineContent << '\n';
+
         }
 
-        return fileContent;
+        return shaderSource.str();
+
+    }
+
+    std::string parseInclude(const std::string& line, const std::filesystem::path& folder) {
+
+        auto firstQuote = line.find_first_of('"');
+        auto lastQuote = line.find_last_of('"');
+        std::string includePath = line.substr(firstQuote + 1, lastQuote - firstQuote - 1);
+        includePath = std::regex_replace(includePath, std::regex("GL_PREFABS_PATH"), GL_PREFABS_PATH);
+
+        if (std::filesystem::path(includePath).is_relative()) {
+            includePath = std::string(folder.c_str()) + "/" + includePath;
+        }
+
+        return parseShaderFile(includePath);
 
     }
 

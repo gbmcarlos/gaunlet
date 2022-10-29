@@ -20,7 +20,7 @@ namespace gaunlet::Graphics {
             m_rendererId = Core::RenderCommand::createShaderProgram();
         }
 
-        std::string shaderSource = readFromFile(shaderPath);
+        std::string shaderSource = parseShaderFile(shaderPath);
         unsigned int shaderId = Core::RenderCommand::compileShader(type, shaderSource);
         Core::RenderCommand::attachShader(m_rendererId, shaderId);
         Core::RenderCommand::deleteShader(shaderId);
