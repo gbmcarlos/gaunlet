@@ -14,6 +14,10 @@ namespace gaunlet::Prefab::GuiPanels {
 
         void onGuiRender() override {
 
+            if (ImGui::CollapsingHeader("Workspace Properties")) {
+                workspaceProperties();
+            }
+
             if (ImGui::CollapsingHeader("Window Properties")) {
                 windowProperties();
             }
@@ -25,6 +29,13 @@ namespace gaunlet::Prefab::GuiPanels {
         }
 
     private:
+
+        void workspaceProperties() {
+
+            ImGui::Checkbox("ModelOutline tag on select", &getWorkspace()->m_configuration.addModelOutlineTagOnSelect);
+            ImGui::Checkbox("WireframeModel tag on select", &getWorkspace()->m_configuration.addWireframeModelTagOnSelect);
+
+        }
 
         void windowProperties() {
 

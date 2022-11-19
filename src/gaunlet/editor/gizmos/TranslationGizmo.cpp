@@ -25,7 +25,7 @@ namespace gaunlet::Editor {
         axisX.addComponent<Prefab::Components::ModelComponent>(Prefab::Sprites::Square2DModel());
         axisX.addComponent<Scene::TransformComponent>(
             glm::vec3(length/2, 0.0f, 0.0f),
-            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
             glm::vec3(length, thickness, 1.0f)
         );
         axisX.addComponent<Scene::MaterialComponent>(TranslationGizmo::m_colorX);
@@ -34,7 +34,7 @@ namespace gaunlet::Editor {
         axisY.addComponent<Prefab::Components::ModelComponent>(Prefab::Sprites::Square2DModel());
         axisY.addComponent<Scene::TransformComponent>(
             glm::vec3(0.0f, length/2, 0.0f),
-            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
             glm::vec3(thickness, length, 1.0f)
         );
         axisY.addComponent<Scene::MaterialComponent>(TranslationGizmo::m_colorY);
@@ -43,7 +43,7 @@ namespace gaunlet::Editor {
         axisZ.addComponent<Prefab::Components::ModelComponent>(Prefab::Sprites::Square2DModel());
         axisZ.addComponent<Scene::TransformComponent>(
             glm::vec3(0.0f, 0.0f, length/2),
-            glm::vec3(0.0f, 90.0f, 0.0f),
+            glm::vec4(0.0f, 1.0f, 0.0f, 90.0f),
             glm::vec3(length, thickness, 1.0f)
         );
         axisZ.addComponent<Scene::MaterialComponent>(TranslationGizmo::m_colorZ);
@@ -59,7 +59,7 @@ namespace gaunlet::Editor {
         planeYZ.addComponent<Prefab::Components::ModelComponent>(Prefab::Sprites::Square2DModel());
         planeYZ.addComponent<Scene::TransformComponent>(
             glm::vec3(0.0f, finalGap, finalGap),
-            glm::vec3(0.0f, 90.0f, 00.0f),
+            glm::vec4(0.0f, 1.0f, 0.0f, 90.0f),
             glm::vec3(size, size, 1.0f)
         );
         planeYZ.addComponent<Scene::MaterialComponent>(TranslationGizmo::m_colorX);
@@ -68,7 +68,7 @@ namespace gaunlet::Editor {
         planeXZ.addComponent<Prefab::Components::ModelComponent>(Prefab::Sprites::Square2DModel());
         planeXZ.addComponent<Scene::TransformComponent>(
             glm::vec3(finalGap, 0.0f, finalGap),
-            glm::vec3(90.0f, 00.0f, 00.0f),
+            glm::vec4(1.0f, 0.0f, 0.0f, 90.0f),
             glm::vec3(size, size, 1.0f)
         );
         planeXZ.addComponent<Scene::MaterialComponent>(TranslationGizmo::m_colorY);
@@ -77,7 +77,7 @@ namespace gaunlet::Editor {
         planeXY.addComponent<Prefab::Components::ModelComponent>(Prefab::Sprites::Square2DModel());
         planeXY.addComponent<Scene::TransformComponent>(
             glm::vec3(finalGap, finalGap, 0.0f),
-            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
             glm::vec3(size, size, 1.0f)
         );
         planeXY.addComponent<Scene::MaterialComponent>(TranslationGizmo::m_colorZ);

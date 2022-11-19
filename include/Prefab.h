@@ -16,6 +16,5 @@
 #include "gaunlet/prefab/gui-panels/ToolsManagerPanel.h"
 #include "gaunlet/prefab/gui-panels/EntityComponentsPanel.h"
 
-#include "gaunlet/prefab/editor-tools/GlobalCameraController.h"
-#include "gaunlet/prefab/editor-tools/FirstPersonCameraController.h"
+#include "gaunlet/prefab/editor-tools/first-person-camera-controller/FirstPersonCameraController.h"
 #include "gaunlet/prefab/editor-tools/Transformer.h"

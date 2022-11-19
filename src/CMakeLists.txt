@@ -42,6 +42,7 @@ add_library(gaunlet STATIC
 #        Prefab
         gaunlet/prefab/render-pipelines/basic-3d-render-pipeline/Basic3DRenderPipeline.cpp
         gaunlet/prefab/render-pipelines/basic-editor-render-pipeline/BasicEditorRenderPipeline.cpp
+        gaunlet/prefab/editor-tools/first-person-camera-controller/FirstPersonCameraController.cpp
 
         #        Dear ImGui
         ${PROJECT_SOURCE_DIR}/vendor/imgui/imgui_impl_glfw.cpp ${PROJECT_SOURCE_DIR}/vendor/imgui/imgui_impl_opengl3.cpp

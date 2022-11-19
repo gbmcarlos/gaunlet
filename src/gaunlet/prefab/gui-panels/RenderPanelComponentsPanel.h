@@ -40,7 +40,6 @@ namespace gaunlet::Prefab::GuiPanels {
             panelProperties(renderPanel);
             sceneProperties(renderPanel->getScene());
             cameraProperties(renderPanel->getCamera());
-//            directionalLightProperties(getWorkspace()->getDirectionalLight(renderPanel->getDirectionalLightId()));
 
         }
 
@@ -85,18 +84,7 @@ namespace gaunlet::Prefab::GuiPanels {
                 ImGui::Text("Projection type: %s", projectionType);
                 ImGui::Text("Aspect Ratio: %f", camera->getAspectRatio());
                 ImGui::DragFloat3("Position: ", &camera->getPosition().x);
-                ImGui::SliderFloat("Yaw: ", &camera->getYaw(), 0.0f, 360.0f);
-                ImGui::SliderFloat("Pitch: ", &camera->getPitch(), -89.0f, 89.0f);
                 ImGui::SliderFloat("Zoom Level: ", &camera->getZoomLevel(), camera->getMinZoomLevel(), camera->getMaxZoomLevel());
-            }
-
-        }
-
-        void directionalLightProperties(const Core::Ref<Scene::DirectionalLightComponent>& directionalLight) {
-
-            if (ImGui::CollapsingHeader("Directional Light")) {
-                ImGui::ColorEdit3("Color: ", &directionalLight->m_color.x);
-                ImGui::DragFloat3("Direction: ", &directionalLight->m_direction.x);
             }
 
         }

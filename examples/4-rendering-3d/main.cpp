@@ -38,7 +38,7 @@ public:
         cup.addComponent<gaunlet::Prefab::Components::ModelComponent>(gaunlet::Scene::Model("assets/cup/cup.obj"));
         cup.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec3(0.0f, 30.0f, 0.0f),
+            glm::vec4(0.0f, 1.0f, 0.0f, -90.0f),
             glm::vec3(0.5f, 0.5f, 0.5f)
         );
         cup.addComponent<gaunlet::Scene::MaterialComponent>(glm::vec4(0.8f, 0.2f, 0.2f, 1.0f));

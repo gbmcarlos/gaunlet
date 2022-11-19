@@ -13,25 +13,42 @@ namespace gaunlet::Scene {
 
     struct TransformComponent {
 
-        TransformComponent() : m_translation(glm::vec3(0.0f, 0.0f, 0.0f)), m_rotation(glm::vec3(0.0f, 0.0f, 0.0f)), m_scale(glm::vec3(1.0f, 1.0f, 1.0f)) {}
+        TransformComponent() : m_translation(glm::vec3(0.0f, 0.0f, 0.0f)), m_rotation(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f)), m_scale(glm::vec3(1.0f, 1.0f, 1.0f)) {}
         TransformComponent(const TransformComponent&) = default;
-        TransformComponent(glm::vec3 position,  glm::vec3 rotation, glm::vec3 scale) : m_translation(position), m_rotation(rotation), m_scale(scale) {}
+        TransformComponent(glm::vec3 position, glm::vec4 rotation, glm::vec3 scale) : m_translation(position), m_rotation(rotation), m_scale(scale) {}
 
         glm::vec3 m_translation;
-        glm::vec3 m_rotation;
+        glm::vec4 m_rotation;
         glm::vec3 m_scale;
 
         glm::mat4 getTransformationMatrix() const {
 
             glm::mat4 translationsMatrix = glm::translate(glm::mat4(1.0f), m_translation);
-
-            glm::mat4 rotationMatrixX = glm::rotate(glm::mat4(1.0f), glm::radians(m_rotation.x), {1, 0, 0});
-            glm::mat4 rotationMatrixY = glm::rotate(glm::mat4(1.0f), glm::radians(m_rotation.y), {0, 1, 0});
-            glm::mat4 rotationMatrixZ = glm::rotate(glm::mat4(1.0f), glm::radians(m_rotation.z), {0, 0, 1});
-
+            glm::mat4 rotationMatrix = glm::mat4_cast(glm::normalize(getRotationQuaternion(m_rotation)));
             glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), m_scale);
 
-            return translationsMatrix * rotationMatrixX * rotationMatrixY * rotationMatrixZ * scaleMatrix;
+            return translationsMatrix * rotationMatrix * scaleMatrix;
+        }
+
+        glm::quat getRotationQuaternion(glm::vec4 rotation) const {
+
+            float angleRadians = glm::radians(rotation.w);
+            float cos = glm::cos(angleRadians*0.5f);
+            float sin = glm::sin(angleRadians*0.5f);
+
+            glm::vec3 axis = glm::vec3(rotation.x, rotation.y, rotation.z);
+            if (glm::length(axis) == 0.0f && angleRadians == 0.0f) {
+                axis = {1, 0, 0};
+            }
+            axis = glm::normalize(axis);
+
+            return {
+                cos,
+                axis.x * sin,
+                axis.y * sin,
+                axis.z * sin,
+            };
+
         }
 
     };

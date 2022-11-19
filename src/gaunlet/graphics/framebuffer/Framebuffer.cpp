@@ -159,7 +159,7 @@ namespace gaunlet::Graphics {
             nullptr
         );
         texture->setFilteringParameters(gaunlet::Core::TextureFilteringParameterValue::Linear);
-        texture->setWrappingParameters(gaunlet::Core::TextureWrappingParameterValue::ClampToEdge);
+        texture->setWrappingParameters(gaunlet::Core::TextureWrappingParameterValue::Repeat);
         m_textures.push_back(texture);
 
         // Attach the texture to the framebuffer
