@@ -59,12 +59,12 @@ public:
         auto& mainScene = m_workspace->getScene("main");
         auto& mainCamera = m_workspace->getCamera("main");
         mainCamera->setPosition({0.0f, 10.0f, 15.0f});
-        mainCamera->setPitch(-30.0f);
+//        mainCamera->setPitch(-30.0f);
 
         gaunlet::Core::Ref<gaunlet::Graphics::TextureImage2D> texture1 = gaunlet::Core::CreateRef<gaunlet::Graphics::TextureImage2D>(
             "assets/projection.png",
             gaunlet::Core::TextureFilteringParameterValue::Linear,
-            gaunlet::Core::TextureWrappingParameterValue::ClampToEdge
+            gaunlet::Core::TextureWrappingParameterValue::MirroredRepeat
         );
 
         auto sphere = mainScene->createTaggedEntity<gaunlet::Editor::SceneEntityTag>();
@@ -72,14 +72,13 @@ public:
             gaunlet::Core::CreateRef<gaunlet::Prefab::MeshGenerators::PlaneSphereGenerator>(
                 5.0f,
                 40,
-                glm::vec2(-12.0f, 32.0f),
-                glm::vec2(36.0f, 72.0f)
+                mainCamera
             )
         );
 
         sphere.addComponent<gaunlet::Scene::TransformComponent>(
             glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f)
         );
         sphere.addComponent<gaunlet::Scene::MaterialComponent>(texture1);

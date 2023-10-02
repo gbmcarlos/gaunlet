@@ -85,7 +85,7 @@ namespace gaunlet::Editor {
         auto iterator = m_renderPipelines.find(id);
 
         if (iterator == m_renderPipelines.end()) {
-            throw std::runtime_error("Skybox not found");
+            throw std::runtime_error("Render Pipeline not found");
         }
 
         return iterator->second;

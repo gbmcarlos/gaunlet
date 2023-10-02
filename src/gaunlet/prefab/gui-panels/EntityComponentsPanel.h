@@ -84,7 +84,7 @@ namespace gaunlet::Prefab::GuiPanels {
 
             if (ImGui::CollapsingHeader("Transform Component")) {
                 ImGui::DragFloat3("Translation: ", &component.m_translation.x, m_sliderSpeed);
-                ImGui::DragFloat3("Rotation: ", &component.m_rotation.x, m_sliderSpeed);
+                ImGui::DragFloat4("Rotation: ", &component.m_rotation.x, m_sliderSpeed);
                 ImGui::DragFloat3("Scale: ", &component.m_scale.x, m_sliderSpeed);
             }
 

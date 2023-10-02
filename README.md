@@ -1,7 +1,7 @@
-- collision
+- issues
+  - transform gizmo
+    - axis intersection
 
-- pong
-- game of life
-- snake
-- pacman
-- breakout
+- todo
+  - rename
+  - render pipeline metrics
